@@ -1,0 +1,15 @@
+name: self-test
+on: [push, pull_request]
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: bad samples must fail
+        run: |
+          if python3 scripts/copy_lint.py tests/bad-samples.md; then
+            echo "::error::bad-samples.md passed the linter; a pattern regressed"
+            exit 1
+          fi
+      - name: good samples must pass
+        run: python3 scripts/copy_lint.py tests/good-samples.md
