@@ -47,19 +47,46 @@ when the English source passed.
 
 ## Install
 
-### Claude Code / Cowork
+### Skills CLI
+
+```bash
+npx skills@latest add HiroHyun/grounded-copy
+```
+
+The Skills CLI reads the root `SKILL.md`, detects supported agents, and
+installs the skill in their configured skill directories.
+
+For a global installation with confirmation prompts skipped:
+
+```bash
+npx skills@latest add HiroHyun/grounded-copy --skill grounded-copy --global --yes
+```
+
+To inspect the skill metadata before installation:
+
+```bash
+npx skills@latest add HiroHyun/grounded-copy --list
+```
+
+### Manual installation
 
 ```bash
 git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-copy
 ```
 
-The skill activates on any copywriting, localization, or review task.
+The skill activates on copywriting, localization, and review tasks.
 
-### Codex, Cursor, Gemini CLI, other agents
+### Repository enforcement
 
-Point your rules file (`AGENTS.md`, `.cursorrules`, `GEMINI.md`) at
-`SKILL.md` and require the linter gate — copy-paste blocks are in
-`references/setup.md`.
+The Skills CLI installs the skill definition and its linter. A project-local
+checkout supplies stable paths for hooks and CI:
+
+```bash
+git clone https://github.com/HiroHyun/grounded-copy .style/grounded-copy
+```
+
+Use the copy-paste blocks in `references/setup.md` to connect the linter to
+Claude Code hooks, `AGENTS.md`, `GEMINI.md`, GitHub Actions, and CODEOWNERS.
 
 ### Linter only
 
