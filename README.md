@@ -17,6 +17,9 @@ Python linter backs the rules and blocks the task until the copy complies.
 | "This isn't just a task tracker — it's your team's second brain." | "The tracker links every task to its pull request and posts a status digest to Slack each morning." |
 | "Say goodbye to hidden fees." | "The listed price is the complete price; the invoice adds nothing." |
 | "Experts agree Acme leads the market." | "Acme holds 34% of the segment, per Gartner's 2025 market report." |
+| "This is a neighborhood bakery, not a factory." | "The bakery mills its own flour and ferments each loaf for 18 hours before baking." |
+| "The delivery wasn't slow — it arrived before the store opened." | "The courier delivered the order at 6:40 a.m., twenty minutes before the store opened." |
+| "Our jeans are sewn in one workshop rather than shipped between contractors." | "Every pair is cut, sewn, and finished in one Los Angeles workshop." |
 
 Same information, carried by specifics.
 
@@ -67,6 +70,15 @@ To inspect the skill metadata before installation:
 ```bash
 npx skills@latest add HiroHyun/grounded-copy --list
 ```
+
+To update an installed skill to the latest version:
+
+```bash
+npx skills@latest update grounded-copy
+```
+
+`update` takes the installed skill names and refreshes them from their
+source; `-g` restricts the run to global skills and `-p` to project skills.
 
 ### Manual installation
 
