@@ -9,6 +9,9 @@ This marks a turning point for the industry, underscoring its value.
 Acme stands as a leader in its category.
 Studies show users love simple tools.
 Our groundbreaking, revolutionary platform.
+Acme is a partner, not a vendor.
+Acme isn't complicated — it books the job in one tap.
+Acme ships every Friday rather than hoarding features for big releases.
 Acme n'est pas qu'un simple outil.
 Dites adieu aux frais cachés.
 Acme va bien au-delà du stockage.

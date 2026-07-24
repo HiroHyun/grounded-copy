@@ -26,7 +26,9 @@ not invent a new costume for the same move:
    "instead of just".
 2. **Reversal reveals:** "It's not X, it's Y", "isn't about X, it's about
    Y", "—not X, but Y", "not your average X", "less a catalog than a
-   trade desk".
+   trade desk". Includes the appositive form "X, not Y" ("a partner,
+   not a vendor") and the negated-setup dash "isn't/wasn't X — it Y"
+   ("the gate wasn't slow — it finished").
 3. **Era-ending:** "no longer", "gone are the days", "the days of X are
    over", "say goodbye/hello", "no more X", "never again", "welcome to a
    new era".
@@ -104,8 +106,12 @@ rationalization below is pre-emptively rejected:
    replace it with a grounded statement carrying the same information),
    then re-run. Repeat until exit code 0.
 5. Review WARN lines manually: "no longer", "journey", "landscape",
-   "What if" are allowed only in factual, non-rhetorical use ("What if my
-   order arrives damaged?" as an FAQ heading is fine).
+   "What if", bare "rather than", and ", not a/an/your X" are allowed
+   only in factual, non-rhetorical use ("What if my order arrives
+   damaged?" as an FAQ heading; "not a substitute for legal advice" as a
+   required disclaimer; "billed monthly rather than per seat" as a
+   billing fact). Apply the deletion test from
+   `references/patterns.md` to each.
 6. Only present copy to the user after a PASS. State in your summary that
    the copy passed `copy_lint.py`.
 

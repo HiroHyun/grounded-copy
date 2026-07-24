@@ -25,6 +25,9 @@ and its actual specifics; the specifics are the point.
 | "It's not a website. It's your storefront." | "The site takes orders, processes payments in 135 currencies, and prints shipping labels." |
 | "Not your average newsletter." | "The newsletter delivers three vetted job listings every Tuesday, each with salary range and visa status." |
 | "Acme is less a gym than a coaching program." | "Acme pairs every member with a coach who reviews training logs weekly." |
+| "Acme is a partner, not a vendor." | "Acme assigns each client a strategist who joins quarterly planning." |
+| "Acme isn't complicated — it books the job in one tap." | "Acme books the job in one tap." |
+| "We ship every Friday rather than hoarding features." | "We ship every Friday." |
 
 ## 3. Era-ending
 
@@ -141,6 +144,9 @@ requirement the reader needs:
 - "Prices do not include shipping or import duties." ✓
 - "The free plan does not include API access." ✓
 - "Delivery takes no more than 21 days within the EU." ✓
+- "General information, not a substitute for legal advice." ✓
+  (required disclaimer; the `comma-not-appositive` WARN exists to route
+  lines like this through the deletion test below)
 
 Test: delete the negative clause. If the sentence becomes *more*
 flattering, the negation was factual (keep it). If it becomes *less*

@@ -1,4 +1,5 @@
-# Every line below must PASS the gate (0 errors).
+# Every line below must PASS the gate (0 errors). WARN findings are
+# expected on the factual-negation lines; they mark manual-review cases.
 
 Pages load in under 200 ms.
 Acme runs the three checks listed above.
@@ -16,3 +17,5 @@ Acme는 견적을 영업일 기준 1일 이내에 보냅니다.
 표시된 가격은 최종 가격입니다.
 El precio publicado incluye todos los cargos.
 Las cotizaciones llegan en un día hábil.
+The guide is general information, not a substitute for legal advice.
+Invoices are billed monthly rather than per seat.
