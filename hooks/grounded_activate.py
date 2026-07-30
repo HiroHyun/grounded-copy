@@ -181,8 +181,12 @@ def main(argv):
         return 0
 
     output = build(skill, profile)
+    # The resolved path prints every session, not only on first run: it is the
+    # only signal distinguishing a real ${CLAUDE_PLUGIN_DATA} from the
+    # fallback, and reading it costs one line.
+    output += "\nProfile flag: " + _payload.flag_path(data_dir)
     if first_run:
-        output += "\nProfile flag: " + _payload.flag_path(data_dir)
+        output += " (created)"
     sys.stdout.write(output)
     return 0
 
