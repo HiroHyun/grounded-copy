@@ -1,21 +1,13 @@
 #!/usr/bin/env python3
 """SessionStart hook: put the grounded prose ruleset in session context.
 
-Claude Code adds this script's stdout to the session as context, so the rules
-arrive with no skill-trigger judgment involved. Registered with no matcher, so
-it fires on startup, resume, clear, and compact — the ruleset returns after
-every compaction.
+Stdout becomes session context, so the rules arrive with no skill-trigger
+judgment involved. No matcher, so it also fires after every compaction.
 
-The payload is extracted from SKILL.md at runtime, which keeps one source of
-truth. Three pieces, in order:
-
-  1. the intro through the bad/good example pair
-  2. the whole "## The one banned move" section
-  3. the '**"This negation is factual."**' bullet from "## Loophole closures"
-
-Everything else stays out. The other loophole closures, the workflow, the
-integrity rules, and the references matter when the skill is doing copy work,
-and the full text loads then.
+Three pieces come from SKILL.md at runtime: the intro with its example pair,
+the "## The one banned move" section, and the factual-negation bullet. The
+workflow, integrity rules, and remaining closures load with the skill itself
+when a copy task calls for them.
 
 Usage:
     grounded_activate.py --plugin-root DIR
@@ -33,9 +25,7 @@ BANNED_HEADING = "## The one banned move"
 LOOPHOLE_HEADING = "## Loophole closures"
 FACTUAL_LABEL = '- **"This negation is factual."**'
 
-# Recorded baseline for the extraction, measured 2026-07-30 against SKILL.md.
-# The plan records 3,028 from a hand-measurement that carried one extra
-# separator byte; this is what the shipped extractor produces.
+# Extraction size measured 2026-07-30 against SKILL.md.
 BASELINE_BYTES = 3027
 BYTE_RANGE = (2400, 3800)
 
@@ -108,11 +98,10 @@ def read_skill(plugin_root):
 
 
 def self_test(plugin_root):
-    """Structural invariants plus a printed delta against the baseline.
+    """Assert structure, report size.
 
-    Asserting an exact size would turn every intentional SKILL.md rule
-    addition into a red test, and a test that fails for correct work gets
-    muted. So the structure carries the assertions and the size reports.
+    An exact-size assertion would fail on every intentional SKILL.md rule
+    addition, and a test that fails for correct work gets muted.
     """
     skill = read_skill(plugin_root)
     if not skill:
@@ -169,8 +158,7 @@ def main(argv):
         profile = _payload.DEFAULT
         _payload.write_profile(profile)
     elif profile == _payload.INVALID:
-        # An untrusted flag falls back to the default and stays untouched, so a
-        # hand-edited file survives for its owner to inspect.
+        # Fall back without rewriting: a hand-edited file survives inspection.
         profile = _payload.DEFAULT
 
     if profile == "off":

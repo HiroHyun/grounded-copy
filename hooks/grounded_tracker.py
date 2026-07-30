@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 """UserPromptSubmit hook: reinforce the rules and own the profile switch.
 
-Two jobs:
-
-  1. Parse a profile switch out of the prompt and write the flag. This script
-     is the only writer, reached either as a hook or by commands/grounded.md
-     through --set.
-  2. Emit a one-line reminder through hookSpecificOutput.additionalContext
-     while a profile is active. SessionStart injects the full ruleset once,
-     and this keeps it in attention against competing per-turn injections
-     from other plugins.
+Emits a one-line reminder while a profile is active, which holds against the
+per-turn injections other plugins make. Also the only writer of the flag,
+reached either as a hook or through --set.
 
 Usage:
     grounded_tracker.py --plugin-root DIR
@@ -95,9 +89,9 @@ def parse_switch(prompt):
 def set_mode(argv):
     """--set PROFILE: write the flag from a shell run, print one line.
 
-    commands/grounded.md calls this. A prompt starting with `/` is resolved as
-    a slash command before any UserPromptSubmit event, so parsing command
-    names out of the prompt cannot carry the switch on its own.
+    commands/grounded.md calls this. A `/` prompt is resolved as a slash
+    command before any UserPromptSubmit event, so hook-side command parsing
+    cannot carry the switch alone.
     """
     index = argv.index("--set")
     arg = argv[index + 1].strip().lower() if index + 1 < len(argv) else ""
@@ -130,8 +124,7 @@ def main(argv):
         profile = _payload.DEFAULT
         _payload.write_profile(profile)
     elif profile == _payload.INVALID:
-        # Emit nothing on an untrusted flag; a corrupted or symlinked file
-        # never becomes a reason to inject text.
+        # A corrupted or symlinked flag never becomes a reason to inject text.
         return 0
 
     if profile not in _payload.ACTIVE:
