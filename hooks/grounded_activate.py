@@ -40,7 +40,8 @@ BASELINE_BYTES = 3027
 BYTE_RANGE = (2400, 3800)
 
 SWITCH_LINE = (
-    "Profile: {profile}. Switch with `/grounded chat|copy|off`. "
+    "Profile: {profile}. Switch with `/grounded-copy:grounded chat|copy|off`, "
+    "or in plain words (\"switch grounded to copy\", \"stop grounded prose\"). "
     "The `copy` profile adds the marketing-register rules; `off` stops this "
     "block and the per-turn reminder."
 )
@@ -163,6 +164,8 @@ def main(argv):
     _payload.read_payload()  # drain stdin; the event fields go unused here
 
     data_dir = _payload.resolve_data_dir(paths["data_dir"])
+    if paths["data_dir"] and data_dir != _payload.FALLBACK_DIR:
+        _payload.record_data_dir(data_dir)
     profile = _payload.read_profile(data_dir)
     first_run = profile == _payload.MISSING
     if first_run:

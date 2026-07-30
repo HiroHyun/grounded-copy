@@ -73,6 +73,30 @@ def flag_path(data_dir):
     return os.path.join(data_dir, "profile")
 
 
+# A fixed pointer to the resolved data directory. The hooks receive
+# ${CLAUDE_PLUGIN_DATA} through argv, and a command run from the shell has no
+# way to learn it, so every hook run records it here.
+POINTER = os.path.join(FALLBACK_DIR, "datadir.txt")
+
+
+def record_data_dir(data_dir):
+    try:
+        os.makedirs(os.path.dirname(POINTER), exist_ok=True)
+        with open(POINTER, "w", encoding="utf-8") as handle:
+            handle.write(data_dir + "\n")
+    except Exception:
+        pass
+
+
+def read_recorded_data_dir():
+    try:
+        with open(POINTER, encoding="utf-8") as handle:
+            value = handle.read().strip()
+    except Exception:
+        return None
+    return value if value and os.path.isdir(value) else None
+
+
 def read_profile(data_dir):
     """The recorded profile, or MISSING, or INVALID.
 

@@ -53,6 +53,13 @@ ON_PATTERNS = (
     re.compile(r"\bgrounded\s+(prose|copy)\s+(on|please|now)\b"),
 )
 
+# Plain-word switch naming a target profile, which reaches the hook even when a
+# slash command does not: "switch grounded to copy", "set grounded prose to off".
+NL_SWITCH = re.compile(
+    r"\b(?:switch|set|change|put)\s+grounded(?:\s+prose|\s+copy)?\s+"
+    r"(?:profile\s+)?(?:to|into)\s+(chat|copy|technical|marketing|off)\b"
+)
+
 QUESTION = re.compile(
     r"^(what|whats|what's|how|why|when|where|who|does|do|did|is|are|can|could|"
     r"would|should|tell me|explain)\b"
@@ -71,6 +78,10 @@ def parse_switch(prompt):
     if QUESTION.match(prompt):
         return None
 
+    named = NL_SWITCH.search(prompt)
+    if named:
+        return ARG_TO_PROFILE.get(named.group(1))
+
     for pattern in OFF_PATTERNS:
         if pattern.search(prompt):
             return "off"
@@ -80,9 +91,37 @@ def parse_switch(prompt):
     return None
 
 
+def set_mode(argv, data_dir):
+    """--set PROFILE: write the flag from a shell run, print one line.
+
+    commands/grounded.md calls this. A prompt starting with `/` is resolved as
+    a slash command before any UserPromptSubmit event, so parsing command
+    names out of the prompt cannot carry the switch on its own.
+    """
+    index = argv.index("--set")
+    arg = argv[index + 1].strip().lower() if index + 1 < len(argv) else ""
+    profile = ARG_TO_PROFILE.get(arg)
+    if profile is None:
+        print("grounded: unknown profile %r; choose chat, copy, or off" % arg)
+        return 0
+    if _payload.write_profile(data_dir, profile):
+        print("grounded profile: %s (%s)" % (profile, _payload.flag_path(data_dir)))
+    else:
+        print("grounded: write failed at " + _payload.flag_path(data_dir))
+    return 0
+
+
 def main(argv):
     paths = _payload.argv_paths(argv)
     data_dir = _payload.resolve_data_dir(paths["data_dir"])
+    if paths["data_dir"] and data_dir != _payload.FALLBACK_DIR:
+        _payload.record_data_dir(data_dir)
+    elif "--set" in argv:
+        # A shell run learns the real directory from the pointer the hooks left.
+        data_dir = _payload.read_recorded_data_dir() or data_dir
+
+    if "--set" in argv:
+        return set_mode(argv, data_dir)
 
     data = _payload.read_payload()
     prompt = str(data.get("prompt") or "").strip().lower()

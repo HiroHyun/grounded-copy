@@ -15,6 +15,15 @@ loading mechanism differs. Vendor the folder into the repo once:
 
 ## Claude Code, always-on (plugin)
 
+Measured on Claude Code 2.1.220, Windows 11:
+
+| Question | Result |
+|---|---|
+| Does the Skills CLI deliver the plugin files? | Its `.source` manifest lists four files (`SKILL.md`, both references, `copy_lint.py`), and the install carries no `.git` directory, so `.claude-plugin/` and `hooks/` arrive by `git clone` only |
+| Which launcher works? | `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"` runs in the hook shell; `run.cmd` covers a setup lacking `sh` |
+| Does `${CLAUDE_PLUGIN_DATA}` resolve for `@skills-dir`? | Yes — `~/.claude/plugins/data/grounded-copy-skills-dir/profile`. The `~/.claude/grounded-copy` fallback stays as insurance |
+| Command name | `/grounded-copy:grounded`, alongside plain `/grounded` |
+
 A skill loads when the model judges its description relevant, and this
 description covers copy tasks, so chat replies fall outside it. Two hooks put
 the rules in every session instead.
@@ -63,9 +72,19 @@ session start costs more than the reminder is worth.
 
 ### Profiles
 
-`/grounded chat|copy|off` switches the profile. `commands/grounded.md`
-documents the choice and writes nothing; the `UserPromptSubmit` hook owns
-every write. Values persist at `$CLAUDE_PLUGIN_DATA/profile`, falling back to
+Two switch paths, one writer. `grounded_tracker.py` performs every write,
+reached either by `/grounded-copy:grounded chat|copy|off`, which runs the
+script with `--set`, or by plain words in a prompt ("switch grounded to copy",
+"grounded prose off"), which the hook parses.
+
+Both paths exist because a prompt starting with `/` is resolved as a slash
+command before any `UserPromptSubmit` event fires. Measured: typing
+`/grounded copy` when no such command is registered prints "Unknown command"
+and the hook never receives the text, so command-name parsing inside the hook
+cannot carry the switch alone. Shell runs find the data directory through
+`~/.claude/grounded-copy/datadir.txt`, which every hook run rewrites.
+
+Values persist at `$CLAUDE_PLUGIN_DATA/profile`, falling back to
 `~/.claude/grounded-copy/profile` when that variable holds no path — the case
 for a plugin discovered in place. `off` persists across restarts as an
 explicit value; an absent flag reads as the `technical` default; anything

@@ -3,9 +3,22 @@ description: Show or switch the grounded prose profile
 argument-hint: chat|copy|off
 ---
 
-The `UserPromptSubmit` hook has already written the profile flag for this
-invocation. Read the flag file and report the active profile in one line.
-Change no files.
+Run this, substituting the plugin's own hooks directory if it differs from the
+default path:
+
+```bash
+python ~/.claude/skills/grounded-copy/hooks/grounded_tracker.py --set $ARGUMENTS
+```
+
+Report the one line it prints. With empty arguments, read
+`$CLAUDE_PLUGIN_DATA/profile` and report the current value instead. Change no
+other files.
+
+The script owns every write to the flag, whether a hook run or this command
+triggers it. A prompt starting with `/` is resolved as a slash command before
+any `UserPromptSubmit` event, so the hook's own prompt parsing covers plain
+words ("switch grounded to copy", "stop grounded prose") while this command
+covers the slash path.
 
 Profiles:
 
@@ -14,8 +27,7 @@ Profiles:
   verbs and code terms pass.
 - `copy` — the marketing register, matching `SKILL.md` exactly.
 - `off` — the session-start block and the per-turn reminder both stop. The
-  value persists across restarts until `/grounded chat` or `/grounded copy`
-  replaces it.
+  value persists across restarts until `chat` or `copy` replaces it.
 
-The flag lives at `$CLAUDE_PLUGIN_DATA/profile`, or at
-`~/.claude/grounded-copy/profile` when that variable holds no path.
+The flag lives at `$CLAUDE_PLUGIN_DATA/profile`, with the resolved path
+recorded at `~/.claude/grounded-copy/datadir.txt` for shell runs.
