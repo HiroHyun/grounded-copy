@@ -24,8 +24,8 @@ Measured on Claude Code 2.1.220, Windows 11:
 | Does `${CLAUDE_PLUGIN_DATA}` resolve for `@skills-dir`? | Yes — `~/.claude/plugins/data/grounded-copy-skills-dir`. The flag still uses a fixed path (see below) |
 | Command name | `/grounded-copy:grounded`; plain `/grounded` returns "Unknown command" |
 
-The flag lives at `<config-dir>/grounded-copy/profile` rather than in the
-plugin data directory. `${CLAUDE_PLUGIN_DATA}` earns its keep for a
+The flag lives at `<config-dir>/grounded-copy/profile`, one fixed path for
+every install. `${CLAUDE_PLUGIN_DATA}` earns its keep for a
 marketplace plugin, whose `${CLAUDE_PLUGIN_ROOT}` moves into a new cache
 directory on update; a plugin discovered in a skills directory is read in
 place, so the root holds still. The flag also holds user state, which belongs
@@ -73,16 +73,32 @@ to `"${CLAUDE_PLUGIN_ROOT}/hooks/run.cmd"`. The two launchers behave
 identically, and each forwards its arguments verbatim, so paths holding
 spaces survive.
 
-Missing interpreter, malformed stdin, an oversized flag file, and a symlinked
-flag file each end in exit 0 with no output. A style reminder that breaks a
-session start costs more than the reminder is worth.
+Every failure ends in exit 0 with no traceback: a missing interpreter, malformed
+stdin, an oversized flag file, and a symlinked flag file. A style reminder that
+breaks a session start costs more than the reminder is worth.
+
+Each launcher forwards its arguments as the shell parsed them. `run.cmd` runs
+with delayed expansion off and passes `%2` through `%9`, which caps it at eight
+arguments after the script name; both hook commands pass two. Delayed expansion
+consumed `!` inside an argument, so `co!py` reached the hook as `copy` and wrote
+the `copy` profile.
 
 ### Profiles
 
+Three names: `chat`, `copy`, `off`. `chat` is the default and the stored value
+for the core rules; a flag written as `technical` by an earlier install reads as
+`chat`.
+
+| Profile | Session block | Per-turn reminder |
+|---|---|---|
+| `chat` | intro with its example pair, the banned move with its ten disguises and the repair, the factual-negation test — 3,027 bytes | one line naming `chat` |
+| `copy` | the same, plus four closures covering quotes and testimonials, headline and CTA scope, translation, and the linter's standing as a floor — 4,143 bytes | one line naming `copy` |
+| `off` | none | none |
+
 Two switch paths, one writer. `grounded_tracker.py` performs every write,
 reached either by `/grounded-copy:grounded chat|copy|off`, which runs the
-script with `--set`, or by plain words in a prompt ("switch grounded to copy",
-"grounded prose off"), which the hook parses.
+script with `--set`, or by a prompt whose whole text is a control instruction,
+which the hook parses.
 
 Both paths exist because a prompt starting with `/` is resolved as a slash
 command before any `UserPromptSubmit` event fires. Measured: typing
@@ -91,9 +107,48 @@ and the hook never receives the text, so command-name parsing inside the hook
 cannot carry the switch alone. Both paths reach the same fixed flag path, so a
 hook run and a shell run need no coordination.
 
-`off` persists across restarts as an explicit value; an absent flag reads as
-the `technical` default; anything outside the three names reads as untrusted,
-and the tracker then emits nothing.
+The parser matches a control instruction against the whole prompt, under a
+64-character cap, and a trailing `?` falls outside every form. An unanchored
+search matched the words wherever they sat, so a quoted error string, a pasted
+line, or a note about this file each wrote a value that the transcript never
+reported. `off` is the value that silences both hooks, which made an accidental
+switch look like an ordinary session with the block scrolled past.
+
+### Reading and restoring the profile
+
+```bash
+python hooks/grounded_tracker.py --status
+python hooks/grounded_tracker.py --set chat
+```
+
+`--status` reports the profile, its source, and the resolved path, and exits 0
+in every state:
+
+| Flag file | Resolved | `--status` reports |
+|---|---|---|
+| absent | `chat` | `(default, no flag at PATH)` |
+| `chat`, or legacy `technical` | `chat` | `(recorded at PATH)` |
+| `copy` | `copy` | `(recorded at PATH)` |
+| `off` | `off` | `(recorded at PATH); run --set chat to restore` |
+| symlink, over 64 bytes, or an unrecognized value | `chat` | `(default, unreadable flag at PATH)` |
+
+`resolve_profile()` in `hooks/_payload.py` is the one place this table is
+implemented, and both hooks call it, so the two entry points agree on every
+input. Neither hook writes the flag; the file appears when a user selects a
+profile.
+
+### Tests
+
+```bash
+python hooks/grounded_activate.py --self-test
+python -m unittest discover -s tests -p 'test_*.py'
+```
+
+The suite drives both CLI entry points through `subprocess` with
+`CLAUDE_CONFIG_DIR` pointed at a temporary directory, so it reads and writes
+nothing outside it. `tests/test_launchers.py` covers argument forwarding and
+skips the `run.cmd` cases off Windows. CI runs both files on `ubuntu-latest`
+and `windows-latest`.
 
 ### Dev loop
 
@@ -105,6 +160,46 @@ need `/reload-plugins` or a restart.
 `claude plugin disable grounded-copy@skills-dir` stops the hooks and leaves
 the skill in place. Deleting `.claude-plugin/` and restarting returns the
 folder to a plain skill.
+
+### Phase 2 evidence gate
+
+Phase 1 injects text and lints nothing. The deterministic output gates — the
+`Stop` hook, the file gate, and the commit-body gate — ship against counted
+drift with layers A and B already running. One row per observed slip:
+
+| Date | Banned move | Surface | Layers active |
+|---|---|---|---|
+| 2026-07-30 | appositive reversal | fenced block in a chat reply | A and B |
+| 2026-07-30 | bare "rather than" contrast | fenced block in a chat reply | A and B |
+
+Counting method: record a row when a banned move reaches user-visible output
+with a profile active, naming the move, the surface, and the layers running.
+Both rows landed inside fenced blocks, which is why the deferred spec selects
+fences by language tag and keeps untagged fences in scope.
+
+The per-turn reminder stays in Phase 1 for a role `SessionStart` leaves open:
+per-turn recency against the per-turn injections other plugins make, with
+caveman writing `additionalContext` on every turn in this configuration.
+`SessionStart` returns after each compaction and says nothing about the turns
+between.
+
+Two gaps in `scripts/copy_lint.py`, recorded here and carried as their own
+change against `main`, one pattern per pull request per `CONTRIBUTING.md`:
+
+- The prepositional appositive passes. `comma-not-appositive` matches
+  `,\s*not\s+(?:a|an|another|your)`, so `, not from`, `, not on`, `, not by`,
+  `, not in`, and `, not through` all clear the gate. Measured: "Decide from
+  observed drift, not from a calendar." returns 0 findings; the same sentence
+  ending "not a calendar" returns 1 WARN. Severity belongs at WARN, since
+  factual uses exist, and the deletion test in `references/patterns.md` decides
+  each case.
+- Bare "rather than" sits at WARN, and the second slip above used that form.
+
+Citation cost, measured while writing this branch: `README.md` produces 15
+errors and 4 warnings on both `main` and this branch, every one a banned pattern
+quoted as an example in the before/after table or the multilingual list. The
+deferred `prose_gate.py` demotes a quoted or backticked ERROR to WARN in the
+technical profile for this reason.
 
 ## Claude Code, skill only
 

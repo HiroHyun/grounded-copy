@@ -116,11 +116,26 @@ the next session and two hooks start:
   which survives compaction and holds against per-turn injections from other
   plugins.
 
-Switch profiles two ways: `/grounded-copy:grounded chat|copy|off`, or plain
-words in a prompt ("switch grounded to copy", "grounded prose off"). Both end
-in the same script write. The value persists across restarts at
+Switch profiles two ways: `/grounded-copy:grounded chat|copy|off`, or a prompt
+whose whole text is a control instruction, among them "switch grounded to
+copy". Both end in the same script write. `chat` carries the core rules;
+`copy` adds four closures that govern marketing register, roughly 290 tokens
+more. The value persists across restarts at
 `<config-dir>/grounded-copy/profile`, where config-dir is `$CLAUDE_CONFIG_DIR`
 when set and `~/.claude` otherwise.
+
+A prompt that carries those words inside other content leaves the profile
+alone, so quoting the deactivation phrase in a document or a test name changes
+nothing. To read the current state, and to recover a profile that was switched
+off:
+
+```bash
+python hooks/grounded_tracker.py --status
+python hooks/grounded_tracker.py --set chat
+```
+
+`--status` names the profile, whether it came from the flag file or from the
+default, and the resolved path.
 
 Requirements: Python 3 on PATH as `python` or `python3`. The manifest calls
 `sh hooks/run.sh`; on a Windows setup lacking `sh`, change that to
