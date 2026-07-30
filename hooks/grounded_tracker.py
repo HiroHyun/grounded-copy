@@ -5,9 +5,15 @@ Emits a one-line reminder while a profile is active, which holds against the
 per-turn injections other plugins make. Also the only writer of the flag,
 reached either as a hook or through --set.
 
+A prompt switches the profile when its whole text is a control instruction.
+An unanchored search matched the words wherever they appeared, so a quoted
+error string, a pasted line, or a note about this plugin's own documentation
+each wrote a persistent value that nothing in the transcript reported.
+
 Usage:
     grounded_tracker.py --plugin-root DIR
     grounded_tracker.py --set chat|copy|off
+    grounded_tracker.py --status
 """
 
 import json
@@ -24,65 +30,44 @@ REMINDER = (
     "register. Code and errors verbatim."
 )
 
-# "chat" is the user-facing word for the technical profile.
-ARG_TO_PROFILE = {
-    "chat": "technical",
-    "technical": "technical",
-    "copy": "copy",
-    "marketing": "copy",
-    "off": "off",
-    "stop": "off",
-    "disable": "off",
-}
+# A prompt longer than this carries content around the words, whatever else it
+# holds, so no control form can match it.
+MAX_CONTROL_CHARS = 64
 
-COMMAND_NAMES = ("/grounded", "/grounded-copy:grounded")
+NAME = r"(chat|copy|technical|marketing|off|on|stop|disable)"
 
-OFF_PATTERNS = (
-    re.compile(r"\b(stop|disable|deactivate|quit|exit|kill)\s+(the\s+)?grounded\b"),
-    re.compile(r"\bgrounded(\s+(prose|copy|mode))?\s+(off|stop|disabled?)\b"),
-    re.compile(r"\bturn\s+off\s+(the\s+)?grounded\b"),
+# Each form matches a whole prompt. A trailing `?` falls outside every one of
+# them, which leaves questions about the switch as questions.
+CONTROL_FORMS = (
+    re.compile(r"^grounded(?:\s+(?:prose|copy|mode))?\s+" + NAME + r"$"),
+    re.compile(
+        r"^(?:switch|set|change|put)\s+grounded(?:\s+prose)?"
+        r"(?:\s+profile)?\s+(?:to|into)\s+" + NAME + r"$"
+    ),
+    re.compile(
+        r"^(?:stop|disable|deactivate|turn\s+off)\s+(?:the\s+)?"
+        r"grounded(?:\s+(?:prose|copy|mode))?$"
+    ),
+    re.compile(
+        r"^(?:activate|enable|start)\s+(?:the\s+)?grounded(?:\s+prose)?$"
+    ),
 )
 
-ON_PATTERNS = (
-    re.compile(r"\b(activate|enable|start|turn on|use|switch to)\b[^.]{0,40}\bgrounded\b"),
-    re.compile(r"\bgrounded\s+(prose|copy)\s+(on|please|now)\b"),
-)
-
-# Plain-word switch naming a target profile, which reaches the hook even when a
-# slash command does not: "switch grounded to copy", "set grounded prose to off".
-NL_SWITCH = re.compile(
-    r"\b(?:switch|set|change|put)\s+grounded(?:\s+prose|\s+copy)?\s+"
-    r"(?:profile\s+)?(?:to|into)\s+(chat|copy|technical|marketing|off)\b"
-)
-
-QUESTION = re.compile(
-    r"^(what|whats|what's|how|why|when|where|who|does|do|did|is|are|can|could|"
-    r"would|should|tell me|explain)\b"
-)
+# The form each pattern selects when it names no profile of its own.
+IMPLIED = {2: "off", 3: _payload.DEFAULT}
 
 
 def parse_switch(prompt):
     """The profile this prompt selects, or None to leave the flag alone."""
-    for name in COMMAND_NAMES:
-        if prompt == name or prompt.startswith(name + " "):
-            arg = prompt[len(name):].strip().split(" ")[0]
-            if not arg:
-                return _payload.DEFAULT
-            return ARG_TO_PROFILE.get(arg)  # unknown arg leaves the flag alone
-
-    if QUESTION.match(prompt):
+    if not prompt or len(prompt) > MAX_CONTROL_CHARS:
         return None
-
-    named = NL_SWITCH.search(prompt)
-    if named:
-        return ARG_TO_PROFILE.get(named.group(1))
-
-    for pattern in OFF_PATTERNS:
-        if pattern.search(prompt):
-            return "off"
-    for pattern in ON_PATTERNS:
-        if pattern.search(prompt):
-            return _payload.DEFAULT
+    for index, pattern in enumerate(CONTROL_FORMS):
+        match = pattern.match(prompt)
+        if not match:
+            continue
+        if match.groups():
+            return _payload.canonical_argument(match.group(1))
+        return IMPLIED[index]
     return None
 
 
@@ -90,43 +75,44 @@ def set_mode(argv):
     """--set PROFILE: write the flag from a shell run, print one line.
 
     commands/grounded.md calls this. A `/` prompt is resolved as a slash
-    command before any UserPromptSubmit event, so hook-side command parsing
-    cannot carry the switch alone.
+    command before any UserPromptSubmit event, so the command file is the only
+    path the slash form takes.
     """
     index = argv.index("--set")
-    arg = argv[index + 1].strip().lower() if index + 1 < len(argv) else ""
-    profile = ARG_TO_PROFILE.get(arg)
+    raw = argv[index + 1] if index + 1 < len(argv) else ""
+    if not raw.strip():
+        print(_payload.status_line())
+        return 0
+    profile = _payload.canonical_argument(raw)
     if profile is None:
-        print("grounded: unknown profile %r; choose chat, copy, or off" % arg)
+        print(
+            "grounded: unknown profile %r; choose chat, copy, or off"
+            % raw.strip().lower()
+        )
         return 0
     if _payload.write_profile(profile):
-        print("grounded profile: %s (%s)" % (profile, _payload.flag_path()))
+        print(_payload.status_line())
     else:
         print("grounded: write failed at " + _payload.flag_path())
     return 0
 
 
 def main(argv):
+    if "--status" in argv:
+        print(_payload.status_line())
+        return 0
     if "--set" in argv:
         return set_mode(argv)
 
     data = _payload.read_payload()
-    prompt = str(data.get("prompt") or "").strip().lower()
-    prompt = re.sub(r"\s+", " ", prompt)
+    raw = data.get("prompt")
+    prompt = re.sub(r"\s+", " ", raw.strip().lower()) if isinstance(raw, str) else ""
 
-    if prompt:
-        switch = parse_switch(prompt)
-        if switch:
-            _payload.write_profile(switch)
+    switch = parse_switch(prompt)
+    if switch:
+        _payload.write_profile(switch)
 
-    profile = _payload.read_profile()
-    if profile == _payload.MISSING:
-        profile = _payload.DEFAULT
-        _payload.write_profile(profile)
-    elif profile == _payload.INVALID:
-        # A corrupted or symlinked flag never becomes a reason to inject text.
-        return 0
-
+    profile, _source = _payload.resolve_profile()
     if profile not in _payload.ACTIVE:
         return 0
 
