@@ -21,8 +21,15 @@ Measured on Claude Code 2.1.220, Windows 11:
 |---|---|
 | Does the Skills CLI deliver the plugin files? | Its `.source` manifest lists four files (`SKILL.md`, both references, `copy_lint.py`), and the install carries no `.git` directory, so `.claude-plugin/` and `hooks/` arrive by `git clone` only |
 | Which launcher works? | `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"` runs in the hook shell; `run.cmd` covers a setup lacking `sh` |
-| Does `${CLAUDE_PLUGIN_DATA}` resolve for `@skills-dir`? | Yes — `~/.claude/plugins/data/grounded-copy-skills-dir/profile`. The `~/.claude/grounded-copy` fallback stays as insurance |
-| Command name | `/grounded-copy:grounded`, alongside plain `/grounded` |
+| Does `${CLAUDE_PLUGIN_DATA}` resolve for `@skills-dir`? | Yes — `~/.claude/plugins/data/grounded-copy-skills-dir`. The flag still uses a fixed path (see below) |
+| Command name | `/grounded-copy:grounded`; plain `/grounded` returns "Unknown command" |
+
+The flag lives at `<config-dir>/grounded-copy/profile` rather than in the
+plugin data directory. `${CLAUDE_PLUGIN_DATA}` earns its keep for a
+marketplace plugin, whose `${CLAUDE_PLUGIN_ROOT}` moves into a new cache
+directory on update; a plugin discovered in a skills directory is read in
+place, so the root holds still. The flag also holds user state, which belongs
+somewhere the user can cat, edit, and grep while debugging the switch.
 
 A skill loads when the model judges its description relevant, and this
 description covers copy tasks, so chat replies fall outside it. Two hooks put
@@ -81,15 +88,12 @@ Both paths exist because a prompt starting with `/` is resolved as a slash
 command before any `UserPromptSubmit` event fires. Measured: typing
 `/grounded copy` when no such command is registered prints "Unknown command"
 and the hook never receives the text, so command-name parsing inside the hook
-cannot carry the switch alone. Shell runs find the data directory through
-`~/.claude/grounded-copy/datadir.txt`, which every hook run rewrites.
+cannot carry the switch alone. Both paths reach the same fixed flag path, so a
+hook run and a shell run need no coordination.
 
-Values persist at `$CLAUDE_PLUGIN_DATA/profile`, falling back to
-`~/.claude/grounded-copy/profile` when that variable holds no path — the case
-for a plugin discovered in place. `off` persists across restarts as an
-explicit value; an absent flag reads as the `technical` default; anything
-outside the three names reads as untrusted, and the tracker then emits
-nothing.
+`off` persists across restarts as an explicit value; an absent flag reads as
+the `technical` default; anything outside the three names reads as untrusted,
+and the tracker then emits nothing.
 
 ### Dev loop
 

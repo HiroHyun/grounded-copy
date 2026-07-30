@@ -18,7 +18,7 @@ integrity rules, and the references matter when the skill is doing copy work,
 and the full text loads then.
 
 Usage:
-    grounded_activate.py --plugin-root DIR --data-dir DIR
+    grounded_activate.py --plugin-root DIR
     grounded_activate.py --self-test [--plugin-root DIR]
 """
 
@@ -163,14 +163,11 @@ def main(argv):
 
     _payload.read_payload()  # drain stdin; the event fields go unused here
 
-    data_dir = _payload.resolve_data_dir(paths["data_dir"])
-    if paths["data_dir"] and data_dir != _payload.FALLBACK_DIR:
-        _payload.record_data_dir(data_dir)
-    profile = _payload.read_profile(data_dir)
+    profile = _payload.read_profile()
     first_run = profile == _payload.MISSING
     if first_run:
         profile = _payload.DEFAULT
-        _payload.write_profile(data_dir, profile)
+        _payload.write_profile(profile)
     elif profile == _payload.INVALID:
         # An untrusted flag falls back to the default and stays untouched, so a
         # hand-edited file survives for its owner to inspect.
@@ -184,10 +181,7 @@ def main(argv):
         return 0
 
     output = build(skill, profile)
-    # The resolved path prints every session, not only on first run: it is the
-    # only signal distinguishing a real ${CLAUDE_PLUGIN_DATA} from the
-    # fallback, and reading it costs one line.
-    output += "\nProfile flag: " + _payload.flag_path(data_dir)
+    output += "\nProfile flag: " + _payload.flag_path()
     if first_run:
         output += " (created)"
     sys.stdout.write(output)

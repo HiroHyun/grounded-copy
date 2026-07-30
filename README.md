@@ -109,10 +109,10 @@ the next session and two hooks start:
   plugins.
 
 Switch profiles two ways: `/grounded-copy:grounded chat|copy|off`, or plain
-words in a prompt ("switch grounded to copy", "stop grounded prose"). Both end
-in the same script write. The value persists across restarts in
-`$CLAUDE_PLUGIN_DATA/profile`, or in `~/.claude/grounded-copy/profile` when
-that variable holds no path.
+words in a prompt ("switch grounded to copy", "grounded prose off"). Both end
+in the same script write. The value persists across restarts at
+`<config-dir>/grounded-copy/profile`, where config-dir is `$CLAUDE_CONFIG_DIR`
+when set and `~/.claude` otherwise.
 
 Requirements: Python 3 on PATH as `python` or `python3`. The manifest calls
 `sh hooks/run.sh`; on a Windows setup lacking `sh`, change that to

@@ -8,7 +8,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run.sh\" grounded_activate.py --plugin-root \"${CLAUDE_PLUGIN_ROOT}\" --data-dir \"${CLAUDE_PLUGIN_DATA}\"",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run.sh\" grounded_activate.py --plugin-root \"${CLAUDE_PLUGIN_ROOT}\"",
             "timeout": 5,
             "statusMessage": "Loading grounded prose rules..."
           }
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run.sh\" grounded_tracker.py --plugin-root \"${CLAUDE_PLUGIN_ROOT}\" --data-dir \"${CLAUDE_PLUGIN_DATA}\"",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run.sh\" grounded_tracker.py --plugin-root \"${CLAUDE_PLUGIN_ROOT}\"",
             "timeout": 5
           }
         ]

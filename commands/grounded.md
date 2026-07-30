@@ -11,8 +11,8 @@ python ~/.claude/skills/grounded-copy/hooks/grounded_tracker.py --set $ARGUMENTS
 ```
 
 Report the one line it prints. With empty arguments, read
-`$CLAUDE_PLUGIN_DATA/profile` and report the current value instead. Change no
-other files.
+`~/.claude/grounded-copy/profile` and report the current value instead. Change
+no other files.
 
 The script owns every write to the flag, whether a hook run or this command
 triggers it. A prompt starting with `/` is resolved as a slash command before
@@ -29,5 +29,5 @@ Profiles:
 - `off` — the session-start block and the per-turn reminder both stop. The
   value persists across restarts until `chat` or `copy` replaces it.
 
-The flag lives at `$CLAUDE_PLUGIN_DATA/profile`, with the resolved path
-recorded at `~/.claude/grounded-copy/datadir.txt` for shell runs.
+The flag lives at `<config-dir>/grounded-copy/profile`, where config-dir is
+`$CLAUDE_CONFIG_DIR` when set and `~/.claude` otherwise.

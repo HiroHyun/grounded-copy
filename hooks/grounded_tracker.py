@@ -3,16 +3,17 @@
 
 Two jobs:
 
-  1. Parse a profile switch out of the prompt and write the flag. This hook is
-     the only writer; commands/grounded.md documents the switch and writes
-     nothing.
+  1. Parse a profile switch out of the prompt and write the flag. This script
+     is the only writer, reached either as a hook or by commands/grounded.md
+     through --set.
   2. Emit a one-line reminder through hookSpecificOutput.additionalContext
      while a profile is active. SessionStart injects the full ruleset once,
      and this keeps it in attention against competing per-turn injections
      from other plugins.
 
 Usage:
-    grounded_tracker.py --plugin-root DIR --data-dir DIR
+    grounded_tracker.py --plugin-root DIR
+    grounded_tracker.py --set chat|copy|off
 """
 
 import json
@@ -91,7 +92,7 @@ def parse_switch(prompt):
     return None
 
 
-def set_mode(argv, data_dir):
+def set_mode(argv):
     """--set PROFILE: write the flag from a shell run, print one line.
 
     commands/grounded.md calls this. A prompt starting with `/` is resolved as
@@ -104,24 +105,16 @@ def set_mode(argv, data_dir):
     if profile is None:
         print("grounded: unknown profile %r; choose chat, copy, or off" % arg)
         return 0
-    if _payload.write_profile(data_dir, profile):
-        print("grounded profile: %s (%s)" % (profile, _payload.flag_path(data_dir)))
+    if _payload.write_profile(profile):
+        print("grounded profile: %s (%s)" % (profile, _payload.flag_path()))
     else:
-        print("grounded: write failed at " + _payload.flag_path(data_dir))
+        print("grounded: write failed at " + _payload.flag_path())
     return 0
 
 
 def main(argv):
-    paths = _payload.argv_paths(argv)
-    data_dir = _payload.resolve_data_dir(paths["data_dir"])
-    if paths["data_dir"] and data_dir != _payload.FALLBACK_DIR:
-        _payload.record_data_dir(data_dir)
-    elif "--set" in argv:
-        # A shell run learns the real directory from the pointer the hooks left.
-        data_dir = _payload.read_recorded_data_dir() or data_dir
-
     if "--set" in argv:
-        return set_mode(argv, data_dir)
+        return set_mode(argv)
 
     data = _payload.read_payload()
     prompt = str(data.get("prompt") or "").strip().lower()
@@ -130,12 +123,12 @@ def main(argv):
     if prompt:
         switch = parse_switch(prompt)
         if switch:
-            _payload.write_profile(data_dir, switch)
+            _payload.write_profile(switch)
 
-    profile = _payload.read_profile(data_dir)
+    profile = _payload.read_profile()
     if profile == _payload.MISSING:
         profile = _payload.DEFAULT
-        _payload.write_profile(data_dir, profile)
+        _payload.write_profile(profile)
     elif profile == _payload.INVALID:
         # Emit nothing on an untrusted flag; a corrupted or symlinked file
         # never becomes a reason to inject text.
