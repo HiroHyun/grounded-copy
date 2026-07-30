@@ -10,6 +10,9 @@ others", "say goodbye to") in every disguise it wears, plus hype
 vocabulary and vague attribution, across nine languages. A deterministic
 Python linter backs the rules and blocks the task until the copy complies.
 
+In Claude Code, two hooks carry the same rules into every session, so chat
+replies follow them alongside landing pages and locale files.
+
 ## Before and after
 
 | Draft | After grounded-copy |
@@ -25,7 +28,7 @@ Same information, carried by specifics.
 
 ## How it works
 
-Three layers, each catching what the previous one misses:
+Four layers, each catching what the previous one misses:
 
 1. **`SKILL.md`** teaches the agent the banned move and its ten
    disguises, with loophole closures written against the ways agents
@@ -34,7 +37,12 @@ Three layers, each catching what the previous one misses:
 2. **`scripts/copy_lint.py`** is a zero-dependency Python 3 linter with
    50+ enumerated patterns. Exit code 1 blocks the task; the agent must
    rewrite the copy, and the skill forbids editing the linter.
-3. **Hooks and CI** (see `references/setup.md`) enforce the gate on
+3. **Session hooks** (Tier 2) put the core rules in context at every
+   session start and repeat a one-line reminder each turn, which reaches
+   chat replies. A skill description scoped to copy tasks leaves those
+   uncovered, since the model decides when a skill applies and a chat
+   reply reads as ordinary conversation.
+4. **File hooks and CI** (see `references/setup.md`) run the linter on
    every file write and every pull request, including human ones.
 
 ## Nine languages
@@ -123,10 +131,10 @@ Roll back with `claude plugin disable grounded-copy@skills-dir`, which leaves
 the skill in place, or delete `.claude-plugin/` and restart to return the
 folder to a plain skill.
 
-### Repository enforcement
+### Project checkout, for CI and other agents
 
-The Skills CLI installs the skill definition and its linter. A project-local
-checkout supplies stable paths for hooks and CI:
+Either tier above installs for one machine. A project-local checkout supplies
+stable in-repo paths, which CI, Codex, and Gemini all read:
 
 ```bash
 git clone https://github.com/HiroHyun/grounded-copy .style/grounded-copy
@@ -155,7 +163,7 @@ grounded-copy/
 │   ├── grounded_activate.py    # SessionStart: ruleset into session context
 │   ├── grounded_tracker.py     # UserPromptSubmit: reminder + profile switch
 │   └── _payload.py             # Shared stdin, argv, and flag handling
-├── commands/grounded.md        # /grounded chat|copy|off
+├── commands/grounded.md        # /grounded-copy:grounded chat|copy|off
 ├── references/
 │   ├── patterns.md             # Full catalog: bad → good per category
 │   └── setup.md                # Plugin hooks, Codex, CI, CODEOWNERS
