@@ -13,7 +13,77 @@ loading mechanism differs. Vendor the folder into the repo once:
 └── AGENTS.md
 ```
 
-## Claude Code
+## Claude Code, always-on (plugin)
+
+A skill loads when the model judges its description relevant, and this
+description covers copy tasks, so chat replies fall outside it. Two hooks put
+the rules in every session instead.
+
+Clone the repo into the skills directory, which makes Claude Code load the
+folder as `grounded-copy@skills-dir`:
+
+```bash
+git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-copy
+```
+
+`.claude-plugin/plugin.json` registers both hooks:
+
+| Hook | Script | Output |
+|---|---|---|
+| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the ruleset as session context, ~780 tokens, repeated after each compaction |
+| `UserPromptSubmit` | `hooks/grounded_tracker.py` | a one-line reminder, ~45 tokens, plus the profile switch |
+
+`grounded_activate.py` reads `SKILL.md` at runtime and emits three pieces: the
+intro with its example pair, the whole banned-move section, and the
+factual-negation bullet. Run `python hooks/grounded_activate.py --self-test`
+after editing `SKILL.md`; it asserts the structure and prints the size delta
+against the recorded baseline.
+
+### Launchers
+
+Both hook commands call a launcher, which probes `python` then `python3`,
+takes the first reporting Python 3, and runs the hook once. The direct form
+
+```
+python X.py || python3 X.py
+```
+
+re-runs the script whenever the first interpreter exits nonzero for any
+reason, which on `SessionStart` emits the ruleset twice.
+
+`plugin.json` ships with `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. On a
+Windows setup where `sh` is absent from the hook shell, change both commands
+to `"${CLAUDE_PLUGIN_ROOT}/hooks/run.cmd"`. The two launchers behave
+identically, and each forwards its arguments verbatim, so paths holding
+spaces survive.
+
+Missing interpreter, malformed stdin, an oversized flag file, and a symlinked
+flag file each end in exit 0 with no output. A style reminder that breaks a
+session start costs more than the reminder is worth.
+
+### Profiles
+
+`/grounded chat|copy|off` switches the profile. `commands/grounded.md`
+documents the choice and writes nothing; the `UserPromptSubmit` hook owns
+every write. Values persist at `$CLAUDE_PLUGIN_DATA/profile`, falling back to
+`~/.claude/grounded-copy/profile` when that variable holds no path — the case
+for a plugin discovered in place. `off` persists across restarts as an
+explicit value; an absent flag reads as the `technical` default; anything
+outside the three names reads as untrusted, and the tracker then emits
+nothing.
+
+### Dev loop
+
+`SKILL.md` edits apply live in the current session. Changes under `hooks/`
+need `/reload-plugins` or a restart.
+
+### Rollback
+
+`claude plugin disable grounded-copy@skills-dir` stops the hooks and leaves
+the skill in place. Deleting `.claude-plugin/` and restarting returns the
+folder to a plain skill.
+
+## Claude Code, skill only
 
 Install as a skill (auto-triggers on copy tasks):
 

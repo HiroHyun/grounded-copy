@@ -50,7 +50,11 @@ when the English source passed.
 
 ## Install
 
-### Skills CLI
+Two tiers. Tier 1 installs the skill on any agent that reads a skill
+directory. Tier 2 adds hooks that put the rules in every Claude Code session,
+including chat replies.
+
+### Tier 1 — the portable skill
 
 ```bash
 npx skills@latest add HiroHyun/grounded-copy
@@ -80,13 +84,42 @@ npx skills@latest update grounded-copy
 `update` takes the installed skill names and refreshes them from their
 source; `-g` restricts the run to global skills and `-p` to project skills.
 
-### Manual installation
+The CLI records the files it manages in a `.source` manifest: `SKILL.md`,
+`references/patterns.md`, `references/setup.md`, and `scripts/copy_lint.py`.
+The skill activates on copywriting, localization, and review tasks, and the
+linter runs from the command line on any agent.
+
+### Tier 2 — always-on for Claude Code
 
 ```bash
 git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-copy
 ```
 
-The skill activates on copywriting, localization, and review tasks.
+Remove or rename any earlier Tier 1 install first; the clone needs an empty
+destination. The clone carries `.claude-plugin/plugin.json`, `hooks/`, and
+`commands/`, so Claude Code loads the folder as `grounded-copy@skills-dir` on
+the next session and two hooks start:
+
+- `SessionStart` puts the banned move, its ten disguises, the repair, and the
+  factual-negation test into session context — roughly 780 tokens, repeated
+  after each compaction. The rules reach chat replies, where a skill
+  description scoped to copy tasks never triggers.
+- `UserPromptSubmit` repeats a one-line reminder, roughly 45 tokens per turn,
+  which survives compaction and holds against per-turn injections from other
+  plugins.
+
+Switch profiles with `/grounded chat|copy|off`. The value persists across
+restarts in `$CLAUDE_PLUGIN_DATA/profile`, or in
+`~/.claude/grounded-copy/profile` when that variable holds no path.
+
+Requirements: Python 3 on PATH as `python` or `python3`. The manifest calls
+`sh hooks/run.sh`; on a Windows setup lacking `sh`, change that to
+`hooks/run.cmd` in `.claude-plugin/plugin.json`. Both launchers resolve the
+interpreter once and run the hook once.
+
+Roll back with `claude plugin disable grounded-copy@skills-dir`, which leaves
+the skill in place, or delete `.claude-plugin/` and restart to return the
+folder to a plain skill.
 
 ### Repository enforcement
 
@@ -114,9 +147,16 @@ Exit 0 = pass, 1 = rewrite and re-run. No dependencies beyond Python 3.
 ```
 grounded-copy/
 ├── SKILL.md                    # Core rules + workflow + integrity rules
+├── .claude-plugin/plugin.json  # Tier 2: registers the two hooks
+├── hooks/
+│   ├── run.sh, run.cmd         # Resolve Python once, run the hook once
+│   ├── grounded_activate.py    # SessionStart: ruleset into session context
+│   ├── grounded_tracker.py     # UserPromptSubmit: reminder + profile switch
+│   └── _payload.py             # Shared stdin, argv, and flag handling
+├── commands/grounded.md        # /grounded chat|copy|off
 ├── references/
 │   ├── patterns.md             # Full catalog: bad → good per category
-│   └── setup.md                # Claude Code hooks, Codex, CI, CODEOWNERS
+│   └── setup.md                # Plugin hooks, Codex, CI, CODEOWNERS
 ├── scripts/copy_lint.py        # The deterministic gate
 └── tests/
     ├── bad-samples.md          # Must FAIL the linter (self-test)

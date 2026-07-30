@@ -1,0 +1,7 @@
+# run.sh executes under `sh`, which fails on CRLF line endings. Pin the
+# endings per type so a clone on any platform gets working hooks.
+*.sh text eol=lf
+*.py text eol=lf
+*.cmd text eol=crlf
+*.md text
+*.json text
