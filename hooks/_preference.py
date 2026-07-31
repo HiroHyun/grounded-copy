@@ -1,34 +1,31 @@
 #!/usr/bin/env python3
-"""Shared helpers for the grounded-copy hooks.
+"""The profile preference: the value stored on disk.
 
-Both hooks exit 0 on every internal failure. A style reminder that blocks a
-session start costs more than the reminder is worth.
-
-The profile flag lives at <config-dir>/grounded-copy/profile, config-dir being
+The preference lives at <config-dir>/grounded-copy/profile, config-dir being
 $CLAUDE_CONFIG_DIR when set and ~/.claude otherwise. One fixed path keeps hook
 runs and shell runs on the same file, and keeps the preference somewhere the
 user can cat and edit. references/setup.md records why ${CLAUDE_PLUGIN_DATA}
 stays out of it.
 
-resolve_profile() is the one place a flag state turns into a profile name, so
-the two entry points agree on every input. It returns a name from VALID
-together with the reason it chose that name, and it writes nothing.
+This module is the sole writer of the preference, and the `--set` path of
+grounded_tracker.py is its only caller. resolve_preference() is read-only, and
+both hooks are read-only.
+
+Transport stays outside this module: it reads no stdin and parses no argv.
 """
 
-import json
 import os
-import sys
 
 VALID = ("chat", "copy", "off")
 DEFAULT = "chat"
 ACTIVE = ("chat", "copy")
-MAX_FLAG_BYTES = 64
+MAX_PREFERENCE_BYTES = 64
 
 # `technical` was the stored name for `chat` before the profiles took their
-# user-facing names. A flag written by an earlier install keeps working.
+# user-facing names. A preference written by an earlier install keeps working.
 LEGACY = {"technical": "chat"}
 
-# Words accepted from `--set` and from a prompt.
+# Words `--set` accepts.
 ARGUMENTS = {
     "chat": "chat",
     "technical": "chat",
@@ -40,7 +37,7 @@ ARGUMENTS = {
     "disable": "off",
 }
 
-# Why resolve_profile() returned the name it returned.
+# Why resolve_preference() returned the name it returned.
 RECORDED = "recorded"
 ABSENT = "absent"
 UNREADABLE = "unreadable"
@@ -56,59 +53,28 @@ def data_dir():
     return os.path.join(config_dir(), "grounded-copy")
 
 
-def flag_path():
+def preference_path():
     return os.path.join(data_dir(), "profile")
 
 
-def argv_paths(argv):
-    """Pull --plugin-root out of argv."""
-    found = {"plugin_root": None}
-    for i, arg in enumerate(argv):
-        if arg == "--plugin-root" and i + 1 < len(argv):
-            found["plugin_root"] = argv[i + 1]
-    return found
-
-
-def read_payload():
-    """Hook stdin as a dict. Malformed or absent input reads as empty."""
-    try:
-        raw = sys.stdin.read()
-    except Exception:
-        return {}
-    if not raw or not raw.strip():
-        return {}
-    try:
-        data = json.loads(raw)
-    except Exception:
-        return {}
-    return data if isinstance(data, dict) else {}
-
-
-def resolve_plugin_root(value, hook_dir):
-    """The plugin root, falling back to the hooks directory's parent."""
-    if value and "${" not in value and value.strip():
-        return os.path.abspath(os.path.expanduser(value))
-    return os.path.dirname(os.path.abspath(hook_dir))
-
-
 def canonical_argument(value):
-    """A profile name from a --set value or a parsed prompt, or None."""
+    """A profile name from a `--set` value, or None."""
     return ARGUMENTS.get(str(value).strip().lower())
 
 
-def _read_flag():
+def _read_preference():
     """The recorded name, or None when the file is absent or untrusted.
 
     A symlink, an oversized file, or an unrecognized value reads as untrusted,
     so neither hook emits bytes it did not write.
     """
-    path = flag_path()
+    path = preference_path()
     try:
         if os.path.islink(path):
             return None, UNREADABLE
         if not os.path.exists(path):
             return None, ABSENT
-        if os.path.getsize(path) > MAX_FLAG_BYTES:
+        if os.path.getsize(path) > MAX_PREFERENCE_BYTES:
             return None, UNREADABLE
         with open(path, encoding="utf-8") as handle:
             value = handle.read().strip().lower()
@@ -120,37 +86,53 @@ def _read_flag():
     return None, UNREADABLE
 
 
-def resolve_profile():
-    """(profile, source): a name from VALID, and why. Writes nothing."""
-    value, source = _read_flag()
+def resolve_preference():
+    """(profile, source): a name from VALID, and why. Read-only."""
+    value, source = _read_preference()
     return (value if value else DEFAULT), source
 
 
 def status_line():
     """One line naming the profile, the reason, and the resolved path."""
-    profile, source = resolve_profile()
-    path = flag_path()
+    profile, source = resolve_preference()
+    path = preference_path()
     if source == RECORDED:
         line = "grounded profile: %s (recorded at %s)" % (profile, path)
         if profile == "off":
             line += "; run --set chat to restore"
         return line
     if source == ABSENT:
-        return "grounded profile: %s (default, no flag at %s)" % (profile, path)
-    return "grounded profile: %s (default, unreadable flag at %s)" % (profile, path)
+        return "grounded profile: %s (default, no preference at %s)" % (
+            profile, path
+        )
+    return "grounded profile: %s (default, unreadable preference at %s)" % (
+        profile, path
+    )
 
 
-def write_profile(profile):
-    """Record the profile. Creates the data directory on first write."""
+def write_preference(profile):
+    """Record the preference. Returns (ok, detail).
+
+    The write is followed by a read-back through _read_preference(), so a write
+    that lands somewhere the resolver cannot use reports failure here instead
+    of resolving stale later. Creates the data directory on first write.
+    """
     if profile not in VALID:
-        return False
+        return False, "grounded: refusing to record %r" % (profile,)
+    path = preference_path()
     try:
         os.makedirs(data_dir(), exist_ok=True)
-        path = flag_path()
         if os.path.islink(path):
             os.unlink(path)
         with open(path, "w", encoding="utf-8", newline="\n") as handle:
             handle.write(profile + "\n")
-        return True
-    except Exception:
-        return False
+    except Exception as exc:
+        return False, "grounded: write failed at %s: %s" % (path, exc)
+
+    stored, source = _read_preference()
+    if stored != profile:
+        return False, (
+            "grounded: wrote %s at %s, read back %s (%s)"
+            % (profile, path, stored, source)
+        )
+    return True, ""

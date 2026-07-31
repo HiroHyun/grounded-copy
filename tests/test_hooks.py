@@ -1,10 +1,20 @@
 #!/usr/bin/env python3
 """Interface tests for the two hook entry points.
 
+One class per domain term, matching `### Profile lifecycle` in
+references/setup.md: the profile preference on disk, the session policy
+SessionStart injects, the turn reminder UserPromptSubmit injects, and the
+governing directive `--set` prints.
+
 Every case runs the CLI through subprocess with CLAUDE_CONFIG_DIR pointed at a
 temporary directory, so the suite reads and writes nothing outside it and never
-touches the user's own profile flag. Assertions cover observable output and
-persisted state, which is the contract the plugin manifest depends on.
+touches the user's own preference. Assertions cover observable output, exit
+codes, and persisted state, which is the contract the plugin manifest depends
+on.
+
+These are the deterministic criteria. Whether the model then follows the
+injected text is behavioral, measured by observation and recorded as evidence
+rows in references/setup.md.
 """
 
 import json
@@ -21,8 +31,28 @@ HOOKS = REPO_ROOT / "hooks"
 ACTIVATE = str(HOOKS / "grounded_activate.py")
 TRACKER = str(HOOKS / "grounded_tracker.py")
 
-BANNED_HEADING = "## The one banned move"
-FACTUAL_LABEL = '- **"This negation is factual."**'
+# Sections both profiles carry.
+CORE_HEADINGS = (
+    "## The one banned move",
+    "## The deletion test",
+    "## Positive forms",
+    "## Scope and precedence",
+    "## Sourcing",
+)
+
+# Rules inside those sections, asserted by their own text so a section that
+# survives extraction while losing a rule still fails.
+# SKILL.md is hard-wrapped, so each anchor stays short enough to sit on one
+# line. A phrase spanning a wrap would fail here for its formatting alone.
+CORE_RULES = (
+    "**Verbatim source material.**",
+    "**Governed everywhere else.**",
+    "**User precedence.**",
+    "**read-only**",
+    "Name the source, the figure",
+)
+
+MARKETING_HEADING = "## Marketing register"
 
 COPY_LABELS = (
     '**"It\'s in a quote/testimonial."**',
@@ -37,6 +67,13 @@ EXCLUDED_LABELS = (
     '**"I\'ll adjust the linter/config."**',
 )
 
+DIRECTIVE_HEADER = "GROUNDED PROSE — governing profile:"
+SUPERSESSION = "supersedes every grounded-copy policy statement"
+
+EXIT_OK = 0
+EXIT_PERSISTENCE = 1
+EXIT_REJECTED = 2
+
 
 class HookCase(unittest.TestCase):
     """Base: a throwaway config directory per test."""
@@ -47,17 +84,26 @@ class HookCase(unittest.TestCase):
         self.addCleanup(self._tmp.cleanup)
 
     @property
-    def flag(self):
+    def preference(self):
         return self.config_dir / "grounded-copy" / "profile"
 
-    def write_flag(self, value):
-        self.flag.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.flag, "w", encoding="utf-8", newline="\n") as handle:
+    def write_preference(self, value):
+        self.preference.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.preference, "w", encoding="utf-8", newline="\n") as handle:
             handle.write(value)
 
-    def read_flag(self):
-        with open(self.flag, encoding="utf-8") as handle:
+    def read_preference(self):
+        with open(self.preference, encoding="utf-8") as handle:
             return handle.read().strip()
+
+    def block_data_dir(self):
+        """Make the data directory unusable: a regular file at its path.
+
+        os.makedirs(..., exist_ok=True) raises on both platforms for this,
+        which is how the persistence-failure path gets exercised.
+        """
+        with open(self.config_dir / "grounded-copy", "w", encoding="utf-8"):
+            pass
 
     def run_hook(self, script, args=(), stdin=""):
         env = os.environ.copy()
@@ -92,41 +138,79 @@ class HookCase(unittest.TestCase):
                 return name
         self.fail("reminder names no known profile: %r" % context)
 
+    def reminder_text(self, result):
+        return json.loads(result.stdout)["hookSpecificOutput"]["additionalContext"]
+
+    def assertNoSection(self, text, heading):
+        """The heading starts no line.
+
+        A cross-reference names the heading in running prose, so a substring
+        check would read that mention as the section itself.
+        """
+        for line in text.splitlines():
+            self.assertFalse(
+                line.startswith(heading), "section present: " + heading
+            )
+
 
 # ---------------------------------------------------------------------------
-# Payloads
+# Session policy: what SessionStart injects
 # ---------------------------------------------------------------------------
-class ActivationPayloadTests(HookCase):
-    def test_default_payload_carries_the_three_pieces(self):
-        result = self.activate()
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn(BANNED_HEADING, result.stdout)
-        self.assertIn("Copy describes things by what they ARE", result.stdout)
-        self.assertIn(FACTUAL_LABEL, result.stdout)
+class SessionPolicyTests(HookCase):
+    def test_both_profiles_carry_every_core_section(self):
+        for value in ("chat", "copy"):
+            with self.subTest(profile=value):
+                self.write_preference(value + "\n")
+                result = self.activate()
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("Copy describes things by what they ARE", result.stdout)
+                for heading in CORE_HEADINGS:
+                    self.assertIn(heading, result.stdout)
 
-    def test_default_payload_names_the_chat_profile(self):
+    def test_both_profiles_carry_the_scope_and_precedence_rules(self):
+        for value in ("chat", "copy"):
+            with self.subTest(profile=value):
+                self.write_preference(value + "\n")
+                result = self.activate()
+                for rule in CORE_RULES:
+                    self.assertIn(rule, result.stdout)
+
+    def test_default_policy_names_the_chat_profile(self):
         result = self.activate()
         self.assertIn("profile: chat", result.stdout)
         self.assertNotIn("profile: technical", result.stdout)
 
-    def test_chat_payload_excludes_the_copy_closures(self):
-        self.write_flag("chat\n")
+    def test_chat_policy_excludes_the_marketing_register(self):
+        self.write_preference("chat\n")
         result = self.activate()
+        self.assertNoSection(result.stdout, MARKETING_HEADING)
         for label in COPY_LABELS:
             self.assertNotIn(label, result.stdout)
 
-    def test_copy_payload_adds_the_four_closures(self):
-        self.write_flag("copy\n")
+    def test_copy_policy_adds_the_marketing_register_and_closures(self):
+        self.write_preference("copy\n")
         result = self.activate()
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("profile: copy", result.stdout)
+        self.assertIn(MARKETING_HEADING, result.stdout)
         for label in COPY_LABELS:
             self.assertIn(label, result.stdout)
 
-    def test_neither_payload_carries_the_excluded_sections(self):
+    def test_hype_catalog_reaches_copy_and_sourcing_reaches_both(self):
+        """Directive: the full catalog is marketing register; sourcing is core."""
+        self.write_preference("chat\n")
+        chat = self.activate().stdout
+        self.write_preference("copy\n")
+        copy = self.activate().stdout
+        self.assertNotIn("state-of-the-art", chat)
+        self.assertIn("state-of-the-art", copy)
+        for text in (chat, copy):
+            self.assertIn("## Sourcing", text)
+
+    def test_neither_policy_carries_the_excluded_sections(self):
         for value in ("chat", "copy"):
             with self.subTest(profile=value):
-                self.write_flag(value + "\n")
+                self.write_preference(value + "\n")
                 result = self.activate()
                 self.assertNotIn("## Workflow", result.stdout)
                 self.assertNotIn("## Integrity rules", result.stdout)
@@ -135,10 +219,10 @@ class ActivationPayloadTests(HookCase):
                 for label in EXCLUDED_LABELS:
                     self.assertNotIn(label, result.stdout)
 
-    def test_copy_payload_exceeds_chat_payload(self):
-        self.write_flag("chat\n")
+    def test_copy_policy_exceeds_chat_policy(self):
+        self.write_preference("chat\n")
         chat = len(self.activate().stdout.encode("utf-8"))
-        self.write_flag("copy\n")
+        self.write_preference("copy\n")
         copy = len(self.activate().stdout.encode("utf-8"))
         self.assertGreater(copy, chat)
 
@@ -151,26 +235,33 @@ class ActivationPayloadTests(HookCase):
 
 
 # ---------------------------------------------------------------------------
-# Profile resolution and the failure policy
+# Turn reminder: what UserPromptSubmit injects
 # ---------------------------------------------------------------------------
-class ProfileResolutionTests(HookCase):
-    def test_missing_flag_writes_no_file(self):
-        result = self.activate()
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertFalse(self.flag.exists(), "activation created a flag file")
+class TurnReminderTests(HookCase):
+    CLAUSES = (
+        "Rules hold inside quotes, fences, and comments.",
+        "Source material you were given stays verbatim.",
+        "Prefer established positive terms.",
+        "A direct user instruction outranks this",
+    )
 
-    def test_activation_output_carries_no_absolute_path(self):
-        result = self.activate()
-        self.assertNotIn(str(self.config_dir), result.stdout)
-        self.assertNotIn("Profile flag:", result.stdout)
+    def test_reminder_names_the_resolved_profile(self):
+        for value, expected in (("chat", "chat"), ("copy", "copy"),
+                                ("technical", "chat")):
+            with self.subTest(preference=value):
+                self.write_preference(value + "\n")
+                self.assertEqual(
+                    self.reminder_profile(self.track("hello")), expected
+                )
 
-    def test_legacy_technical_reads_as_chat(self):
-        self.write_flag("technical\n")
-        self.assertIn("profile: chat", self.activate().stdout)
-        self.assertEqual(self.reminder_profile(self.track("hello")), "chat")
+    def test_reminder_carries_every_clause(self):
+        self.write_preference("chat\n")
+        text = self.reminder_text(self.track("hello"))
+        for clause in self.CLAUSES:
+            self.assertIn(clause, text)
 
     def test_off_silences_both_hooks(self):
-        self.write_flag("off\n")
+        self.write_preference("off\n")
         activation = self.activate()
         self.assertEqual(activation.returncode, 0)
         self.assertEqual(activation.stdout, "")
@@ -178,33 +269,52 @@ class ProfileResolutionTests(HookCase):
         self.assertEqual(reminder.returncode, 0)
         self.assertEqual(reminder.stdout, "")
 
+
+# ---------------------------------------------------------------------------
+# Profile preference: resolution and the failure policy
+# ---------------------------------------------------------------------------
+class PreferenceResolutionTests(HookCase):
+    def test_missing_preference_writes_no_file(self):
+        result = self.activate()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.preference.exists(), "activation created a file")
+
+    def test_activation_output_carries_no_absolute_path(self):
+        result = self.activate()
+        self.assertNotIn(str(self.config_dir), result.stdout)
+
+    def test_legacy_technical_reads_as_chat(self):
+        self.write_preference("technical\n")
+        self.assertIn("profile: chat", self.activate().stdout)
+        self.assertEqual(self.reminder_profile(self.track("hello")), "chat")
+
     def test_off_persists_across_runs(self):
-        self.write_flag("off\n")
+        self.write_preference("off\n")
         for _ in range(2):
             self.assertEqual(self.activate().stdout, "")
-        self.assertEqual(self.read_flag(), "off")
+        self.assertEqual(self.read_preference(), "off")
 
     def test_unknown_value_falls_back_in_both_hooks(self):
-        self.write_flag("bogus\n")
-        self.assertIn(BANNED_HEADING, self.activate().stdout)
+        self.write_preference("bogus\n")
+        self.assertIn(CORE_HEADINGS[0], self.activate().stdout)
         self.assertEqual(self.reminder_profile(self.track("hello")), "chat")
-        self.assertEqual(self.read_flag(), "bogus", "fallback rewrote the flag")
+        self.assertEqual(self.read_preference(), "bogus", "fallback rewrote it")
 
-    def test_oversized_flag_falls_back_in_both_hooks(self):
-        self.write_flag("chat" * 64)
-        self.assertIn(BANNED_HEADING, self.activate().stdout)
+    def test_oversized_preference_falls_back_in_both_hooks(self):
+        self.write_preference("chat" * 64)
+        self.assertIn(CORE_HEADINGS[0], self.activate().stdout)
         self.assertEqual(self.reminder_profile(self.track("hello")), "chat")
 
     @unittest.skipUnless(hasattr(os, "symlink"), "platform has no symlink")
-    def test_symlinked_flag_falls_back_in_both_hooks(self):
+    def test_symlinked_preference_falls_back_in_both_hooks(self):
         target = self.config_dir / "elsewhere"
         target.write_text("copy\n", encoding="utf-8")
-        self.flag.parent.mkdir(parents=True, exist_ok=True)
+        self.preference.parent.mkdir(parents=True, exist_ok=True)
         try:
-            os.symlink(str(target), str(self.flag))
+            os.symlink(str(target), str(self.preference))
         except (OSError, NotImplementedError) as exc:
             self.skipTest("symlink creation refused: %s" % exc)
-        self.assertIn(BANNED_HEADING, self.activate().stdout)
+        self.assertIn(CORE_HEADINGS[0], self.activate().stdout)
         self.assertEqual(self.reminder_profile(self.track("hello")), "chat")
 
 
@@ -214,7 +324,7 @@ class MalformedInputTests(HookCase):
             with self.subTest(stdin=stdin):
                 result = self.activate(stdin)
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertIn(BANNED_HEADING, result.stdout)
+                self.assertIn(CORE_HEADINGS[0], result.stdout)
                 self.assertEqual(result.stderr, "")
 
     def test_tracker_survives_malformed_stdin(self):
@@ -227,19 +337,19 @@ class MalformedInputTests(HookCase):
                 self.assertEqual(self.reminder_profile(result), "chat")
                 self.assertEqual(result.stderr, "")
 
-    def test_non_string_prompt_leaves_the_flag_alone(self):
-        payload = json.dumps({"prompt": {"nested": "stop grounded prose"}})
-        result = self.run_hook(TRACKER, ["--plugin-root", str(REPO_ROOT)], payload)
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertFalse(self.flag.exists())
-
 
 # ---------------------------------------------------------------------------
-# Prompt parsing
+# The hook path is read-only
 # ---------------------------------------------------------------------------
-class PromptSwitchTests(HookCase):
-    #  Prompts that carry the control words inside other content. Each one
-    #  reproduces a live switch against the shipped parser.
+class ReadOnlyHookTests(HookCase):
+    """No prompt records a preference.
+
+    The first group carried the control words inside other content and each one
+    reproduced a live switch against an earlier parser. The second group was
+    the parser's own accepted vocabulary. references/setup.md records why the
+    natural-language path came out; both groups stay here as the invariant.
+    """
+
     INERT = (
         'add a test for "stop grounded prose"',
         "we should disable grounded in tests",
@@ -251,49 +361,99 @@ class PromptSwitchTests(HookCase):
         "switch grounded to copy is the phrase users type",
     )
 
-    CONTROL = (
-        ("stop grounded prose", "off"),
-        ("grounded prose off", "off"),
-        ("turn off grounded", "off"),
-        ("disable grounded", "off"),
-        ("switch grounded to copy", "copy"),
-        ("set grounded prose to off", "off"),
-        ("grounded copy", "copy"),
-        ("grounded chat", "chat"),
-        ("enable grounded prose", "chat"),
+    FORMER_CONTROL = (
+        "stop grounded prose",
+        "grounded prose off",
+        "turn off grounded",
+        "disable grounded",
+        "switch grounded to copy",
+        "set grounded prose to off",
+        "grounded copy",
+        "grounded chat",
+        "enable grounded prose",
     )
 
-    def test_incidental_mentions_leave_the_flag_alone(self):
-        for prompt in self.INERT:
+    def test_no_prompt_creates_a_preference(self):
+        for prompt in self.INERT + self.FORMER_CONTROL:
             with self.subTest(prompt=prompt):
-                self.write_flag("chat\n")
                 self.track(prompt)
-                self.assertEqual(self.read_flag(), "chat")
+                self.assertFalse(
+                    self.preference.exists(), "a prompt created a preference"
+                )
 
-    def test_complete_control_instructions_switch(self):
-        for prompt, expected in self.CONTROL:
+    def test_no_prompt_changes_a_recorded_preference(self):
+        for prompt in self.INERT + self.FORMER_CONTROL:
             with self.subTest(prompt=prompt):
-                self.write_flag("chat\n")
+                self.write_preference("chat\n")
                 self.track(prompt)
-                self.assertEqual(self.read_flag(), expected)
+                self.assertEqual(self.read_preference(), "chat")
 
-    def test_switch_takes_effect_in_the_same_turn(self):
-        self.write_flag("chat\n")
-        self.assertEqual(self.reminder_profile(self.track("grounded copy")), "copy")
+    def test_a_non_string_prompt_leaves_the_preference_alone(self):
+        payload = json.dumps({"prompt": {"nested": "stop grounded prose"}})
+        result = self.run_hook(TRACKER, ["--plugin-root", str(REPO_ROOT)], payload)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.preference.exists())
 
-    def test_slash_prompts_reach_no_parser(self):
+    def test_a_slash_prompt_reaches_no_parser(self):
         """A `/` prompt resolves as a slash command before the hook fires.
 
-        references/setup.md records the measurement. The command file owns that
-        path through --set, so the hook treats the text as ordinary content.
+        references/setup.md records the measurement. commands/grounded.md owns
+        that path through --set.
         """
-        self.write_flag("chat\n")
+        self.write_preference("chat\n")
         self.track("/grounded-copy:grounded copy")
-        self.assertEqual(self.read_flag(), "chat")
+        self.assertEqual(self.read_preference(), "chat")
 
 
 # ---------------------------------------------------------------------------
-# Shell entry points
+# Governing directive: what --set prints
+# ---------------------------------------------------------------------------
+class GoverningDirectiveTests(HookCase):
+    def set_profile(self, value):
+        return self.run_hook(
+            TRACKER, ["--plugin-root", str(REPO_ROOT), "--set", value]
+        )
+
+    def test_each_recorded_switch_prints_a_directive(self):
+        for value in ("chat", "copy", "off"):
+            with self.subTest(profile=value):
+                result = self.set_profile(value)
+                self.assertEqual(result.returncode, EXIT_OK, result.stdout)
+                self.assertIn(DIRECTIVE_HEADER, result.stdout)
+                self.assertIn("governing profile: " + value, result.stdout)
+                self.assertIn(SUPERSESSION, result.stdout)
+
+    def test_the_directive_is_self_contained(self):
+        """It restates the whole policy, so no transition needs a delta."""
+        self.write_preference("off\n")
+        result = self.set_profile("copy")
+        for heading in CORE_HEADINGS:
+            self.assertIn(heading, result.stdout)
+        self.assertIn(MARKETING_HEADING, result.stdout)
+        for label in COPY_LABELS:
+            self.assertIn(label, result.stdout)
+
+    def test_the_chat_directive_excludes_the_marketing_register(self):
+        self.write_preference("copy\n")
+        result = self.set_profile("chat")
+        self.assertIn(CORE_HEADINGS[0], result.stdout)
+        self.assertNoSection(result.stdout, MARKETING_HEADING)
+
+    def test_the_off_directive_carries_no_rules(self):
+        self.write_preference("copy\n")
+        result = self.set_profile("off")
+        self.assertIn("No grounded-copy rule governs", result.stdout)
+        self.assertNotIn(CORE_HEADINGS[0], result.stdout)
+        self.assertNoSection(result.stdout, MARKETING_HEADING)
+
+    def test_a_rejected_value_prints_no_directive(self):
+        result = self.set_profile("bogus")
+        self.assertEqual(result.returncode, EXIT_REJECTED)
+        self.assertNotIn(DIRECTIVE_HEADER, result.stdout)
+
+
+# ---------------------------------------------------------------------------
+# The explicit-control exit-code contract
 # ---------------------------------------------------------------------------
 class SetAndStatusTests(HookCase):
     def status(self):
@@ -302,7 +462,7 @@ class SetAndStatusTests(HookCase):
     def set_profile(self, value):
         return self.run_hook(TRACKER, ["--set", value])
 
-    def test_set_writes_each_profile(self):
+    def test_set_records_each_profile_and_exits_zero(self):
         for arg, stored in (
             ("chat", "chat"),
             ("copy", "copy"),
@@ -312,47 +472,54 @@ class SetAndStatusTests(HookCase):
         ):
             with self.subTest(arg=arg):
                 result = self.set_profile(arg)
-                self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertEqual(self.read_flag(), stored)
+                self.assertEqual(result.returncode, EXIT_OK, result.stderr)
+                self.assertEqual(self.read_preference(), stored)
                 self.assertIn(stored, result.stdout)
 
-    def test_set_rejects_an_unknown_value(self):
-        self.write_flag("chat\n")
+    def test_an_unknown_value_exits_two_and_holds_the_preference(self):
+        self.write_preference("chat\n")
         result = self.set_profile("bogus")
-        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.returncode, EXIT_REJECTED)
         self.assertIn("chat, copy, or off", result.stdout)
-        self.assertEqual(self.read_flag(), "chat")
+        self.assertEqual(self.read_preference(), "chat")
 
-    def test_set_with_an_empty_value_reports_status(self):
+    def test_a_persistence_failure_exits_one_and_names_the_path(self):
+        self.block_data_dir()
+        result = self.set_profile("copy")
+        self.assertEqual(result.returncode, EXIT_PERSISTENCE, result.stdout)
+        self.assertIn("grounded:", result.stdout)
+        self.assertIn(str(self.config_dir), result.stdout)
+
+    def test_an_empty_value_reports_status_and_exits_zero(self):
         result = self.set_profile("")
-        self.assertEqual(result.returncode, 0)
+        self.assertEqual(result.returncode, EXIT_OK)
         self.assertIn("grounded profile:", result.stdout)
-        self.assertFalse(self.flag.exists(), "empty --set wrote a flag")
+        self.assertFalse(self.preference.exists(), "empty --set wrote a file")
 
     def test_status_names_the_source_for_each_state(self):
         cases = (
-            (None, "chat", "no flag at"),
+            (None, "chat", "no preference at"),
             ("chat\n", "chat", "recorded at"),
             ("technical\n", "chat", "recorded at"),
             ("copy\n", "copy", "recorded at"),
             ("off\n", "off", "recorded at"),
-            ("bogus\n", "chat", "unreadable flag at"),
+            ("bogus\n", "chat", "unreadable preference at"),
         )
         for value, profile, source in cases:
-            with self.subTest(flag=value):
+            with self.subTest(preference=value):
                 if value is None:
-                    if self.flag.exists():
-                        self.flag.unlink()
+                    if self.preference.exists():
+                        self.preference.unlink()
                 else:
-                    self.write_flag(value)
+                    self.write_preference(value)
                 result = self.status()
-                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.returncode, EXIT_OK, result.stderr)
                 self.assertIn("grounded profile: %s" % profile, result.stdout)
                 self.assertIn(source, result.stdout)
-                self.assertIn(str(self.flag), result.stdout)
+                self.assertIn(str(self.preference), result.stdout)
 
     def test_status_names_the_restore_command_when_off(self):
-        self.write_flag("off\n")
+        self.write_preference("off\n")
         self.assertIn("--set chat", self.status().stdout)
 
 

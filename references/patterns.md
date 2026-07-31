@@ -28,6 +28,12 @@ and its actual specifics; the specifics are the point.
 | "Acme is a partner, not a vendor." | "Acme assigns each client a strategist who joins quarterly planning." |
 | "Acme isn't complicated — it books the job in one tap." | "Acme books the job in one tap." |
 | "We ship every Friday rather than hoarding features." | "We ship every Friday." |
+| "Freshness confirmed by query, not by the node count." | "The freshness query returned the current result." |
+
+The last row is the prepositional form. `comma-not-appositive` matches
+`, not a/an/another/your`, so `, not by`, `, not from`, `, not on`, `, not in`,
+and `, not through` clear the gate today. `references/setup.md` carries it as
+its own review scope.
 
 ## 3. Era-ending
 
@@ -62,6 +68,11 @@ Cross-sentence variant — equally banned:
 |---|---|
 | "Order direct without the hassle of middlemen." | "You order directly from the maker's own workshop stock." |
 | "Zero guesswork. Zero hidden fees." | "Each listing carries the serial number, condition report, and full price." |
+| "A second index would add duplication without adding information." | "The existing index already represents that commit." |
+
+The last row is absence-framed justification, which reaches technical prose as
+readily as marketing copy. No shipped pattern matches it;
+`references/setup.md` carries it as its own review scope.
 
 ## 7. Rhetorical bait
 
@@ -138,16 +149,26 @@ next section: coordination of facts stays, contrast set up for praise goes.
 
 ## Allowed negation — the deletion test
 
-Negation is allowed when it states a limitation, exclusion, or
-requirement the reader needs:
+`## The deletion test` in `SKILL.md` holds the canonical wording. In short:
+delete the clause and read what remains.
+
+The clause stays when it carries a requirement, a limitation, a causal fact, a
+selection rule, a compatibility boundary, a safety condition, or any other
+information the reader acts on:
 
 - "Prices do not include shipping or import duties." ✓
 - "The free plan does not include API access." ✓
 - "Delivery takes no more than 21 days within the EU." ✓
 - "General information, not a substitute for legal advice." ✓
   (required disclaimer; the `comma-not-appositive` WARN exists to route
-  lines like this through the deletion test below)
+  lines like this through the test)
 
-Test: delete the negative clause. If the sentence becomes *more*
-flattering, the negation was factual (keep it). If it becomes *less*
-flattering or collapses, the negation was there to set up praise (banned).
+The clause goes when the sentence carries the same information after the
+deletion. It was there to set up praise, or to dress a plain fact as a reveal.
+Rewrite it as a direct statement of what the subject is or does.
+
+An earlier wording asked whether the sentence became *less* flattering, which
+reads only against marketing rhetoric. The test now covers technical prose on
+the same terms: "Freshness confirmed by query, not by the node count." loses
+nothing when the clause goes, so it becomes "The freshness query returned the
+current result."

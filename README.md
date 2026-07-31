@@ -41,7 +41,8 @@ Four layers, each catching what the previous one misses:
    session start and repeat a one-line reminder each turn, which reaches
    chat replies. A skill description scoped to copy tasks leaves those
    uncovered, since the model decides when a skill applies and a chat
-   reply reads as ordinary conversation.
+   reply reads as ordinary conversation. Both hooks supply guidance;
+   deterministic interception of model output waits for layer 4.
 4. **File hooks and CI** (see `references/setup.md`) run the linter on
    every file write and every pull request, including human ones.
 
@@ -108,34 +109,35 @@ destination. The clone carries `.claude-plugin/plugin.json`, `hooks/`, and
 `commands/`, so Claude Code loads the folder as `grounded-copy@skills-dir` on
 the next session and two hooks start:
 
-- `SessionStart` puts the banned move, its ten disguises, the repair, and the
-  factual-negation test into session context — roughly 780 tokens, repeated
-  after each compaction. The rules reach chat replies, where a skill
-  description scoped to copy tasks never triggers.
-- `UserPromptSubmit` repeats a one-line reminder, roughly 45 tokens per turn,
-  which survives compaction and holds against per-turn injections from other
-  plugins.
+- `SessionStart` puts the session policy into context — the banned move with
+  its disguises, the deletion test, positive forms, scope and precedence, and
+  sourcing, roughly 1,600 tokens, repeated after each compaction. The rules
+  reach chat replies, where a skill description scoped to copy tasks never
+  triggers.
+- `UserPromptSubmit` repeats a one-line turn reminder, roughly 60 tokens per
+  turn, which holds against per-turn injections from other plugins.
 
-Switch profiles two ways: `/grounded-copy:grounded chat|copy|off`, or a prompt
-whose whole text is a control instruction, among them "switch grounded to
-copy". Both end in the same script write. `chat` carries the core rules;
-`copy` adds four closures that govern marketing register, roughly 290 tokens
-more. The value persists across restarts at
-`<config-dir>/grounded-copy/profile`, where config-dir is `$CLAUDE_CONFIG_DIR`
-when set and `~/.claude` otherwise.
+Both hooks are read-only. `/grounded-copy:grounded chat|copy|off` is the one
+path that records a preference, and a recorded switch prints a governing
+directive that takes effect in the same turn. `chat` carries the core rules;
+`copy` adds the marketing register and four closures, roughly 550 tokens more.
+The value persists across restarts at `<config-dir>/grounded-copy/profile`,
+where config-dir is `$CLAUDE_CONFIG_DIR` when set and `~/.claude` otherwise.
 
-A prompt that carries those words inside other content leaves the profile
-alone, so quoting the deactivation phrase in a document or a test name changes
-nothing. To read the current state, and to recover a profile that was switched
-off:
+To read the current state, and to recover a profile that was switched off:
 
 ```bash
 python hooks/grounded_tracker.py --status
 python hooks/grounded_tracker.py --set chat
 ```
 
-`--status` names the profile, whether it came from the flag file or from the
-default, and the resolved path.
+`--status` names the profile, whether it came from the preference file or from
+the default, and the resolved path. `--set` exits 0 when it records the
+preference, 1 when the write fails, and 2 when it rejects the value.
+
+`### Profile lifecycle` in `references/setup.md` is the one description of how
+the profile preference, the session policy, the turn reminder, and the
+effective policy relate.
 
 Requirements: Python 3 on PATH as `python` or `python3`. The manifest calls
 `sh hooks/run.sh`; on a Windows setup lacking `sh`, change that to
@@ -175,9 +177,11 @@ grounded-copy/
 ├── .claude-plugin/plugin.json  # Tier 2: registers the two hooks
 ├── hooks/
 │   ├── run.sh, run.cmd         # Resolve Python once, run the hook once
-│   ├── grounded_activate.py    # SessionStart: ruleset into session context
-│   ├── grounded_tracker.py     # UserPromptSubmit: reminder + profile switch
-│   └── _payload.py             # Shared stdin, argv, and flag handling
+│   ├── grounded_activate.py    # SessionStart: session policy into context
+│   ├── grounded_tracker.py     # UserPromptSubmit: turn reminder; --set
+│   ├── _preference.py          # The stored profile preference; sole writer
+│   ├── _policy.py              # SKILL.md extraction and policy assembly
+│   └── _hook_io.py             # Hook transport: stdin drain, plugin root
 ├── commands/grounded.md        # /grounded-copy:grounded chat|copy|off
 ├── references/
 │   ├── patterns.md             # Full catalog: bad → good per category
