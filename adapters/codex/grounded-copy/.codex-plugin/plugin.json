@@ -1,0 +1,14 @@
+{
+  "name": "grounded-copy",
+  "version": "0.2.0",
+  "description": "Copy states what the subject is or does: concrete nouns, verbs, and specifics, checked by a zero-dependency Python linter. This adapter carries the skill, the pattern catalog, the linter, and the sample corpora. The session hooks, the three profiles, and the slash command are Claude Code features and are absent here.",
+  "author": {
+    "name": "HiroHyun",
+    "url": "https://github.com/HiroHyun"
+  },
+  "homepage": "https://github.com/HiroHyun/grounded-copy",
+  "repository": "https://github.com/HiroHyun/grounded-copy",
+  "license": "MIT",
+  "keywords": ["copywriting", "style", "linter", "i18n"],
+  "skills": "./skills/"
+}

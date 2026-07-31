@@ -55,9 +55,10 @@ in `references/setup.md`; `cmd` reads `'` as an ordinary character.
 
 Profiles:
 
-- `chat` — the core rules: the banned move with its disguises, the deletion
+- `chat` — the core rules: the banned move with its seven shapes, the deletion
   test, positive forms, scope and precedence, and sourcing.
-- `copy` — the same, plus the marketing register and its four closures.
+- `copy` — the same, plus the marketing register and two closures covering
+  translation and the linter's standing as a floor.
 - `off` — the session policy and the turn reminder both stop. The value
   persists across restarts until `chat` or `copy` replaces it.
 

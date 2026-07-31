@@ -1,0 +1,20 @@
+{
+  "name": "hirohyun-plugins",
+  "interface": {
+    "displayName": "HiroHyun plugins",
+    "shortDescription": "Style gates for marketing, web, and technical prose."
+  },
+  "plugins": [
+    {
+      "name": "grounded-copy",
+      "source": {
+        "source": "local",
+        "path": "./adapters/codex/grounded-copy"
+      },
+      "category": "productivity",
+      "policy": {
+        "installation": "AVAILABLE"
+      }
+    }
+  ]
+}

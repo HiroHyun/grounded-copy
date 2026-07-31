@@ -10,8 +10,9 @@ under `### Profile lifecycle`:
   preference
 
 Every one of them is assembled from SKILL.md at runtime, so a rule edit lands
-without a code change. The workflow, the integrity rules, and the three
-excluded closures load with the skill itself when a copy task calls for them.
+without a code change. The workflow, the integrity rules, and the four excluded
+closures load with the skill itself when a copy task calls for them, and so do
+the trigger catalogs and rewrite tables in references/patterns.md.
 
 Transport stays outside this module: it reads no environment and takes the
 plugin root as an argument.
@@ -34,10 +35,12 @@ MARKETING_HEADING = "## Marketing register"
 
 LOOPHOLE_HEADING = "## Loophole closures"
 
-# The closures the `copy` profile adds, in SKILL.md order.
+# The closures the `copy` profile adds, in SKILL.md order. The quote and the
+# headline closures came out when `## Scope and precedence` absorbed them: the
+# verbatim rule already covers invented testimonials and `## Marketing register`
+# already enumerates headline and CTA scope. These two carry content no core
+# rule states.
 COPY_LABELS = (
-    '- **"It\'s in a quote/testimonial."**',
-    '- **"It\'s a headline/CTA/meta tag, not body copy."**',
     '- **"It\'s a different language."**',
     '- **"The linter passed, so it\'s fine."**',
 )
@@ -46,20 +49,18 @@ COPY_LEAD = "The copy profile adds these closures from the skill:"
 
 SESSION_HEADER = "GROUNDED PROSE ACTIVE — profile: {profile}"
 
-SWITCH_LINE = (
-    "Profile: {profile}. Switch with `/grounded-copy:grounded chat|copy|off`, "
-    "which is the one path that records a preference. The `copy` profile adds "
-    "the marketing register and its four closures; `off` stops the session "
-    "policy and the turn reminder."
-)
+SWITCH_LINE = "Profile: {profile}. Switch: `/grounded-copy:grounded chat|copy|off`."
 
+# Every clause here holds a boundary the session policy states once and the
+# turn reminder keeps in reach. `Prefer established positive terms` came out:
+# `## Positive forms` carries it at session start, and no evidence row in
+# references/setup.md attributes a slip to its absence. Both rows there landed
+# inside fenced blocks, which is why the fence clause stays.
 TURN_REMINDER = (
-    "GROUNDED PROSE ACTIVE ({profile}). State what the subject is or does. "
-    "No negation-contrast, no era-ending, no competitor contrast, no hype "
-    "register. Rules hold inside quotes, fences, and comments. Source material "
-    "you were given stays verbatim. Prefer established positive terms. A direct "
-    "user instruction outranks this; name the rule it conflicts with in one "
-    "sentence."
+    "GROUNDED PROSE ({profile}). State what the subject is or does. No "
+    "contrast, era-ending, or hype. Rules hold in quotes, fences, and "
+    "comments; given source text stays verbatim. A user instruction outranks "
+    "this; name the rule."
 )
 
 DIRECTIVE_HEADER = "GROUNDED PROSE — governing profile: {profile} ({source})"
@@ -81,13 +82,21 @@ DIRECTIVE_LEAD_EMPTY = (
     "rules for this profile arrive at the next session start."
 )
 
-# Extraction sizes measured 2026-07-31 against SKILL.md. The core grew from
-# 3,027 bytes when scope, precedence, the deletion test, positive forms, and
-# sourcing moved into it; references/setup.md records the per-session cost.
-BASELINE_BYTES = 6333
-COPY_BASELINE_BYTES = 8590
-BYTE_RANGE = (5000, 8000)
-COPY_BYTE_RANGE = (6800, 10800)
+# Extraction sizes measured 2026-07-31 against SKILL.md, after the trigger
+# catalogs and the example tables moved into references/patterns.md. The chat
+# core ran at 6,333 bytes and the copy core at 8,590 before that move;
+# references/setup.md records the per-session cost and the method.
+BASELINE_BYTES = 4278
+COPY_BASELINE_BYTES = 5835
+TURN_BASELINE_BYTES = 218
+
+# (floor, ceiling) per payload. The ceiling is the published budget: a payload
+# that grows past it fails the self-test, which is what keeps the per-session
+# cost where the documentation says it is. The floor catches an extraction that
+# returns a stub while every structural assertion still passes.
+BYTE_RANGE = (3650, 4700)
+COPY_BYTE_RANGE = (5000, 6400)
+TURN_BYTE_RANGE = (160, 260)
 
 
 def _strip_frontmatter(text):
@@ -208,10 +217,12 @@ def read_skill(plugin_root):
 
 
 def self_test(plugin_root):
-    """Assert structure, report size.
+    """Assert structure and budget, report size.
 
     An exact-size assertion would fail on every intentional SKILL.md rule
-    addition, and a test that fails for correct work gets muted.
+    addition, and a test that fails for correct work gets muted. A budget
+    ceiling fails only when a payload passes the figure the documentation
+    publishes, which is the growth this gate exists to catch.
     """
     skill = read_skill(plugin_root)
     if not skill:
@@ -237,28 +248,31 @@ def self_test(plugin_root):
     copy = policy_body(pieces, "copy")
     chat_size = len(chat.encode("utf-8"))
     copy_size = len(copy.encode("utf-8"))
+    turn_size = len(turn_reminder("chat").encode("utf-8"))
 
     if any(line.startswith(MARKETING_HEADING) for line in chat.splitlines()):
         failures.append("chat body carries the marketing register")
-    if not BYTE_RANGE[0] <= chat_size <= BYTE_RANGE[1]:
-        failures.append(
-            "chat extraction of %d bytes sits outside the %d-%d range"
-            % (chat_size, BYTE_RANGE[0], BYTE_RANGE[1])
-        )
-    if not COPY_BYTE_RANGE[0] <= copy_size <= COPY_BYTE_RANGE[1]:
-        failures.append(
-            "copy extraction of %d bytes sits outside the %d-%d range"
-            % (copy_size, COPY_BYTE_RANGE[0], COPY_BYTE_RANGE[1])
-        )
+    for name, size, budget in (
+        ("chat", chat_size, BYTE_RANGE),
+        ("copy", copy_size, COPY_BYTE_RANGE),
+        ("turn reminder", turn_size, TURN_BYTE_RANGE),
+    ):
+        if not budget[0] <= size <= budget[1]:
+            failures.append(
+                "%s payload of %d bytes sits outside the %d-%d budget"
+                % (name, size, budget[0], budget[1])
+            )
     if copy_size <= chat_size:
         failures.append("copy policy matches or trails chat policy")
 
     print(
         "self-test: chat %d bytes, baseline %d, delta %+d; "
-        "copy %d bytes, baseline %d, delta %+d"
+        "copy %d bytes, baseline %d, delta %+d; "
+        "turn reminder %d bytes, baseline %d, delta %+d"
         % (
             chat_size, BASELINE_BYTES, chat_size - BASELINE_BYTES,
             copy_size, COPY_BASELINE_BYTES, copy_size - COPY_BASELINE_BYTES,
+            turn_size, TURN_BASELINE_BYTES, turn_size - TURN_BASELINE_BYTES,
         )
     )
     for failure in failures:

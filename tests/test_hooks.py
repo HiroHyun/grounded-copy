@@ -55,14 +55,13 @@ CORE_RULES = (
 MARKETING_HEADING = "## Marketing register"
 
 COPY_LABELS = (
-    '**"It\'s in a quote/testimonial."**',
-    '**"It\'s a headline/CTA/meta tag, not body copy."**',
     '**"It\'s a different language."**',
     '**"The linter passed, so it\'s fine."**',
 )
 
 EXCLUDED_LABELS = (
     '**"The banned string doesn\'t appear."**',
+    '**"This negation is factual."**',
     '**"A synonym isn\'t on the list."**',
     '**"I\'ll adjust the linter/config."**',
 )
@@ -238,12 +237,17 @@ class SessionPolicyTests(HookCase):
 # Turn reminder: what UserPromptSubmit injects
 # ---------------------------------------------------------------------------
 class TurnReminderTests(HookCase):
+    # One clause per boundary the reminder keeps in reach. `Prefer established
+    # positive terms` came out with the payload cut; references/setup.md records
+    # why. The reminder also carries a byte budget, asserted below.
     CLAUSES = (
-        "Rules hold inside quotes, fences, and comments.",
-        "Source material you were given stays verbatim.",
-        "Prefer established positive terms.",
-        "A direct user instruction outranks this",
+        "State what the subject is or does.",
+        "No contrast, era-ending, or hype.",
+        "Rules hold in quotes, fences, and comments",
+        "given source text stays verbatim",
+        "A user instruction outranks this",
     )
+    CEILING = 260
 
     def test_reminder_names_the_resolved_profile(self):
         for value, expected in (("chat", "chat"), ("copy", "copy"),
@@ -259,6 +263,12 @@ class TurnReminderTests(HookCase):
         text = self.reminder_text(self.track("hello"))
         for clause in self.CLAUSES:
             self.assertIn(clause, text)
+
+    def test_reminder_stays_inside_its_budget(self):
+        """The reminder is the per-prompt cost, so its ceiling is asserted."""
+        self.write_preference("chat\n")
+        size = len(self.reminder_text(self.track("hello")).encode("utf-8"))
+        self.assertLessEqual(size, self.CEILING, "turn reminder grew")
 
     def test_off_silences_both_hooks(self):
         self.write_preference("off\n")
