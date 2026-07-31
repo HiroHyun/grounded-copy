@@ -310,6 +310,21 @@ The adapter is skills-only by design: it ships the skill, `references/`,
 `commands/`, and no `.claude-plugin/`. `tests/test_codex_adapter.py` asserts
 that absence alongside byte identity and the MIT notice.
 
+Measured on codex-cli 0.144.1, Windows 11, against this repository as a local
+marketplace source:
+
+| Question | Result |
+|---|---|
+| Which catalog does Codex read when a repository carries both? | `.agents/plugins/marketplace.json`. `codex plugin list` prints that path under the marketplace name, and the legacy `.claude-plugin/marketplace.json` alongside it stays unread |
+| Does the local source resolve? | Yes — `grounded-copy@hirohyun-plugins` resolves to `adapters/codex/grounded-copy` |
+| Subcommand names | `codex plugin add` and `codex plugin remove`; `install` and `uninstall` return "unrecognized subcommand". Marketplace verbs are `add`, `list`, `upgrade`, `remove` |
+| Install location | `~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.2.0`, holding the manifest, `LICENSE`, `README.md`, and `skills/grounded-copy/` |
+| Does the linter run from the installed copy? | Yes — `good-samples.md` exits 0 and `bad-samples.md` exits 1 from the cache path |
+
+The two catalogs carrying one name is settled by that first row: Codex reads
+only `.agents/`, and Claude Code reads only `.claude-plugin/`, so the shared
+name `hirohyun-plugins` names one catalog per host with no collision.
+
 ### Change classification
 
 Each change this branch made against `main`, and what happened to it here.
@@ -333,23 +348,18 @@ Each change this branch made against `main`, and what happened to it here.
 
 ### Unresolved host behavior
 
-Two questions need a measurement on a live host. Neither is settled here, and
-neither blocks the shipped behavior.
+One question needs a measurement on a live host. It blocks nothing that ships.
 
-1. **Plugin-root quoting.** `.claude-plugin/plugin.json` keeps
-   `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. `### Shell-facing values` above
-   holds the three-step measurement and the two candidate mechanisms. A working
-   state tells them apart in neither direction, so the quoting holds until the
-   measurement runs.
-2. **Codex marketplace path precedence.** Codex reads
-   `$REPO_ROOT/.agents/plugins/marketplace.json` and also supports the legacy
-   `$REPO_ROOT/.claude-plugin/marketplace.json`. This repository carries both,
-   under the same marketplace name. Measurement: add the repository with
-   `codex plugin marketplace add`, run `codex plugin marketplace list`, and
-   record which catalog and which entries appear. If Codex reads the legacy
-   file, the Claude Code entry surfaces in Codex advertising hooks Codex does
-   not run; the fallback is a distinct `name` in one of the two manifests,
-   which is a one-line change.
+**Plugin-root quoting.** `.claude-plugin/plugin.json` keeps
+`sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. `### Shell-facing values` above holds
+the three-step measurement and the two candidate mechanisms. A working state
+tells them apart in neither direction, so the quoting holds until the
+measurement runs.
+
+Codex marketplace path precedence was the second question here. The measured
+table in `### Distribution` above answers it: Codex reads
+`.agents/plugins/marketplace.json` and leaves the legacy
+`.claude-plugin/marketplace.json` unread.
 
 ### Reading and restoring the preference
 
@@ -545,9 +555,11 @@ This is the only layer that cannot be rationalized around.
 Two routes, and they compose.
 
 **The marketplace.** `codex plugin marketplace add HiroHyun/grounded-copy`
-registers the catalog at `.agents/plugins/marketplace.json`; `codex /plugins`
-installs the adapter at `adapters/codex/grounded-copy`. `### Distribution`
-above covers what the adapter carries and what it leaves to Claude Code.
+registers the catalog at `.agents/plugins/marketplace.json`, and
+`codex plugin add grounded-copy@hirohyun-plugins` installs the adapter from
+`adapters/codex/grounded-copy`. `codex /plugins` does the same interactively.
+`### Distribution` above covers what the adapter carries, what it leaves to
+Claude Code, and the measured CLI behavior.
 
 **`AGENTS.md`.** Codex reads it from the repo root, which reaches a project
 checkout with no install step:

@@ -182,21 +182,32 @@ the canonical files:
 
 ```bash
 codex plugin marketplace add HiroHyun/grounded-copy
+codex plugin add grounded-copy@hirohyun-plugins
+```
+
+Start a new session before using the skill. Check what is registered, and
+manage it afterwards:
+
+```bash
+codex plugin list
 codex plugin marketplace list
 codex plugin marketplace upgrade
+codex plugin remove grounded-copy@hirohyun-plugins
 codex plugin marketplace remove hirohyun-plugins
 ```
 
-Then open the plugin browser, install `grounded-copy`, and start a new session
-before using the skill:
+`codex /plugins` opens the same catalog as a browser: Space turns an installed
+plugin on or off, and **Uninstall plugin** removes it. To keep it installed and
+off, set `enabled = false` on its entry in `~/.codex/config.toml` and restart
+Codex.
+
+`codex plugin add` copies the adapter to
+`~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>`. Run the
+linter from there, or from any checkout:
 
 ```bash
-codex /plugins
+python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.2.0/skills/grounded-copy/scripts/copy_lint.py draft.md
 ```
-
-In the browser, Space turns an installed plugin on or off, and **Uninstall
-plugin** removes it. To keep it installed and off, set `enabled = false` on its
-entry in `~/.codex/config.toml` and restart Codex.
 
 The adapter lives at `adapters/codex/grounded-copy` and carries the skill, both
 references, the linter, and the two sample corpora. It ships no hooks, so the
