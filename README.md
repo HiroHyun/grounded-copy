@@ -308,19 +308,19 @@ fails when a payload passes its published budget.
 
 | Payload | Bytes | Estimated tokens | When it is spent |
 |---|---|---|---|
-| `chat` session policy | 4,027 | ~1,005 | every session start, and after each compaction |
-| `copy` session policy | 5,760 | ~1,440 | every session start, and after each compaction |
+| `chat` session policy | 4,051 | ~1,015 | every session start, and after each compaction |
+| `copy` session policy | 5,788 | ~1,445 | every session start, and after each compaction |
 | turn reminder | 218 | ~55 | every prompt |
-| `chat` governing directive | 4,179 | ~1,045 | every recorded profile switch |
-| `copy` governing directive | 5,912 | ~1,480 | every recorded profile switch |
-| `SKILL.md` | 9,131 | ~2,285 | when the skill triggers on a copy task |
+| `chat` governing directive | 4,203 | ~1,050 | every recorded profile switch |
+| `copy` governing directive | 5,940 | ~1,485 | every recorded profile switch |
+| `SKILL.md` | 9,196 | ~2,300 | when the skill triggers on a copy task |
 
 **Method.** Bytes are the measured unit: the UTF-8 length of what each hook
 writes to stdout, printed by `--self-test`. Token figures are estimates at
 bytes ÷ 4, and no token count in this repository comes from a tokenizer.
 
 A 60-turn `chat` session with one compaction and one profile switch spends
-about 25,313 bytes, down from 41,594 before the payload was cut.
+about 25,385 bytes, down from 41,594 before the payload was cut.
 `### Measured recurring cost` in `references/setup.md` records the history and
 what moved where.
 
@@ -363,7 +363,7 @@ grounded-copy/
 The example rows and quoted phrases in this README, in `SKILL.md`, and in
 `references/patterns.md` are the banned patterns quoted as the examples that
 define them, so each file reports findings against its own gate: README 20,
-`SKILL.md` 53, `references/patterns.md` 141, measured 2026-08-01. CI runs
+`SKILL.md` 53, `references/patterns.md` 148, measured 2026-08-01. CI runs
 `copy_lint.py` on `tests/bad-samples.md` and `tests/good-samples.md` and on no
 other path, which is what keeps those three files shippable.
 

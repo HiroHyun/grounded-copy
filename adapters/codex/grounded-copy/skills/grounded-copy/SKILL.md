@@ -21,8 +21,8 @@ against what *era* has ended. Grounded prose states what the subject is
 and does, and attaches a specific.
 
 Seven shapes, one rule; the triggers below are openers.
-`## Trigger phrases by shape` in `references/patterns.md` carries each
-complete list with a rewrite beside it.
+`references/patterns.md` gives each shape a section with the complete
+trigger list and a rewrite for every entry.
 
 1. **Placed against an alternative** — negated intensifiers, comparative
    clauses, transcendence verbs, absence framing: "not just", "more than
@@ -52,8 +52,8 @@ write the term: **read-only**, **immutable**, **append-only**,
 **idempotent**, **dry run**, **single-writer**, **fixed-width**,
 **allowlist**, **constant-time**, **exit code 2**.
 
-Where no term exists, state the constraint plainly as what holds. Section
-12 of `references/patterns.md` carries the rewrites.
+Where no term exists, state the constraint plainly as what holds.
+`## Positive forms` in `references/patterns.md` carries the rewrites.
 
 ## Scope and precedence
 
@@ -80,7 +80,7 @@ An unnamed authority offers praise where a checkable fact belongs, which
 is the vagueness twin of contrast. Name the source, the figure, and the
 date, or state the measurable claim. Editorializing participles carry the
 same defect — ", highlighting our commitment to quality" — so delete the
-tail and state the fact it gestured at. Section 11 of
+tail and state the fact it gestured at. `## Vague attribution` in
 `references/patterns.md` carries the rewrites.
 
 ## Marketing register
@@ -105,7 +105,7 @@ a perfume ad and a SaaS deck, it is hype. Replace it.
 on — "does not support batching", "ships within the EU only". State every
 other point positively.
 
-Sections 3 and 10 of `references/patterns.md` carry the full tables.
+`## Hype vocabulary` in `references/patterns.md` carries the full table.
 
 ## Loophole closures — read these before claiming compliance
 
@@ -160,10 +160,10 @@ rationalization below is pre-emptively rejected:
 
 ## References
 
-- `references/patterns.md` — the full trigger phrases for each of the
-  seven shapes, a bad → good rewrite for every category, and the
-  positive-form rewrites. Read it when a flagged
-  sentence is hard to rewrite, before writing copy in
+- `references/patterns.md` — one section per shape, each with its full
+  trigger list and a bad → good rewrite for every entry, plus the hype,
+  attribution, positive-form, and multilingual tables. Read it when a
+  flagged sentence is hard to rewrite, before writing copy in
   zh/ru/es/ar/fr/de/ja/ko, or when a shape's openers leave a case
   undecided.
 - `tests/bad-samples.md` and `tests/good-samples.md` — after any change

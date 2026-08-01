@@ -82,11 +82,12 @@ DIRECTIVE_LEAD_EMPTY = (
 )
 
 # Extraction sizes measured 2026-08-01 against SKILL.md, after `## The deletion
-# test` came out of the core. The chat core ran at 4,278 bytes and the copy core
-# at 5,835 with that section in the payload; references/setup.md records the
+# test` came out of the core and the cross-references moved from section numbers
+# to section names. The chat core ran at 4,278 bytes and the copy core at 5,835
+# with the deletion test in the payload; references/setup.md records the
 # per-session cost and the method.
-BASELINE_BYTES = 3921
-COPY_BASELINE_BYTES = 5654
+BASELINE_BYTES = 3945
+COPY_BASELINE_BYTES = 5682
 TURN_BASELINE_BYTES = 218
 
 # (floor, ceiling) per payload. The ceiling is the published budget: a payload

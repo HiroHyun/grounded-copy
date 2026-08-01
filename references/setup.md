@@ -47,7 +47,7 @@ git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-co
 
 | Hook | Script | Output |
 |---|---|---|
-| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 4,027 bytes under `chat`, repeated after each compaction |
+| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 4,051 bytes under `chat`, repeated after each compaction |
 | `UserPromptSubmit` | `hooks/grounded_tracker.py` | the turn reminder, 218 bytes |
 
 Both hooks are read-only. `### Profile lifecycle` below defines every term
@@ -70,7 +70,7 @@ Modules, split by domain responsibility:
 | `hooks/_hook_io.py` | hook transport: the stdin drain and plugin-root resolution |
 | `hooks/grounded_activate.py` | the `SessionStart` entry point and `--self-test` |
 | `hooks/grounded_tracker.py` | the `UserPromptSubmit` entry point, `--set`, and `--status` |
-| `scripts/copy_lint.py` | the deterministic gate: patterns, severities, exit codes |
+| `scripts/copy_lint.py` | the deterministic gate: patterns, findings, exit codes |
 | `scripts/build_codex_adapter.py` | building the Codex adapter from the canonical files, and `--check` |
 
 `_hook_io.py` earns its own file on use: both entry points call both of its
@@ -180,8 +180,8 @@ install reads as `chat`.
 
 | Profile | Session policy | Turn reminder |
 |---|---|---|
-| `chat` | the intro with its example pair, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,921 bytes of rules | one line naming `chat` |
-| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,654 bytes | one line naming `copy` |
+| `chat` | the intro with its example pair, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,945 bytes of rules | one line naming `chat` |
+| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,682 bytes | one line naming `copy` |
 | `off` | none | none |
 
 `--self-test` prints the current figures and fails when a payload passes its
@@ -249,17 +249,17 @@ reminder figures.
 
 | Payload | Start | After the payload cut | After the carve-out removal |
 |---|---|---|---|
-| `chat` session policy, per `SessionStart` | 6,616 | 4,384 | 4,027 |
-| `copy` session policy, per `SessionStart` | 8,873 | 5,941 | 5,760 |
+| `chat` session policy, per `SessionStart` | 6,616 | 4,384 | 4,051 |
+| `copy` session policy, per `SessionStart` | 8,873 | 5,941 | 5,788 |
 | turn reminder, per prompt | 363 | 218 | 218 |
-| `chat` governing directive, per switch | 6,582 | 4,527 | 4,179 |
-| `copy` governing directive, per switch | 8,839 | 6,084 | 5,912 |
-| `SKILL.md`, loaded when the skill triggers | 12,544 | 9,789 | 9,131 |
+| `chat` governing directive, per switch | 6,582 | 4,527 | 4,203 |
+| `copy` governing directive, per switch | 8,839 | 6,084 | 5,940 |
+| `SKILL.md`, loaded when the skill triggers | 12,544 | 9,789 | 9,196 |
 
 One 60-turn `chat` session with one compaction and one profile switch:
 6,616 × 2 + 363 × 60 + 6,582 = 41,594 bytes at the start,
 4,384 × 2 + 218 × 60 + 4,527 = 26,375 after the payload cut, and
-4,027 × 2 + 218 × 60 + 4,179 = 25,313 now, a 39.1% reduction overall.
+4,051 × 2 + 218 × 60 + 4,203 = 25,385 now, a 39.0% reduction overall.
 
 Every token figure in this repository is an estimate at bytes ÷ 4 and is
 labelled as one. No token count here comes from a tokenizer.
@@ -267,9 +267,9 @@ labelled as one. No token count here comes from a tokenizer.
 **Where the reduction came from.** The trigger-phrase catalogs and the example
 tables moved out of `SKILL.md` into `references/patterns.md`, which already
 held a bad → good rewrite for every shape. `SKILL.md` keeps the rule and the
-opener for each of the seven shapes; `## Trigger phrases by shape` in
-`references/patterns.md` holds the complete lists, and `## 12. Positive forms`
-holds the positive-term rewrites. No rule left the payload. Two loophole
+opener for each of the seven shapes; `references/patterns.md` gives each shape
+a section holding its complete trigger list beside the rewrites. No rule left
+the payload. Two loophole
 closures were folded into the rules they restated: the quote-and-testimonial
 closure into **Verbatim source material**, and the headline-and-CTA closure
 into the scope sentence of `## Marketing register`. The turn reminder dropped
@@ -289,8 +289,8 @@ and the section came out, taking `## Allowed negation` in
 `references/patterns.md`, the `"This negation is factual."` closure, and the
 manual WARN-review step in `## Workflow` with it. The `copy` profile gained one
 line on plain negation, and `## The one banned move` gained the sentence naming
-the `off` profile as the escape, which is why the chat core fell 357 bytes where
-the removed section alone measured 551.
+the `off` profile as the escape, so the chat core stands 333 bytes under 4,278
+where the removed section alone measured 551.
 
 ### Distribution
 
@@ -532,7 +532,7 @@ match. A red-capable test writes each shipped multi-word pattern in both
 forms and asserts the finding counts match. Formatting creates no exemption.
 
 Citation cost, measured 2026-08-01 after every rule went blocking: `README.md`
-produces 20 findings, `SKILL.md` 53, and `references/patterns.md` 141 — every
+produces 20 findings, `SKILL.md` 53, and `references/patterns.md` 148 — every
 one a banned pattern quoted as the example that defines it. Under the WARN tier
 the same three files stood at 15, 44, and 110 errors. `references/setup.md`
 holds at 2 findings, both of them the quoted move name on an evidence row, so
