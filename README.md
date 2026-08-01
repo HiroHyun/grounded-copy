@@ -13,6 +13,22 @@ Python linter backs the rules and blocks the task until the copy complies.
 In Claude Code, two hooks carry the same rules into every session, so chat
 replies follow them alongside landing pages and locale files.
 
+## The off switch
+
+Every rule blocks, and no rule carries an exception. Copy that has to use a
+banned form is written with the profile off:
+
+```shell
+/grounded-copy:grounded off
+```
+
+Write the text, then `/grounded-copy:grounded chat` (or `copy`) to switch back.
+The topics that need it: legal disclaimers, terms of service, regulatory copy,
+billing facts, and translations of source text someone supplied. The stored
+value survives restarts, so a switch left at `off` stays there until you set it
+back. Outside Claude Code the linter is a command you run, so the same escape
+is running it on the files you choose.
+
 ## Before and after
 
 | Draft | After grounded-copy |
@@ -31,14 +47,14 @@ Same information, carried by specifics.
 Four layers, each catching what the previous one misses:
 
 1. **`SKILL.md`** teaches the agent the banned move and its seven shapes,
-   the deletion test that decides every negative clause, and loophole
+   the positive terms that carry a constraint in one word, and loophole
    closures written against the ways agents rationalize around style
    rules (cross-sentence contrast, translation, "the linter passed").
    `references/patterns.md` carries the complete trigger phrases for each
    shape and a bad → good rewrite for every category.
-2. **`scripts/copy_lint.py`** is a zero-dependency Python 3 linter with
-   50+ enumerated patterns. Exit code 1 blocks the task; the agent must
-   rewrite the copy, and the skill forbids editing the linter.
+2. **`scripts/copy_lint.py`** is a zero-dependency Python 3 linter with 66
+   enumerated patterns, every one blocking. Exit code 1 blocks the task; the
+   agent must rewrite the copy, and the skill forbids editing the linter.
 3. **Session hooks** put the core rules in context at every session start
    and repeat a one-line reminder each turn, which reaches chat replies.
    A skill description scoped to copy tasks leaves those uncovered, since
@@ -53,11 +69,11 @@ Four layers, each catching what the previous one misses:
 The linter catches the same moves in English, Chinese, Russian, Spanish,
 Arabic, French, German, Japanese, and Korean — 不仅仅是, не просто,
 no es solo, ليس مجرد, pas seulement, mehr als nur, 単なる〜ではない,
-단순한 ~이 아닙니다 are all "not just". Constructions with common factual
-uses (だけでなく, 뿐만 아니라) lint as warnings and go through the
-deletion test in `references/patterns.md`. This makes the gate usable on
-locale files: a translation that re-introduces contrast fails CI even
-when the English source passed.
+단순한 ~이 아닙니다 are all "not just". The Chinese reversal reveal
+(不是 X，而是 Y) has its own pattern, and the constructions that also carry
+factual uses (だけでなく, 뿐만 아니라) block alongside the rest. This makes
+the gate usable on locale files: a translation that re-introduces contrast
+fails CI even when the English source passed.
 
 ## Supported agents and installation paths
 
@@ -86,7 +102,7 @@ npx skills@latest update grounded-copy
 npx skills@latest remove grounded-copy
 ```
 
-`--list` prints the skill metadata without installing. `update` takes
+`--list` prints the skill metadata and stops there. `update` takes
 installed skill names and refreshes them from their source; `-g` restricts the
 run to global skills and `-p` to project skills. `remove` deletes the installed
 copy. The CLI records the files it manages in a `.source` manifest: `SKILL.md`,
@@ -289,19 +305,19 @@ fails when a payload passes its published budget.
 
 | Payload | Bytes | Estimated tokens | When it is spent |
 |---|---|---|---|
-| `chat` session policy | 4,384 | ~1,100 | every session start, and after each compaction |
-| `copy` session policy | 5,941 | ~1,485 | every session start, and after each compaction |
+| `chat` session policy | 4,027 | ~1,005 | every session start, and after each compaction |
+| `copy` session policy | 5,760 | ~1,440 | every session start, and after each compaction |
 | turn reminder | 218 | ~55 | every prompt |
-| `chat` governing directive | 4,527 | ~1,130 | every recorded profile switch |
-| `copy` governing directive | 6,084 | ~1,520 | every recorded profile switch |
-| `SKILL.md` | 9,789 | ~2,450 | when the skill triggers on a copy task |
+| `chat` governing directive | 4,179 | ~1,045 | every recorded profile switch |
+| `copy` governing directive | 5,912 | ~1,480 | every recorded profile switch |
+| `SKILL.md` | 9,131 | ~2,285 | when the skill triggers on a copy task |
 
 **Method.** Bytes are the measured unit: the UTF-8 length of what each hook
 writes to stdout, printed by `--self-test`. Token figures are estimates at
 bytes ÷ 4, and no token count in this repository comes from a tokenizer.
 
 A 60-turn `chat` session with one compaction and one profile switch spends
-about 26,375 bytes, down from 41,594 before the payload was cut.
+about 25,313 bytes, down from 41,594 before the payload was cut.
 `### Measured recurring cost` in `references/setup.md` records the history and
 what moved where.
 
@@ -341,15 +357,18 @@ grounded-copy/
 └── CONTRIBUTING.md
 ```
 
-The example rows and quoted phrases in this README, in `SKILL.md`, in
-`references/patterns.md`, and in `tests/bad-samples.md` contain banned patterns
-on purpose; the CI self-test lints only the test corpus.
+The example rows and quoted phrases in this README, in `SKILL.md`, and in
+`references/patterns.md` are the banned patterns quoted as the examples that
+define them, so each file reports findings against its own gate: README 20,
+`SKILL.md` 53, `references/patterns.md` 141, measured 2026-08-01. CI runs
+`copy_lint.py` on `tests/bad-samples.md` and `tests/good-samples.md` and on no
+other path, which is what keeps those three files shippable.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: every new pattern
-needs a real-world sighting, a failing line in `tests/bad-samples.md`,
-and a factual counterexample check for false positives.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: every new pattern needs
+a real-world sighting, a failing line in `tests/bad-samples.md`, and a note
+naming the factual uses the regex also matches.
 
 ## License
 

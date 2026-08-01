@@ -47,16 +47,16 @@ git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-co
 
 | Hook | Script | Output |
 |---|---|---|
-| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 4,384 bytes under `chat`, repeated after each compaction |
+| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 4,027 bytes under `chat`, repeated after each compaction |
 | `UserPromptSubmit` | `hooks/grounded_tracker.py` | the turn reminder, 218 bytes |
 
 Both hooks are read-only. `### Profile lifecycle` below defines every term
 above and names the one path that records a preference.
 `### Measured recurring cost` gives the figures and the method.
 
-`_policy.py` reads `SKILL.md` at runtime and emits five core sections: the
-intro with its example pair, the banned move with its seven shapes, the
-deletion test, positive forms, scope and precedence, and sourcing. Run
+`_policy.py` reads `SKILL.md` at runtime and emits the intro with its example
+pair plus four core sections: the banned move with its seven shapes, positive
+forms, scope and precedence, and sourcing. Run
 `python hooks/grounded_activate.py --self-test` after editing `SKILL.md`; it
 asserts the structure, checks each payload against its published budget, and
 prints the size delta against the recorded baseline.
@@ -180,8 +180,8 @@ install reads as `chat`.
 
 | Profile | Session policy | Turn reminder |
 |---|---|---|
-| `chat` | the intro with its example pair, the banned move with its seven shapes, the deletion test, positive forms, scope and precedence, and sourcing — 4,278 bytes of rules | one line naming `chat` |
-| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,835 bytes | one line naming `copy` |
+| `chat` | the intro with its example pair, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,921 bytes of rules | one line naming `chat` |
+| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,654 bytes | one line naming `copy` |
 | `off` | none | none |
 
 `--self-test` prints the current figures and fails when a payload passes its
@@ -242,22 +242,24 @@ records a preference.
 
 ### Measured recurring cost
 
-UTF-8 bytes of each hook's stdout, measured 2026-07-31 on Claude Code 2.1.220,
-Windows 11. `python hooks/grounded_activate.py --self-test` prints the current
-policy and reminder figures.
+UTF-8 bytes of each hook's stdout. The first two columns were measured
+2026-07-31 and the third 2026-08-01, both on Claude Code 2.1.220, Windows 11.
+`python hooks/grounded_activate.py --self-test` prints the current policy and
+reminder figures.
 
-| Payload | Before | After |
-|---|---|---|
-| `chat` session policy, per `SessionStart` | 6,616 | 4,384 |
-| `copy` session policy, per `SessionStart` | 8,873 | 5,941 |
-| turn reminder, per prompt | 363 | 218 |
-| `chat` governing directive, per switch | 6,582 | 4,527 |
-| `copy` governing directive, per switch | 8,839 | 6,084 |
-| `SKILL.md`, loaded when the skill triggers | 12,544 | 9,789 |
+| Payload | Start | After the payload cut | After the carve-out removal |
+|---|---|---|---|
+| `chat` session policy, per `SessionStart` | 6,616 | 4,384 | 4,027 |
+| `copy` session policy, per `SessionStart` | 8,873 | 5,941 | 5,760 |
+| turn reminder, per prompt | 363 | 218 | 218 |
+| `chat` governing directive, per switch | 6,582 | 4,527 | 4,179 |
+| `copy` governing directive, per switch | 8,839 | 6,084 | 5,912 |
+| `SKILL.md`, loaded when the skill triggers | 12,544 | 9,789 | 9,131 |
 
 One 60-turn `chat` session with one compaction and one profile switch:
-6,616 × 2 + 363 × 60 + 6,582 = 41,594 bytes before, and
-4,384 × 2 + 218 × 60 + 4,527 = 26,375 bytes after, a 36.6% reduction.
+6,616 × 2 + 363 × 60 + 6,582 = 41,594 bytes at the start,
+4,384 × 2 + 218 × 60 + 4,527 = 26,375 after the payload cut, and
+4,027 × 2 + 218 × 60 + 4,179 = 25,313 now, a 39.1% reduction overall.
 
 Every token figure in this repository is an estimate at bytes ÷ 4 and is
 labelled as one. No token count here comes from a tokenizer.
@@ -279,6 +281,16 @@ home. The measured cost of the old arrangement was 2,055 bytes of chat payload
 and 2,755 bytes of copy payload per session, repeated after every compaction,
 for text that `references/patterns.md` already carried and that arrives again
 whenever the skill loads.
+
+**The carve-out removal.** `## The deletion test` was 551 bytes of the injected
+core, and it decided every negative, comparative, and absence clause by
+judgment. Every listed shape blocks now, so the test has nothing left to decide
+and the section came out, taking `## Allowed negation` in
+`references/patterns.md`, the `"This negation is factual."` closure, and the
+manual WARN-review step in `## Workflow` with it. The `copy` profile gained one
+line on plain negation, and `## The one banned move` gained the sentence naming
+the `off` profile as the escape, which is why the chat core fell 357 bytes where
+the removed section alone measured 551.
 
 ### Distribution
 
