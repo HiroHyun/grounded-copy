@@ -34,7 +34,6 @@ TRACKER = str(HOOKS / "grounded_tracker.py")
 # Sections both profiles carry.
 CORE_HEADINGS = (
     "## The one banned move",
-    "## The deletion test",
     "## Positive forms",
     "## Scope and precedence",
     "## Sourcing",
@@ -45,6 +44,7 @@ CORE_HEADINGS = (
 # SKILL.md is hard-wrapped, so each anchor stays short enough to sit on one
 # line. A phrase spanning a wrap would fail here for its formatting alone.
 CORE_RULES = (
+    "Every shape blocks with no",
     "**Verbatim source material.**",
     "**Governed everywhere else.**",
     "**User precedence.**",
@@ -61,7 +61,6 @@ COPY_LABELS = (
 
 EXCLUDED_LABELS = (
     '**"The banned string doesn\'t appear."**',
-    '**"This negation is factual."**',
     '**"A synonym isn\'t on the list."**',
     '**"I\'ll adjust the linter/config."**',
 )

@@ -26,7 +26,8 @@ complete list with a rewrite beside it.
 
 1. **Placed against an alternative** — negated intensifiers, comparative
    clauses, transcendence verbs, absence framing: "not just", "more than
-   just", "rather than X", "goes beyond", "without the hassle".
+   just", "rather than X", "instead of X", "as opposed to X", "goes
+   beyond", "without the hassle", "without doing B".
 2. **Reversal reveals** — "It's not X, it's Y"; the appositive "X, not
    Y"; the prepositional ", not by X"; the negated-setup dash
    "isn't/wasn't X — it Y".
@@ -36,22 +37,13 @@ complete list with a rewrite beside it.
 6. **Collision framing** — "where X meets Y".
 7. **Corporate throat-clearing** — "At [Company], we...".
 
-Write none of them, and invent no new costume. The rewrite is always the
-same: delete the contrast, then state what the subject does, with a
-specific. A booster word does the same in one word, offering praise where
-a fact belongs; `## Marketing register` holds that catalog.
-
-## The deletion test
-
-One test decides every negative, comparative, and absence clause. Delete
-the clause and read what remains. If the sentence loses a requirement, a
-limitation, a causal fact, a selection rule, a compatibility boundary, a
-safety condition, or any other information the reader acts on, the clause
-carried content and it stays. If the sentence carries the same
-information, the clause was rhetorical: rewrite it as a direct statement
-of what the subject is or does.
-
-`## Allowed negation` in `references/patterns.md` holds both lists.
+Write none of them, and invent no new costume. Every shape blocks with no
+exception; copy that has to carry one — a legal disclaimer, regulatory
+text, a translation of supplied source — is written with the profile off.
+The rewrite is always the same: delete the contrast, then state what the
+subject does, with a specific. A booster word does the same in one word,
+offering praise where a fact belongs; `## Marketing register` holds that
+catalog.
 
 ## Positive forms
 
@@ -60,9 +52,8 @@ write the term: **read-only**, **immutable**, **append-only**,
 **idempotent**, **dry run**, **single-writer**, **fixed-width**,
 **allowlist**, **constant-time**, **exit code 2**.
 
-Where no term exists, the deletion test decides: a clause that carries
-content stays, written plainly. Section 12 of `references/patterns.md`
-carries the rewrites.
+Where no term exists, state the constraint plainly as what holds. Section
+12 of `references/patterns.md` carries the rewrites.
 
 ## Scope and precedence
 
@@ -110,6 +101,10 @@ one-stop shop, synergy; figurative "landscape" and "journey"; and
 Register test for unlisted synonyms: if the word could appear unchanged in
 a perfume ad and a SaaS deck, it is hype. Replace it.
 
+**Plain negation.** Keep a negation when it states a limit the reader acts
+on — "does not support batching", "ships within the EU only". State every
+other point positively.
+
 Sections 3 and 10 of `references/patterns.md` carry the full tables.
 
 ## Loophole closures — read these before claiming compliance
@@ -126,9 +121,6 @@ rationalization below is pre-emptively rejected:
   単なる〜ではない / 단순한 ~이 아니다 / ليس مجرد are all "not just".
   Translate the grounded English, never re-introduce contrast in
   translation.
-- **"This negation is factual."** Apply `## The deletion test`. It decides
-  every negative, comparative, and absence clause, and it asks what the
-  reader loses when the clause goes.
 - **"A synonym isn't on the list."** The hype list bans a register, not
   ten words. Apply the register test in `## Marketing register`. When
   unsure, replace the word with the specific fact it was hiding.
@@ -152,13 +144,7 @@ rationalization below is pre-emptively rejected:
 4. Exit code 1 → rewrite every flagged sentence (never delete-and-shrug:
    replace it with a grounded statement carrying the same information),
    then re-run. Repeat until exit code 0.
-5. Review WARN lines manually: "no longer", "journey", "landscape",
-   "What if", bare "rather than", and ", not a/an/your X" are allowed
-   only in factual, non-rhetorical use ("What if my order arrives
-   damaged?" as an FAQ heading; "not a substitute for legal advice" as a
-   required disclaimer; "billed monthly rather than per seat" as a
-   billing fact). Apply `## The deletion test` to each.
-6. Only present copy to the user after a PASS. State in your summary that
+5. Only present copy to the user after a PASS. State in your summary that
    the copy passed `copy_lint.py`.
 
 ## Integrity rules (non-negotiable)
@@ -175,8 +161,8 @@ rationalization below is pre-emptively rejected:
 ## References
 
 - `references/patterns.md` — the full trigger phrases for each of the
-  seven shapes, a bad → good rewrite for every category, the positive-form
-  rewrites, and the allowed-negation lists. Read it when a flagged
+  seven shapes, a bad → good rewrite for every category, and the
+  positive-form rewrites. Read it when a flagged
   sentence is hard to rewrite, before writing copy in
   zh/ru/es/ar/fr/de/ja/ko, or when a shape's openers leave a case
   undecided.

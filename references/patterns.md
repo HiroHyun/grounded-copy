@@ -210,33 +210,3 @@ holds one bounded quantifier. Sightings:
 Plain negation in Chinese opens with the same two characters, so the bounded gap
 is what separates the two shapes: 不是 with no 是 behind it in the same sentence
 reports nothing.
-
-## Allowed negation
-
-`## The deletion test` in `SKILL.md` holds the canonical wording. In short:
-delete the clause and read what remains.
-
-The clause stays when it carries a requirement, a limitation, a causal fact, a
-selection rule, a compatibility boundary, a safety condition, or any other
-information the reader acts on:
-
-- "Prices do not include shipping or import duties." ✓
-- "The free plan does not include API access." ✓
-- "Delivery takes no more than 21 days within the EU." ✓
-- "General information, not a substitute for legal advice." ✓
-  (required disclaimer; the `comma-not-appositive` WARN exists to route
-  lines like this through the test)
-
-The clause goes when the sentence carries the same information after the
-deletion. It was there to set up praise, or to dress a plain fact as a reveal.
-Rewrite it as a direct statement of what the subject is or does.
-
-An earlier wording asked whether the sentence became *less* flattering, which
-reads only against marketing rhetoric. The test now covers technical prose on
-the same terms. Three rhetorical clauses with their direct forms:
-
-- "Freshness confirmed by query, not by the node count." → "The freshness
-  query returned the current result."
-- "A second index would add duplication without adding information." → "The
-  existing index already represents that commit."
-- "The gate wasn't slow — it finished." → "The gate finished in 1.2 s."

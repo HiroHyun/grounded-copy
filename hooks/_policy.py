@@ -10,7 +10,7 @@ under `### Profile lifecycle`:
   preference
 
 Every one of them is assembled from SKILL.md at runtime, so a rule edit lands
-without a code change. The workflow, the integrity rules, and the four excluded
+without a code change. The workflow, the integrity rules, and the three excluded
 closures load with the skill itself when a copy task calls for them, and so do
 the trigger catalogs and rewrite tables in references/patterns.md.
 
@@ -24,7 +24,6 @@ import re
 # Sections both profiles carry, in payload order.
 CORE_HEADINGS = (
     "## The one banned move",
-    "## The deletion test",
     "## Positive forms",
     "## Scope and precedence",
     "## Sourcing",
@@ -82,20 +81,20 @@ DIRECTIVE_LEAD_EMPTY = (
     "rules for this profile arrive at the next session start."
 )
 
-# Extraction sizes measured 2026-07-31 against SKILL.md, after the trigger
-# catalogs and the example tables moved into references/patterns.md. The chat
-# core ran at 6,333 bytes and the copy core at 8,590 before that move;
-# references/setup.md records the per-session cost and the method.
-BASELINE_BYTES = 4278
-COPY_BASELINE_BYTES = 5835
+# Extraction sizes measured 2026-08-01 against SKILL.md, after `## The deletion
+# test` came out of the core. The chat core ran at 4,278 bytes and the copy core
+# at 5,835 with that section in the payload; references/setup.md records the
+# per-session cost and the method.
+BASELINE_BYTES = 3921
+COPY_BASELINE_BYTES = 5654
 TURN_BASELINE_BYTES = 218
 
 # (floor, ceiling) per payload. The ceiling is the published budget: a payload
 # that grows past it fails the self-test, which is what keeps the per-session
 # cost where the documentation says it is. The floor catches an extraction that
 # returns a stub while every structural assertion still passes.
-BYTE_RANGE = (3650, 4700)
-COPY_BYTE_RANGE = (5000, 6400)
+BYTE_RANGE = (3350, 4300)
+COPY_BYTE_RANGE = (4850, 6200)
 TURN_BYTE_RANGE = (160, 260)
 
 
