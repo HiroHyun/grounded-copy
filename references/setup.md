@@ -436,20 +436,47 @@ drift with layers A and B already running. One row per observed slip:
 | 2026-07-30 | appositive reversal | fenced block in a chat reply | A and B |
 | 2026-07-30 | bare "rather than" contrast | fenced block in a chat reply | A and B |
 | 2026-08-01 | appositive reversal, code-span object | running prose in a chat reply | A and B |
+| 2026-08-01 | bare "rather than" contrast | running prose in a chat reply | A and B |
 
 Counting method: record a row when a banned move reaches user-visible output
 with a profile active, naming the move, the surface, and the layers running.
 
 The first two rows landed inside fenced blocks, which is why the deferred spec
-selects fences by language tag and keeps untagged fences in scope. Row three
-landed in running prose, so surface selection covers the reply body as well:
-"the verbs are \`codex plugin add\`/\`remove\`, not \`install\`/\`uninstall\`."
-Two things follow. The session policy carried `## Scope and precedence` and the
-appositive form of shape 2 at the time, so the guidance layer had the rule in
-context and the slip happened anyway. And `copy_lint.py` returns
-`0 error(s), 0 warning(s)` on that sentence, because `comma-not-appositive`
-matches `,\s*not\s+(?:a|an|another|your)` and the object here opens with a
-backtick. `### Follow-up review scopes` carries both as review rows.
+selects fences by language tag and keeps untagged fences in scope. Rows three
+and four landed in running prose, so surface selection covers the reply body as
+well.
+
+Both new rows happened with the session policy and the turn reminder in
+context, and both sentences fail the deletion test — deleting the negated half
+loses no information — so the guidance layer already prohibited them. The
+specification was uniform; compliance was the failure.
+
+What the deterministic layer did with them, measured:
+
+| Row | `copy_lint.py` result | Exit |
+|---|---|---|
+| 3, code-span object | `0 error(s), 0 warning(s)` | 0 |
+| 4, bare "rather than" | `1 warning`, rule `bare-rather-than` | 0 |
+
+Row three misses because `comma-not-appositive` matches
+`,\s*not\s+(?:a|an|another|your)` and the object opens with a backtick. Row
+four matches at WARN, and WARN leaves the process exit at zero, so the gate
+reports PASS. Neither reply passed through a gate in any case: no `Stop` hook
+runs, so chat replies reach the user unlinted. That is the Phase 1 boundary
+these rows exist to price.
+
+**Promoting every WARN to ERROR, measured.** Ten of the 54 shipped rules are
+WARN. Reclassifying them makes `tests/good-samples.md` fail on two lines:
+
+- `The guide is general information, not a substitute for legal advice.`
+- `Invoices are billed monthly rather than per seat.`
+
+Those two lines are the false-positive counterexamples `CONTRIBUTING.md`
+requires, and they are the required-disclaimer and billing-fact cases that
+`## The deletion test` rules in. A uniform ERROR ban trades a corpus that
+defines allowed factual negation for a gate that still leaves chat replies
+unscanned, so it buys nothing on rows three and four. The deferred `Stop` hook
+covers both without that trade.
 
 The turn reminder stays in Phase 1 for a role `SessionStart` leaves open:
 per-turn recency against the per-turn injections other plugins make, with
@@ -471,7 +498,8 @@ guidance layer covers them today; the rows add the deterministic layer.
 | absence framing, rhetorical | new `without-sacrificing` covering `sacrificing\|compromising`, ERROR | a line in `tests/bad-samples.md`, exit 1 |
 | bare exclusion clause | new `bare-instead-of` mirroring `bare-rather-than`, WARN | rule name reported |
 | code-span object | widen `comma-not-appositive` so a backtick, quote, or bracket may open the object, WARN | rule name reported for the row-three sentence |
-| zh reversal reveal | new `zh-not-x-but-y` for the negate-then-assert structure and its four variants, ERROR | lines in `tests/bad-samples.md`, exit 1 |
+| zh reversal reveal, connector present | new `zh-not-x-but-y`, ERROR: negation, bounded gap, comma, explicit connector | lines in `tests/bad-samples.md`, exit 1 |
+| zh reversal reveal, connector absent | new `zh-not-x-is-y`, WARN: the same shape with the connector dropped | rule name reported |
 | wrapped phrases | `scan_text()` gains a wrap-joined pass with line-offset mapping | see below |
 
 The zh row has its sighting, measured 2026-08-01 against a 285-line corpus of
@@ -483,9 +511,24 @@ outside both. `## Multilingual equivalents` in
 `references/patterns.md` holds the forms and the sighting lines; the linter
 has no pattern for them.
 
-False-positive check before shipping: plain negation in Chinese opens with the
-same characters, so the pattern needs both halves present with a bounded gap
-between them, and `tests/good-samples.md` needs a factual negated line that
+The two rows split on the connector, and the split is measured. Candidates run
+against the 17 corpus lines and against 9 hand-written factual negations:
+
+| Candidate | Corpus lines matched | Factual lines matched |
+|---|---|---|
+| comma, bounded gap, explicit connector | 10 of 17 | 0 of 9 |
+| comma, bounded gap, connector optional | 14 of 17 | 2 of 9 |
+
+The connector-required form earns ERROR on that evidence. Dropping the
+connector reaches four more corpus lines, and it also matches a required risk
+disclaimer and a conditional clause whose negation and assertion belong to
+different sentences, so it earns WARN and goes through the deletion test. That
+mirrors the English pairs already shipped: `rather-than-simply` at ERROR beside
+`bare-rather-than` at WARN, and `not-x-but-y` beside `comma-not-appositive`.
+
+False-positive requirement for both rows: plain negation in Chinese opens with
+the same characters, so each pattern needs both halves present within a bounded
+gap, and `tests/good-samples.md` needs a factual negated line per severity that
 keeps passing.
 
 Measured on this branch, both blind-spot sentences return
