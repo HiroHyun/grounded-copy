@@ -30,10 +30,9 @@ and its actual specifics; the specifics are the point.
 | "We ship every Friday rather than hoarding features." | "We ship every Friday." |
 | "Freshness confirmed by query, not by the node count." | "The freshness query returned the current result." |
 
-The last row is the prepositional form. `comma-not-appositive` matches
-`, not a/an/another/your`, so `, not by`, `, not from`, `, not on`, `, not in`,
-and `, not through` clear the gate today. `references/setup.md` carries it as
-its own review scope.
+The last row is the prepositional form. `comma-not-appositive` matches a comma
+and `not` before any object, so `, not by`, `, not from`, `, not through`, and
+an object opening with a backtick, a quote, or a bracket all report.
 
 ## 3. Era-ending
 
@@ -71,8 +70,10 @@ Cross-sentence variant — equally banned:
 | "A second index would add duplication without adding information." | "The existing index already represents that commit." |
 
 The last row is absence-framed justification, which reaches technical prose as
-readily as marketing copy. No shipped pattern matches it;
-`references/setup.md` carries it as its own review scope.
+readily as marketing copy. `without-gerund` reports it and every other
+`without` + `-ing` form. A regex reads an `-ing` noun the same way, so "without
+warning" and "without training" report too; copy that needs one of those is
+written with the profile off.
 
 ## 7. Rhetorical bait
 
@@ -187,15 +188,17 @@ Rule for translators: translate the grounded English sentence literally.
 If the target-language draft contains a contrast the English source does
 not, the translation is wrong, even if it "sounds more natural."
 
-Some locale patterns lint as WARN because they have common factual uses —
-だけでなく, 뿐만 아니라, 더 이상, 혁신적. Apply the deletion test from the
-next section: coordination of facts stays, contrast set up for praise goes.
+だけでなく, 뿐만 아니라, 더 이상, and 혁신적 report alongside the rest. Each also
+carries a coordinating factual use; copy that needs one is written with the
+profile off.
 
-**zh reversal reveal — no shipped pattern matches it.** The rows above cover
-the minimizing forms (不仅仅是 / 不只是) and the era-ending forms (不再是 /
-告别). The reversal reveal in Chinese is 不是 X，而是 Y and its variants
-并不是…而是, 不在于…而在于, 不是…，是, and 而不是. Sightings, all returning
-`0 error(s), 0 warning(s)` today:
+**zh reversal reveal.** The rows above cover the minimizing forms (不仅仅是 /
+不只是) and the era-ending forms (不再是 / 告别). The reversal reveal in Chinese
+is 不是 X，而是 Y and its variants 并不是…而是, 不在于…而在于, 不是…，是, and
+而不是. `zh-not-x-but-y` reports every one: 不是 followed by 是 within 32
+characters of the same sentence, plus the two standalone forms. The connector
+slot (而 / 或 / 却 / one word / nothing) sits inside the gap, so the pattern
+holds one bounded quantifier. Sightings:
 
 | Bad | Good |
 |---|---|
@@ -204,9 +207,9 @@ the minimizing forms (不仅仅是 / 不只是) and the era-ending forms (不再
 | "它不是善意，是一套算出来的生意。" | "低价来自三处结构调整：砍掉一层渠道、压缩营销预算、把周转天数做到 30 天以内。" |
 | "量贩零食卖的不是零食，是情绪和节奏。" | "量贩零食按口味把品类拆到 SKU 级，一筐几十元，顾客平均停留 12 分钟。" |
 
-`references/setup.md` carries this as a review scope with its false-positive
-requirement: the opening characters also form ordinary negation, so a shipped
-pattern needs both halves within a bounded gap.
+Plain negation in Chinese opens with the same two characters, so the bounded gap
+is what separates the two shapes: 不是 with no 是 behind it in the same sentence
+reports nothing.
 
 ## Allowed negation
 

@@ -55,14 +55,16 @@ PATTERNS = [
      _c(r"\bthe\s+days\s+of\b[^.!?\n]{0,60}\bare\s+"
         r"(?:over|behind|gone|numbered)\b")),
     ("rather-than", _c(r"\brather\s+than\b")),
-    ("instead-of-just", _c(r"\binstead\s+of\s+(?:just|simply|merely)\b")),
+    ("instead-of", _c(r"\binstead\s+of\b")),
+    ("as-opposed-to", _c(r"\bas\s+opposed\s+to\b")),
     ("say-goodbye-hello", _c(r"\bsay\s+(?:goodbye|hello|farewell)\b")),
     ("no-more-x", _c(r"\bno\s+more\s+(?!than\b)\w+")),
     ("never-again", _c(r"\bnever\s+again\b")),
     ("not-x-but-y",
      _c(r"\bnot\s+(?:a|an|the|your)\b[^.!?\n]{0,60}?,?\s+but\b")),
     ("dash-not-contrast", _c(r"[—–]\s*not\s+")),
-    ("comma-not-appositive", _c(r",\s*not\s+(?:a|an|another|your)\b")),
+    # Any object, including one opening with a backtick, a quote, or a bracket.
+    ("comma-not-appositive", _c(r",\s*not\s+(?=\S)")),
     ("negated-copula-dash",
      _c(r"\b(?:is|was|are|were)(?:n't|\s+not)\s+[^—–.!?\n;:]{1,30}[—–]")),
     ("not-your-average",
@@ -79,6 +81,9 @@ PATTERNS = [
      _c(r"\bwithout\s+(?:the|all\s+the|any\s+of\s+the)\s+(?:hassle|hassles|"
         r"headache|headaches|hidden|stress|guesswork|usual|middlemen|"
         r"red\s+tape|runaround)\b")),
+    # "do A without doing B". A regex reads an -ing noun the same way, so
+    # "without warning" and "without training" match too.
+    ("without-gerund", _c(r"\bwithout\s+\w+ing\b")),
     ("zero-hassle",
      _c(r"\bzero\s+(?:hassle|hassles|guesswork|compromise|compromises|"
         r"hidden|surprises)\b")),
@@ -129,6 +134,11 @@ PATTERNS = [
     ("zh-not-just",
      _c(r"不仅仅是|不只是|不仅是|不止是|不再是|不只提供|告别|"
         r"重新定义|颠覆")),
+    # The reversal reveal: negate, then assert. The connector slot (而 / 或 /
+    # 却 / one word / nothing) sits inside the gap class, so the pattern holds
+    # one bounded quantifier and cannot backtrack past it.
+    ("zh-not-x-but-y",
+     _c(r"不是[^。！？；\n]{0,32}是|而不是|不在于[^。！？；\n]{0,32}而在于")),
     ("ru-not-just",
      _c(r"не\s+просто|больше,?\s+чем\s+просто|это\s+не\s+о\b|"
         r"попрощайтесь|переосмысл\w*|прощай(?:те)?,")),

@@ -32,3 +32,11 @@ Olvídate de las comisiones ocultas.
 Atrás quedaron los días de precios opacos.
 The guide is general information, not a substitute for legal advice.
 Invoices are billed monthly rather than per seat.
+Acme is more than a tool.
+The wait is no longer part of the process.
+Acme ships instead of stalling.
+Acme prices by plan as opposed to by seat.
+A second index would add duplication without adding information.
+Freshness confirmed by query, not by the node count.
+What if my order arrives damaged?
+它不是善意，是一套算出来的生意。
