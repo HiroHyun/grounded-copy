@@ -36,11 +36,9 @@ is running it on the files you choose.
 | "This isn't just a task tracker — it's your team's second brain." | "The tracker links every task to its pull request and posts a status digest to Slack each morning." |
 | "Say goodbye to hidden fees." | "The listed price is the complete price; the invoice adds nothing." |
 | "Experts agree Acme leads the market." | "Acme holds 34% of the segment, per Gartner's 2025 market report." |
-| "This is a neighborhood bakery, not a factory." | "The bakery mills its own flour and ferments each loaf for 18 hours before baking." |
-| "The delivery wasn't slow — it arrived before the store opened." | "The courier delivered the order at 6:40 a.m., twenty minutes before the store opened." |
-| "Our jeans are sewn in one workshop rather than shipped between contractors." | "Every pair is cut, sewn, and finished in one Los Angeles workshop." |
 
-Same information, carried by specifics.
+Same information, carried by specifics. `references/patterns.md` holds a
+rewrite for every shape.
 
 ## How it works
 
@@ -63,6 +61,13 @@ Four layers, each catching what the previous one misses:
    interception of model output waits for layer 4.
 4. **File hooks and CI** (see `references/setup.md`) run the linter on
    every file write and every pull request, including human ones.
+
+This README, `SKILL.md`, and `references/patterns.md` quote every banned
+pattern as the example that defines it, so each one fails layer 2 against its
+own content. CI runs `copy_lint.py` on `tests/bad-samples.md` and
+`tests/good-samples.md` and on no other path, which is what keeps the
+documentation shippable; `### Citation cost and open scope` in
+`references/setup.md` carries the per-file counts.
 
 ## Nine languages
 
@@ -105,18 +110,10 @@ npx skills@latest remove grounded-copy
 `--list` prints the skill metadata and stops there. `update` takes
 installed skill names and refreshes them from their source; `-g` restricts the
 run to global skills and `-p` to project skills. `remove` deletes the installed
-copy. The CLI records the files it manages in a `.source` manifest: `SKILL.md`,
-`references/patterns.md`, `references/setup.md`, and `scripts/copy_lint.py`.
+copy.
 
-### Direct skill download
-
-Every file is plain text under MIT, so a checkout is optional:
-
-```bash
-curl -L https://github.com/HiroHyun/grounded-copy/archive/refs/heads/main.tar.gz | tar xz
-```
-
-Or take the four files the skill needs:
+The CLI records the files it manages in a `.source` manifest, and those four
+are the whole skill, so `curl` fetches it just as well:
 
 ```bash
 base=https://raw.githubusercontent.com/HiroHyun/grounded-copy/main
@@ -141,30 +138,12 @@ This repository hosts its own marketplace, `hirohyun-plugins`, at
 ```
 
 `/plugin install` opens the plugin details, where you pick user, project, or
-local scope. `/reload-plugins` activates it in the current session.
-
-Manage it afterwards:
-
-```shell
-/plugin marketplace update hirohyun-plugins
-/plugin disable grounded-copy@hirohyun-plugins
-/plugin enable grounded-copy@hirohyun-plugins
-/plugin uninstall grounded-copy@hirohyun-plugins
-/plugin marketplace remove hirohyun-plugins
-```
-
-`/plugin marketplace remove` also uninstalls the plugins installed from that
-marketplace; `/plugin marketplace update` refreshes the catalog and keeps them.
-
-The same operations run from the shell for scripting:
-
-```bash
-claude plugin marketplace add HiroHyun/grounded-copy
-claude plugin install grounded-copy@hirohyun-plugins --scope project
-claude plugin marketplace list --json
-claude plugin uninstall grounded-copy@hirohyun-plugins --scope project
-claude plugin marketplace remove hirohyun-plugins
-```
+local scope. `/reload-plugins` activates it in the current session. The same
+verbs manage it afterwards — `update`, `disable`, `enable`, `uninstall`,
+`marketplace remove` — and each runs from the shell as `claude plugin ...` for
+scripting. `/plugin marketplace remove` also uninstalls the plugins that came
+from that marketplace; `/plugin marketplace update` refreshes the catalog and
+keeps them.
 
 The marketplace entry sets `"source": "./"`, so the plugin is this repository.
 A relative source resolves against a local copy of the marketplace, which means
@@ -204,21 +183,12 @@ codex plugin marketplace add HiroHyun/grounded-copy
 codex plugin add grounded-copy@hirohyun-plugins
 ```
 
-Start a new session before using the skill. Check what is registered, and
-manage it afterwards:
-
-```bash
-codex plugin list
-codex plugin marketplace list
-codex plugin marketplace upgrade
-codex plugin remove grounded-copy@hirohyun-plugins
-codex plugin marketplace remove hirohyun-plugins
-```
-
-`codex /plugins` opens the same catalog as a browser: Space turns an installed
-plugin on or off, and **Uninstall plugin** removes it. To keep it installed and
-off, set `enabled = false` on its entry in `~/.codex/config.toml` and restart
-Codex.
+Start a new session before using the skill. `codex plugin list` shows what is
+registered; the marketplace verbs are `add`, `list`, `upgrade`, and `remove`,
+and the plugin verbs are `add` and `remove`. `codex /plugins` opens the same
+catalog as a browser: Space turns an installed plugin on or off, and
+**Uninstall plugin** removes it. To keep it installed and off, set
+`enabled = false` on its entry in `~/.codex/config.toml` and restart Codex.
 
 `codex plugin add` copies the adapter to
 `~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>`. Run the
@@ -316,60 +286,15 @@ published budget and fails when one passes it.
 | `SKILL.md` | 8,707 | ~2,175 | when the skill triggers on a copy task |
 
 **Method.** Bytes are the measured unit: the UTF-8 length of what each hook
-writes to stdout. The session-policy rows are the rules body plus the header,
-the switch line, and the blank lines between them; `--self-test` prints the body
-alone, 106 bytes less. A governing directive is that body plus 248 bytes plus
-the resolved preference path, which its header interpolates, so the two
-directive rows measure a 59-character path and move with it. Token figures are
-estimates at bytes ÷ 4, and no token count in this repository comes from a
-tokenizer.
+writes to stdout. Token figures are estimates at bytes ÷ 4, and no token count
+in this repository comes from a tokenizer. `--self-test` prints the rules alone,
+106 bytes under the session-policy rows; the two directive rows include the
+resolved preference path and measure a 59-character one.
+`### Measured recurring cost` in `references/setup.md` gives both boundaries.
 
 A 60-turn `chat` session with one compaction and one profile switch spends
 3,872 × 2 + 218 × 60 + 4,073 = 24,897 bytes, down from 41,594 before the payload
 was cut.
-
-## Repository layout
-
-```
-grounded-copy/
-├── SKILL.md                        # Core rules + workflow + integrity rules
-├── LICENSE                         # MIT
-├── .claude-plugin/
-│   ├── plugin.json                 # Registers the two hooks and the skill
-│   └── marketplace.json            # The hirohyun-plugins catalog
-├── .agents/plugins/marketplace.json  # The Codex catalog
-├── hooks/
-│   ├── run.sh, run.cmd             # Resolve Python once, run the hook once
-│   ├── grounded_activate.py        # SessionStart: session policy into context
-│   ├── grounded_tracker.py         # UserPromptSubmit: turn reminder; --set
-│   ├── _preference.py              # The stored profile preference; sole writer
-│   ├── _policy.py                  # SKILL.md extraction and policy assembly
-│   └── _hook_io.py                 # Hook transport: stdin drain, plugin root
-├── commands/grounded.md            # /grounded-copy:grounded chat|copy|off
-├── references/
-│   ├── patterns.md                 # Trigger phrases, bad → good per category
-│   └── setup.md                    # Plugin hooks, distribution, Codex, CI
-├── scripts/
-│   ├── copy_lint.py                # The deterministic gate
-│   └── build_codex_adapter.py      # Builds the Codex adapter; --check
-├── adapters/codex/grounded-copy/   # Generated; skills-only Codex plugin
-├── tests/
-│   ├── bad-samples.md              # Must FAIL the linter (self-test)
-│   ├── good-samples.md             # Must PASS the linter (self-test)
-│   ├── test_hooks.py               # Hook interface suite
-│   ├── test_launchers.py           # Launcher dispatch, arguments, exit codes
-│   └── test_codex_adapter.py       # Adapter byte identity and scope
-├── .github/workflows/copy-lint.yml # Linter corpora, self-test, both suites
-├── .gitattributes                  # Line endings per file type
-└── CONTRIBUTING.md
-```
-
-The example rows and quoted phrases in this README, in `SKILL.md`, and in
-`references/patterns.md` are the banned patterns quoted as the examples that
-define them, so each file reports findings against its own gate: README 20,
-`SKILL.md` 53, `references/patterns.md` 148, measured 2026-08-01. CI runs
-`copy_lint.py` on `tests/bad-samples.md` and `tests/good-samples.md` and on no
-other path, which is what keeps those three files shippable.
 
 ## Contributing
 

@@ -372,7 +372,7 @@ folder to a plain skill.
 
 Every banned pattern this repository documents is quoted as the example that
 defines it, so each file reports findings against its own gate. Measured
-2026-08-02: `README.md` 20, `SKILL.md` 53, `references/patterns.md` 148, and
+2026-08-02: `README.md` 17, `SKILL.md` 53, `references/patterns.md` 148, and
 this file 0. CI runs `copy_lint.py` on `tests/bad-samples.md` and
 `tests/good-samples.md` and on no other path, which is what keeps the rest
 shippable. Sighting quotes belong in `references/patterns.md`; this file names
