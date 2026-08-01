@@ -437,6 +437,7 @@ drift with layers A and B already running. One row per observed slip:
 | 2026-07-30 | bare "rather than" contrast | fenced block in a chat reply | A and B |
 | 2026-08-01 | appositive reversal, code-span object | running prose in a chat reply | A and B |
 | 2026-08-01 | bare "rather than" contrast | running prose in a chat reply | A and B |
+| 2026-08-01 | appositive reversal | running prose in a chat reply | A and B |
 
 Counting method: record a row when a banned move reaches user-visible output
 with a profile active, naming the move, the surface, and the layers running.
