@@ -53,16 +53,9 @@ setup where `sh` is absent from PATH, run the same script through
 `hooks/run.cmd` with double quotes around the path, matching the launcher swap
 in `references/setup.md`; `cmd` reads `'` as an ordinary character.
 
-Profiles:
-
-- `chat` — the core rules: the banned move with its seven shapes, positive
-  forms, scope and precedence, and sourcing.
-- `copy` — the same, plus the marketing register and two closures covering
-  translation and the linter's standing as a floor.
-- `off` — the session policy and the turn reminder both stop. This is the path
-  for a legal disclaimer, terms of service, regulatory copy, a billing fact, or
-  a translation of supplied source: switch off, write the text, switch back.
-  The value persists across restarts until `chat` or `copy` replaces it.
+Profiles: `chat` carries the core rules, `copy` adds the marketing register and
+two closures, and `off` stops the session policy and the turn reminder. The
+recorded value persists across restarts until another `--set` replaces it.
 
 `### Profile lifecycle` in `references/setup.md` is the one description of how
 the profile preference, the session policy, the turn reminder, and the

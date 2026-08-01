@@ -10,9 +10,8 @@
    exception. Search for factual uses of the same string and name them in
    the PR description ("no more than 21 days", "mehr als ein Jahr", the
    `-ing` nouns `without-gerund` reads as gerunds), so a reader knows what
-   else the regex reports.
-   Copy that has to use one of those forms is written with the profile
-   off, and `README.md` documents that switch.
+   else the regex reports. Copy needing one of those forms is written with
+   the profile off, which `README.md` documents.
 4. **Catalog entry.** Add a bad → good row to `references/patterns.md`.
    The good cell must itself pass the linter.
 

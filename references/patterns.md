@@ -1,11 +1,10 @@
 # Pattern catalog: every disguise, with rewrites
 
-One section per shape in `## The one banned move` in `SKILL.md`, each carrying
-that shape's complete trigger list and a bad → good rewrite for every entry.
-The recipe holds throughout: delete the contrast, state what the subject does,
-attach a specific (feature, number, mechanism). "Acme", "the app", and "the
-store" are placeholders spanning SaaS, e-commerce, services, and physical
-goods; substitute the real product and its real specifics.
+One section per shape in `## The one banned move` in `SKILL.md`. The recipe
+holds throughout: delete the contrast, state what the subject does, attach a
+specific (feature, number, mechanism). "Acme", "the app", and "the store" are
+placeholders spanning SaaS, e-commerce, services, and physical goods;
+substitute the real product and its real specifics.
 
 ## 1. Placed against an alternative
 
@@ -33,7 +32,7 @@ compromises", "hassle-free", "frictionless").
 The last row is absence-framed justification, which reaches technical prose as
 readily as marketing copy. `without-gerund` reports it and every other
 `without` + `-ing` form. A regex reads an `-ing` noun the same way, so "without
-warning" and "without training" report too; copy that needs one of those is
+warning" and "without training" report too; copy needing one of those is
 written with the profile off.
 
 ## 2. Reversal reveals
@@ -157,11 +156,10 @@ state the fact it gestured at.
 | ja | 単なる〜ではない / 〜だけではない / 〜だけでなく / 〜にとどまらない / 〜とはおさらば / 再定義 / 革命的 / 想像してみてください |
 | ko | 단순한 〜이 아니다 / 뿐만 아니라 / 〜에 그치지 않는다 / 〜와 작별하세요 / 더 이상 / 재정의 / 게임 체인저 / 상상해 보세요 |
 
-Rule for translators: translate the grounded English sentence literally. If the
-target-language draft contains a contrast the English source does not, the
-translation is wrong, even if it "sounds more natural." だけでなく, 뿐만 아니라,
-더 이상, and 혁신적 each also carry a coordinating factual use and report all the
-same; copy that needs one is written with the profile off.
+Rule for translators: a target-language draft carrying a contrast the English
+source lacks is a wrong translation, however natural it sounds. だけでなく,
+뿐만 아니라, 더 이상, and 혁신적 each also carry a coordinating factual use and
+report all the same; copy needing one is written with the profile off.
 
 **zh reversal reveal.** The row above covers the minimizing forms (不仅仅是 /
 不只是) and the era-ending forms (不再是 / 告别). The reversal reveal is
