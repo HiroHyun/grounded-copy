@@ -52,9 +52,9 @@ SWITCH_LINE = "Profile: {profile}. Switch: `/grounded-copy:grounded chat|copy|of
 
 # Every clause here holds a boundary the session policy states once and the
 # turn reminder keeps in reach. `Prefer established positive terms` came out:
-# `## Positive forms` carries it at session start, and no evidence row in
-# references/setup.md attributes a slip to its absence. Both rows there landed
-# inside fenced blocks, which is why the fence clause stays.
+# `## Positive forms` carries it at session start. The fence clause stays
+# because a fence is where the observed slips landed, and the rules govern
+# inside one.
 TURN_REMINDER = (
     "GROUNDED PROSE ({profile}). State what the subject is or does. No "
     "contrast, era-ending, or hype. Rules hold in quotes, fences, and "

@@ -15,14 +15,8 @@ loading mechanism differs. Vendor the folder into the repo once:
 
 ## Claude Code, always-on (plugin)
 
-Measured on Claude Code 2.1.220, Windows 11:
-
-| Question | Result |
-|---|---|
-| Does the Skills CLI deliver the plugin files? | Its `.source` manifest lists four files (`SKILL.md`, both references, `copy_lint.py`), and the install carries no `.git` directory, so `.claude-plugin/` and `hooks/` arrive by `git clone` or by a marketplace install |
-| Which launcher works? | `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"` runs in the hook shell; `run.cmd` covers a setup lacking `sh` |
-| Does `${CLAUDE_PLUGIN_DATA}` resolve for `@skills-dir`? | Yes — `~/.claude/plugins/data/grounded-copy-skills-dir`. The flag still uses a fixed path (see below) |
-| Command name | `/grounded-copy:grounded`; plain `/grounded` returns "Unknown command" |
+`README.md` carries the install commands. This file covers what the plugin
+wires up once it is installed.
 
 The flag lives at `<config-dir>/grounded-copy/profile`, one fixed path across
 every install method. A marketplace install copies the plugin into
@@ -30,18 +24,13 @@ every install method. A marketplace install copies the plugin into
 directory on each version; a plugin discovered in a skills directory is read in
 place, so that root holds still. One fixed path keeps the two methods on the
 same file, and it holds user state, which belongs somewhere the user can cat,
-edit, and grep while debugging the switch.
+edit, and grep while debugging the switch. `${CLAUDE_PLUGIN_DATA}` does resolve
+for `@skills-dir`, measured at `~/.claude/plugins/data/grounded-copy-skills-dir`
+on Claude Code 2.1.220; the fixed path wins on the reason above.
 
 A skill loads when the model judges its description relevant, and this
 description covers copy tasks, so chat replies fall outside it. Two hooks put
 the rules in every session instead.
-
-Clone the repo into the skills directory, which makes Claude Code load the
-folder as `grounded-copy@skills-dir`:
-
-```bash
-git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-copy
-```
 
 `.claude-plugin/plugin.json` registers both hooks:
 
@@ -82,40 +71,26 @@ the preference and policy vocabulary, so `_preference.py` reads no stdin and
 ### Launchers
 
 Both hook commands call a launcher, which probes `python` then `python3`,
-takes the first reporting Python 3, and runs the hook once. The direct form
-
-```
-python X.py || python3 X.py
-```
-
-re-runs the script whenever the first interpreter exits nonzero for any
-reason, which on `SessionStart` emits the ruleset twice.
+takes the first reporting Python 3, and runs the hook once.
 
 `plugin.json` ships with `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. On a
 Windows setup where `sh` is absent from the hook shell, change both commands
 to `"${CLAUDE_PLUGIN_ROOT}/hooks/run.cmd"`. The two launchers behave
 identically, and each forwards its arguments verbatim, so paths holding
-spaces survive.
+spaces survive. `run.cmd` forwards `%2` through `%9`, which caps it at eight
+arguments after the script name; each hook command passes one.
+
+Both launchers match the first argument against the two shipped script names
+and assign a literal on match, so the executed command line derives from the
+launcher file. An unknown name exits 0 with no output. Both hand the
+interpreter's exit code back — `run.sh` through `exec`, `run.cmd` through
+`exit /b %ERRORLEVEL%` — which the `--set` contract needs.
 
 Every failure ends in exit 0 with no traceback: a missing interpreter, malformed
 stdin, an oversized flag file, and a symlinked flag file. A style reminder that
 breaks a session start costs more than the reminder is worth.
 
-Each launcher forwards its arguments as the shell parsed them. `run.cmd` runs
-with delayed expansion off and passes `%2` through `%9`, which caps it at eight
-arguments after the script name; each hook command passes one. Delayed
-expansion consumed `!` inside an argument, so `co!py` reached the hook as
-`copy` and wrote the `copy` profile.
-
-Both launchers match the first argument against the two shipped script names
-and assign a literal on match, so the executed command line derives from the
-launcher file. `run.cmd` re-expands `%SCRIPT%` into that line, which is the
-reason the closed set exists. An unknown name exits 0 with no output.
-
-Both launchers hand the interpreter's exit code back — `run.sh` through `exec`,
-`run.cmd` through `exit /b %ERRORLEVEL%` — which the `--set` contract needs.
-`run.cmd` ended at `exit /b 0` before, which masked every result the hook
-reported.
+Each launcher's header comment records the bug its shape exists to prevent.
 
 ### Shell-facing values
 
@@ -126,34 +101,23 @@ as a security guarantee. Three value classes, three treatments:
 |---|---|---|
 | script name | closed-set dispatch in both launchers | none: the executed string is a literal from the file |
 | profile value | `commands/grounded.md` interpolates nothing; every command line in it is a constant, and `canonical_argument()` rejects anything outside the closed set with exit 2 | a model could compose a line the file does not contain; the permission prompt is the boundary |
-| plugin root | open — see the measurement below | a shell metacharacter in the plugin root |
+| plugin root | open | a shell metacharacter in the plugin root |
 
 The manifest writes `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. That form works
-under two different mechanisms — Claude Code substituting the token before the
-shell parses the line, or `sh` expanding it from the environment — and the
-working state alone tells them apart in neither direction. Tightening the
-quoting needs the measurement first:
+under two mechanisms — Claude Code substituting the token before the shell
+parses the line, or `sh` expanding it from the environment — and a working state
+tells them apart in neither direction. The quoting holds at the double-quoted
+form until a live host measurement says which one runs. It blocks nothing that
+ships.
 
-1. Register a temporary `SessionStart` command that writes its environment and
-   its own argv to a file, run `/reload-plugins`, and start one session.
-2. Exported and unsubstituted: switch the manifest to
-   `sh "$CLAUDE_PLUGIN_ROOT/hooks/run.sh"`. A parameter expansion inside double
-   quotes undergoes no word splitting and no re-parsing, so the path is data by
-   the shell's own rules.
-3. Substituted: the path is textual, and single quotes are the strongest
-   available control, with a literal `'` in the root as the residual. The
-   `run.cmd` variant keeps double quotes, since `cmd` reads `'` as an ordinary
-   character.
-
-`--plugin-root "${CLAUDE_PLUGIN_ROOT}"` came out of both hook commands as a
-second interpolation with no purpose: `plugin_root()` reads
-`$CLAUDE_PLUGIN_ROOT` from the environment and falls back to the hooks
-directory's parent. The flag stays supported for the suite and manual runs.
+`plugin_root()` reads `$CLAUDE_PLUGIN_ROOT` from the environment and falls back
+to the hooks directory's parent, so the hook commands pass no `--plugin-root`.
+The flag stays supported for the suite and manual runs.
 
 `tests/test_launchers.py` drives a plugin root named ``gc $t`e;s&t v`` through
 both launchers, with `"` added on POSIX where the filesystem permits it. That
-bounds the launchers. The shell parsing that precedes them lives at the
-manifest seam, which the live check above covers.
+bounds the launchers themselves; the shell parsing that precedes them lives at
+the manifest seam above.
 
 ### Profile lifecycle
 
@@ -171,8 +135,12 @@ other surface points here.
 model's context. Both are read-only with respect to model output: they observe
 nothing the model produces and block nothing. Everything they achieve is
 guidance, and compliance with guidance is probabilistic. Deterministic
-interception needs an output-side gate — the `Stop` hook, the file gate, and
-the commit-body gate deferred to Phase 2 below.
+interception needs an output-side gate — a `Stop` hook, a file gate, a
+commit-body gate — and Phase 1 ships none of them, so a chat reply reaches the
+user with no scan. The turn reminder holds a role `SessionStart` leaves open:
+per-turn recency against the per-turn injections other plugins make.
+`SessionStart` returns after each compaction and says nothing about the turns
+between.
 
 **Three names.** `chat`, `copy`, `off`. `chat` is the default and the stored
 value for the core rules; a preference written as `technical` by an earlier
@@ -323,42 +291,6 @@ The two catalogs carrying one name is settled by that first row: Codex reads
 only `.agents/`, and Claude Code reads only `.claude-plugin/`, so the shared
 name `hirohyun-plugins` names one catalog per host with no collision.
 
-### Change classification
-
-Each change this branch made against `main`, and what happened to it here.
-
-| Branch change | Classification |
-|---|---|
-| `SessionStart` hook and session policy | retained, simplified — same mechanism, payload down 33.7% |
-| `UserPromptSubmit` turn reminder | retained, simplified — the one clause with no evidence row removed, payload down 39.9% |
-| `--set` and the governing directive | retained — self-contained, one code path, no ordering assumption |
-| `_preference.py`, single writer, fixed path | retained |
-| `_hook_io.py` transport split | retained — both entry points call both functions |
-| `run.sh` / `run.cmd`, closed dispatch, exit codes, argument forwarding | retained |
-| natural-language switch parser | reverted earlier on this branch; the seventeen-prompt invariant stays in `ReadOnlyHookTests` |
-| core rules added to `SKILL.md` | retained as rules, simplified as payload — trigger catalogs and examples relocated |
-| loophole closures | split — two folded into the rules they restated, four skill-only, two in the `copy` payload |
-| self-test tolerance band | redone — a published budget with a floor and a ceiling per payload, and the turn reminder now measured |
-| token figures in `README.md` and `references/setup.md` | redone — measured bytes, estimates labelled as estimates |
-| README disguise count and repository tree | redone |
-| plugin-root quoting | requires supporting evidence — unchanged, measurement below |
-| Claude Code marketplace, Codex marketplace, Codex adapter | added |
-
-### Unresolved host behavior
-
-One question needs a measurement on a live host. It blocks nothing that ships.
-
-**Plugin-root quoting.** `.claude-plugin/plugin.json` keeps
-`sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. `### Shell-facing values` above holds
-the three-step measurement and the two candidate mechanisms. A working state
-tells them apart in neither direction, so the quoting holds until the
-measurement runs.
-
-Codex marketplace path precedence was the second question here. The measured
-table in `### Distribution` above answers it: Codex reads
-`.agents/plugins/marketplace.json` and leaves the legacy
-`.claude-plugin/marketplace.json` unread.
-
 ### Reading and restoring the preference
 
 ```bash
@@ -409,8 +341,13 @@ and a red-capable drift case that modifies a copy and asserts `--check` exits
 1. CI runs all three files on `ubuntu-latest` and `windows-latest`.
 
 These are the deterministic criteria. Whether the model then follows the
-injected text is behavioral, measured by observation and recorded as evidence
-rows below.
+injected text is behavioral, and `**Enforcement boundary**` above states what
+Phase 1 does about it.
+
+Promoting every rule to blocking made two `tests/good-samples.md` lines fail,
+a required disclaimer and a billing fact. Both moved to `tests/bad-samples.md`,
+and the `off` profile is what a writer reaches for when copy has to carry one
+of those forms.
 
 ### Dev loop
 
@@ -431,98 +368,25 @@ the clone applies the current rules to every tracked file and clears it.
 the skill in place. Deleting `.claude-plugin/` and restarting returns the
 folder to a plain skill.
 
-### Phase 2 evidence gate
+### Citation cost and open scope
 
-Phase 1 injects text and lints nothing. The deterministic output gates — the
-`Stop` hook, the file gate, and the commit-body gate — ship against counted
-drift with layers A and B already running. One row per observed slip:
+Every banned pattern this repository documents is quoted as the example that
+defines it, so each file reports findings against its own gate. Measured
+2026-08-02: `README.md` 20, `SKILL.md` 53, `references/patterns.md` 148, and
+this file 0. CI runs `copy_lint.py` on `tests/bad-samples.md` and
+`tests/good-samples.md` and on no other path, which is what keeps the rest
+shippable. Sighting quotes belong in `references/patterns.md`; this file names
+counts and holds none of its own.
 
-| Date | Banned move | Surface | Layers active | Rule that reports it today |
-|---|---|---|---|---|
-| 2026-07-30 | appositive reversal | fenced block in a chat reply | A and B | `comma-not-appositive` |
-| 2026-07-30 | bare "rather than" contrast | fenced block in a chat reply | A and B | `rather-than` |
-| 2026-08-01 | appositive reversal, code-span object | running prose in a chat reply | A and B | `comma-not-appositive` |
-| 2026-08-01 | bare "rather than" contrast | running prose in a chat reply | A and B | `rather-than` |
-| 2026-08-01 | appositive reversal | running prose in a chat reply | A and B | `comma-not-appositive` |
-
-Counting method: record a row when a banned move reaches user-visible output
-with a profile active, naming the move, the surface, and the layers running.
-
-The first two rows landed inside fenced blocks, which is why the deferred spec
-selects fences by language tag and keeps untagged fences in scope. Rows three
-through five landed in running prose, so surface selection covers the reply body
-as well. Every row happened with the session policy and the turn reminder in
-context, and every sentence carried a shape the guidance layer already
-prohibited. The specification was uniform; compliance was the failure.
-
-**What the promotion changed.** Measured before this branch, row three returned
-`0 error(s), 0 warning(s)`: `comma-not-appositive` matched
-`,\s*not\s+(?:a|an|another|your)` and the object opened with a backtick. Row
-four matched `bare-rather-than` at WARN, which leaves the process exit at zero
-and reports PASS. Both rules block now, and the last column above names the rule
-each row hits. The surface is what stays open: no `Stop` hook runs, so a chat
-reply reaches the user with no scan at any severity. That is the Phase 1
-boundary these rows exist to price, and the gate stays open on it.
-
-**The escape hatch.** Promoting every rule made `tests/good-samples.md` fail on
-two lines, the required disclaimer and the billing fact. Both moved to
-`tests/bad-samples.md`, and the `off` profile is what a writer reaches for when
-copy has to carry one of those forms. `README.md` opens with that switch.
-
-The turn reminder stays in Phase 1 for a role `SessionStart` leaves open:
-per-turn recency against the per-turn injections other plugins make, with
-caveman writing `additionalContext` on every turn in this configuration.
-`SessionStart` returns after each compaction and says nothing about the turns
-between.
-
-### Follow-up review scopes
-
-Six of the eight scopes recorded here shipped on 2026-08-01: prepositional
-contrast and the code-span object, both by widening `comma-not-appositive` to
-any object; general and rhetorical absence framing through `without-gerund`;
-the bare exclusion clause through `instead-of`; and both Chinese reversal rows
-through one `zh-not-x-but-y`. One row stands.
-
-| Scope | Content | Red-capable test |
-|---|---|---|
-| wrapped phrases | `scan_text()` gains a wrap-joined pass with line-offset mapping | see below |
-
-The zh rule shipped on its sighting, measured 2026-08-01 against a 285-line
-corpus of two machine-written Chinese articles: `copy_lint.py` returned 4
-findings, every one `zh-not-just` on the era-ending member of that list, while
-17 lines carried the reversal reveal and cleared the gate. `zh-not-just`
-enumerates the minimizing and era-ending families, and the negate-then-assert
-structure sits outside both. Two candidates ran against those 17 lines and
-against 9 hand-written factual negations:
-
-| Candidate | Corpus lines matched | Factual lines matched |
-|---|---|---|
-| comma, bounded gap, explicit connector | 10 of 17 | 0 of 9 |
-| comma, bounded gap, connector optional | 14 of 17 | 2 of 9 |
-
-The shipped rule is the second form, with the connector slot folded into the gap
-class so one bounded quantifier covers both. It reaches the wider set. The two
-factual lines it also matches — a required risk disclaimer, and a conditional
-clause whose negation and assertion belong to different sentences — are cases
-for the `off` profile. `## Multilingual equivalents` in
-`references/patterns.md` holds the forms and the sighting lines.
-
-**Wrapped-phrase acceptance requirement.** `scan_line()` scans one line at a
-time, so a comparison phrase whose two halves land on either side of a Markdown
-line wrap produces zero findings. Every file in this repository is hard-wrapped
-near column 76, so the exemption already applies to the shipped corpus.
-Requirement: a phrase split across a wrap reports the same finding as the same
-phrase on one line, with the line number pointing at the first line of the
-match. A red-capable test writes each shipped multi-word pattern in both
-forms and asserts the finding counts match. Formatting creates no exemption.
-
-Citation cost, measured 2026-08-01 after every rule went blocking: `README.md`
-produces 20 findings, `SKILL.md` 53, and `references/patterns.md` 148 — every
-one a banned pattern quoted as the example that defines it. Under the WARN tier
-the same three files stood at 15, 44, and 110 errors. `references/setup.md`
-holds at 2 findings, both of them the quoted move name on an evidence row, so
-sighting quotes belong in `references/patterns.md` and this file names counts. The deferred `prose_gate.py` reads a quoted or backticked match
-as a citation for this reason.
+**Wrapped-phrase acceptance requirement.** One scope stands open.
+`scan_line()` scans one line at a time, so a comparison phrase whose two halves
+land on either side of a Markdown line wrap produces zero findings. Every file
+in this repository is hard-wrapped near column 76, so the exemption already
+applies to the shipped corpus. Requirement: a phrase split across a wrap
+reports the same finding as the same phrase on one line, with the line number
+pointing at the first line of the match. A red-capable test writes each shipped
+multi-word pattern in both forms and asserts the finding counts match.
+Formatting creates no exemption.
 
 ## Claude Code, skill only
 
@@ -627,12 +491,3 @@ jobs:
 Add `.style/grounded-copy/scripts/copy_lint.py` to a CODEOWNERS entry so
 edits to the linter itself require human review — that closes the last
 loophole, where an agent "fixes" the gate and leaves the copy alone.
-
-## Layer summary
-
-| Layer | Mechanism | Catches |
-|---|---|---|
-| SKILL.md rules | Probabilistic | Novel phrasings, cross-sentence contrast |
-| `copy_lint.py` | Deterministic | 50+ enumerated patterns, 9 languages |
-| Claude Code hook | Blocking | Anything written to disk in-session |
-| CI + CODEOWNERS | Blocking | Every agent and human; linter tampering |

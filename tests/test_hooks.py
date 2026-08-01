@@ -13,8 +13,8 @@ codes, and persisted state, which is the contract the plugin manifest depends
 on.
 
 These are the deterministic criteria. Whether the model then follows the
-injected text is behavioral, measured by observation and recorded as evidence
-rows in references/setup.md.
+injected text is behavioral; `**Enforcement boundary**` in references/setup.md
+states what Phase 1 does about that.
 """
 
 import json
@@ -42,7 +42,11 @@ CORE_HEADINGS = (
 # Rules inside those sections, asserted by their own text so a section that
 # survives extraction while losing a rule still fails.
 # SKILL.md is hard-wrapped, so each anchor stays short enough to sit on one
-# line. A phrase spanning a wrap would fail here for its formatting alone.
+# line. A phrase spanning a wrap would fail here for its formatting alone,
+# which makes this tuple a constraint on how SKILL.md may be rewrapped: each
+# anchor below pins the paragraph under `## The one banned move`,
+# `## Scope and precedence` (three bullets), `## Positive forms`, and
+# `## Sourcing`, in that order. Re-wrap those paragraphs and check here first.
 CORE_RULES = (
     "Every shape blocks with no",
     "**Verbatim source material.**",
@@ -237,8 +241,10 @@ class SessionPolicyTests(HookCase):
 # ---------------------------------------------------------------------------
 class TurnReminderTests(HookCase):
     # One clause per boundary the reminder keeps in reach. `Prefer established
-    # positive terms` came out with the payload cut; references/setup.md records
-    # why. The reminder also carries a byte budget, asserted below.
+    # positive terms` came out with the payload cut, since `## Positive forms`
+    # states it at session start; `### Measured recurring cost` in
+    # references/setup.md records that. The reminder also carries a byte
+    # budget, asserted below.
     CLAUSES = (
         "State what the subject is or does.",
         "No contrast, era-ending, or hype.",

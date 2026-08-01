@@ -9,8 +9,8 @@ argument shows up as a changed string and a swallowed exit code shows up as a 0.
 
 Scope bound: these cases measure what the launchers do with the arguments a
 shell already parsed. The shell parsing that happens before a launcher starts
-lives at the manifest seam, and references/setup.md records the live check for
-it.
+lives at the manifest seam, which references/setup.md records as an open
+residual under `### Shell-facing values`.
 """
 
 import os
