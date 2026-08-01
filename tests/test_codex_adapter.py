@@ -12,6 +12,7 @@ and no commands.
 import json
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -51,20 +52,45 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_the_check_mode_reports_a_modified_copy(self):
-        """A red-capable case: the check has to fail on real drift."""
-        target = SKILL_DIR / "SKILL.md"
-        original = target.read_bytes()
-        try:
-            target.write_bytes(original + b"\ndrift\n")
-            result = subprocess.run(
-                [sys.executable, BUILDER, "--check"],
-                cwd=str(REPO_ROOT), text=True, capture_output=True,
+        """A red-capable case: the check has to fail on real drift.
+
+        It runs against a temporary mirror, so every write stays inside the
+        temporary directory and a kill mid-test leaves no tracked file
+        modified. The builder takes its root from its own `__file__`, so
+        copying the builder into the mirror is what redirects it.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for source, _ in COPIES:
+                destination = root / source
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes((REPO_ROOT / source).read_bytes())
+            builder = root / "scripts" / "build_codex_adapter.py"
+            builder.write_bytes(Path(BUILDER).read_bytes())
+
+            built = subprocess.run(
+                [sys.executable, str(builder)],
+                cwd=tmp, text=True, capture_output=True,
             )
-            self.assertEqual(result.returncode, 1, result.stdout)
-            self.assertIn("differs", result.stdout)
-            self.assertIn("SKILL.md", result.stdout)
-        finally:
-            target.write_bytes(original)
+            self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
+
+            clean = subprocess.run(
+                [sys.executable, str(builder), "--check"],
+                cwd=tmp, text=True, capture_output=True,
+            )
+            self.assertEqual(clean.returncode, 0, clean.stdout)
+
+            copy = root / "adapters" / "codex" / "grounded-copy" / \
+                "skills" / "grounded-copy" / "SKILL.md"
+            copy.write_bytes(copy.read_bytes() + b"\ndrift\n")
+
+            drifted = subprocess.run(
+                [sys.executable, str(builder), "--check"],
+                cwd=tmp, text=True, capture_output=True,
+            )
+            self.assertEqual(drifted.returncode, 1, drifted.stdout)
+            self.assertIn("differs", drifted.stdout)
+            self.assertIn("SKILL.md", drifted.stdout)
 
     def test_the_manifest_declares_the_required_fields(self):
         manifest = json.loads(
