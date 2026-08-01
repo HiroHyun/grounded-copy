@@ -24,8 +24,10 @@ alongside the rest, and the over-match note records them.
 
 ## Ground rules
 
-- `scripts/copy_lint.py` stays zero-dependency Python 3 stdlib, one regex
-  pass per line, with no nested quantifier that backtracks.
+- `scripts/copy_lint.py` stays zero-dependency Python 3 stdlib. Each line
+  runs the 53 whole-line patterns; each sentence in it runs the 13 anchored
+  openers. Every nested quantifier stays bounded, so scan time holds linear
+  in the length of the line.
 - One severity and the 0/1/2 exit contract: 0 clean, 1 findings, 2 usage
   or IO error.
 - Changes to the linter and to `tests/` ship in the same PR; CI runs the

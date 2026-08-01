@@ -199,7 +199,9 @@ OPENERS = [
 ]
 
 SENTENCE_SPLIT = re.compile(r"(?<=[.!?！？。؟])\s+")
-LEAD_STRIP = " \t#*->—–-\"'“”‘’([`0123456789."
+# Straight quotes only: normalize() folds the curly forms before scan_line
+# strips a sentence, so a curly quote never reaches this set.
+LEAD_STRIP = " \t#*->—–-\"'([`0123456789."
 
 
 def normalize(text):
