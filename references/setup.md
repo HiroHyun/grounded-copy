@@ -308,7 +308,8 @@ repository root is the plugin. `"skills": ["./"]` names the root `SKILL.md`
 explicitly, which fixes the skill's invocation name to the frontmatter `name`
 on every version; the auto-load of a root `SKILL.md` needs 2.1.142 or later.
 A relative source resolves against a local copy of the marketplace, so users
-add this marketplace from git rather than from a direct URL to the JSON file.
+add this marketplace from git; a direct URL to the JSON file downloads that
+file alone and leaves the relative source unresolved.
 
 The Codex plugin specification places skills at `skills/<skill-name>/SKILL.md`,
 and the Skills CLI and Claude Code both read the repository-root `SKILL.md`.
@@ -443,53 +444,37 @@ Phase 1 injects text and lints nothing. The deterministic output gates — the
 `Stop` hook, the file gate, and the commit-body gate — ship against counted
 drift with layers A and B already running. One row per observed slip:
 
-| Date | Banned move | Surface | Layers active |
-|---|---|---|---|
-| 2026-07-30 | appositive reversal | fenced block in a chat reply | A and B |
-| 2026-07-30 | bare "rather than" contrast | fenced block in a chat reply | A and B |
-| 2026-08-01 | appositive reversal, code-span object | running prose in a chat reply | A and B |
-| 2026-08-01 | bare "rather than" contrast | running prose in a chat reply | A and B |
-| 2026-08-01 | appositive reversal | running prose in a chat reply | A and B |
+| Date | Banned move | Surface | Layers active | Rule that reports it today |
+|---|---|---|---|---|
+| 2026-07-30 | appositive reversal | fenced block in a chat reply | A and B | `comma-not-appositive` |
+| 2026-07-30 | bare "rather than" contrast | fenced block in a chat reply | A and B | `rather-than` |
+| 2026-08-01 | appositive reversal, code-span object | running prose in a chat reply | A and B | `comma-not-appositive` |
+| 2026-08-01 | bare "rather than" contrast | running prose in a chat reply | A and B | `rather-than` |
+| 2026-08-01 | appositive reversal | running prose in a chat reply | A and B | `comma-not-appositive` |
 
 Counting method: record a row when a banned move reaches user-visible output
 with a profile active, naming the move, the surface, and the layers running.
 
 The first two rows landed inside fenced blocks, which is why the deferred spec
 selects fences by language tag and keeps untagged fences in scope. Rows three
-and four landed in running prose, so surface selection covers the reply body as
-well.
+through five landed in running prose, so surface selection covers the reply body
+as well. Every row happened with the session policy and the turn reminder in
+context, and every sentence carried a shape the guidance layer already
+prohibited. The specification was uniform; compliance was the failure.
 
-Both new rows happened with the session policy and the turn reminder in
-context, and both sentences fail the deletion test — deleting the negated half
-loses no information — so the guidance layer already prohibited them. The
-specification was uniform; compliance was the failure.
+**What the promotion changed.** Measured before this branch, row three returned
+`0 error(s), 0 warning(s)`: `comma-not-appositive` matched
+`,\s*not\s+(?:a|an|another|your)` and the object opened with a backtick. Row
+four matched `bare-rather-than` at WARN, which leaves the process exit at zero
+and reports PASS. Both rules block now, and the last column above names the rule
+each row hits. The surface is what stays open: no `Stop` hook runs, so a chat
+reply reaches the user with no scan at any severity. That is the Phase 1
+boundary these rows exist to price, and the gate stays open on it.
 
-What the deterministic layer did with them, measured:
-
-| Row | `copy_lint.py` result | Exit |
-|---|---|---|
-| 3, code-span object | `0 error(s), 0 warning(s)` | 0 |
-| 4, bare "rather than" | `1 warning`, rule `bare-rather-than` | 0 |
-
-Row three misses because `comma-not-appositive` matches
-`,\s*not\s+(?:a|an|another|your)` and the object opens with a backtick. Row
-four matches at WARN, and WARN leaves the process exit at zero, so the gate
-reports PASS. Neither reply passed through a gate in any case: no `Stop` hook
-runs, so chat replies reach the user unlinted. That is the Phase 1 boundary
-these rows exist to price.
-
-**Promoting every WARN to ERROR, measured.** Ten of the 54 shipped rules are
-WARN. Reclassifying them makes `tests/good-samples.md` fail on two lines:
-
-- `The guide is general information, not a substitute for legal advice.`
-- `Invoices are billed monthly rather than per seat.`
-
-Those two lines are the false-positive counterexamples `CONTRIBUTING.md`
-requires, and they are the required-disclaimer and billing-fact cases that
-`## The deletion test` rules in. A uniform ERROR ban trades a corpus that
-defines allowed factual negation for a gate that still leaves chat replies
-unscanned, so it buys nothing on rows three and four. The deferred `Stop` hook
-covers both without that trade.
+**The escape hatch.** Promoting every rule made `tests/good-samples.md` fail on
+two lines, the required disclaimer and the billing fact. Both moved to
+`tests/bad-samples.md`, and the `off` profile is what a writer reaches for when
+copy has to carry one of those forms. `README.md` opens with that switch.
 
 The turn reminder stays in Phase 1 for a role `SessionStart` leaves open:
 per-turn recency against the per-turn injections other plugins make, with
@@ -499,68 +484,35 @@ between.
 
 ### Follow-up review scopes
 
-`CONTRIBUTING.md` caps a pull request at one pattern, and separate commits on
-one branch still ship as one pull request. Each row below is its own pull
-request. `SKILL.md` already names the prepositional and absence forms, so the
-guidance layer covers them today; the rows add the deterministic layer.
+Six of the eight scopes recorded here shipped on 2026-08-01: prepositional
+contrast and the code-span object, both by widening `comma-not-appositive` to
+any object; general and rhetorical absence framing through `without-gerund`;
+the bare exclusion clause through `instead-of`; and both Chinese reversal rows
+through one `zh-not-x-but-y`. One row stands.
 
 | Scope | Content | Red-capable test |
 |---|---|---|
-| prepositional contrast | widen `comma-not-appositive` to `,\s*not\s+(?:by\|from\|on\|in\|through\|with\|at\|for\|to\|via)\b`, WARN | rule name reported for the freshness sentence |
-| absence framing, general | new `without-gerund` covering `adding\|needing\|requiring\|losing`, WARN | rule name reported for the index sentence |
-| absence framing, rhetorical | new `without-sacrificing` covering `sacrificing\|compromising`, ERROR | a line in `tests/bad-samples.md`, exit 1 |
-| bare exclusion clause | new `bare-instead-of` mirroring `bare-rather-than`, WARN | rule name reported |
-| code-span object | widen `comma-not-appositive` so a backtick, quote, or bracket may open the object, WARN | rule name reported for the row-three sentence |
-| zh reversal reveal, connector present | new `zh-not-x-but-y`, ERROR: negation, bounded gap, comma, explicit connector | lines in `tests/bad-samples.md`, exit 1 |
-| zh reversal reveal, connector absent | new `zh-not-x-is-y`, WARN: the same shape with the connector dropped | rule name reported |
 | wrapped phrases | `scan_text()` gains a wrap-joined pass with line-offset mapping | see below |
 
-The zh row has its sighting, measured 2026-08-01 against a 285-line corpus of
-two machine-written Chinese articles: `copy_lint.py` returns 4 errors, every
-one `zh-not-just` on the era-ending member of that list, while 17 lines carry
-the reversal reveal and clear the gate. `zh-not-just` enumerates the
-minimizing and era-ending families, and the negate-then-assert structure sits
-outside both. `## Multilingual equivalents` in
-`references/patterns.md` holds the forms and the sighting lines; the linter
-has no pattern for them.
-
-The two rows split on the connector, and the split is measured. Candidates run
-against the 17 corpus lines and against 9 hand-written factual negations:
+The zh rule shipped on its sighting, measured 2026-08-01 against a 285-line
+corpus of two machine-written Chinese articles: `copy_lint.py` returned 4
+findings, every one `zh-not-just` on the era-ending member of that list, while
+17 lines carried the reversal reveal and cleared the gate. `zh-not-just`
+enumerates the minimizing and era-ending families, and the negate-then-assert
+structure sits outside both. Two candidates ran against those 17 lines and
+against 9 hand-written factual negations:
 
 | Candidate | Corpus lines matched | Factual lines matched |
 |---|---|---|
 | comma, bounded gap, explicit connector | 10 of 17 | 0 of 9 |
 | comma, bounded gap, connector optional | 14 of 17 | 2 of 9 |
 
-The connector-required form earns ERROR on that evidence. Dropping the
-connector reaches four more corpus lines, and it also matches a required risk
-disclaimer and a conditional clause whose negation and assertion belong to
-different sentences, so it earns WARN and goes through the deletion test. That
-mirrors the English pairs already shipped: `rather-than-simply` at ERROR beside
-`bare-rather-than` at WARN, and `not-x-but-y` beside `comma-not-appositive`.
-
-False-positive requirement for both rows: plain negation in Chinese opens with
-the same characters, so each pattern needs both halves present within a bounded
-gap, and `tests/good-samples.md` needs a factual negated line per severity that
-keeps passing.
-
-Measured on this branch, both blind-spot sentences return
-`0 error(s), 0 warning(s)`:
-
-- "Freshness confirmed by query, not by the node count." → "The freshness query
-  returned the current result."
-- "It's the same code at the same commit, so a second index of it would add
-  duplication without adding information." → "The existing index already
-  represents that commit."
-
-Both compliant forms also return `0 error(s), 0 warning(s)` and go into
-`tests/good-samples.md` with the pattern that motivates them.
-
-Both forms warrant WARN severity. WARN findings leave the process exit at zero,
-so the red-capable test asserts each finding's rule name. Blocking findings
-stay reserved for evidenced rhetorical forms with acceptable false-positive
-rates. Bare "rather than" already sits at WARN, and the second slip above used
-that form.
+The shipped rule is the second form, with the connector slot folded into the gap
+class so one bounded quantifier covers both. It reaches the wider set. The two
+factual lines it also matches — a required risk disclaimer, and a conditional
+clause whose negation and assertion belong to different sentences — are cases
+for the `off` profile. `## Multilingual equivalents` in
+`references/patterns.md` holds the forms and the sighting lines.
 
 **Wrapped-phrase acceptance requirement.** `scan_line()` scans one line at a
 time, so a comparison phrase whose two halves land on either side of a Markdown
@@ -568,17 +520,16 @@ line wrap produces zero findings. Every file in this repository is hard-wrapped
 near column 76, so the exemption already applies to the shipped corpus.
 Requirement: a phrase split across a wrap reports the same finding as the same
 phrase on one line, with the line number pointing at the first line of the
-match. A red-capable test writes each shipped multi-word ERROR pattern in both
+match. A red-capable test writes each shipped multi-word pattern in both
 forms and asserts the finding counts match. Formatting creates no exemption.
 
-Citation cost, measured 2026-08-01: `README.md` produces 15 errors and 4
-warnings, `SKILL.md` 44 errors and 12 warnings, and `references/patterns.md`
-110 errors and 14 warnings — every one a banned pattern quoted as the example
-that defines it. `references/setup.md` holds at 0 errors and 1 warning, so
-sighting quotes belong in `references/patterns.md` and this file names counts. `SKILL.md` ran at 69 errors and 16 warnings before the trigger
-catalogs moved into `references/patterns.md`, which is where the counts moved
-too. The deferred `prose_gate.py` demotes a quoted or backticked ERROR to WARN
-in the technical profile for this reason.
+Citation cost, measured 2026-08-01 after every rule went blocking: `README.md`
+produces 20 findings, `SKILL.md` 53, and `references/patterns.md` 141 — every
+one a banned pattern quoted as the example that defines it. Under the WARN tier
+the same three files stood at 15, 44, and 110 errors. `references/setup.md`
+holds at 2 findings, both of them the quoted move name on an evidence row, so
+sighting quotes belong in `references/patterns.md` and this file names counts. The deferred `prose_gate.py` reads a quoted or backticked match
+as a citation for this reason.
 
 ## Claude Code, skill only
 
@@ -682,7 +633,7 @@ jobs:
 
 Add `.style/grounded-copy/scripts/copy_lint.py` to a CODEOWNERS entry so
 edits to the linter itself require human review — that closes the last
-loophole, where an agent "fixes" the gate instead of the copy.
+loophole, where an agent "fixes" the gate and leaves the copy alone.
 
 ## Layer summary
 
