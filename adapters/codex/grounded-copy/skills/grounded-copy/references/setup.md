@@ -432,6 +432,14 @@ rows below.
 `SKILL.md` edits apply live in the current session. Changes under `hooks/`
 need `/reload-plugins` or a restart.
 
+A clone made before `.gitattributes` pinned the line endings keeps its original
+bytes for every file a later pull leaves untouched, and
+`scripts/build_codex_adapter.py --check` reports drift on that file alone.
+Measured 2026-08-01 on a skills-directory clone: the root `LICENSE` sat at 1,086
+bytes with CRLF while the adapter copy arrived in the same pull at 1,065 with
+LF, so `--check` printed `codex adapter differs`. `git add --renormalize .` in
+the clone applies the current rules to every tracked file and clears it.
+
 ### Rollback
 
 `claude plugin disable grounded-copy@skills-dir` stops the hooks and leaves

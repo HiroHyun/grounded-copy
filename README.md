@@ -184,7 +184,10 @@ git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-co
 
 Remove or rename any earlier portable install first; the clone needs an empty
 destination. Claude Code loads the folder as `grounded-copy@skills-dir` on the
-next session, and both hooks start. `git pull` in that directory updates it.
+next session, and both hooks start. `git pull` in that directory updates it; a
+clone older than the `.gitattributes` line-ending rules also wants
+`git add --renormalize .` once, which `references/setup.md` explains under
+`### Dev loop`.
 
 Roll back with `claude plugin disable grounded-copy@skills-dir`, which leaves
 the skill in place, or delete `.claude-plugin/` and restart to return the
