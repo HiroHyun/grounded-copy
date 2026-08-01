@@ -47,7 +47,7 @@ git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-co
 
 | Hook | Script | Output |
 |---|---|---|
-| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 4,051 bytes under `chat`, repeated after each compaction |
+| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 3,872 bytes under `chat`, repeated after each compaction |
 | `UserPromptSubmit` | `hooks/grounded_tracker.py` | the turn reminder, 218 bytes |
 
 Both hooks are read-only. `### Profile lifecycle` below defines every term
@@ -180,12 +180,13 @@ install reads as `chat`.
 
 | Profile | Session policy | Turn reminder |
 |---|---|---|
-| `chat` | the intro with its example pair, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,945 bytes of rules | one line naming `chat` |
-| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,682 bytes | one line naming `copy` |
+| `chat` | the intro with its example pair, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,766 bytes of rules | one line naming `chat` |
+| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,429 bytes | one line naming `copy` |
 | `off` | none | none |
 
-`--self-test` prints the current figures and fails when a payload passes its
-budget. `### Measured recurring cost` records the method and the history.
+`--self-test` prints those two figures and fails when a payload passes its
+budget. `### Measured recurring cost` gives what each hook writes to stdout,
+which adds 106 bytes to the rules, and the method behind both.
 
 **One writer, one path.** `_preference.write_preference()` is the sole writer
 and `grounded_tracker.py --set` is its only caller.
@@ -242,55 +243,39 @@ records a preference.
 
 ### Measured recurring cost
 
-UTF-8 bytes of each hook's stdout. The first two columns were measured
-2026-07-31 and the third 2026-08-01, both on Claude Code 2.1.220, Windows 11.
-`python hooks/grounded_activate.py --self-test` prints the current policy and
-reminder figures.
+UTF-8 bytes of each hook's stdout, measured 2026-08-02 on Claude Code 2.1.220,
+Windows 11.
 
-| Payload | Start | After the payload cut | After the carve-out removal |
-|---|---|---|---|
-| `chat` session policy, per `SessionStart` | 6,616 | 4,384 | 4,051 |
-| `copy` session policy, per `SessionStart` | 8,873 | 5,941 | 5,788 |
-| turn reminder, per prompt | 363 | 218 | 218 |
-| `chat` governing directive, per switch | 6,582 | 4,527 | 4,203 |
-| `copy` governing directive, per switch | 8,839 | 6,084 | 5,940 |
-| `SKILL.md`, loaded when the skill triggers | 12,544 | 9,789 | 9,196 |
+| Payload | Bytes |
+|---|---|
+| `chat` session policy, per `SessionStart` | 3,872 |
+| `copy` session policy, per `SessionStart` | 5,535 |
+| turn reminder, per prompt | 218 |
+| `chat` governing directive, per switch | 4,073 |
+| `copy` governing directive, per switch | 5,736 |
+| `SKILL.md`, loaded when the skill triggers | 8,707 |
+
+**Two boundaries, one payload.** A session-policy row is the rules body plus
+the header, the switch line, and the blank lines between them: 106 bytes.
+`python hooks/grounded_activate.py --self-test` prints the body alone, which is
+the figure `### Profile lifecycle` gives per profile. A governing directive is
+that body plus 248 bytes plus the resolved preference path, which its header
+interpolates, so both directive rows measure a 59-character path and move with
+it.
 
 One 60-turn `chat` session with one compaction and one profile switch:
-6,616 × 2 + 363 × 60 + 6,582 = 41,594 bytes at the start,
-4,384 × 2 + 218 × 60 + 4,527 = 26,375 after the payload cut, and
-4,051 × 2 + 218 × 60 + 4,203 = 25,385 now, a 39.0% reduction overall.
+3,872 × 2 + 218 × 60 + 4,073 = 24,897 bytes, against 41,594 before the payload
+cut, a 40.1% reduction.
 
 Every token figure in this repository is an estimate at bytes ÷ 4 and is
 labelled as one. No token count here comes from a tokenizer.
 
-**Where the reduction came from.** The trigger-phrase catalogs and the example
-tables moved out of `SKILL.md` into `references/patterns.md`, which already
-held a bad → good rewrite for every shape. `SKILL.md` keeps the rule and the
-opener for each of the seven shapes; `references/patterns.md` gives each shape
-a section holding its complete trigger list beside the rewrites. No rule left
-the payload. Two loophole
-closures were folded into the rules they restated: the quote-and-testimonial
-closure into **Verbatim source material**, and the headline-and-CTA closure
-into the scope sentence of `## Marketing register`. The turn reminder dropped
-`Prefer established positive terms`, the one clause with no evidence row and a
-session-start statement of its own in `## Positive forms`.
-
-**Evidence for the boundary change.** Examples and trigger phrases now have one
-home. The measured cost of the old arrangement was 2,055 bytes of chat payload
-and 2,755 bytes of copy payload per session, repeated after every compaction,
-for text that `references/patterns.md` already carried and that arrives again
-whenever the skill loads.
-
-**The carve-out removal.** `## The deletion test` was 551 bytes of the injected
-core, and it decided every negative, comparative, and absence clause by
-judgment. Every listed shape blocks now, so the test has nothing left to decide
-and the section came out, taking `## Allowed negation` in
-`references/patterns.md`, the `"This negation is factual."` closure, and the
-manual WARN-review step in `## Workflow` with it. The `copy` profile gained one
-line on plain negation, and `## The one banned move` gained the sentence naming
-the `off` profile as the escape, so the chat core stands 333 bytes under 4,278
-where the removed section alone measured 551.
+**What the payload carries.** `SKILL.md` keeps the rule and the opener for each
+of the seven shapes; `references/patterns.md` holds each shape's complete
+trigger list beside its rewrites, and arrives when the skill loads. The turn
+reminder carries one clause per boundary it keeps in reach and omits
+`Prefer established positive terms`, which `## Positive forms` states at session
+start.
 
 ### Distribution
 

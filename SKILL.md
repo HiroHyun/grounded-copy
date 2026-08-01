@@ -21,8 +21,7 @@ against what *era* has ended. Grounded prose states what the subject is
 and does, and attaches a specific.
 
 Seven shapes, one rule; the triggers below are openers.
-`references/patterns.md` gives each shape a section with the complete
-trigger list and a rewrite for every entry.
+`references/patterns.md` gives each shape its full trigger list and rewrites.
 
 1. **Placed against an alternative** — negated intensifiers, comparative
    clauses, transcendence verbs, absence framing: "not just", "more than
@@ -53,7 +52,6 @@ write the term: **read-only**, **immutable**, **append-only**,
 **allowlist**, **constant-time**, **exit code 2**.
 
 Where no term exists, state the constraint plainly as what holds.
-`## Positive forms` in `references/patterns.md` carries the rewrites.
 
 ## Scope and precedence
 
@@ -80,8 +78,7 @@ An unnamed authority offers praise where a checkable fact belongs, which
 is the vagueness twin of contrast. Name the source, the figure, and the
 date, or state the measurable claim. Editorializing participles carry the
 same defect — ", highlighting our commitment to quality" — so delete the
-tail and state the fact it gestured at. `## Vague attribution` in
-`references/patterns.md` carries the rewrites.
+tail and state the fact it gestured at.
 
 ## Marketing register
 
@@ -104,8 +101,6 @@ a perfume ad and a SaaS deck, it is hype. Replace it.
 **Plain negation.** Keep a negation when it states a limit the reader acts
 on — "does not support batching", "ships within the EU only". State every
 other point positively.
-
-`## Hype vocabulary` in `references/patterns.md` carries the full table.
 
 ## Loophole closures — read these before claiming compliance
 
@@ -154,18 +149,13 @@ rationalization below is pre-emptively rejected:
 - Never add allowlists, ignore-comments, or config that suppresses
   findings; never rename or move files to dodge the scan.
 - Never mark the task complete while the linter reports errors.
-- User instructions outrank this skill. `## Scope and precedence` holds
-  the rule and what to do when one conflicts; your own convenience
-  outranks nothing.
 
 ## References
 
-- `references/patterns.md` — one section per shape, each with its full
-  trigger list and a bad → good rewrite for every entry, plus the hype,
+- `references/patterns.md` — one section per shape with its full trigger
+  list and a bad → good rewrite for every entry, plus the hype,
   attribution, positive-form, and multilingual tables. Read it when a
-  flagged sentence is hard to rewrite, before writing copy in
-  zh/ru/es/ar/fr/de/ja/ko, or when a shape's openers leave a case
-  undecided.
+  rewrite is hard, or before writing copy in zh/ru/es/ar/fr/de/ja/ko.
 - `tests/bad-samples.md` and `tests/good-samples.md` — after any change
   to the linter, `copy_lint.py tests/bad-samples.md` must FAIL and
   `copy_lint.py tests/good-samples.md` must PASS.

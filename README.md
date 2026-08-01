@@ -302,27 +302,31 @@ effective policy relate.
 
 ## Measured recurring context cost
 
-UTF-8 bytes of each hook's stdout, measured 2026-07-31 on Claude Code 2.1.220.
-`python hooks/grounded_activate.py --self-test` prints the current figures and
-fails when a payload passes its published budget.
+UTF-8 bytes of each hook's stdout, measured 2026-08-02 on Claude Code 2.1.220.
+`python hooks/grounded_activate.py --self-test` checks each payload against its
+published budget and fails when one passes it.
 
 | Payload | Bytes | Estimated tokens | When it is spent |
 |---|---|---|---|
-| `chat` session policy | 4,051 | ~1,015 | every session start, and after each compaction |
-| `copy` session policy | 5,788 | ~1,445 | every session start, and after each compaction |
+| `chat` session policy | 3,872 | ~970 | every session start, and after each compaction |
+| `copy` session policy | 5,535 | ~1,385 | every session start, and after each compaction |
 | turn reminder | 218 | ~55 | every prompt |
-| `chat` governing directive | 4,203 | ~1,050 | every recorded profile switch |
-| `copy` governing directive | 5,940 | ~1,485 | every recorded profile switch |
-| `SKILL.md` | 9,196 | ~2,300 | when the skill triggers on a copy task |
+| `chat` governing directive | 4,073 | ~1,020 | every recorded profile switch |
+| `copy` governing directive | 5,736 | ~1,435 | every recorded profile switch |
+| `SKILL.md` | 8,707 | ~2,175 | when the skill triggers on a copy task |
 
 **Method.** Bytes are the measured unit: the UTF-8 length of what each hook
-writes to stdout, printed by `--self-test`. Token figures are estimates at
-bytes ÷ 4, and no token count in this repository comes from a tokenizer.
+writes to stdout. The session-policy rows are the rules body plus the header,
+the switch line, and the blank lines between them; `--self-test` prints the body
+alone, 106 bytes less. A governing directive is that body plus 248 bytes plus
+the resolved preference path, which its header interpolates, so the two
+directive rows measure a 59-character path and move with it. Token figures are
+estimates at bytes ÷ 4, and no token count in this repository comes from a
+tokenizer.
 
 A 60-turn `chat` session with one compaction and one profile switch spends
-about 25,385 bytes, down from 41,594 before the payload was cut.
-`### Measured recurring cost` in `references/setup.md` records the history and
-what moved where.
+3,872 × 2 + 218 × 60 + 4,073 = 24,897 bytes, down from 41,594 before the payload
+was cut.
 
 ## Repository layout
 

@@ -81,19 +81,19 @@ DIRECTIVE_LEAD_EMPTY = (
     "rules for this profile arrive at the next session start."
 )
 
-# Extraction sizes measured 2026-08-01 against SKILL.md, after `## The deletion
-# test` came out of the core and the cross-references moved from section numbers
-# to section names. The chat core ran at 4,278 bytes and the copy core at 5,835
-# with the deletion test in the payload; references/setup.md records the
-# per-session cost and the method.
-BASELINE_BYTES = 3945
-COPY_BASELINE_BYTES = 5682
+# Extraction sizes measured 2026-08-02 against SKILL.md, after the repeated
+# `references/patterns.md` cross-references collapsed into one. These count the
+# rules body alone; hook stdout adds the header and the switch line, 106 bytes.
+# references/setup.md records the per-session cost and the method.
+BASELINE_BYTES = 3766
+COPY_BASELINE_BYTES = 5429
 TURN_BASELINE_BYTES = 218
 
-# (floor, ceiling) per payload. The ceiling is the published budget: a payload
-# that grows past it fails the self-test, which is what keeps the per-session
-# cost where the documentation says it is. The floor catches an extraction that
-# returns a stub while every structural assertion still passes.
+# (floor, ceiling) per payload. The ceiling bounds growth against the figure the
+# documentation published when the range was set: a payload that passes it fails
+# the self-test. An exact-size assertion would fail on every intentional rule
+# addition and get muted, so the band leaves room for one. The floor catches an
+# extraction that returns a stub while every structural assertion still passes.
 BYTE_RANGE = (3350, 4300)
 COPY_BYTE_RANGE = (4850, 6200)
 TURN_BYTE_RANGE = (160, 260)
