@@ -11,6 +11,9 @@
         "source": "local",
         "path": "./adapters/codex/grounded-copy"
       },
+      "description": "Copy states what the subject is or does, backed by a deterministic Python linter. Skills only: the session hooks, the profiles, and the slash command are Claude Code features.",
+      "version": "0.2.0",
+      "license": "MIT",
       "category": "productivity",
       "policy": {
         "installation": "AVAILABLE"

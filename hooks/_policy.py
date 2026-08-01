@@ -34,11 +34,11 @@ MARKETING_HEADING = "## Marketing register"
 
 LOOPHOLE_HEADING = "## Loophole closures"
 
-# The closures the `copy` profile adds, in SKILL.md order. The quote and the
-# headline closures came out when `## Scope and precedence` absorbed them: the
-# verbatim rule already covers invented testimonials and `## Marketing register`
-# already enumerates headline and CTA scope. These two carry content no core
-# rule states.
+# The closures the `copy` profile adds, in SKILL.md order. Two others came out
+# into the rules that already stated them: the quote closure into
+# `## Scope and precedence`, whose verbatim rule covers invented testimonials,
+# and the headline closure into `## Marketing register`, which enumerates
+# headline and CTA scope. These two carry content no core rule states.
 COPY_LABELS = (
     '- **"It\'s a different language."**',
     '- **"The linter passed, so it\'s fine."**',

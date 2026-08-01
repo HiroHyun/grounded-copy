@@ -10,7 +10,6 @@ and no commands.
 """
 
 import json
-import os
 import subprocess
 import sys
 import unittest
@@ -86,6 +85,28 @@ class CodexAdapterTests(unittest.TestCase):
         notice = (ADAPTER / "LICENSE").read_text(encoding="utf-8")
         self.assertIn("MIT License", notice)
         self.assertIn("Permission is hereby granted", notice)
+
+    def test_every_catalog_entry_and_manifest_declares_mit(self):
+        """`README.md` claims both manifests and both catalog entries say MIT.
+
+        The adapter manifest is covered above; these are the other three, so the
+        README sentence is a tested claim rather than a maintained one.
+        """
+        for path in (
+            REPO_ROOT / ".claude-plugin" / "marketplace.json",
+            REPO_ROOT / ".agents" / "plugins" / "marketplace.json",
+        ):
+            with self.subTest(catalog=path.parent.name):
+                catalog = json.loads(path.read_text(encoding="utf-8"))
+                entries = [
+                    p for p in catalog["plugins"] if p["name"] == "grounded-copy"
+                ]
+                self.assertEqual(len(entries), 1, "one entry per catalog")
+                self.assertEqual(entries[0].get("license"), "MIT")
+        manifest = json.loads(
+            (REPO_ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(manifest["license"], "MIT")
 
     def test_the_adapter_ships_no_hooks_and_no_commands(self):
         for name in ("hooks", "commands", ".claude-plugin"):
