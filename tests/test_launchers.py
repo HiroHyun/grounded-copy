@@ -82,7 +82,6 @@ class LauncherCase(unittest.TestCase):
             "MARKER-INTRO probe intro.\n\n"
             "## The one banned move (probe)\n\n"
             "MARKER-BANNED probe body.\n\n"
-            "## The deletion test\n\nMARKER-DELETION\n\n"
             "## Positive forms\n\nMARKER-POSITIVE\n\n"
             "## Scope and precedence\n\nMARKER-SCOPE\n\n"
             "## Sourcing\n\nMARKER-SOURCING\n",

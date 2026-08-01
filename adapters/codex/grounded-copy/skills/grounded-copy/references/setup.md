@@ -73,9 +73,9 @@ Modules, split by domain responsibility:
 | `scripts/copy_lint.py` | the deterministic gate: patterns, severities, exit codes |
 | `scripts/build_codex_adapter.py` | building the Codex adapter from the canonical files, and `--check` |
 
-`_hook_io.py` earns its own file on the deletion test: both entry points call
-both of its functions, and `plugin_root()` carries three resolution rules whose
-duplication across two files is how they drift apart. Transport stays outside
+`_hook_io.py` earns its own file on use: both entry points call both of its
+functions, and `plugin_root()` carries three resolution rules whose duplication
+across two files is how they drift apart. Transport stays outside
 the preference and policy vocabulary, so `_preference.py` reads no stdin and
 `_policy.py` reads no environment.
 
