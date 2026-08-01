@@ -191,6 +191,23 @@ Some locale patterns lint as WARN because they have common factual uses —
 だけでなく, 뿐만 아니라, 더 이상, 혁신적. Apply the deletion test from the
 next section: coordination of facts stays, contrast set up for praise goes.
 
+**zh reversal reveal — no shipped pattern matches it.** The rows above cover
+the minimizing forms (不仅仅是 / 不只是) and the era-ending forms (不再是 /
+告别). The reversal reveal in Chinese is 不是 X，而是 Y and its variants
+并不是…而是, 不在于…而在于, 不是…，是, and 而不是. Sightings, all returning
+`0 error(s), 0 warning(s)` today:
+
+| Bad | Good |
+|---|---|
+| "消费者不是图便宜才买的，而是真心认可产品本身的价值。" | "该品牌主力车型均价 20 万以上，购车用户中 68% 将续航和智驾列为首选理由。" |
+| "关键不是等，而是看你的用车场景适不适合现在入手。" | "有固定车位可装充电桩的用户，每公里电费几分钱，现在入手即可回本。" |
+| "它不是善意，是一套算出来的生意。" | "低价来自三处结构调整：砍掉一层渠道、压缩营销预算、把周转天数做到 30 天以内。" |
+| "量贩零食卖的不是零食，是情绪和节奏。" | "量贩零食按口味把品类拆到 SKU 级，一筐几十元，顾客平均停留 12 分钟。" |
+
+`references/setup.md` carries this as a review scope with its false-positive
+requirement: the opening characters also form ordinary negation, so a shipped
+pattern needs both halves within a bounded gap.
+
 ## Allowed negation
 
 `## The deletion test` in `SKILL.md` holds the canonical wording. In short:

@@ -435,11 +435,21 @@ drift with layers A and B already running. One row per observed slip:
 |---|---|---|---|
 | 2026-07-30 | appositive reversal | fenced block in a chat reply | A and B |
 | 2026-07-30 | bare "rather than" contrast | fenced block in a chat reply | A and B |
+| 2026-08-01 | appositive reversal, code-span object | running prose in a chat reply | A and B |
 
 Counting method: record a row when a banned move reaches user-visible output
 with a profile active, naming the move, the surface, and the layers running.
-Both rows landed inside fenced blocks, which is why the deferred spec selects
-fences by language tag and keeps untagged fences in scope.
+
+The first two rows landed inside fenced blocks, which is why the deferred spec
+selects fences by language tag and keeps untagged fences in scope. Row three
+landed in running prose, so surface selection covers the reply body as well:
+"the verbs are \`codex plugin add\`/\`remove\`, not \`install\`/\`uninstall\`."
+Two things follow. The session policy carried `## Scope and precedence` and the
+appositive form of shape 2 at the time, so the guidance layer had the rule in
+context and the slip happened anyway. And `copy_lint.py` returns
+`0 error(s), 0 warning(s)` on that sentence, because `comma-not-appositive`
+matches `,\s*not\s+(?:a|an|another|your)` and the object here opens with a
+backtick. `### Follow-up review scopes` carries both as review rows.
 
 The turn reminder stays in Phase 1 for a role `SessionStart` leaves open:
 per-turn recency against the per-turn injections other plugins make, with
@@ -460,7 +470,23 @@ guidance layer covers them today; the rows add the deterministic layer.
 | absence framing, general | new `without-gerund` covering `adding\|needing\|requiring\|losing`, WARN | rule name reported for the index sentence |
 | absence framing, rhetorical | new `without-sacrificing` covering `sacrificing\|compromising`, ERROR | a line in `tests/bad-samples.md`, exit 1 |
 | bare exclusion clause | new `bare-instead-of` mirroring `bare-rather-than`, WARN | rule name reported |
+| code-span object | widen `comma-not-appositive` so a backtick, quote, or bracket may open the object, WARN | rule name reported for the row-three sentence |
+| zh reversal reveal | new `zh-not-x-but-y` for the negate-then-assert structure and its four variants, ERROR | lines in `tests/bad-samples.md`, exit 1 |
 | wrapped phrases | `scan_text()` gains a wrap-joined pass with line-offset mapping | see below |
+
+The zh row has its sighting, measured 2026-08-01 against a 285-line corpus of
+two machine-written Chinese articles: `copy_lint.py` returns 4 errors, every
+one `zh-not-just` on the era-ending member of that list, while 17 lines carry
+the reversal reveal and clear the gate. `zh-not-just` enumerates the
+minimizing and era-ending families, and the negate-then-assert structure sits
+outside both. `## Multilingual equivalents` in
+`references/patterns.md` holds the forms and the sighting lines; the linter
+has no pattern for them.
+
+False-positive check before shipping: plain negation in Chinese opens with the
+same characters, so the pattern needs both halves present with a bounded gap
+between them, and `tests/good-samples.md` needs a factual negated line that
+keeps passing.
 
 Measured on this branch, both blind-spot sentences return
 `0 error(s), 0 warning(s)`:
@@ -489,10 +515,11 @@ phrase on one line, with the line number pointing at the first line of the
 match. A red-capable test writes each shipped multi-word ERROR pattern in both
 forms and asserts the finding counts match. Formatting creates no exemption.
 
-Citation cost, measured 2026-07-31: `README.md` produces 15 errors and 4
+Citation cost, measured 2026-08-01: `README.md` produces 15 errors and 4
 warnings, `SKILL.md` 44 errors and 12 warnings, and `references/patterns.md`
-106 errors and 14 warnings — every one a banned pattern quoted as the example
-that defines it. `SKILL.md` ran at 69 errors and 16 warnings before the trigger
+110 errors and 14 warnings — every one a banned pattern quoted as the example
+that defines it. `references/setup.md` holds at 0 errors and 1 warning, so
+sighting quotes belong in `references/patterns.md` and this file names counts. `SKILL.md` ran at 69 errors and 16 warnings before the trigger
 catalogs moved into `references/patterns.md`, which is where the counts moved
 too. The deferred `prose_gate.py` demotes a quoted or backticked ERROR to WARN
 in the technical profile for this reason.
