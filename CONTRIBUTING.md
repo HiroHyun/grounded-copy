@@ -21,6 +21,11 @@ Follow the same four steps per pattern. A locale PR names the
 constructions that also carry factual uses in that language; they block
 alongside the rest, and the over-match note records them.
 
+State which tier the rule reaches: a bounded gap between the negation and
+the assertion, which reports phrasings outside the list, or a trigger list,
+which reports the listed phrases. `## Nine languages` in `README.md`
+publishes the tier per language, so a PR that changes one updates it.
+
 ## Ground rules
 
 - `scripts/copy_lint.py` stays zero-dependency Python 3 stdlib. Each line

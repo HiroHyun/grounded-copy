@@ -350,7 +350,10 @@ Windows. `tests/test_codex_adapter.py` covers byte identity against the
 canonical files, the manifest fields, the MIT notice, the skills-only scope,
 and a red-capable drift case that builds the adapter into a temporary mirror,
 confirms it checks clean, then drifts one copy and asserts `--check` exits 1.
-CI runs all three files on `ubuntu-latest` and `windows-latest`.
+`tests/test_corpus.py` asserts every per-locale rule fires on a line in
+`tests/bad-samples.md`; 38 of the 57 English rules carry no line yet, which is
+what bounds that assertion to the locale set. CI runs all four files on
+`ubuntu-latest` and `windows-latest`.
 
 These are the deterministic criteria. Whether the model then follows the
 injected text is behavioral, and `**Enforcement boundary**` above states what

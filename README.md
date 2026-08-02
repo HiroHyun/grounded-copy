@@ -7,7 +7,9 @@ A style gate for marketing and web copy. It enforces one rule: every
 value proposition states what the subject IS or DOES — a feature, a
 number, a mechanism. It bans the contrast move ("not just X", "unlike
 others", "say goodbye to") in every disguise it wears, plus hype
-vocabulary and vague attribution, across nine languages. A deterministic
+vocabulary and vague attribution. English gets full per-shape coverage and
+eight more languages get trigger lists, at the depths the table below sets.
+A deterministic
 Python linter backs the rules and blocks the task until the copy complies.
 
 In Claude Code, two hooks carry the same rules into every session, so chat
@@ -72,14 +74,23 @@ documentation shippable; `### Citation cost and open scope` in
 
 ## Nine languages
 
-The linter catches the same moves in English, Chinese, Russian, Spanish,
-Arabic, French, German, Japanese, and Korean — 不仅仅是, не просто,
-no es solo, ليس مجرد, pas seulement, mehr als nur, 単なる〜ではない,
-단순한 ~이 아닙니다 are all "not just". The Chinese reversal reveal
-(不是 X，而是 Y) has its own pattern, and the constructions that also carry
-factual uses (だけでなく, 뿐만 아니라) block alongside the rest. This makes
-the gate usable on locale files: a translation that re-introduces contrast
-fails CI even when the English source passed.
+Coverage runs at three depths, and the tier sets what the linter catches:
+
+| Tier | Languages | What the regexes match |
+|---|---|---|
+| Full | English | 57 rules, one or more per shape |
+| Structural | Chinese, Japanese, Korean | a bounded gap between the negation and the assertion, plus enumerated triggers |
+| Enumerated | Russian, Spanish, Arabic, French, German | trigger lists of 6 to 18 phrases, reaching the minimizing, era-ending, transcendence, and rhetorical-bait families |
+
+不仅仅是, не просто, no es solo, ليس مجرد, pas seulement, mehr als nur,
+単なる〜ではない, and 단순한 ~이 아닙니다 all report as "not just". The Chinese
+reversal reveal (不是 X，而是 Y) has its own pattern, and the constructions that
+also carry factual uses (だけでなく, 뿐만 아니라) block alongside the rest.
+
+Outside English the linter is a trigger-list floor, so a novel phrasing clears
+it; the translator rule in `references/patterns.md` covers what the regexes
+miss. The floor is what makes the gate usable on locale files: a translation
+that re-introduces contrast fails CI even when the English source passed.
 
 ## Supported agents and installation paths
 
@@ -234,7 +245,7 @@ beyond Python 3.
 | Capability | Portable | Claude Code only |
 |---|---|---|
 | the `SKILL.md` rules | yes | |
-| `references/patterns.md` catalog, nine locales | yes | |
+| `references/patterns.md` catalog, nine locales at three depths | yes | |
 | `scripts/copy_lint.py` | yes | |
 | `tests/` sample corpora | with a checkout or the Codex adapter | |
 | `SessionStart` policy, repeated after each compaction | | yes |

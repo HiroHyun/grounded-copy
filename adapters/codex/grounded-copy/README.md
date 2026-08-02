@@ -9,7 +9,8 @@ rebuild; `--check` fails when this tree drifts from them.
 - `skills/grounded-copy/SKILL.md` — the rules, byte-for-byte from the canonical
   skill.
 - `skills/grounded-copy/references/patterns.md` — the pattern catalog, with a
-  bad to good rewrite for every shape and nine locales.
+  bad to good rewrite for every shape, and nine locales at three depths of
+  regex coverage.
 - `skills/grounded-copy/scripts/copy_lint.py` — the deterministic gate.
   Zero dependencies beyond Python 3. Exit 0 passes, 1 asks for a rewrite,
   2 reports a usage or IO error.

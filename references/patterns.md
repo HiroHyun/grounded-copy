@@ -145,6 +145,12 @@ state the fact it gestured at.
 
 ## Multilingual equivalents (all banned)
 
+Every form below is banned in prose. What the linter reports depends on the
+tier: `zh`, `ja`, and `ko` match a bounded gap between the negation and the
+assertion, so a phrasing outside the list can still report; `ru`, `es`, `ar`,
+`fr`, and `de` match the listed phrases only. Outside English the regexes are a
+floor, and the translator rule below carries the rest.
+
 | Locale | Patterns |
 |---|---|
 | zh-Hans | 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 告别… / 重新定义 / 颠覆 / 不是 X，而是 Y |
