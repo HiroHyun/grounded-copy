@@ -1,6 +1,6 @@
 ---
 name: grounded-copy
-description: Enforces grounded, contrast-free marketing and web copy. Every value proposition must state what the subject IS or DOES using concrete nouns, verbs, and specifics — never negation, contrast, or hype vocabulary. Use this skill whenever writing, editing, translating, reviewing, or localizing ANY user-facing copy — headlines, taglines, value propositions, landing pages, product descriptions, About pages, CTAs, button labels, meta/OG descriptions, alt text, email subjects and bodies, social posts, ad copy, brochures, or locale/i18n string files — even if the user does not mention style rules. Also use when the user says "on-brand", "our writing style", "no AI clichés", or asks to check copy.
+description: Enforces grounded, contrast-free prose. Every value proposition and every claim must state what the subject IS or DOES using concrete nouns, verbs, and specifics — never negation, contrast, or hype vocabulary. Use this skill whenever writing, editing, translating, reviewing, or localizing ANY user-facing copy — headlines, taglines, value propositions, landing pages, product descriptions, About pages, CTAs, button labels, meta/OG descriptions, alt text, email subjects and bodies, social posts, ad copy, brochures, or locale/i18n string files — and whenever writing any other prose a person reads: chat replies, commit bodies, pull request descriptions, code comments, documentation, plans, and reports. Use it even if the user does not mention style rules. Also use when the user says "on-brand", "our writing style", "no AI clichés", or asks to check copy.
 ---
 
 # Grounded Copy
@@ -156,8 +156,9 @@ rationalization below is pre-emptively rejected:
   list and a bad → good rewrite for every entry, plus the hype,
   attribution, positive-form, and multilingual tables. Read it when a
   rewrite is hard, or before writing copy in zh/ru/es/ar/fr/de/ja/ko.
-- `tests/bad-samples.md` and `tests/good-samples.md` — after any change
-  to the linter, `copy_lint.py tests/bad-samples.md` must FAIL and
+- `tests/bad-samples.md` and `tests/good-samples.md` — the linter's own
+  corpora, which ship with a checkout and with the Codex adapter. After a
+  change to the linter, `copy_lint.py tests/bad-samples.md` must FAIL and
   `copy_lint.py tests/good-samples.md` must PASS.
 - `references/setup.md` — wiring the skill into Claude Code (CLAUDE.md /
   hooks) and Codex (AGENTS.md) so both agents load it and run the gate.

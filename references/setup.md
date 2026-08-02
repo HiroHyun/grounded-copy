@@ -28,9 +28,11 @@ edit, and grep while debugging the switch. `${CLAUDE_PLUGIN_DATA}` does resolve
 for `@skills-dir`, measured at `~/.claude/plugins/data/grounded-copy-skills-dir`
 on Claude Code 2.1.220; the fixed path wins on the reason above.
 
-A skill loads when the model judges its description relevant, and this
-description covers copy tasks, so chat replies fall outside it. Two hooks put
-the rules in every session instead.
+A skill loads when the model judges its description relevant. The description
+names chat replies, commit bodies, and code comments alongside the copy
+surfaces, matching what `## Scope and precedence` governs, and the judgment is
+still made per turn. Two hooks put the core rules in every session on a session
+event instead, at 3,766 bytes where the skill costs 8,953.
 
 `.claude-plugin/plugin.json` registers both hooks:
 
@@ -222,7 +224,7 @@ Windows 11.
 | turn reminder, per prompt | 218 |
 | `chat` governing directive, per switch | 4,073 |
 | `copy` governing directive, per switch | 5,736 |
-| `SKILL.md`, loaded when the skill triggers | 8,707 |
+| `SKILL.md`, loaded when the skill triggers | 8,953 |
 
 **Two boundaries, one payload.** A session-policy row is the rules body plus
 the header, the switch line, and the blank lines between them: 106 bytes.
@@ -346,8 +348,9 @@ nothing outside it. One class per domain term:
 exit-code propagation, and hostile paths, and skips the `run.cmd` cases off
 Windows. `tests/test_codex_adapter.py` covers byte identity against the
 canonical files, the manifest fields, the MIT notice, the skills-only scope,
-and a red-capable drift case that modifies a copy and asserts `--check` exits
-1. CI runs all three files on `ubuntu-latest` and `windows-latest`.
+and a red-capable drift case that builds the adapter into a temporary mirror,
+confirms it checks clean, then drifts one copy and asserts `--check` exits 1.
+CI runs all three files on `ubuntu-latest` and `windows-latest`.
 
 These are the deterministic criteria. Whether the model then follows the
 injected text is behavioral, and `**Enforcement boundary**` above states what

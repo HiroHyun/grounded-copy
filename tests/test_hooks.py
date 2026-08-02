@@ -19,6 +19,7 @@ states what Phase 1 does about that.
 
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -574,6 +575,36 @@ class SetAndStatusTests(HookCase):
     def test_status_names_the_restore_command_when_off(self):
         self.write_preference("off\n")
         self.assertIn("--set chat", self.status().stdout)
+
+
+# ---------------------------------------------------------------------------
+# What SKILL.md points a reader at
+# ---------------------------------------------------------------------------
+# Backticked repository paths only. A bare filename carries no directory and
+# names a file rather than locating one, and the fenced command examples use
+# `<skill-path>/` and placeholders like draft.md, none of which sit in
+# backticks.
+SKILL_PATH = re.compile(r"`([A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)+\.(?:md|py))`")
+
+
+class SkillReferenceTests(unittest.TestCase):
+    """A path SKILL.md names has to exist, so a rename fails here.
+
+    `## References` sends a reader to files by path. A rename or a move leaves
+    the pointer behind with nothing to catch it, and the skill ships to four
+    install paths that carry no test suite of their own.
+    """
+
+    def test_every_path_skill_md_names_exists(self):
+        text = (REPO_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        named = sorted(set(SKILL_PATH.findall(text)))
+        self.assertTrue(named, "no paths matched; the pattern stopped working")
+        for relative in named:
+            with self.subTest(path=relative):
+                self.assertTrue(
+                    (REPO_ROOT / relative).exists(),
+                    "SKILL.md points at %s, which is absent" % relative,
+                )
 
 
 if __name__ == "__main__":

@@ -55,10 +55,11 @@ Four layers, each catching what the previous one misses:
    agent must rewrite the copy, and the skill forbids editing the linter.
 3. **Session hooks** put the core rules in context at every session start
    and repeat a one-line reminder each turn, which reaches chat replies.
-   A skill description scoped to copy tasks leaves those uncovered, since
-   the model decides when a skill applies and a chat reply reads as
-   ordinary conversation. Both hooks supply guidance; deterministic
-   interception of model output waits for layer 4.
+   A skill loads when the model judges its description relevant, which is a
+   judgment call on every turn; the hooks fire on a session event, and they
+   carry the 3,766-byte core where the skill carries 8,953. Both hooks
+   supply guidance; deterministic interception of model output waits for
+   layer 4.
 4. **File hooks and CI** (see `references/setup.md`) run the linter on
    every file write and every pull request, including human ones.
 
@@ -112,8 +113,9 @@ installed skill names and refreshes them from their source; `-g` restricts the
 run to global skills and `-p` to project skills. `remove` deletes the installed
 copy.
 
-The CLI records the files it manages in a `.source` manifest, and those four
-are the whole skill, so `curl` fetches it just as well:
+The CLI records the files it manages in a `.source` manifest: the four below.
+They carry the rules and the gate; the sample corpora `SKILL.md` names come
+with a checkout or the Codex adapter. `curl` fetches the same four:
 
 ```bash
 base=https://raw.githubusercontent.com/HiroHyun/grounded-copy/main
@@ -233,7 +235,8 @@ beyond Python 3.
 |---|---|---|
 | the `SKILL.md` rules | yes | |
 | `references/patterns.md` catalog, nine locales | yes | |
-| `scripts/copy_lint.py` and both sample corpora | yes | |
+| `scripts/copy_lint.py` | yes | |
+| `tests/` sample corpora | with a checkout or the Codex adapter | |
 | `SessionStart` policy, repeated after each compaction | | yes |
 | `UserPromptSubmit` turn reminder | | yes |
 | `chat`, `copy`, `off` profiles and the stored preference | | yes |
@@ -283,7 +286,7 @@ published budget and fails when one passes it.
 | turn reminder | 218 | ~55 | every prompt |
 | `chat` governing directive | 4,073 | ~1,020 | every recorded profile switch |
 | `copy` governing directive | 5,736 | ~1,435 | every recorded profile switch |
-| `SKILL.md` | 8,707 | ~2,175 | when the skill triggers on a copy task |
+| `SKILL.md` | 8,953 | ~2,240 | when the skill triggers |
 
 **Method.** Bytes are the measured unit: the UTF-8 length of what each hook
 writes to stdout. Token figures are estimates at bytes ÷ 4, and no token count
