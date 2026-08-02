@@ -265,14 +265,20 @@ def self_test(plugin_root):
     if copy_size <= chat_size:
         failures.append("copy policy matches or trails chat policy")
 
+    # The budget is what fails this run; the baseline and its delta report
+    # movement since the figures were published. Printing both keeps a nonzero
+    # delta readable as news rather than as a failure.
     print(
-        "self-test: chat %d bytes, baseline %d, delta %+d; "
-        "copy %d bytes, baseline %d, delta %+d; "
-        "turn reminder %d bytes, baseline %d, delta %+d"
+        "self-test: chat %d bytes, budget %d-%d, baseline %d, delta %+d; "
+        "copy %d bytes, budget %d-%d, baseline %d, delta %+d; "
+        "turn reminder %d bytes, budget %d-%d, baseline %d, delta %+d"
         % (
-            chat_size, BASELINE_BYTES, chat_size - BASELINE_BYTES,
-            copy_size, COPY_BASELINE_BYTES, copy_size - COPY_BASELINE_BYTES,
-            turn_size, TURN_BASELINE_BYTES, turn_size - TURN_BASELINE_BYTES,
+            chat_size, BYTE_RANGE[0], BYTE_RANGE[1],
+            BASELINE_BYTES, chat_size - BASELINE_BYTES,
+            copy_size, COPY_BYTE_RANGE[0], COPY_BYTE_RANGE[1],
+            COPY_BASELINE_BYTES, copy_size - COPY_BASELINE_BYTES,
+            turn_size, TURN_BYTE_RANGE[0], TURN_BYTE_RANGE[1],
+            TURN_BASELINE_BYTES, turn_size - TURN_BASELINE_BYTES,
         )
     )
     for failure in failures:

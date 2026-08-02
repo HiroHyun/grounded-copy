@@ -25,16 +25,16 @@ MAX_PREFERENCE_BYTES = 64
 # user-facing names. A preference written by an earlier install keeps working.
 LEGACY = {"technical": "chat"}
 
-# Words `--set` accepts.
+# Words `--set` accepts: the three profile names, plus `technical` for the
+# legacy stored value and `marketing` for the register `copy` carries. `on`,
+# `stop`, and `disable` came out with the natural-language switch that used
+# them; nothing documented or tested them afterwards.
 ARGUMENTS = {
     "chat": "chat",
     "technical": "chat",
-    "on": "chat",
     "copy": "copy",
     "marketing": "copy",
     "off": "off",
-    "stop": "off",
-    "disable": "off",
 }
 
 # Why resolve_preference() returned the name it returned.
@@ -116,14 +116,21 @@ def write_preference(profile):
     The write is followed by a read-back through _read_preference(), so a write
     that lands somewhere the resolver cannot use reports failure here instead
     of resolving stale later. Creates the data directory on first write.
+
+    A symlink at the path is reported, never removed. _read_preference() reads
+    one as untrusted, so the link is already inert, and deleting a file the user
+    put there reaches past what this function owns.
     """
     if profile not in VALID:
         return False, "grounded: refusing to record %r" % (profile,)
     path = preference_path()
+    if os.path.islink(path):
+        return False, (
+            "grounded: %s is a symlink, which resolve_preference() reads as "
+            "unreadable. Remove it and run --set again." % path
+        )
     try:
         os.makedirs(data_dir(), exist_ok=True)
-        if os.path.islink(path):
-            os.unlink(path)
         with open(path, "w", encoding="utf-8", newline="\n") as handle:
             handle.write(profile + "\n")
     except Exception as exc:

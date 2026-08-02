@@ -70,11 +70,13 @@ def set_mode(argv, hook_dir):
 def main(argv):
     hook_dir = os.path.dirname(os.path.abspath(__file__))
 
+    # `--set` outranks `--status`: it prints the status line itself, so the two
+    # together still report, and the write the user asked for happens.
+    if "--set" in argv:
+        return set_mode(argv, hook_dir)
     if "--status" in argv:
         print(_preference.status_line())
         return EXIT_OK
-    if "--set" in argv:
-        return set_mode(argv, hook_dir)
 
     _hook_io.drain_stdin()
 

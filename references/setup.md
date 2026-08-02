@@ -144,7 +144,8 @@ between.
 
 **Three names.** `chat`, `copy`, `off`. `chat` is the default and the stored
 value for the core rules; a preference written as `technical` by an earlier
-install reads as `chat`.
+install reads as `chat`. `### Reading and restoring the preference` below gives
+the words `--set` accepts.
 
 | Profile | Session policy | Turn reminder |
 |---|---|---|
@@ -314,11 +315,19 @@ implemented, and both hooks call it, so the two entry points agree on every
 input. It is read-only, and so are both hooks; the file appears when a user
 selects a profile.
 
+`--set` accepts the three profile names plus two aliases: `technical` for the
+legacy stored value, and `marketing` for `copy`. Every other word exits 2 with
+the message naming the three. `--set` outranks `--set --status` given together,
+since it prints the status line itself.
+
 `--set` exit codes: 0 recorded, 1 persistence failure, 2 rejected value. An
 empty value reports status and exits 0, since it requests no change. A
 recorded write reads the file back and confirms the stored value, so a write
 landing somewhere the resolver cannot use reports failure at the moment it
-happens. The hook path keeps the exit-0 policy for every internal failure.
+happens. A symlink at the preference path exits 1 and names it: the resolver
+already reads one as unreadable, and `write_preference()` leaves a file the
+user placed there alone. The hook path keeps the exit-0 policy for every
+internal failure.
 
 ### Tests
 

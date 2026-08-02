@@ -103,6 +103,24 @@ class LauncherCase(unittest.TestCase):
             argv, env=env, cwd=str(REPO_ROOT), text=True, capture_output=True
         )
 
+    def assertMarkers(self, result, *markers):
+        """Assert the probe SKILL.md reached stdout, naming the other cause.
+
+        A launcher whose interpreter probe finds nothing exits 0 with empty
+        stdout by design, which reads here as a missing marker. Separating the
+        two says which happened: an empty stdout is the environment, a
+        populated stdout missing a marker is the path arriving mangled.
+        """
+        self.assertEqual(result.returncode, EXIT_OK, result.stderr)
+        self.assertTrue(
+            result.stdout.strip(),
+            "launcher produced no output: the interpreter probe resolved "
+            "neither `python` nor `python3`, so this run measured nothing. "
+            "stderr: %r" % result.stderr,
+        )
+        for marker in markers:
+            self.assertIn(marker, result.stdout)
+
 
 @unittest.skipUnless(SH, "no `sh` on PATH")
 class RunShTests(LauncherCase):
@@ -132,17 +150,14 @@ class RunShTests(LauncherCase):
             [SH, RUN_SH.as_posix(), "grounded_activate.py",
              "--plugin-root", self.probe_plugin_root("gc test")]
         )
-        self.assertEqual(result.returncode, EXIT_OK, result.stderr)
-        self.assertIn("MARKER-INTRO", result.stdout)
+        self.assertMarkers(result, "MARKER-INTRO")
 
     def test_a_hostile_path_arrives_whole(self):
         result = self.launch(
             [SH, RUN_SH.as_posix(), "grounded_activate.py",
              "--plugin-root", self.hostile_plugin_root()]
         )
-        self.assertEqual(result.returncode, EXIT_OK, result.stderr)
-        self.assertIn("MARKER-INTRO", result.stdout)
-        self.assertIn("MARKER-SCOPE", result.stdout)
+        self.assertMarkers(result, "MARKER-INTRO", "MARKER-SCOPE")
 
     def test_an_unknown_script_name_exits_zero_and_writes_nothing(self):
         for name in UNKNOWN_SCRIPTS:
@@ -207,17 +222,14 @@ class RunCmdTests(LauncherCase):
             ["cmd", "/c", str(RUN_CMD), "grounded_activate.py",
              "--plugin-root", self.probe_plugin_root("gc test")]
         )
-        self.assertEqual(result.returncode, EXIT_OK, result.stderr)
-        self.assertIn("MARKER-INTRO", result.stdout)
+        self.assertMarkers(result, "MARKER-INTRO")
 
     def test_a_hostile_path_arrives_whole(self):
         result = self.launch(
             ["cmd", "/c", str(RUN_CMD), "grounded_activate.py",
              "--plugin-root", self.hostile_plugin_root()]
         )
-        self.assertEqual(result.returncode, EXIT_OK, result.stderr)
-        self.assertIn("MARKER-INTRO", result.stdout)
-        self.assertIn("MARKER-SCOPE", result.stdout)
+        self.assertMarkers(result, "MARKER-INTRO", "MARKER-SCOPE")
 
     def test_an_unknown_script_name_exits_zero_and_writes_nothing(self):
         for name in UNKNOWN_SCRIPTS:

@@ -498,6 +498,44 @@ class SetAndStatusTests(HookCase):
         self.assertIn("chat, copy, or off", result.stdout)
         self.assertEqual(self.read_preference(), "chat")
 
+    def test_the_retired_parser_words_are_rejected(self):
+        """`on`, `stop`, and `disable` belonged to the removed switch.
+
+        The rejection message names three profiles, so the accepted set is the
+        three plus the two documented aliases and nothing else.
+        """
+        for value in ("on", "stop", "disable"):
+            with self.subTest(value=value):
+                self.write_preference("chat\n")
+                result = self.set_profile(value)
+                self.assertEqual(result.returncode, EXIT_REJECTED, result.stdout)
+                self.assertEqual(self.read_preference(), "chat")
+
+    def test_set_outranks_status_when_both_are_passed(self):
+        result = self.run_hook(TRACKER, ["--set", "copy", "--status"])
+        self.assertEqual(result.returncode, EXIT_OK, result.stdout)
+        self.assertEqual(self.read_preference(), "copy")
+
+    def test_a_symlinked_preference_is_reported_and_left_in_place(self):
+        """`--set` reports the link; removing it reaches past what it owns.
+
+        resolve_preference() already reads a symlink as unreadable, so the link
+        changes no behavior. Deleting a file the user placed there would.
+        """
+        target = self.config_dir / "elsewhere"
+        target.write_text("copy\n", encoding="utf-8")
+        self.preference.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.symlink(str(target), str(self.preference))
+        except (OSError, NotImplementedError) as exc:
+            self.skipTest("cannot create a symlink here: %s" % exc)
+
+        result = self.set_profile("chat")
+        self.assertEqual(result.returncode, EXIT_PERSISTENCE, result.stdout)
+        self.assertIn("symlink", result.stdout)
+        self.assertTrue(self.preference.is_symlink(), "the link was removed")
+        self.assertEqual(target.read_text(encoding="utf-8").strip(), "copy")
+
     def test_a_persistence_failure_exits_one_and_names_the_path(self):
         self.block_data_dir()
         result = self.set_profile("copy")
