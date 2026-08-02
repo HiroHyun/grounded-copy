@@ -5,10 +5,10 @@
 
 A style gate for marketing and web copy. It enforces one rule: every
 value proposition states what the subject IS or DOES — a feature, a
-number, a mechanism. It bans the contrast move ("not just X", "unlike
-others", "say goodbye to") in every disguise it wears, plus hype
-vocabulary and vague attribution. English gets full per-shape coverage and
-eight more languages get trigger lists, at the depths the table below sets.
+number, a mechanism. It detects contrast framing in its documented forms,
+plus hype vocabulary and vague attribution. English gets full per-shape
+coverage and eight more languages get trigger lists, at the depths the table
+below sets.
 A deterministic
 Python linter backs the rules and blocks the task until the copy complies.
 
@@ -17,8 +17,8 @@ replies follow them alongside landing pages and locale files.
 
 ## The off switch
 
-Every rule blocks, and no rule carries an exception. Copy that has to use a
-banned form is written with the profile off:
+The profile controls whether the hooks inject the rules. Set `off` for source
+text that must retain its supplied wording:
 
 ```shell
 /grounded-copy:grounded off
@@ -35,9 +35,9 @@ is running it on the files you choose.
 
 | Draft | After grounded-copy |
 |---|---|
-| "This isn't just a task tracker — it's your team's second brain." | "The tracker links every task to its pull request and posts a status digest to Slack each morning." |
-| "Say goodbye to hidden fees." | "The listed price is the complete price; the invoice adds nothing." |
-| "Experts agree Acme leads the market." | "Acme holds 34% of the segment, per Gartner's 2025 market report." |
+| Vague task-tracker slogan | The tracker links every task to its pull request and posts a status digest to Slack each morning. |
+| Hidden-fee slogan | The listed price is the complete price; the invoice adds nothing. |
+| Unnamed expert claim | Acme holds 34% of the segment, per Gartner's 2025 market report. |
 
 Same information, carried by specifics. `references/patterns.md` holds a
 rewrite for every shape.
@@ -48,8 +48,7 @@ Four layers, each catching what the previous one misses:
 
 1. **`SKILL.md`** teaches the agent the banned move and its seven shapes,
    the positive terms that carry a constraint in one word, and loophole
-   closures written against the ways agents rationalize around style
-   rules (cross-sentence contrast, translation, "the linter passed").
+   closures covering cross-sentence contrast, translation, and linter scope.
    `references/patterns.md` carries the complete trigger phrases for each
    shape and a bad → good rewrite for every category.
 2. **`scripts/copy_lint.py`** is a zero-dependency Python 3 linter with 66
@@ -66,9 +65,8 @@ Four layers, each catching what the previous one misses:
    every file write and every pull request, including human ones.
 
 `SKILL.md` passes layer 2 against its own content, so the ruleset obeys the
-rule it publishes. The quoted banned patterns live in
-`references/patterns.md`, which is a catalog of them by construction and
-reports every one; this README quotes a few in its examples and reports those.
+rule it publishes. `references/patterns.md` is the catalog of documented
+patterns and rewrites.
 CI runs `copy_lint.py` on `tests/bad-samples.md` and `tests/good-samples.md`
 and on no other path, which is what keeps both files shippable;
 `### Citation cost and open scope` in `references/setup.md` carries the
@@ -84,10 +82,9 @@ Coverage runs at three depths, and the tier sets what the linter catches:
 | Structural | Chinese, Japanese, Korean | a bounded gap between the negation and the assertion, plus enumerated triggers |
 | Enumerated | Russian, Spanish, Arabic, French, German | trigger lists of 6 to 18 phrases, reaching the minimizing, era-ending, transcendence, and rhetorical-bait families |
 
-不仅仅是, не просто, no es solo, ليس مجرد, pas seulement, mehr als nur,
-単なる〜ではない, and 단순한 ~이 아닙니다 all report as "not just". The Chinese
-reversal reveal (不是 X，而是 Y) has its own pattern, and the constructions that
-also carry factual uses (だけでなく, 뿐만 아니라) block alongside the rest.
+The locale tables cover minimizing, reversal, era-ending, transcendence, and
+rhetorical-bait families in Chinese, Japanese, Korean, Russian, Spanish,
+Arabic, French, and German.
 
 Outside English the linter is a trigger-list floor, so a novel phrasing clears
 it; the translator rule in `references/patterns.md` covers what the regexes
@@ -101,7 +98,7 @@ that re-introduces contrast fails CI even when the English source passed.
 | [Portable skill](#portable-skill) | any agent the Skills CLI supports | skill, references, linter | Node (for `npx`), Python 3 to run the linter |
 | [Claude Code marketplace](#claude-code-marketplace) | Claude Code | skill, hooks, profiles, slash command | Claude Code with `/plugin`, Python 3, `sh` |
 | [Skills-directory clone](#skills-directory-clone) | Claude Code | the same, read in place | `git`, Python 3, `sh` |
-| [Codex marketplace](#codex-marketplace) | Codex, ChatGPT | skill, references, linter | Codex with `/plugins`, Python 3 |
+| [Codex marketplace](#codex-marketplace) | Codex, ChatGPT | skill, hooks, profile controller, references, linter | Codex with `/plugins`, Python 3 |
 | [Project checkout](#project-checkout-for-ci-and-other-agents) | CI, Codex, Gemini, humans | files at stable in-repo paths | `git`, Python 3 |
 | [Linter only](#linter-only) | any | the gate | Python 3 |
 
@@ -190,15 +187,16 @@ folder to a plain skill.
 ### Codex marketplace
 
 The same repository hosts a Codex marketplace at
-`.agents/plugins/marketplace.json`, listing a skills-only adapter built from
-the canonical files:
+`.agents/plugins/marketplace.json`, listing a generated plugin built from the
+canonical files:
 
 ```bash
 codex plugin marketplace add HiroHyun/grounded-copy
 codex plugin add grounded-copy@hirohyun-plugins
 ```
 
-Start a new session before using the skill. `codex plugin list` shows what is
+Review and trust the plugin hooks in `/hooks` before starting a session.
+Codex keeps hooks pending review until that step. `codex plugin list` shows what is
 registered; the marketplace verbs are `add`, `list`, `upgrade`, and `remove`,
 and the plugin verbs are `add` and `remove`. `codex /plugins` opens the same
 catalog as a browser: Space turns an installed plugin on or off, and
@@ -210,13 +208,18 @@ catalog as a browser: Space turns an installed plugin on or off, and
 linter from there, or from any checkout:
 
 ```bash
-python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.2.0/skills/grounded-copy/scripts/copy_lint.py draft.md
+python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.3.0/skills/grounded-copy/scripts/copy_lint.py draft.md
 ```
 
-The adapter lives at `adapters/codex/grounded-copy` and carries the skill, both
-references, the linter, and the two sample corpora. It ships no hooks, so the
-session policy, the turn reminder, the three profiles, and the
-`/grounded-copy:grounded` command stay Claude Code features.
+The adapter lives at `adapters/codex/grounded-copy` and carries lifecycle hooks,
+the `grounded-copy` skill, the `$grounded-profile` controller skill, both
+references, and the linter. Generated inventory excludes repository test
+corpora. `SessionStart` injects the active policy at startup, resume, clear,
+and after compaction. `UserPromptSubmit` injects the active turn reminder.
+Use `$grounded-profile chat`, `$grounded-profile copy`, `$grounded-profile off`,
+or `$grounded-profile status` to manage the Codex profile. The preference lives
+at `$CODEX_HOME/grounded-copy/profile`, with `~/.codex` as the default home.
+The `off` profile returns empty hook output and persists across restarts.
 `scripts/build_codex_adapter.py --check` and `tests/test_codex_adapter.py`
 assert that the adapter matches the canonical files byte-for-byte.
 
@@ -244,7 +247,7 @@ beyond Python 3.
 
 ## Portable capabilities and Claude Code capabilities
 
-| Capability | Portable | Claude Code only |
+| Capability | Portable | Claude Code / Codex plugin |
 |---|---|---|
 | the `SKILL.md` rules | yes | |
 | `references/patterns.md` catalog, nine locales at three depths | yes | |
@@ -253,7 +256,7 @@ beyond Python 3.
 | `SessionStart` policy, repeated after each compaction | | yes |
 | `UserPromptSubmit` turn reminder | | yes |
 | `chat`, `copy`, `off` profiles and the stored preference | | yes |
-| `/grounded-copy:grounded` and the governing directive | | yes |
+| Profile controller and governing directive | | yes |
 
 Requirements for the Claude Code paths: Python 3 on PATH as `python` or
 `python3`. The manifest calls `sh hooks/run.sh`; on a Windows setup lacking
@@ -278,9 +281,11 @@ the default, and the resolved path. `--set` exits 0 when it records the
 preference, 1 when the write fails, and 2 when it rejects the value.
 
 **What gets written.** One file, and only when you select a profile:
-`<config-dir>/grounded-copy/profile`, where config-dir is `$CLAUDE_CONFIG_DIR`
-when set and `~/.claude` otherwise. It holds one word. Both hooks are
-read-only, the linter writes nothing, and the Codex adapter writes nothing.
+Claude stores `<config-dir>/grounded-copy/profile`, where config-dir is
+`$CLAUDE_CONFIG_DIR` when set and `~/.claude` otherwise. Codex stores
+`$CODEX_HOME/grounded-copy/profile`, with `~/.codex` as the default. Each file
+holds one word. Hooks read the preference; the profile controller writes it
+atomically; the linter writes nothing.
 
 `### Profile lifecycle` in `references/setup.md` is the one description of how
 the profile preference, the session policy, the turn reminder, and the

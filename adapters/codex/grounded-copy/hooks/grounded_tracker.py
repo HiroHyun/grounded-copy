@@ -32,8 +32,14 @@ import _policy  # noqa: E402
 import _preference  # noqa: E402
 
 # Adapter seam: a copied entrypoint may set these paths for its host.
-PREFERENCE_PATH = None
-SKILL_PATH = None
+PREFERENCE_PATH = os.path.join(
+    os.environ.get("CODEX_HOME") or os.path.join(
+        os.path.expanduser("~"), ".codex"
+    ),
+    "grounded-copy",
+    "profile",
+)
+SKILL_PATH = "skills/grounded-copy/SKILL.md"
 
 EXIT_OK = 0
 EXIT_PERSISTENCE = 1

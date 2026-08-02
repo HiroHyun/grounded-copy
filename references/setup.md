@@ -257,7 +257,7 @@ commands for each.
 |---|---|---|
 | portable skill (Skills CLI) | none; the root `SKILL.md` is the skill source | `SKILL.md`, both references, `copy_lint.py` |
 | Claude Code marketplace | `.claude-plugin/marketplace.json`, plus `.claude-plugin/plugin.json` | the whole repository as one plugin: skill, hooks, command |
-| Codex marketplace | `.agents/plugins/marketplace.json`, plus the adapter's `.codex-plugin/plugin.json` | `adapters/codex/grounded-copy`: skill, references, linter, sample corpora |
+| Codex marketplace | `.agents/plugins/marketplace.json`, plus the adapter's `.codex-plugin/plugin.json` | `adapters/codex/grounded-copy`: lifecycle hooks, skills, references, linter, and launchers |
 
 The Claude Code marketplace lists one plugin whose `source` is `"./"`, so the
 repository root is the plugin. `"skills": ["./"]` names the root `SKILL.md`
@@ -270,14 +270,16 @@ file alone and leaves the relative source unresolved.
 The Codex plugin specification places skills at `skills/<skill-name>/SKILL.md`,
 and the Skills CLI and Claude Code both read the repository-root `SKILL.md`.
 `scripts/build_codex_adapter.py` resolves that by copying the canonical files
-into the adapter byte-for-byte and writing the two files the adapter owns, its
-manifest and its README. `--check` compares and exits 1 on any difference, and
+into the adapter byte-for-byte and generating the adapter-owned hooks,
+controller skill, manifest, and README. `--check` compares the complete
+inventory and exits 1 on any difference, and
 CI runs it on both platforms, so the reuse claim is a tested property.
 
-The adapter is skills-only by design: it ships the skill, `references/`,
-`copy_lint.py`, and both sample corpora, and it ships no `hooks/`, no
-`commands/`, and no `.claude-plugin/`. `tests/test_codex_adapter.py` asserts
-that absence alongside byte identity and the MIT notice.
+The adapter is a generated plugin: it ships `hooks/hooks.json`, the shared
+hook runtime and launchers, `skills/grounded-copy/`, and the explicit
+`skills/grounded-profile/` controller. The generated inventory excludes
+repository test corpora and Claude-only files. `tests/test_codex_adapter.py`
+asserts the inventory, byte identity, and the MIT notice.
 
 Measured on codex-cli 0.144.1, Windows 11, against this repository as a local
 marketplace source:
@@ -314,8 +316,8 @@ in every state:
 
 `resolve_preference()` in `hooks/_preference.py` is the one place this table is
 implemented, and both hooks call it, so the two entry points agree on every
-input. It is read-only, and so are both hooks; the file appears when a user
-selects a profile.
+input. Codex resolves `$CODEX_HOME/grounded-copy/profile`, defaulting to
+`~/.codex/grounded-copy/profile`; Claude keeps its existing config path.
 
 `--set` accepts the three profile names plus two aliases: `technical` for the
 legacy stored value, and `marketing` for `copy`. Every other word exits 2 with
@@ -464,8 +466,27 @@ Two routes, and they compose.
 registers the catalog at `.agents/plugins/marketplace.json`, and
 `codex plugin add grounded-copy@hirohyun-plugins` installs the adapter from
 `adapters/codex/grounded-copy`. `codex /plugins` does the same interactively.
-`### Distribution` above covers what the adapter carries, what it leaves to
-Claude Code, and the measured CLI behavior.
+Review and trust the hook definition in `/hooks` after installation. Codex
+holds plugin hooks pending review until the user trusts them. `SessionStart`
+runs for startup, resume, clear, and compact sources; the compact run restores
+the stored active policy before continuation. `UserPromptSubmit` adds the
+turn reminder through its additional-context output.
+
+Invoke the profile controller explicitly:
+
+```text
+$grounded-profile chat
+$grounded-profile copy
+$grounded-profile off
+$grounded-profile status
+```
+
+`chat` injects the core policy, `copy` adds the marketing register, and `off`
+returns empty lifecycle output. A successful change writes
+`$CODEX_HOME/grounded-copy/profile` atomically and prints the status plus a
+governing directive. The stored value survives restarts. `### Profile
+lifecycle` above defines the relationship among preference, policy, reminder,
+and governing directive.
 
 **`AGENTS.md`.** Codex reads it from the repo root, which reaches a project
 checkout with no install step:
@@ -478,9 +499,11 @@ Run `python3 .style/grounded-copy/scripts/copy_lint.py <files>` and iterate
 until it exits 0. Do not modify the linter.
 ```
 
-A Codex plugin may register lifecycle hooks under `hooks/hooks.json`, and Codex
-holds them untrusted until the user reviews the definition. This adapter ships
-none, so CI is the backstop for the Codex path.
+A Codex plugin registers lifecycle hooks under `hooks/hooks.json`; this adapter
+uses `PLUGIN_ROOT` for its commands and provides Windows and POSIX launchers.
+Run `python scripts/build_codex_adapter.py --check` to verify the generated
+inventory and `python scripts/copy_lint.py README.md references/setup.md` to
+verify this documentation.
 
 ## Gemini
 

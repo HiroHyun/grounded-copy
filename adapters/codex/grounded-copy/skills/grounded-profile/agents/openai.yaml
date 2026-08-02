@@ -1,0 +1,6 @@
+interface:
+  display_name: grounded-profile
+  short_description: Manage grounded-copy profile
+  default_prompt: Run the explicitly requested profile operation.
+policy:
+  allow_implicit_invocation: false
