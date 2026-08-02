@@ -59,18 +59,20 @@ Four layers, each catching what the previous one misses:
    and repeat a one-line reminder each turn, which reaches chat replies.
    A skill loads when the model judges its description relevant, which is a
    judgment call on every turn; the hooks fire on a session event, and they
-   carry the 3,766-byte core where the skill carries 8,953. Both hooks
+   carry the 3,679-byte core where the skill carries 8,703. Both hooks
    supply guidance; deterministic interception of model output waits for
    layer 4.
 4. **File hooks and CI** (see `references/setup.md`) run the linter on
    every file write and every pull request, including human ones.
 
-This README, `SKILL.md`, and `references/patterns.md` quote every banned
-pattern as the example that defines it, so each one fails layer 2 against its
-own content. CI runs `copy_lint.py` on `tests/bad-samples.md` and
-`tests/good-samples.md` and on no other path, which is what keeps the
-documentation shippable; `### Citation cost and open scope` in
-`references/setup.md` carries the per-file counts.
+`SKILL.md` passes layer 2 against its own content, so the ruleset obeys the
+rule it publishes. The quoted banned patterns live in
+`references/patterns.md`, which is a catalog of them by construction and
+reports every one; this README quotes a few in its examples and reports those.
+CI runs `copy_lint.py` on `tests/bad-samples.md` and `tests/good-samples.md`
+and on no other path, which is what keeps both files shippable;
+`### Citation cost and open scope` in `references/setup.md` carries the
+per-file counts.
 
 ## Nine languages
 
@@ -292,12 +294,12 @@ published budget and fails when one passes it.
 
 | Payload | Bytes | Estimated tokens | When it is spent |
 |---|---|---|---|
-| `chat` session policy | 3,872 | ~970 | every session start, and after each compaction |
-| `copy` session policy | 5,535 | ~1,385 | every session start, and after each compaction |
+| `chat` session policy | 3,785 | ~945 | every session start, and after each compaction |
+| `copy` session policy | 5,246 | ~1,310 | every session start, and after each compaction |
 | turn reminder | 218 | ~55 | every prompt |
-| `chat` governing directive | 4,073 | ~1,020 | every recorded profile switch |
-| `copy` governing directive | 5,736 | ~1,435 | every recorded profile switch |
-| `SKILL.md` | 8,953 | ~2,240 | when the skill triggers |
+| `chat` governing directive | 3,986 | ~995 | every recorded profile switch |
+| `copy` governing directive | 5,447 | ~1,360 | every recorded profile switch |
+| `SKILL.md` | 8,703 | ~2,175 | when the skill triggers |
 
 **Method.** Bytes are the measured unit: the UTF-8 length of what each hook
 writes to stdout. Token figures are estimates at bytes ÷ 4, and no token count
@@ -307,7 +309,7 @@ resolved preference path and measure a 59-character one.
 `### Measured recurring cost` in `references/setup.md` gives both boundaries.
 
 A 60-turn `chat` session with one compaction and one profile switch spends
-3,872 × 2 + 218 × 60 + 4,073 = 24,897 bytes, down from 41,594 before the payload
+3,785 × 2 + 218 × 60 + 3,986 = 24,636 bytes, down from 41,594 before the payload
 was cut.
 
 ## Contributing

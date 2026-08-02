@@ -9,9 +9,8 @@ Copy describes things by what they ARE. Every value proposition is a direct
 declarative statement built on concrete nouns, verbs, and specifics: the
 feature, the number, the mechanism.
 
-- Bad: "This isn't just a task tracker — it's your team's second brain."
-- Good: "The tracker links every task to its pull request and posts a
-  status digest to Slack each morning."
+Grounded: "The tracker links every task to its pull request and posts a
+status digest to Slack each morning." Every claim in it is checkable.
 
 ## The one banned move (and every disguise it wears)
 
@@ -20,21 +19,18 @@ something** — against what it is *not*, against what *others* do worse,
 against what *era* has ended. Grounded prose states what the subject is
 and does, and attaches a specific.
 
-Seven shapes, one rule; the triggers below are openers.
-`references/patterns.md` gives each shape its full trigger list and rewrites.
+Seven shapes, one rule. `references/patterns.md` carries the trigger
+phrases for each shape and pairs every one with a rewrite.
 
 1. **Placed against an alternative** — negated intensifiers, comparative
-   clauses, transcendence verbs, absence framing: "not just", "more than
-   just", "rather than X", "instead of X", "as opposed to X", "goes
-   beyond", "without the hassle", "without doing B".
-2. **Reversal reveals** — "It's not X, it's Y"; the appositive "X, not
-   Y"; the prepositional ", not by X"; the negated-setup dash
-   "isn't/wasn't X — it Y".
-3. **Era-ending** — "no longer", "gone are the days", "say goodbye".
-4. **Competitor put-downs** — "unlike traditional/most/other X".
-5. **Rhetorical bait** — "The result?", "Tired of", "Imagine".
-6. **Collision framing** — "where X meets Y".
-7. **Corporate throat-clearing** — "At [Company], we...".
+   clauses, transcendence verbs, absence framing.
+2. **Reversal reveals** — a negated clause staging the assertion that
+   follows it, joined by a comma, a dash, or a sentence break.
+3. **Era-ending** — the old way declared finished, the past waved off.
+4. **Competitor put-downs** — a rival class named as the foil.
+5. **Rhetorical bait** — a question or command that stages its own answer.
+6. **Collision framing** — two abstractions announced as meeting.
+7. **Corporate throat-clearing** — a company preamble before the claim.
 
 Write none of them, and invent no new costume. Every shape blocks with no
 exception; copy that has to carry one — a legal disclaimer, regulatory
@@ -76,9 +72,10 @@ Where no term exists, state the constraint plainly as what holds.
 
 An unnamed authority offers praise where a checkable fact belongs, which
 is the vagueness twin of contrast. Name the source, the figure, and the
-date, or state the measurable claim. Editorializing participles carry the
-same defect — ", highlighting our commitment to quality" — so delete the
-tail and state the fact it gestured at.
+date, or state the measurable claim. An editorializing participle carries
+the same defect: a clause hung off a comma that praises the subject where a
+fact belongs. Delete the tail and state the fact it gestured at.
+`## Vague attribution` in `references/patterns.md` has the forms.
 
 ## Marketing register
 
@@ -87,16 +84,13 @@ every register. Scope here is every user-facing string: headlines,
 subheads, CTAs, button labels, meta and OG descriptions, alt text, email
 subjects, social posts, ad variants, brochure text, and locale files.
 
-**Hype vocabulary.** Replace the word with the fact it was hiding:
-unleash, unlock, unparalleled, unwavering, unmatched, unprecedented,
-unsung, unrivaled, elevate, seamless, empower, revolutionize,
-game-changing, delve, supercharge, turbocharge, next-level, cutting-edge,
-state-of-the-art, best-in-class, world-class, transformative, effortless,
-one-stop shop, synergy; figurative "landscape" and "journey"; and
-"harness", "next-gen", "revolutionary" for the same reason.
+**Hype vocabulary.** Replace the word with the fact it was hiding. The
+register runs to booster verbs, superlative adjectives, and figurative
+nouns standing in for a specific. `## Hype vocabulary` in
+`references/patterns.md` enumerates it and rewrites each entry.
 
-Register test for unlisted synonyms: if the word could appear unchanged in
-a perfume ad and a SaaS deck, it is hype. Replace it.
+Register test for an unlisted synonym: a word that could appear unchanged
+in a perfume ad and a SaaS deck is hype. Replace it.
 
 **Plain negation.** Keep a negation when it states a limit the reader acts
 on — "does not support batching", "ships within the EU only". State every
@@ -112,16 +106,17 @@ rationalization below is pre-emptively rejected:
   reversal pattern split across two sentences — still banned. A contrast
   spread across sentences, paragraphs, or a headline/subhead pair counts.
 - **"It's a different language."** The rules apply conceptually in every
-  locale. 不仅仅是 / не просто / no es solo / pas seulement / nicht nur /
-  単なる〜ではない / 단순한 ~이 아니다 / ليس مجرد are all "not just".
-  Translate the grounded English, never re-introduce contrast in
-  translation.
-- **"A synonym isn't on the list."** The hype list bans a register, not
-  ten words. Apply the register test in `## Marketing register`. When
-  unsure, replace the word with the specific fact it was hiding.
-- **"The linter passed, so it's fine."** The linter is a floor, not a
-  ceiling. Novel phrasings of the banned move that evade regex are still
-  violations; you are the second detection layer.
+  locale, and every locale has its own stock phrase for the minimizing
+  shape. `## Multilingual equivalents` in `references/patterns.md` lists
+  the eight covered so far. Translate the grounded English, and keep
+  contrast out of the translation.
+- **"A synonym isn't on the list."** The hype list bans a whole register,
+  and the register is wider than any ten words. Apply the register test in
+  `## Marketing register`. When unsure, replace the word with the specific
+  fact it was hiding.
+- **"The linter passed, so it's fine."** The linter is a floor; holding
+  the ceiling is your job. Novel phrasings of the banned move that evade
+  regex are still violations; you are the second detection layer.
 - **"I'll adjust the linter/config."** Never. See integrity rules.
 
 ## Workflow

@@ -110,6 +110,14 @@ Trigger: "At [Company], we...".
 
 ## Hype vocabulary
 
+The register, enumerated: unleash, unlock, unparalleled, unwavering,
+unmatched, unprecedented, unsung, unrivaled, elevate, seamless, empower,
+revolutionize, game-changing, delve, supercharge, turbocharge, next-level,
+cutting-edge, state-of-the-art, best-in-class, world-class, transformative,
+effortless, one-stop shop, synergy; figurative "landscape" and "journey";
+and "harness", "next-gen", "revolutionary" for the same reason. `SKILL.md`
+carries the register test that covers the synonyms this list omits.
+
 Replace the word with the fact it was hiding:
 
 | Bad | Good |

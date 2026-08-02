@@ -200,13 +200,18 @@ class SessionPolicyTests(HookCase):
             self.assertIn(label, result.stdout)
 
     def test_hype_catalog_reaches_copy_and_sourcing_reaches_both(self):
-        """Directive: the full catalog is marketing register; sourcing is core."""
+        """Directive: the register test is copy-side; sourcing is core.
+
+        The anchor is the register test rather than a hype word: SKILL.md
+        holds no hype word now, so that it passes copy_lint.py itself, and
+        `## Hype vocabulary` in references/patterns.md enumerates them.
+        """
         self.write_preference("chat\n")
         chat = self.activate().stdout
         self.write_preference("copy\n")
         copy = self.activate().stdout
-        self.assertNotIn("state-of-the-art", chat)
-        self.assertIn("state-of-the-art", copy)
+        self.assertNotIn("a perfume ad and a SaaS deck", chat)
+        self.assertIn("a perfume ad and a SaaS deck", copy)
         for text in (chat, copy):
             self.assertIn("## Sourcing", text)
 

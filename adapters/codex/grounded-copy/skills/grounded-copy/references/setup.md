@@ -32,13 +32,13 @@ A skill loads when the model judges its description relevant. The description
 names chat replies, commit bodies, and code comments alongside the copy
 surfaces, matching what `## Scope and precedence` governs, and the judgment is
 still made per turn. Two hooks put the core rules in every session on a session
-event instead, at 3,766 bytes where the skill costs 8,953.
+event instead, at 3,679 bytes where the skill costs 8,703.
 
 `.claude-plugin/plugin.json` registers both hooks:
 
 | Hook | Script | Output |
 |---|---|---|
-| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 3,872 bytes under `chat`, repeated after each compaction |
+| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 3,785 bytes under `chat`, repeated after each compaction |
 | `UserPromptSubmit` | `hooks/grounded_tracker.py` | the turn reminder, 218 bytes |
 
 Both hooks are read-only. `### Profile lifecycle` below defines every term
@@ -151,8 +151,8 @@ the words `--set` accepts.
 
 | Profile | Session policy | Turn reminder |
 |---|---|---|
-| `chat` | the intro with its example pair, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,766 bytes of rules | one line naming `chat` |
-| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,429 bytes | one line naming `copy` |
+| `chat` | the intro with its grounded example, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,679 bytes of rules | one line naming `chat` |
+| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,140 bytes | one line naming `copy` |
 | `off` | none | none |
 
 `--self-test` prints those two figures and fails when a payload passes its
@@ -219,12 +219,12 @@ Windows 11.
 
 | Payload | Bytes |
 |---|---|
-| `chat` session policy, per `SessionStart` | 3,872 |
-| `copy` session policy, per `SessionStart` | 5,535 |
+| `chat` session policy, per `SessionStart` | 3,785 |
+| `copy` session policy, per `SessionStart` | 5,246 |
 | turn reminder, per prompt | 218 |
-| `chat` governing directive, per switch | 4,073 |
-| `copy` governing directive, per switch | 5,736 |
-| `SKILL.md`, loaded when the skill triggers | 8,953 |
+| `chat` governing directive, per switch | 3,986 |
+| `copy` governing directive, per switch | 5,447 |
+| `SKILL.md`, loaded when the skill triggers | 8,703 |
 
 **Two boundaries, one payload.** A session-policy row is the rules body plus
 the header, the switch line, and the blank lines between them: 106 bytes.
@@ -235,7 +235,7 @@ interpolates, so both directive rows measure a 59-character path and move with
 it.
 
 One 60-turn `chat` session with one compaction and one profile switch:
-3,872 × 2 + 218 × 60 + 4,073 = 24,897 bytes, against 41,594 before the payload
+3,785 × 2 + 218 × 60 + 3,986 = 24,636 bytes, against 41,594 before the payload
 cut, a 40.1% reduction.
 
 Every token figure in this repository is an estimate at bytes ÷ 4 and is
@@ -387,7 +387,7 @@ folder to a plain skill.
 
 Every banned pattern this repository documents is quoted as the example that
 defines it, so each file reports findings against its own gate. Measured
-2026-08-02: `README.md` 17, `SKILL.md` 53, `references/patterns.md` 148, and
+2026-08-02: `README.md` 17, `SKILL.md` 0, `references/patterns.md` 176, and
 this file 0. CI runs `copy_lint.py` on `tests/bad-samples.md` and
 `tests/good-samples.md` and on no other path, which is what keeps the rest
 shippable. Sighting quotes belong in `references/patterns.md`; this file names

@@ -81,12 +81,13 @@ DIRECTIVE_LEAD_EMPTY = (
     "rules for this profile arrive at the next session start."
 )
 
-# Extraction sizes measured 2026-08-02 against SKILL.md, after the repeated
-# `references/patterns.md` cross-references collapsed into one. These count the
-# rules body alone; hook stdout adds the header and the switch line, 106 bytes.
-# references/setup.md records the per-session cost and the method.
-BASELINE_BYTES = 3766
-COPY_BASELINE_BYTES = 5429
+# Extraction sizes measured 2026-08-02 against SKILL.md, after the quoted
+# banned forms moved to references/patterns.md so SKILL.md passes copy_lint.py
+# itself. These count the rules body alone; hook stdout adds the header and the
+# switch line, 106 bytes. references/setup.md records the per-session cost and
+# the method.
+BASELINE_BYTES = 3679
+COPY_BASELINE_BYTES = 5140
 TURN_BASELINE_BYTES = 218
 
 # (floor, ceiling) per payload. The ceiling bounds growth against the figure the
