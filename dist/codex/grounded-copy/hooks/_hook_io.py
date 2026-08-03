@@ -13,6 +13,30 @@ import os
 import sys
 
 
+def utf8_streams():
+    """Speak UTF-8 to the host on every platform.
+
+    The payloads carry em dashes and the arrow in the workflow step, and a
+    `copy` policy carries more. Python picks the encoding for a pipe from the
+    platform, so a Windows interpreter at a legacy code page hands the host
+    cp1252 bytes for those characters; a host decoding UTF-8 then reads the
+    session policy mojibaked, and a character the code page cannot hold raises
+    UnicodeEncodeError, which the entrypoint swallows into a silent exit 0.
+
+    Measured: `PYTHONIOENCODING=cp1252` made a UTF-8 reader see byte 0x97 and
+    return no policy at all.
+
+    Call it before writing. `errors="replace"` keeps a payload flowing when one
+    character will not encode, since a style reminder is worth less than the
+    session it would break.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def drain_stdin():
     """Consume the hook event.
 

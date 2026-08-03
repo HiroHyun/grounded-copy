@@ -46,6 +46,7 @@ def _preference_path(argv):
 
 
 def main(argv):
+    _hook_io.utf8_streams()
     hook_dir = os.path.dirname(os.path.abspath(__file__))
     root = _hook_io.plugin_root(argv, hook_dir)
 

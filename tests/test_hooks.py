@@ -160,6 +160,52 @@ class HookCase(unittest.TestCase):
 # ---------------------------------------------------------------------------
 # Session policy: what SessionStart injects
 # ---------------------------------------------------------------------------
+class OutputEncodingTests(HookCase):
+    """Both hooks hand the host UTF-8 whatever encoding the platform picks.
+
+    The payloads carry em dashes, and Python takes a pipe's encoding from the
+    platform. Measured before `utf8_streams()`: a Windows interpreter at
+    cp1252 made a UTF-8 reader fail on byte 0x97 and receive no policy, so the
+    session ran with the rules absent and nothing reported.
+    """
+
+    def legacy_code_page(self, script, args=()):
+        env = os.environ.copy()
+        env.pop("CLAUDE_PLUGIN_ROOT", None)
+        env["CLAUDE_CONFIG_DIR"] = str(self.config_dir)
+        env["PYTHONIOENCODING"] = "cp1252"
+        return subprocess.run(
+            [sys.executable, script, *args],
+            input="{}", env=env, cwd=str(REPO_ROOT),
+            text=True, encoding="utf-8", capture_output=True,
+        )
+
+    def test_the_session_policy_decodes_as_utf8(self):
+        self.write_preference("copy\n")
+        result = self.legacy_code_page(
+            ACTIVATE, ["--plugin-root", str(REPO_ROOT)]
+        )
+        self.assertEqual(result.returncode, EXIT_OK)
+        self.assertIn("GROUNDED PROSE ACTIVE", result.stdout)
+        self.assertIn("—", result.stdout)
+
+    def test_the_turn_reminder_decodes_as_utf8(self):
+        self.write_preference("chat\n")
+        result = self.legacy_code_page(
+            TRACKER, ["--plugin-root", str(REPO_ROOT)]
+        )
+        self.assertEqual(result.returncode, EXIT_OK)
+        self.assertIn("GROUNDED PROSE", self.reminder_text(result))
+
+    def test_the_governing_directive_decodes_as_utf8(self):
+        result = self.legacy_code_page(
+            TRACKER, ["--plugin-root", str(REPO_ROOT), "--set", "copy"]
+        )
+        self.assertEqual(result.returncode, EXIT_OK, result.stdout)
+        self.assertIn(DIRECTIVE_HEADER, result.stdout)
+        self.assertIn("—", result.stdout)
+
+
 class SessionPolicyTests(HookCase):
     def test_both_profiles_carry_every_core_section(self):
         for value in ("chat", "copy"):

@@ -85,6 +85,7 @@ def set_mode(argv, hook_dir):
 
 
 def main(argv):
+    _hook_io.utf8_streams()
     hook_dir = os.path.dirname(os.path.abspath(__file__))
 
     # `--set` outranks `--status`: it prints the status line itself, so the two

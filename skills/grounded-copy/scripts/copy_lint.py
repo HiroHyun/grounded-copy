@@ -231,7 +231,28 @@ def scan_text(text):
     return findings
 
 
+def _utf8_streams():
+    """Read and report in UTF-8 on every platform.
+
+    A finding quotes the text it matched, and eight of the nine covered
+    languages are non-ASCII. Python picks the encoding for a pipe or a console
+    from the platform, so on Windows at a legacy code page the quote arrives
+    mojibaked, a character the code page has no room for raises
+    UnicodeEncodeError, and `--stdin` decodes the draft wrong before a pattern
+    ever runs. `errors="replace"` keeps the exit code, the rule name, and the
+    line number readable when one character will not render.
+
+    Streams only. The patterns and the 0/1/2 exit contract are untouched.
+    """
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
 def main(argv):
+    _utf8_streams()
     args = argv[1:]
     if not args:
         print(__doc__)

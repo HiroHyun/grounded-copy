@@ -10,6 +10,7 @@ English rules carry no corpus line today, so the same assertion over the whole
 rule set would ship red. Widening it means adding those lines first.
 """
 
+import os
 import re
 import subprocess
 import sys
@@ -37,12 +38,37 @@ def locale_rules():
             if LOCALE_RULE.match(n)]
 
 
+def run_linter(path, env=None):
+    return subprocess.run(
+        [sys.executable, LINTER, path],
+        capture_output=True, text=True, encoding="utf-8", env=env,
+    )
+
+
+class OutputEncodingTests(unittest.TestCase):
+    """The linter reports UTF-8 whatever the platform hands it.
+
+    Measured on windows-latest, Python 3.12: the reader thread died with
+    "UnicodeDecodeError: 'utf-8' codec can't decode byte 0x97", 0x97 being the
+    cp1252 em dash out of the FAIL line, and the caller read stdout as None.
+    Eight of the nine covered languages are non-ASCII, so a locale file is the
+    normal case for this path rather than the exotic one.
+    """
+
+    def test_findings_decode_as_utf8_under_a_legacy_code_page(self):
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "cp1252"
+        result = run_linter(CORPUS, env=env)
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("copy_lint:", result.stdout)
+        for snippet in ("不仅仅是", "단순한 도구가 아닙니다", "ليس مجرد"):
+            with self.subTest(snippet=snippet):
+                self.assertIn(snippet, result.stdout)
+
+
 class LocaleCoverageTests(unittest.TestCase):
     def setUp(self):
-        result = subprocess.run(
-            [sys.executable, LINTER, CORPUS],
-            capture_output=True, text=True, encoding="utf-8",
-        )
+        result = run_linter(CORPUS)
         self.assertEqual(result.returncode, 1, result.stdout)
         self.reported = set(REPORTED.findall(result.stdout))
 
