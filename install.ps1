@@ -11,7 +11,10 @@
 # native process's stdin drops the pipe on some PowerShell hosts.
 
 function Install-GroundedCopy {
-    param([string[]] $Arguments = @())
+    param(
+        [string[]] $Arguments = @(),
+        [Parameter(Mandatory = $true)] [ref] $ExitCode
+    )
 
     $ErrorActionPreference = 'Stop'
     $raw = 'https://raw.githubusercontent.com/HiroHyun/grounded-copy/main'
@@ -24,8 +27,9 @@ function Install-GroundedCopy {
         if ($LASTEXITCODE -eq 0) { $python = $candidate; break }
     }
     if ($null -eq $python) {
+        $ExitCode.Value = 1
         Write-Error 'grounded-copy: Python 3 is required and resolved as none of python, python3, py'
-        return 1
+        return
     }
 
     # A clone runs its own copy.
@@ -33,7 +37,8 @@ function Install-GroundedCopy {
         $local = Join-Path (Split-Path -Parent $PSCommandPath) 'install.py'
         if (Test-Path $local) {
             & $python $local @Arguments
-            return $LASTEXITCODE
+            $ExitCode.Value = $LASTEXITCODE
+            return
         }
     }
 
@@ -43,11 +48,14 @@ function Install-GroundedCopy {
         $script = Join-Path $temp 'install.py'
         Invoke-WebRequest -Uri "$raw/install.py" -OutFile $script -UseBasicParsing
         & $python $script @Arguments
-        return $LASTEXITCODE
+        $ExitCode.Value = $LASTEXITCODE
+        return
     }
     finally {
         Remove-Item -Recurse -Force $temp -ErrorAction SilentlyContinue
     }
 }
 
-exit (Install-GroundedCopy -Arguments $args)
+$exitCode = 1
+Install-GroundedCopy -Arguments $args -ExitCode ([ref] $exitCode)
+exit $exitCode
