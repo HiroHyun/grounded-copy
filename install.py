@@ -166,9 +166,14 @@ def plan(options, found):
                          "%s@%s" % (PLUGIN, MARKETPLACE), "-y"],
                     ))
                 else:
+                    # `codex plugin remove` wants PLUGIN@MARKETPLACE or a
+                    # --marketplace flag; a bare name exits with
+                    # "plugin requires --marketplace unless passed as
+                    # <plugin>@<marketplace>".
                     steps.append((
                         "codex: remove the plugin",
-                        ["codex", "plugin", "remove", PLUGIN],
+                        ["codex", "plugin", "remove",
+                         "%s@%s" % (PLUGIN, MARKETPLACE)],
                     ))
                 continue
             steps.append((

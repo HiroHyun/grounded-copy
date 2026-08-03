@@ -156,9 +156,23 @@ class PlanTests(unittest.TestCase):
             )
             self.assertEqual(commands_in(steps), [
                 ["claude", "plugin", "uninstall", "grounded-copy@hirohyun-plugins", "-y"],
-                ["codex", "plugin", "remove", "grounded-copy"],
+                ["codex", "plugin", "remove", "grounded-copy@hirohyun-plugins"],
                 ["npx", "-y", "skills", "remove", "grounded-copy", "--yes"],
             ])
+
+    def test_every_removal_selector_names_its_marketplace(self):
+        """Measured on codex-cli: a bare plugin name exits with "plugin
+        requires --marketplace unless passed as <plugin>@<marketplace>".
+        """
+        with tempfile.TemporaryDirectory() as home:
+            steps = install.plan(
+                self.options(uninstall=True),
+                machine(home, commands=("claude", "codex"),
+                        agents=(".claude", ".codex")),
+            )
+            for argv in commands_in(steps):
+                if argv[0] in ("claude", "codex"):
+                    self.assertIn("grounded-copy@hirohyun-plugins", argv)
 
 
 class ArgumentTests(unittest.TestCase):
