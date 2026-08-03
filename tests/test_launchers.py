@@ -103,7 +103,14 @@ class LauncherCase(unittest.TestCase):
         env.pop("CLAUDE_PLUGIN_ROOT", None)
         env["CLAUDE_CONFIG_DIR"] = str(self.config_dir)
         return subprocess.run(
-            argv, env=env, cwd=str(REPO_ROOT), text=True, encoding="utf-8", capture_output=True
+            argv, env=env, cwd=str(REPO_ROOT),
+            # Both entrypoints call drain_stdin(), which reads to EOF. With no
+            # input the child inherits the caller's stdin, so the suite hangs
+            # wherever that stays open — measured against a backgrounded shell,
+            # where the run sat for an hour. An empty string closes the pipe,
+            # matching the host, which writes the event and closes.
+            input="",
+            text=True, encoding="utf-8", capture_output=True,
         )
 
     def assertMarkers(self, result, *markers):
