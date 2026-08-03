@@ -25,10 +25,10 @@ SKILL_SOURCE = REPO_ROOT / "skills" / "grounded-copy"
 CODEX_ACTIVATE = ADAPTER / "hooks" / "grounded_activate.py"
 CODEX_TRACKER = ADAPTER / "hooks" / "grounded_tracker.py"
 
-# Every file the generated package holds. The builder walks the skill directory
-# rather than naming its files, which ships a new reference automatically; this
-# set is what keeps that walk under review, so an added or dropped file is a
-# decision someone made here.
+# Every file the generated package holds. The builder walks the skill
+# directory, so a new reference ships automatically; this set is what keeps
+# that walk under review, so an added or dropped file is a decision someone
+# made here.
 GENERATED_INVENTORY = {
     ".codex-plugin/plugin.json",
     "LICENSE",
@@ -57,9 +57,9 @@ class CodexAdapterTests(unittest.TestCase):
     def test_every_skill_file_ships_byte_identical(self):
         """The whole canonical directory travels, at the same relative path.
 
-        This walks the source rather than the builder's payload list. Reading
-        the list back would make the case tautological with the `--check` test,
-        so a builder that dropped a file would satisfy both.
+        This walks the source tree. Reading the builder's payload list back
+        would make the case tautological with the `--check` test, so a builder
+        that dropped a file would satisfy both.
         """
         sources = sorted(
             p for p in SKILL_SOURCE.rglob("*")

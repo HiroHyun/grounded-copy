@@ -52,7 +52,7 @@ class OutputEncodingTests(unittest.TestCase):
     "UnicodeDecodeError: 'utf-8' codec can't decode byte 0x97", 0x97 being the
     cp1252 em dash out of the FAIL line, and the caller read stdout as None.
     Eight of the nine covered languages are non-ASCII, so a locale file is the
-    normal case for this path rather than the exotic one.
+    normal case for this path.
     """
 
     def test_findings_decode_as_utf8_under_a_legacy_code_page(self):

@@ -73,8 +73,8 @@ class LauncherCase(unittest.TestCase):
         Activation reads `skills/grounded-copy/SKILL.md` under the root it is
         handed and falls back to the repository copy when that read fails, so
         the marker in stdout is what proves the path arrived whole. Write the
-        probe anywhere else and the fallback answers, which reads as an
-        interpreter failure rather than a lost path.
+        probe anywhere else and the fallback answers, which reports an
+        interpreter failure for what is a lost path.
         """
         root = self.config_dir / name
         skill = root / "skills" / "grounded-copy"
