@@ -61,7 +61,7 @@ Four layers, each catching what the previous one misses:
    and repeat a one-line reminder each turn, which reaches chat replies.
    A skill loads when the model judges its description relevant, which is a
    judgment call on every turn; the hooks fire on a session event, and they
-   carry the 3,679-byte core where the skill carries 8,703. Both hooks
+   carry the 3,679-byte core where the skill carries 8,735. Both hooks
    supply guidance; deterministic interception of model output waits for
    layer 4.
 4. **File hooks and CI** (see `references/setup.md`) run the linter on
@@ -358,7 +358,7 @@ published budget and fails when one passes it.
 | turn reminder | 218 | ~55 | every prompt |
 | `chat` governing directive | 3,986 | ~995 | every recorded profile switch |
 | `copy` governing directive | 5,447 | ~1,360 | every recorded profile switch |
-| `SKILL.md` | 8,703 | ~2,175 | when the skill triggers |
+| `SKILL.md` | 8,735 | ~2,185 | when the skill triggers |
 
 **Method.** Bytes are the measured unit: the UTF-8 length of what each hook
 writes to stdout. Token figures are estimates at bytes ÷ 4, and no token count

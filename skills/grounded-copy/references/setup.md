@@ -40,7 +40,7 @@ A skill loads when the model judges its description relevant. The description
 names chat replies, commit bodies, and code comments alongside the copy
 surfaces, matching what `## Scope and precedence` governs, and the judgment is
 still made per turn. Two hooks put the core rules in every session on a session
-event instead, at 3,679 bytes where the skill costs 8,703.
+event instead, at 3,679 bytes where the skill costs 8,735.
 
 `.claude-plugin/plugin.json` registers both hooks:
 
@@ -238,7 +238,7 @@ Windows 11.
 | turn reminder, per prompt | 218 |
 | `chat` governing directive, per switch | 3,986 |
 | `copy` governing directive, per switch | 5,447 |
-| `SKILL.md`, loaded when the skill triggers | 8,703 |
+| `SKILL.md`, loaded when the skill triggers | 8,735 |
 
 **Two boundaries, one payload.** A session-policy row is the rules body plus
 the header, the switch line, and the blank lines between them: 106 bytes under
