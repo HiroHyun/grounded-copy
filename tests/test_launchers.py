@@ -103,7 +103,7 @@ class LauncherCase(unittest.TestCase):
         env.pop("CLAUDE_PLUGIN_ROOT", None)
         env["CLAUDE_CONFIG_DIR"] = str(self.config_dir)
         return subprocess.run(
-            argv, env=env, cwd=str(REPO_ROOT), text=True, capture_output=True
+            argv, env=env, cwd=str(REPO_ROOT), text=True, encoding="utf-8", capture_output=True
         )
 
     def assertMarkers(self, result, *markers):

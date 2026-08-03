@@ -87,7 +87,7 @@ class CodexAdapterTests(unittest.TestCase):
     def test_the_check_mode_passes_against_the_committed_adapter(self):
         result = subprocess.run(
             [sys.executable, BUILDER, "--check"],
-            cwd=str(REPO_ROOT), text=True, capture_output=True,
+            cwd=str(REPO_ROOT), text=True, encoding="utf-8", capture_output=True,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
@@ -106,13 +106,13 @@ class CodexAdapterTests(unittest.TestCase):
 
             built = subprocess.run(
                 [sys.executable, str(builder)],
-                cwd=str(root), text=True, capture_output=True,
+                cwd=str(root), text=True, encoding="utf-8", capture_output=True,
             )
             self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
 
             clean = subprocess.run(
                 [sys.executable, str(builder), "--check"],
-                cwd=str(root), text=True, capture_output=True,
+                cwd=str(root), text=True, encoding="utf-8", capture_output=True,
             )
             self.assertEqual(clean.returncode, 0, clean.stdout)
 
@@ -121,7 +121,7 @@ class CodexAdapterTests(unittest.TestCase):
 
             drifted = subprocess.run(
                 [sys.executable, str(builder), "--check"],
-                cwd=str(root), text=True, capture_output=True,
+                cwd=str(root), text=True, encoding="utf-8", capture_output=True,
             )
             self.assertEqual(drifted.returncode, 1, drifted.stdout)
             self.assertIn("differs", drifted.stdout)
@@ -133,7 +133,7 @@ class CodexAdapterTests(unittest.TestCase):
             shutil.copytree(REPO_ROOT, root)
             builder = root / "scripts" / "build_codex_adapter.py"
             built = subprocess.run([sys.executable, str(builder)], cwd=root,
-                                   text=True, capture_output=True)
+                                   text=True, encoding="utf-8", capture_output=True)
             self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
             generated = root / ADAPTER_REL
             missing = generated / "hooks" / "hooks.json"
@@ -142,7 +142,7 @@ class CodexAdapterTests(unittest.TestCase):
             extra = generated / "unexpected-generated-file.txt"
             extra.write_text("drift", encoding="utf-8")
             result = subprocess.run([sys.executable, str(builder), "--check"],
-                                    cwd=root, text=True, capture_output=True)
+                                    cwd=root, text=True, encoding="utf-8", capture_output=True)
             self.assertEqual(result.returncode, 1, result.stdout)
             self.assertIn("missing", result.stdout)
             self.assertIn("unexpected", result.stdout)
@@ -204,12 +204,12 @@ class CodexAdapterTests(unittest.TestCase):
         linter = str(SKILL_DIR / "scripts" / "copy_lint.py")
         good = subprocess.run(
             [sys.executable, linter, str(SKILL_DIR / "tests" / "good-samples.md")],
-            cwd=str(REPO_ROOT), text=True, capture_output=True,
+            cwd=str(REPO_ROOT), text=True, encoding="utf-8", capture_output=True,
         )
         self.assertEqual(good.returncode, 0, good.stdout)
         bad = subprocess.run(
             [sys.executable, linter, str(SKILL_DIR / "tests" / "bad-samples.md")],
-            cwd=str(REPO_ROOT), text=True, capture_output=True,
+            cwd=str(REPO_ROOT), text=True, encoding="utf-8", capture_output=True,
         )
         self.assertEqual(bad.returncode, 1, bad.stdout)
 
@@ -223,7 +223,7 @@ class CodexAdapterTests(unittest.TestCase):
             env["CODEX_HOME"] = str(home)
         return subprocess.run([sys.executable, str(script), *args],
                               cwd=str(REPO_ROOT), input=stdin,
-                              text=True, capture_output=True, env=env)
+                              text=True, encoding="utf-8", capture_output=True, env=env)
 
     def test_codex_session_start_recovers_policy_after_compaction_and_off_is_silent(self):
         self.assertTrue(CODEX_ACTIVATE.exists())

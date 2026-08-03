@@ -119,6 +119,11 @@ class HookCase(unittest.TestCase):
             env=env,
             cwd=str(REPO_ROOT),
             text=True,
+            # The hooks call _hook_io.utf8_streams() and hand the host UTF-8 on
+            # every platform, so the reader names the same encoding. Leaving it
+            # to the platform decodes an em dash as cp1252 on Windows and dies
+            # on a byte that code page has no character for.
+            encoding="utf-8",
             capture_output=True,
         )
 
