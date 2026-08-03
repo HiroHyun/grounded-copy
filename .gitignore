@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+# dist/ is generated AND tracked. scripts/build_codex_adapter.py writes
+# dist/codex/grounded-copy, `--check` compares it byte-for-byte, and
+# .agents/plugins/marketplace.json points `codex plugin add` at that path in a
+# clone. Ignoring it here would leave the Codex catalog naming a directory that
+# no checkout carries.

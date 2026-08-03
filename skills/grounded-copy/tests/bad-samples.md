@@ -1,4 +1,4 @@
-# Every line below must produce at least one finding. ERROR lines fail the gate.
+# Every line below must produce at least one finding, so the file fails the gate.
 
 In today's fast-paced world, teams need speed.
 We live in an era where attention is scarce.
@@ -30,3 +30,18 @@ Acme는 파일 저장에 그치지 않습니다.
 업계를 재정의하는 게임 체인저입니다.
 Olvídate de las comisiones ocultas.
 Atrás quedaron los días de precios opacos.
+Acme — это не просто CRM, а операционная система отдела продаж.
+Попрощайтесь со скрытыми комиссиями.
+Acme ليس مجرد تطبيق، بل منصة متكاملة.
+وداعًا للرسوم الخفية.
+The guide is general information, not a substitute for legal advice.
+Invoices are billed monthly rather than per seat.
+Acme is more than a tool.
+The wait is no longer part of the process.
+Acme ships instead of stalling.
+Acme prices by plan as opposed to by seat.
+A second index would add duplication without adding information.
+Freshness confirmed by query, not by the node count.
+What if my order arrives damaged?
+它不是善意，是一套算出来的生意。
+Acme 不仅仅是一个工具，告别繁琐的对账流程。

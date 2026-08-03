@@ -5,93 +5,282 @@
 
 A style gate for marketing and web copy. It enforces one rule: every
 value proposition states what the subject IS or DOES — a feature, a
-number, a mechanism. It bans the contrast move ("not just X", "unlike
-others", "say goodbye to") in every disguise it wears, plus hype
-vocabulary and vague attribution, across nine languages. A deterministic
+number, a mechanism. It detects contrast framing in its documented forms,
+plus hype vocabulary and vague attribution. English gets full per-shape
+coverage and eight more languages get trigger lists, at the depths the table
+below sets.
+A deterministic
 Python linter backs the rules and blocks the task until the copy complies.
+
+In Claude Code, two hooks carry the same rules into every session, so chat
+replies follow them alongside landing pages and locale files.
+
+## The off switch
+
+The profile controls whether the hooks inject the rules. Set `off` for source
+text that must retain its supplied wording:
+
+```shell
+/grounded-copy:grounded off
+```
+
+Write the text, then `/grounded-copy:grounded chat` (or `copy`) to switch back.
+The topics that need it: legal disclaimers, terms of service, regulatory copy,
+billing facts, and translations of source text someone supplied. The stored
+value survives restarts, so a switch left at `off` stays there until you set it
+back. Outside Claude Code the linter is a command you run, so the same escape
+is running it on the files you choose.
 
 ## Before and after
 
 | Draft | After grounded-copy |
 |---|---|
-| "This isn't just a task tracker — it's your team's second brain." | "The tracker links every task to its pull request and posts a status digest to Slack each morning." |
-| "Say goodbye to hidden fees." | "The listed price is the complete price; the invoice adds nothing." |
-| "Experts agree Acme leads the market." | "Acme holds 34% of the segment, per Gartner's 2025 market report." |
-| "This is a neighborhood bakery, not a factory." | "The bakery mills its own flour and ferments each loaf for 18 hours before baking." |
-| "The delivery wasn't slow — it arrived before the store opened." | "The courier delivered the order at 6:40 a.m., twenty minutes before the store opened." |
-| "Our jeans are sewn in one workshop rather than shipped between contractors." | "Every pair is cut, sewn, and finished in one Los Angeles workshop." |
+| Vague task-tracker slogan | The tracker links every task to its pull request and posts a status digest to Slack each morning. |
+| Hidden-fee slogan | The listed price is the complete price; the invoice adds nothing. |
+| Unnamed expert claim | Acme holds 34% of the segment, per Gartner's 2025 market report. |
 
-Same information, carried by specifics.
+Same information, carried by specifics. `references/patterns.md` holds a
+rewrite for every shape.
 
 ## How it works
 
-Three layers, each catching what the previous one misses:
+Paths named below are relative to `skills/grounded-copy/`, the canonical skill
+directory. Commands give the full repository path.
 
-1. **`SKILL.md`** teaches the agent the banned move and its ten
-   disguises, with loophole closures written against the ways agents
-   rationalize around style rules (cross-sentence contrast, invented
-   testimonials, "the banned string doesn't appear").
-2. **`scripts/copy_lint.py`** is a zero-dependency Python 3 linter with
-   50+ enumerated patterns. Exit code 1 blocks the task; the agent must
-   rewrite the copy, and the skill forbids editing the linter.
-3. **Hooks and CI** (see `references/setup.md`) enforce the gate on
+Four layers, each catching what the previous one misses:
+
+1. **`SKILL.md`** teaches the agent the banned move and its seven shapes,
+   the positive terms that carry a constraint in one word, and loophole
+   closures covering cross-sentence contrast, translation, and linter scope.
+   `references/patterns.md` carries the complete trigger phrases for each
+   shape and a bad → good rewrite for every category.
+2. **`scripts/copy_lint.py`** is a zero-dependency Python 3 linter with 66
+   enumerated patterns, every one blocking. Exit code 1 blocks the task; the
+   agent must rewrite the copy, and the skill forbids editing the linter.
+3. **Session hooks** put the core rules in context at every session start
+   and repeat a one-line reminder each turn, which reaches chat replies.
+   A skill loads when the model judges its description relevant, which is a
+   judgment call on every turn; the hooks fire on a session event, and they
+   carry the 3,679-byte core where the skill carries 8,703. Both hooks
+   supply guidance; deterministic interception of model output waits for
+   layer 4.
+4. **File hooks and CI** (see `references/setup.md`) run the linter on
    every file write and every pull request, including human ones.
+
+`SKILL.md` passes layer 2 against its own content, so the ruleset obeys the
+rule it publishes. `references/patterns.md` is the catalog of documented
+patterns and rewrites.
+CI runs `copy_lint.py` on `tests/bad-samples.md` and `tests/good-samples.md`
+inside the skill directory and on no other path, which is what keeps both files
+shippable;
+`### Citation cost and open scope` in `references/setup.md` carries the
+per-file counts.
 
 ## Nine languages
 
-The linter catches the same moves in English, Chinese, Russian, Spanish,
-Arabic, French, German, Japanese, and Korean — 不仅仅是, не просто,
-no es solo, ليس مجرد, pas seulement, mehr als nur, 単なる〜ではない,
-단순한 ~이 아닙니다 are all "not just". Constructions with common factual
-uses (だけでなく, 뿐만 아니라) lint as warnings and go through the
-deletion test in `references/patterns.md`. This makes the gate usable on
-locale files: a translation that re-introduces contrast fails CI even
-when the English source passed.
+Coverage runs at three depths, and the tier sets what the linter catches:
 
-## Install
+| Tier | Languages | What the regexes match |
+|---|---|---|
+| Full | English | 57 rules, one or more per shape |
+| Structural | Chinese, Japanese, Korean | a bounded gap between the negation and the assertion, plus enumerated triggers |
+| Enumerated | Russian, Spanish, Arabic, French, German | trigger lists of 6 to 18 phrases, reaching the minimizing, era-ending, transcendence, and rhetorical-bait families |
 
-### Skills CLI
+The locale tables cover minimizing, reversal, era-ending, transcendence, and
+rhetorical-bait families in Chinese, Japanese, Korean, Russian, Spanish,
+Arabic, French, and German.
+
+Outside English the linter is a trigger-list floor, so a novel phrasing clears
+it; the translator rule in `references/patterns.md` covers what the regexes
+miss. The floor is what makes the gate usable on locale files: a translation
+that re-introduces contrast fails CI even when the English source passed.
+
+## Supported agents and installation paths
+
+| Path | Agent | Installs | Needs |
+|---|---|---|---|
+| [One command](#one-command) | whatever the machine carries | the plugin where a plugin CLI exists, the skill everywhere else | Python 3, plus the CLIs for the paths you want |
+| [Portable skill](#portable-skill) | any agent the Skills CLI supports | the whole skill directory: skill, references, linter, corpora | Node (for `npx`), Python 3 to run the linter |
+| [Claude Code marketplace](#claude-code-marketplace) | Claude Code | skill, hooks, profiles, slash command | Claude Code with `/plugin`, Python 3, `sh` |
+| [Skills-directory clone](#skills-directory-clone) | Claude Code | the same, read in place | `git`, Python 3, `sh` |
+| [Codex marketplace](#codex-marketplace) | Codex, ChatGPT | skill, hooks, profile controller, references, linter | Codex with `/plugins`, Python 3 |
+| [Project checkout](#project-checkout-for-ci-and-other-agents) | CI, Codex, Gemini, humans | files at stable in-repo paths | `git`, Python 3 |
+| [Linter only](#linter-only) | any | the gate | Python 3 |
+
+### One command
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.py | python3 -
+```
+
+```powershell
+irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | iex
+```
+
+`install.py` detects which agents the machine carries and drives each host's
+own CLI: `claude plugin` and `codex plugin` install the full plugin, and the
+Skills CLI installs the skill for every other agent it finds. Updates and
+removal stay with those same tools, so the script owns no state.
+
+`python3 -` forwards trailing arguments, so the flags work from the pipe:
+
+```bash
+base=https://raw.githubusercontent.com/HiroHyun/grounded-copy/main
+curl -fsSL $base/install.py | python3 - --dry-run       # print the plan and stop
+curl -fsSL $base/install.py | python3 - --skills-only   # the skill for every agent
+curl -fsSL $base/install.py | python3 - --only codex
+curl -fsSL $base/install.py | python3 - --uninstall
+```
+
+`--list` and `--dry-run` print what was detected and the exact commands, then
+stop. `--only NAME` repeats and takes `claude`, `codex`, `skills`, or an agent
+name such as `cursor`. `--skills-only` routes every detected agent through the
+Skills CLI, which is the path that installs the skill alone. `--yes` skips the
+prompt, and `--uninstall` maps to each host's removal verb. Re-running is safe:
+every underlying verb is idempotent.
+
+**What you are running.** The one-liner executes whatever sits on `main` at
+that moment. Read it first, or pin a tag:
+
+```bash
+curl -fsSL $base/install.py | less
+curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/refs/tags/v0.4.0/install.py | python3 -
+```
+
+The script prints every command before it runs one, invokes `claude`, `codex`,
+and `npx`, and writes no file of its own; those CLIs own what lands on disk.
+
+### Portable skill
 
 ```bash
 npx skills@latest add HiroHyun/grounded-copy
 ```
 
-The Skills CLI reads the root `SKILL.md`, detects supported agents, and
-installs the skill in their configured skill directories.
-
-For a global installation with confirmation prompts skipped:
+The Skills CLI reads `skills/grounded-copy/SKILL.md`, detects supported agents,
+and installs the skill in their configured skill directories.
 
 ```bash
 npx skills@latest add HiroHyun/grounded-copy --skill grounded-copy --global --yes
-```
-
-To inspect the skill metadata before installation:
-
-```bash
 npx skills@latest add HiroHyun/grounded-copy --list
+npx skills@latest update grounded-copy
+npx skills@latest remove grounded-copy
 ```
 
-To update an installed skill to the latest version:
+`--list` prints the skill metadata and stops there. `update` takes
+installed skill names and refreshes them from their source; `-g` restricts the
+run to global skills and `-p` to project skills. `remove` deletes the installed
+copy.
+
+The CLI records the files it manages in a `.source` manifest. `curl` fetches
+the same directory, corpora included:
 
 ```bash
-npx skills@latest update grounded-copy
+base=https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/skills/grounded-copy
+mkdir -p grounded-copy/references grounded-copy/scripts grounded-copy/tests
+curl -o grounded-copy/SKILL.md                $base/SKILL.md
+curl -o grounded-copy/references/patterns.md  $base/references/patterns.md
+curl -o grounded-copy/references/setup.md     $base/references/setup.md
+curl -o grounded-copy/scripts/copy_lint.py    $base/scripts/copy_lint.py
+curl -o grounded-copy/tests/bad-samples.md    $base/tests/bad-samples.md
+curl -o grounded-copy/tests/good-samples.md   $base/tests/good-samples.md
 ```
 
-`update` takes the installed skill names and refreshes them from their
-source; `-g` restricts the run to global skills and `-p` to project skills.
+Every path `SKILL.md` names resolves inside that directory. Point any agent at
+`SKILL.md` and run `copy_lint.py` from the command line.
 
-### Manual installation
+### Claude Code marketplace
+
+This repository hosts its own marketplace, `hirohyun-plugins`, at
+`.claude-plugin/marketplace.json`. Add it, then install the plugin:
+
+```shell
+/plugin marketplace add HiroHyun/grounded-copy
+/plugin install grounded-copy@hirohyun-plugins
+/reload-plugins
+```
+
+`/plugin install` opens the plugin details, where you pick user, project, or
+local scope. `/reload-plugins` activates it in the current session. The same
+verbs manage it afterwards — `update`, `disable`, `enable`, `uninstall`,
+`marketplace remove` — and each runs from the shell as `claude plugin ...` for
+scripting. `/plugin marketplace remove` also uninstalls the plugins that came
+from that marketplace; `/plugin marketplace update` refreshes the catalog and
+keeps them.
+
+The marketplace entry sets `"source": "./"`, so the plugin is this repository.
+A relative source resolves against a local copy of the marketplace, which means
+adding it from GitHub or a git URL; adding a direct URL to the `marketplace.json`
+file downloads only that file and the relative source fails to resolve.
+
+Third-party marketplaces have auto-update disabled by default. Turn it on from
+`/plugin` → **Marketplaces** → the marketplace → **Enable auto-update**.
+
+### Skills-directory clone
+
+A clone into a skills directory is read in place, with no plugin cache:
 
 ```bash
 git clone https://github.com/HiroHyun/grounded-copy ~/.claude/skills/grounded-copy
 ```
 
-The skill activates on copywriting, localization, and review tasks.
+Remove or rename any earlier portable install first; the clone needs an empty
+destination. Claude Code loads the folder as `grounded-copy@skills-dir` on the
+next session, and both hooks start. `git pull` in that directory updates it; a
+clone older than the `.gitattributes` line-ending rules also wants
+`git add --renormalize .` once, which `references/setup.md` explains under
+`### Dev loop`.
 
-### Repository enforcement
+Roll back with `claude plugin disable grounded-copy@skills-dir`, which leaves
+the skill in place. The clone loads as a plugin whose skill sits at
+`skills/grounded-copy/`, so a plain-skill fallback wants that inner directory
+copied into a skills directory of its own.
 
-The Skills CLI installs the skill definition and its linter. A project-local
-checkout supplies stable paths for hooks and CI:
+### Codex marketplace
+
+The same repository hosts a Codex marketplace at
+`.agents/plugins/marketplace.json`, listing a generated plugin built from the
+canonical files:
+
+```bash
+codex plugin marketplace add HiroHyun/grounded-copy
+codex plugin add grounded-copy@hirohyun-plugins
+```
+
+Review and trust the plugin hooks in `/hooks` before starting a session.
+Codex keeps hooks pending review until that step. `codex plugin list` shows what is
+registered; the marketplace verbs are `add`, `list`, `upgrade`, and `remove`,
+and the plugin verbs are `add` and `remove`. `codex /plugins` opens the same
+catalog as a browser: Space turns an installed plugin on or off, and
+**Uninstall plugin** removes it. To keep it installed and off, set
+`enabled = false` on its entry in `~/.codex/config.toml` and restart Codex.
+
+`codex plugin add` copies the adapter to
+`~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>`. Run the
+linter from there, or from any checkout:
+
+```bash
+python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.4.0/skills/grounded-copy/scripts/copy_lint.py draft.md
+```
+
+The generated package lives at `dist/codex/grounded-copy` and carries
+lifecycle hooks, the `grounded-copy` skill, the `$grounded-profile` controller
+skill, both references, both corpora, and the linter. Its
+`skills/grounded-copy/` is a byte-for-byte mirror of the canonical directory,
+so every path `SKILL.md` names resolves from the installed copy; the
+repository's own Python suites and Claude-only files stay behind.
+`SessionStart` injects the active policy at startup, resume, clear,
+and after compaction. `UserPromptSubmit` injects the active turn reminder.
+Use `$grounded-profile chat`, `$grounded-profile copy`, `$grounded-profile off`,
+or `$grounded-profile status` to manage the Codex profile. The preference lives
+at `$CODEX_HOME/grounded-copy/profile`, with `~/.codex` as the default home.
+The `off` profile returns empty hook output and persists across restarts.
+`scripts/build_codex_adapter.py --check` and `tests/test_codex_adapter.py`
+assert that the adapter matches the canonical files byte-for-byte.
+
+### Project checkout, for CI and other agents
+
+Any path above installs for one machine. A project-local checkout supplies
+stable in-repo paths, which CI, Codex, and Gemini all read:
 
 ```bash
 git clone https://github.com/HiroHyun/grounded-copy .style/grounded-copy
@@ -103,35 +292,96 @@ Claude Code hooks, `AGENTS.md`, `GEMINI.md`, GitHub Actions, and CODEOWNERS.
 ### Linter only
 
 ```bash
-python3 scripts/copy_lint.py draft.md locales/en.json
-cat draft.md | python3 scripts/copy_lint.py --stdin
+python3 skills/grounded-copy/scripts/copy_lint.py draft.md locales/en.json
+cat draft.md | python3 skills/grounded-copy/scripts/copy_lint.py --stdin
 ```
 
-Exit 0 = pass, 1 = rewrite and re-run. No dependencies beyond Python 3.
+Exit 0 = pass, 1 = rewrite and re-run, 2 = usage or IO error. No dependencies
+beyond Python 3.
 
-## Repository layout
+## Portable capabilities and Claude Code capabilities
 
+| Capability | Portable | Claude Code / Codex plugin |
+|---|---|---|
+| the `SKILL.md` rules | yes | |
+| `references/patterns.md` catalog, nine locales at three depths | yes | |
+| `scripts/copy_lint.py` | yes | |
+| `tests/` sample corpora | yes | |
+| `SessionStart` policy, repeated after each compaction | | yes |
+| `UserPromptSubmit` turn reminder | | yes |
+| `chat`, `copy`, `off` profiles and the stored preference | | yes |
+| Profile controller and governing directive | | yes |
+
+Requirements for the Claude Code paths: Python 3 on PATH as `python` or
+`python3`. The manifest calls `sh hooks/run.sh`; on a Windows setup lacking
+`sh`, change both commands to `hooks/run.cmd` in
+`.claude-plugin/plugin.json`. Both launchers resolve the interpreter once and
+run the hook once.
+
+## Profiles and local state
+
+`/grounded-copy:grounded chat|copy|off` is the one path that records a
+preference, and a recorded switch prints a governing directive that takes
+effect in the same turn. `chat` carries the core rules; `copy` adds the
+marketing register and two closures.
+
+```bash
+python hooks/grounded_tracker.py --status
+python hooks/grounded_tracker.py --set chat
 ```
-grounded-copy/
-├── SKILL.md                    # Core rules + workflow + integrity rules
-├── references/
-│   ├── patterns.md             # Full catalog: bad → good per category
-│   └── setup.md                # Claude Code hooks, Codex, CI, CODEOWNERS
-├── scripts/copy_lint.py        # The deterministic gate
-└── tests/
-    ├── bad-samples.md          # Must FAIL the linter (self-test)
-    └── good-samples.md         # Must PASS the linter (self-test)
-```
 
-The example rows and quoted phrases in this README and `tests/bad-samples.md` contain banned
-patterns on purpose; the CI self-test lints only the test corpus.
+`--status` names the profile, whether it came from the preference file or from
+the default, and the resolved path. `--set` exits 0 when it records the
+preference, 1 when the write fails, and 2 when it rejects the value.
+
+**What gets written.** One file, and only when you select a profile:
+Claude stores `<config-dir>/grounded-copy/profile`, where config-dir is
+`$CLAUDE_CONFIG_DIR` when set and `~/.claude` otherwise. Codex stores
+`$CODEX_HOME/grounded-copy/profile`, with `~/.codex` as the default. Each file
+holds one word. Hooks read the preference; the profile controller writes it
+atomically; the linter writes nothing.
+
+`### Profile lifecycle` in `references/setup.md` is the one description of how
+the profile preference, the session policy, the turn reminder, and the
+effective policy relate.
+
+## Measured recurring context cost
+
+UTF-8 bytes of each hook's stdout, measured 2026-08-02 on Claude Code 2.1.220.
+`python hooks/grounded_activate.py --self-test` checks each payload against its
+published budget and fails when one passes it.
+
+| Payload | Bytes | Estimated tokens | When it is spent |
+|---|---|---|---|
+| `chat` session policy | 3,785 | ~945 | every session start, and after each compaction |
+| `copy` session policy | 5,246 | ~1,310 | every session start, and after each compaction |
+| turn reminder | 218 | ~55 | every prompt |
+| `chat` governing directive | 3,986 | ~995 | every recorded profile switch |
+| `copy` governing directive | 5,447 | ~1,360 | every recorded profile switch |
+| `SKILL.md` | 8,703 | ~2,175 | when the skill triggers |
+
+**Method.** Bytes are the measured unit: the UTF-8 length of what each hook
+writes to stdout. Token figures are estimates at bytes ÷ 4, and no token count
+in this repository comes from a tokenizer. `--self-test` prints the rules alone,
+106 bytes under the session-policy rows; the two directive rows include the
+resolved preference path and measure a 59-character one.
+`### Measured recurring cost` in `references/setup.md` gives both boundaries.
+
+A 60-turn `chat` session with one compaction and one profile switch spends
+3,785 × 2 + 218 × 60 + 3,986 = 24,636 bytes, down from 41,594 before the payload
+was cut.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: every new pattern
-needs a real-world sighting, a failing line in `tests/bad-samples.md`,
-and a factual counterexample check for false positives.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Short version: every new pattern needs
+a real-world sighting, a failing line in
+`skills/grounded-copy/tests/bad-samples.md`, and a note
+naming the factual uses the regex also matches.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). Every redistributed package carries the notice: the Codex
+package ships its own `LICENSE`, and both plugin manifests and both marketplace
+entries declare `MIT`. The source stays public at
+https://github.com/HiroHyun/grounded-copy, which is what both marketplaces
+fetch from.

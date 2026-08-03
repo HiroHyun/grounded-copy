@@ -1,0 +1,26 @@
+{
+  "name": "hirohyun-plugins",
+  "owner": {
+    "name": "HiroHyun",
+    "url": "https://github.com/HiroHyun"
+  },
+  "description": "Style gates for marketing, web, and technical prose.",
+  "plugins": [
+    {
+      "name": "grounded-copy",
+      "source": "./",
+      "description": "Copy states what the subject is or does, backed by a deterministic Python linter and two session hooks that carry the rules into chat replies.",
+      "version": "0.4.0",
+      "author": {
+        "name": "HiroHyun",
+        "url": "https://github.com/HiroHyun"
+      },
+      "homepage": "https://github.com/HiroHyun/grounded-copy",
+      "repository": "https://github.com/HiroHyun/grounded-copy",
+      "license": "MIT",
+      "keywords": ["copywriting", "style", "linter", "i18n", "hooks"],
+      "category": "productivity",
+      "skills": ["./skills/"]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "grounded-copy",
+  "version": "0.4.0",
+  "description": "Grounded copy rules, lifecycle hooks, and an explicit profile controller.",
+  "author": {
+    "name": "HiroHyun",
+    "url": "https://github.com/HiroHyun"
+  },
+  "homepage": "https://github.com/HiroHyun/grounded-copy",
+  "repository": "https://github.com/HiroHyun/grounded-copy",
+  "license": "MIT",
+  "keywords": [
+    "copywriting",
+    "style",
+    "linter",
+    "i18n"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}

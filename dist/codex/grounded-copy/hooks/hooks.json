@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${PLUGIN_ROOT}/hooks/run.sh\" grounded_activate.py",
+            "commandWindows": "\"${PLUGIN_ROOT}\\hooks\\run.cmd\" grounded_activate.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${PLUGIN_ROOT}/hooks/run.sh\" grounded_tracker.py",
+            "commandWindows": "\"${PLUGIN_ROOT}\\hooks\\run.cmd\" grounded_tracker.py"
+          }
+        ]
+      }
+    ]
+  }
+}
