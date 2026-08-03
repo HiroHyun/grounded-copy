@@ -13,7 +13,7 @@ REPO_RAW="https://raw.githubusercontent.com/HiroHyun/grounded-copy/main"
 # Probe once and keep the first interpreter that reports Python 3. Running
 # `python install.py || python3 install.py` would run the installer twice.
 py=""
-for candidate in python3 python; do
+for candidate in python3 python py; do
     if command -v "$candidate" >/dev/null 2>&1 &&
        "$candidate" -c 'import sys; sys.exit(0 if sys.version_info[0] == 3 else 1)' >/dev/null 2>&1; then
         py="$candidate"
@@ -22,7 +22,7 @@ for candidate in python3 python; do
 done
 
 if [ -z "$py" ]; then
-    echo "grounded-copy: Python 3 is required and resolved as neither python3 nor python" >&2
+    echo "grounded-copy: Python 3 is required and resolved as none of python3, python, py" >&2
     exit 1
 fi
 

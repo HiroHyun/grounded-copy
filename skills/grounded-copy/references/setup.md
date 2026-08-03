@@ -275,6 +275,25 @@ three from one command. `README.md` carries the user commands for each.
 | Claude Code marketplace | `.claude-plugin/marketplace.json`, plus `.claude-plugin/plugin.json` | the whole repository as one plugin: skill, hooks, command |
 | Codex marketplace | `.agents/plugins/marketplace.json`, plus the package's `.codex-plugin/plugin.json` | `dist/codex/grounded-copy`: lifecycle hooks, skills, references, corpora, linter, and launchers |
 
+The portable command reaches 17+ agents through one universal Skills CLI
+install. The two plugin packages add session-event policy and stored profile
+control for Claude Code and Codex.
+
+| Capability | Portable, 17+ agents | Claude Code and Codex plugins |
+|---|:---:|:---:|
+| `SKILL.md` rules | yes | yes |
+| `references/patterns.md` catalog and nine locale rule sets | yes | yes |
+| `scripts/copy_lint.py` | yes | yes |
+| `tests/` sample corpora | yes | yes |
+| `SessionStart` policy, repeated after each compaction |  | yes |
+| `UserPromptSubmit` turn reminder |  | yes |
+| `chat`, `copy`, and `off` profiles with a stored preference |  | yes |
+| Profile controller and governing directive |  | yes |
+
+A skill description is evaluated for relevance on each turn. The plugin hooks
+run on registered session events. `### Profile lifecycle` defines those events
+and the stored preference; `### Measured recurring cost` records each payload.
+
 The Claude Code marketplace lists one plugin whose `source` is `"./"`, so the
 repository root is the plugin, laid out the way a Claude Code plugin is laid
 out: `skills/`, `commands/`, `hooks/`, and `.claude-plugin/plugin.json`.
@@ -427,10 +446,10 @@ fallback wants that inner directory copied to a skills directory of its own.
 
 Every banned pattern this repository documents is quoted as the example that
 defines it, so each file reports findings against its own gate. Measured
-2026-08-03: `references/patterns.md` 176, and `README.md`, `SKILL.md`,
+2026-08-03: `references/patterns.md` 176; `README.md` 3; and `SKILL.md`,
 `CONTRIBUTING.md`, `commands/grounded.md`, `install.py`, and this file 0 each.
-Sighting quotes belong in `references/patterns.md`; every other file names
-counts and holds none of its own. CI runs `copy_lint.py` on
+The front page carries three cited draft sentences beside their rewrites; the
+catalog carries the full set. CI runs `copy_lint.py` on
 `skills/grounded-copy/tests/bad-samples.md` and
 `skills/grounded-copy/tests/good-samples.md` and on no other path, which is
 what keeps the rest shippable.

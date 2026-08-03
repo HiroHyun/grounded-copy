@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """One command that installs grounded-copy wherever it can run.
 
-    curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.py | python3 -
+    curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.sh | sh
 
-`python3 -` forwards trailing arguments, so flags work from the pipe:
+The shell launcher forwards trailing arguments to this installer:
 
-    curl -fsSL .../install.py | python3 - --skills-only --yes
+    curl -fsSL .../install.sh | sh -s -- --skills-only --yes
 
-What it does: detect which agents are present, then drive each host's own
-CLI. Claude Code and Codex install the full plugin through their marketplace
-verbs; every other agent gets the skill through the Skills CLI. Updates and
-removal stay with those same tools, so this script owns no state and writes no
-file of its own.
+What it does: detect the Claude Code and Codex plugin CLIs, then drive each
+host's marketplace verbs. One universal Skills CLI step installs the portable
+skill for every agent that CLI supports. Updates and removal stay with those
+same tools, so this script owns no state and writes no file of its own.
 
 Every step is planned before anything runs, and `--dry-run` prints the plan and
 stops. Re-running is safe: each underlying verb is idempotent.
@@ -25,6 +24,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 
 REPO = "HiroHyun/grounded-copy"
 MARKETPLACE = "hirohyun-plugins"
@@ -36,21 +36,13 @@ EXIT_OK = 0
 EXIT_FAILED = 1
 EXIT_USAGE = 2
 
-# Agents the Skills CLI installs into, and the marker under $HOME that says the
-# agent is present. The name on the left is the CLI's own `-a` profile.
-SKILL_AGENTS = (
-    ("claude-code", ".claude"),
-    ("codex", ".codex"),
-    ("cursor", ".cursor"),
-    ("windsurf", ".windsurf"),
-    ("github-copilot", ".copilot"),
-    ("gemini-cli", ".gemini"),
-    ("opencode", os.path.join(".config", "opencode")),
-)
-
 # Hosts with a plugin CLI of their own. These carry the hooks, the profiles,
 # and the profile switch, which the portable skill leaves out.
 PLUGIN_HOSTS = ("claude", "codex")
+
+CLAUDE_PRECEDENCE_NOTE = """Claude Code may list grounded-copy@skills-dir as
+\"Not loaded\" because grounded-copy@hirohyun-plugins owns that skill name.
+The installed plugin supplies the same skill plus hooks."""
 
 MANUAL = """No agent CLI resolved. Fetch the skill directly:
 
@@ -112,7 +104,7 @@ def parse_args(argv):
             return None, "unknown flag: " + argument
         index += 1
 
-    known = set(PLUGIN_HOSTS) | {"skills"} | {name for name, _ in SKILL_AGENTS}
+    known = set(PLUGIN_HOSTS) | {"skills"}
     for name in options.only:
         if name not in known:
             return None, "unknown --only target: " + name
@@ -123,30 +115,17 @@ def have_command(name):
     return shutil.which(name) is not None
 
 
-def detect(home=None, which=have_command):
-    """What is present: plugin CLIs on PATH, agents by their config directory.
-
-    `which` and `home` are parameters so a test can describe a machine.
-    """
-    home = home or os.path.expanduser("~")
-    found = {
+def detect(which=have_command):
+    """Return the plugin and Skills CLIs available on PATH."""
+    return {
         "commands": sorted(n for n in PLUGIN_HOSTS if which(n)),
         "npx": which("npx") or which("node"),
-        "agents": [],
     }
-    for name, marker in SKILL_AGENTS:
-        if os.path.isdir(os.path.join(home, marker)):
-            found["agents"].append(name)
-    return found
 
 
-def _wanted(options, target, agent=None):
+def _wanted(options, target):
     """Does `--only` admit this step? With no `--only`, everything runs."""
-    if not options.only:
-        return True
-    if target in options.only:
-        return True
-    return agent is not None and agent in options.only
+    return not options.only or target in options.only
 
 
 def plan(options, found):
@@ -192,28 +171,29 @@ def plan(options, found):
                     ["codex", "plugin", "add", "%s@%s" % (PLUGIN, MARKETPLACE)],
                 ))
 
-    agents = list(found["agents"])
-    if not options.skills_only:
-        # A host that took the plugin already has the skill, with the hooks.
-        agents = [a for a in agents
-                  if a.split("-")[0] not in found["commands"]]
-    if agents and found["npx"]:
+    if found["npx"] and _wanted(options, "skills"):
         if options.uninstall:
-            if _wanted(options, "skills"):
-                steps.append((
-                    "skills: remove the skill",
-                    ["npx", "-y", "skills", "remove", SKILL, "--yes"],
-                ))
+            steps.append((
+                "skills: remove the universal skill",
+                ["npx", "-y", "skills", "remove", SKILL, "--yes"],
+            ))
         else:
-            for agent in agents:
-                if not _wanted(options, "skills", agent):
-                    continue
-                steps.append((
-                    "skills: %s the skill for %s" % (verb, agent),
-                    ["npx", "-y", "skills", "add", REPO,
-                     "--skill", SKILL, "-a", agent, "--yes"],
-                ))
+            steps.append((
+                "skills: %s the universal skill" % verb,
+                ["npx", "-y", "skills", "add", REPO,
+                 "--skill", SKILL, "--yes"],
+            ))
     return steps
+
+
+def installs_claude_and_skills(steps):
+    """Whether a successful plan needs the Claude precedence note."""
+    commands = [argv for _label, argv in steps]
+    has_claude = any(argv[:3] == ["claude", "plugin", "install"]
+                     for argv in commands)
+    has_skills = any(argv[:4] == ["npx", "-y", "skills", "add"]
+                    for argv in commands)
+    return has_claude and has_skills
 
 
 def render(steps, color=True):
@@ -241,6 +221,39 @@ def confirm(steps, options, reader=None):
     return answer.strip().lower() in ("y", "yes")
 
 
+def cleanup_claude_cache(env=None, sleeper=time.sleep):
+    """Remove this plugin's orphaned Claude cache after a successful uninstall."""
+    env = os.environ if env is None else env
+    config = env.get("CLAUDE_CONFIG_DIR") or os.path.expanduser("~/.claude")
+    marketplace = os.path.join(
+        os.path.expanduser(config), "plugins", "cache", MARKETPLACE
+    )
+    plugin_cache = os.path.join(marketplace, PLUGIN)
+    if not os.path.lexists(plugin_cache):
+        return True
+
+    error = None
+    for attempt in range(2):
+        try:
+            shutil.rmtree(plugin_cache)
+            error = None
+            break
+        except OSError as exc:
+            error = exc
+            if attempt == 0:
+                sleeper(0.1)
+
+    if os.path.lexists(plugin_cache):
+        print("    Claude retained its cache at %s: %s" % (plugin_cache, error))
+        return False
+
+    try:
+        os.rmdir(marketplace)
+    except OSError:
+        pass
+    return True
+
+
 def run(steps):
     """Execute each step, reporting the ones that fail. Returns an exit code."""
     failed = []
@@ -255,6 +268,9 @@ def run(steps):
         if code != 0:
             print("    exited %d" % code)
             failed.append(label)
+        elif argv[:4] == ["claude", "plugin", "uninstall",
+                          "%s@%s" % (PLUGIN, MARKETPLACE)]:
+            cleanup_claude_cache()
     if failed:
         print("\n%d step(s) failed:" % len(failed))
         for label in failed:
@@ -274,12 +290,11 @@ def main(argv):
 
     print("grounded-copy installer")
     print("  plugin CLIs: %s" % (", ".join(found["commands"]) or "none"))
-    print("  agents:      %s" % (", ".join(found["agents"]) or "none"))
     print("  npx:         %s" % ("yes" if found["npx"] else "no"))
 
     if not steps:
         print()
-        print(MANUAL if not found["commands"] else
+        print(MANUAL if not found["commands"] and not found["npx"] else
               "Nothing matched the requested targets.")
         return EXIT_OK
 
@@ -291,7 +306,10 @@ def main(argv):
     if not confirm(steps, options):
         print("Cancelled.")
         return EXIT_OK
-    return run(steps)
+    code = run(steps)
+    if code == EXIT_OK and installs_claude_and_skills(steps):
+        print("\nNote: " + CLAUDE_PRECEDENCE_NOTE)
+    return code
 
 
 if __name__ == "__main__":
