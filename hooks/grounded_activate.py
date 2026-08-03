@@ -22,9 +22,13 @@ import _hook_io  # noqa: E402
 import _policy  # noqa: E402
 import _preference  # noqa: E402
 
-# Adapter seam: a copied entrypoint may set these paths for its host.
+# Adapter seams: a copied entrypoint sets these for its host. The skill path
+# needs none — every layout puts SKILL.md at the same place under the plugin
+# root, which is what `skills/grounded-copy/` as the one canonical directory
+# buys. scripts/build_codex_adapter.py rewrites each seam and fails the build
+# when one goes missing.
 PREFERENCE_PATH = None
-SKILL_PATH = None
+SWITCH_HINT = None
 
 
 def _preference_path(argv):
@@ -40,7 +44,7 @@ def main(argv):
     root = _hook_io.plugin_root(argv, hook_dir)
 
     if "--self-test" in argv:
-        return _policy.self_test(root, SKILL_PATH)
+        return _policy.self_test(root)
 
     _hook_io.drain_stdin()
 
@@ -49,11 +53,11 @@ def main(argv):
     if profile not in _preference.ACTIVE:
         return 0
 
-    skill = _policy.read_skill(root, SKILL_PATH)
+    skill = _policy.read_skill(root)
     if not skill:
         return 0
 
-    sys.stdout.write(_policy.session_policy(skill, profile))
+    sys.stdout.write(_policy.session_policy(skill, profile, SWITCH_HINT))
     return 0
 
 

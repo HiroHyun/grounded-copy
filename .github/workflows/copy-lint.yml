@@ -8,13 +8,14 @@ jobs:
       - name: bad samples must fail
         run: |
           status=0
-          python3 scripts/copy_lint.py tests/bad-samples.md || status=$?
+          python3 skills/grounded-copy/scripts/copy_lint.py \
+            skills/grounded-copy/tests/bad-samples.md || status=$?
           if [ "$status" -ne 1 ]; then
             echo "::error::bad-samples.md exited $status; expected 1 (findings)"
             exit 1
           fi
       - name: good samples must pass
-        run: python3 scripts/copy_lint.py tests/good-samples.md
+        run: python3 skills/grounded-copy/scripts/copy_lint.py skills/grounded-copy/tests/good-samples.md
 
   hooks:
     runs-on: ubuntu-latest

@@ -152,8 +152,9 @@ rationalization below is pre-emptively rejected:
   attribution, positive-form, and multilingual tables. Read it when a
   rewrite is hard, or before writing copy in zh/ru/es/ar/fr/de/ja/ko.
 - `tests/bad-samples.md` and `tests/good-samples.md` — the linter's own
-  corpora, which ship with a checkout and with the Codex adapter. After a
-  change to the linter, `copy_lint.py tests/bad-samples.md` must FAIL and
+  corpora, which sit beside this file in every install path that copies the
+  skill directory. After a change to the linter,
+  `copy_lint.py tests/bad-samples.md` must FAIL and
   `copy_lint.py tests/good-samples.md` must PASS.
 - `references/setup.md` — wiring the skill into Claude Code (CLAUDE.md /
   hooks) and Codex (AGENTS.md) so both agents load it and run the gate.

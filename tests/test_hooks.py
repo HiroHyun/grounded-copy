@@ -2,7 +2,7 @@
 """Interface tests for the two hook entry points.
 
 One class per domain term, matching `### Profile lifecycle` in
-references/setup.md: the profile preference on disk, the session policy
+skills/grounded-copy/references/setup.md: the profile preference on disk, the session policy
 SessionStart injects, the turn reminder UserPromptSubmit injects, and the
 governing directive `--set` prints.
 
@@ -13,7 +13,7 @@ codes, and persisted state, which is the contract the plugin manifest depends
 on.
 
 These are the deterministic criteria. Whether the model then follows the
-injected text is behavioral; `**Enforcement boundary**` in references/setup.md
+injected text is behavioral; `**Enforcement boundary**` in skills/grounded-copy/references/setup.md
 states what Phase 1 does about that.
 """
 
@@ -28,6 +28,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOKS = REPO_ROOT / "hooks"
+SKILL_DIR = REPO_ROOT / "skills" / "grounded-copy"
 
 ACTIVATE = str(HOOKS / "grounded_activate.py")
 TRACKER = str(HOOKS / "grounded_tracker.py")
@@ -183,6 +184,18 @@ class SessionPolicyTests(HookCase):
         self.assertIn("profile: chat", result.stdout)
         self.assertNotIn("profile: technical", result.stdout)
 
+    def test_the_session_policy_names_the_claude_slash_command(self):
+        """The switch line carries a host verb, and this is the Claude host.
+
+        `_policy.py` ships byte-for-byte into the Codex package, where the verb
+        is `$grounded-profile`, so the two hosts assert their own line: this
+        case and `test_the_codex_payloads_name_the_codex_profile_verb`.
+        """
+        self.write_preference("chat\n")
+        result = self.activate()
+        self.assertIn("`/grounded-copy:grounded chat|copy|off`", result.stdout)
+        self.assertNotIn("$grounded-profile", result.stdout)
+
     def test_chat_policy_excludes_the_marketing_register(self):
         self.write_preference("chat\n")
         result = self.activate()
@@ -204,7 +217,7 @@ class SessionPolicyTests(HookCase):
 
         The anchor is the register test rather than a hype word: SKILL.md
         holds no hype word now, so that it passes copy_lint.py itself, and
-        `## Hype vocabulary` in references/patterns.md enumerates them.
+        `## Hype vocabulary` in skills/grounded-copy/references/patterns.md enumerates them.
         """
         self.write_preference("chat\n")
         chat = self.activate().stdout
@@ -249,7 +262,7 @@ class TurnReminderTests(HookCase):
     # One clause per boundary the reminder keeps in reach. `Prefer established
     # positive terms` came out with the payload cut, since `## Positive forms`
     # states it at session start; `### Measured recurring cost` in
-    # references/setup.md records that. The reminder also carries a byte
+    # skills/grounded-copy/references/setup.md records that. The reminder also carries a byte
     # budget, asserted below.
     CLAUSES = (
         "State what the subject is or does.",
@@ -367,7 +380,7 @@ class ReadOnlyHookTests(HookCase):
 
     The first group carried the control words inside other content and each one
     reproduced a live switch against an earlier parser. The second group was
-    the parser's own accepted vocabulary. references/setup.md records why the
+    the parser's own accepted vocabulary. skills/grounded-copy/references/setup.md records why the
     natural-language path came out; both groups stay here as the invariant.
     """
 
@@ -418,7 +431,7 @@ class ReadOnlyHookTests(HookCase):
     def test_a_slash_prompt_reaches_no_parser(self):
         """A `/` prompt resolves as a slash command before the hook fires.
 
-        references/setup.md records the measurement. commands/grounded.md owns
+        skills/grounded-copy/references/setup.md records the measurement. commands/grounded.md owns
         that path through --set.
         """
         self.write_preference("chat\n")
@@ -598,16 +611,21 @@ class SkillReferenceTests(unittest.TestCase):
     `## References` sends a reader to files by path. A rename or a move leaves
     the pointer behind with nothing to catch it, and the skill ships to four
     install paths that carry no test suite of their own.
+
+    Resolution is against the skill directory, which is the property the
+    canonical layout exists to give: every path SKILL.md names sits beside it,
+    so the same pointer resolves in a checkout, in a Claude plugin install, in
+    a skills-directory clone, in a portable install, and in the Codex package.
     """
 
     def test_every_path_skill_md_names_exists(self):
-        text = (REPO_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        text = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
         named = sorted(set(SKILL_PATH.findall(text)))
         self.assertTrue(named, "no paths matched; the pattern stopped working")
         for relative in named:
             with self.subTest(path=relative):
                 self.assertTrue(
-                    (REPO_ROOT / relative).exists(),
+                    (SKILL_DIR / relative).exists(),
                     "SKILL.md points at %s, which is absent" % relative,
                 )
 

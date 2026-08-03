@@ -18,31 +18,71 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 BUILDER = str(REPO_ROOT / "scripts" / "build_codex_adapter.py")
-ADAPTER = REPO_ROOT / "adapters" / "codex" / "grounded-copy"
+ADAPTER_REL = Path("dist") / "codex" / "grounded-copy"
+ADAPTER = REPO_ROOT / ADAPTER_REL
 SKILL_DIR = ADAPTER / "skills" / "grounded-copy"
+SKILL_SOURCE = REPO_ROOT / "skills" / "grounded-copy"
 CODEX_ACTIVATE = ADAPTER / "hooks" / "grounded_activate.py"
 CODEX_TRACKER = ADAPTER / "hooks" / "grounded_tracker.py"
 
-# Source, then its place in the adapter.
-COPIES = (
-    ("SKILL.md", SKILL_DIR / "SKILL.md"),
-    ("references/patterns.md", SKILL_DIR / "references" / "patterns.md"),
-    ("references/setup.md", SKILL_DIR / "references" / "setup.md"),
-    ("scripts/copy_lint.py", SKILL_DIR / "scripts" / "copy_lint.py"),
-    ("LICENSE", ADAPTER / "LICENSE"),
-)
+# Every file the generated package holds. The builder walks the skill directory
+# rather than naming its files, which ships a new reference automatically; this
+# set is what keeps that walk under review, so an added or dropped file is a
+# decision someone made here.
+GENERATED_INVENTORY = {
+    ".codex-plugin/plugin.json",
+    "LICENSE",
+    "README.md",
+    "hooks/_hook_io.py",
+    "hooks/_policy.py",
+    "hooks/_preference.py",
+    "hooks/grounded_activate.py",
+    "hooks/grounded_tracker.py",
+    "hooks/hooks.json",
+    "hooks/run.cmd",
+    "hooks/run.sh",
+    "skills/grounded-copy/SKILL.md",
+    "skills/grounded-copy/references/patterns.md",
+    "skills/grounded-copy/references/setup.md",
+    "skills/grounded-copy/scripts/copy_lint.py",
+    "skills/grounded-copy/tests/bad-samples.md",
+    "skills/grounded-copy/tests/good-samples.md",
+    "skills/grounded-profile/SKILL.md",
+    "skills/grounded-profile/agents/openai.yaml",
+    "skills/grounded-profile/scripts/profile.py",
+}
 
 
 class CodexAdapterTests(unittest.TestCase):
-    def test_every_copied_file_matches_its_source(self):
-        for source, destination in COPIES:
-            with self.subTest(source=source):
-                self.assertTrue(destination.exists(), "missing: " + source)
+    def test_every_skill_file_ships_byte_identical(self):
+        """The whole canonical directory travels, at the same relative path.
+
+        This walks the source rather than the builder's payload list. Reading
+        the list back would make the case tautological with the `--check` test,
+        so a builder that dropped a file would satisfy both.
+        """
+        sources = sorted(
+            p for p in SKILL_SOURCE.rglob("*")
+            if p.is_file() and "__pycache__" not in p.parts
+        )
+        self.assertTrue(sources, "no skill source files; the walk stopped working")
+        for source in sources:
+            relative = source.relative_to(SKILL_SOURCE)
+            with self.subTest(path=str(relative)):
+                copy = SKILL_DIR / relative
+                self.assertTrue(copy.exists(), "missing: " + str(relative))
                 self.assertEqual(
-                    (REPO_ROOT / source).read_bytes(),
-                    destination.read_bytes(),
-                    "adapter copy drifted from " + source,
+                    source.read_bytes(), copy.read_bytes(),
+                    "adapter copy drifted from " + str(relative),
                 )
+
+    def test_the_generated_inventory_matches_the_published_set(self):
+        found = {
+            p.relative_to(ADAPTER).as_posix()
+            for p in ADAPTER.rglob("*")
+            if p.is_file() and "__pycache__" not in p.parts
+        }
+        self.assertEqual(found, GENERATED_INVENTORY)
 
     def test_the_check_mode_passes_against_the_committed_adapter(self):
         result = subprocess.run(
@@ -76,8 +116,7 @@ class CodexAdapterTests(unittest.TestCase):
             )
             self.assertEqual(clean.returncode, 0, clean.stdout)
 
-            copy = root / "adapters" / "codex" / "grounded-copy" / \
-                "skills" / "grounded-copy" / "SKILL.md"
+            copy = root / ADAPTER_REL / "skills" / "grounded-copy" / "SKILL.md"
             copy.write_bytes(copy.read_bytes() + b"\ndrift\n")
 
             drifted = subprocess.run(
@@ -96,7 +135,7 @@ class CodexAdapterTests(unittest.TestCase):
             built = subprocess.run([sys.executable, str(builder)], cwd=root,
                                    text=True, capture_output=True)
             self.assertEqual(built.returncode, 0, built.stdout + built.stderr)
-            generated = root / "adapters" / "codex" / "grounded-copy"
+            generated = root / ADAPTER_REL
             missing = generated / "hooks" / "hooks.json"
             self.assertTrue(missing.exists(), str(missing))
             missing.unlink()
@@ -154,19 +193,22 @@ class CodexAdapterTests(unittest.TestCase):
         for name in ("hooks",):
             with self.subTest(directory=name):
                 self.assertTrue((ADAPTER / name).exists())
-        for name in ("commands", ".claude-plugin"):
+        # The Python suites and the repository build stay behind; the corpora
+        # that travel sit inside the skill, at `skills/grounded-copy/tests`.
+        for name in ("commands", ".claude-plugin", "tests", "scripts"):
             with self.subTest(directory=name):
                 self.assertFalse((ADAPTER / name).exists())
 
-    def test_the_linter_runs_from_the_adapter_path(self):
+    def test_the_linter_runs_against_the_corpora_it_ships_with(self):
+        """SKILL.md points a reader at both corpora; the package carries them."""
         linter = str(SKILL_DIR / "scripts" / "copy_lint.py")
         good = subprocess.run(
-            [sys.executable, linter, str(REPO_ROOT / "tests" / "good-samples.md")],
+            [sys.executable, linter, str(SKILL_DIR / "tests" / "good-samples.md")],
             cwd=str(REPO_ROOT), text=True, capture_output=True,
         )
         self.assertEqual(good.returncode, 0, good.stdout)
         bad = subprocess.run(
-            [sys.executable, linter, str(REPO_ROOT / "tests" / "bad-samples.md")],
+            [sys.executable, linter, str(SKILL_DIR / "tests" / "bad-samples.md")],
             cwd=str(REPO_ROOT), text=True, capture_output=True,
         )
         self.assertEqual(bad.returncode, 1, bad.stdout)
@@ -252,7 +294,58 @@ class CodexAdapterTests(unittest.TestCase):
         rendered = json.dumps(hooks)
         self.assertIn("PLUGIN_ROOT", rendered)
         self.assertIn("commandWindows", rendered)
-        self.assertFalse((SKILL_DIR / "tests").exists())
+        for corpus in ("bad-samples.md", "good-samples.md"):
+            with self.subTest(corpus=corpus):
+                self.assertTrue((SKILL_DIR / "tests" / corpus).exists())
+
+    def test_one_version_number_covers_both_packages(self):
+        """Four manifests carried two numbers by hand. The Claude one is source."""
+        def load(*parts):
+            return json.loads((REPO_ROOT.joinpath(*parts)).read_text(encoding="utf-8"))
+
+        version = load(".claude-plugin", "plugin.json")["version"]
+        self.assertEqual(
+            load(".claude-plugin", "marketplace.json")["plugins"][0]["version"],
+            version,
+        )
+        self.assertEqual(
+            load(".agents", "plugins", "marketplace.json")["plugins"][0]["version"],
+            version,
+        )
+        manifest = json.loads(
+            (ADAPTER / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(manifest["version"], version)
+        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertIn(
+            "/grounded-copy/%s/skills/grounded-copy/" % version, readme,
+            "README names a cache path with a stale version",
+        )
+
+    def test_the_codex_catalog_points_at_the_generated_tree(self):
+        """A stale path here surfaces at install time on a user's machine."""
+        catalog = json.loads(
+            (REPO_ROOT / ".agents" / "plugins" / "marketplace.json")
+            .read_text(encoding="utf-8")
+        )
+        entry = [p for p in catalog["plugins"] if p["name"] == "grounded-copy"][0]
+        self.assertEqual(entry["source"]["path"], "./" + ADAPTER_REL.as_posix())
+
+    def test_the_codex_payloads_name_the_codex_profile_verb(self):
+        """`_policy.py` and `_preference.py` ship byte-for-byte, so the host
+        verbs travel through the entrypoint seams. Codex has no slash command.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp)
+            policy = self._hook(CODEX_ACTIVATE, home=home,
+                                stdin='{"source":"startup"}').stdout
+            self.assertIn("$grounded-profile chat|copy|off", policy)
+            self.assertNotIn("/grounded-copy:grounded", policy)
+            self.assertEqual(
+                self._hook(CODEX_TRACKER, ("--set", "off"), home=home).returncode, 0
+            )
+            status = self._hook(CODEX_TRACKER, ("--status",), home=home).stdout
+            self.assertIn("run $grounded-profile chat to restore", status)
 
 
 if __name__ == "__main__":

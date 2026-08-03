@@ -4,8 +4,8 @@
 The preference lives at <config-dir>/grounded-copy/profile, config-dir being
 $CLAUDE_CONFIG_DIR when set and ~/.claude otherwise. One fixed path keeps hook
 runs and shell runs on the same file, and keeps the preference somewhere the
-user can cat and edit. references/setup.md records why ${CLAUDE_PLUGIN_DATA}
-stays out of it.
+user can cat and edit. skills/grounded-copy/references/setup.md records why
+${CLAUDE_PLUGIN_DATA} stays out of it.
 
 This module is the sole writer of the preference, and the `--set` path of
 grounded_tracker.py is its only caller. resolve_preference() is read-only, and
@@ -36,6 +36,10 @@ ARGUMENTS = {
     "marketing": "copy",
     "off": "off",
 }
+
+# The Claude command that restores an active profile. A copied entrypoint
+# passes its own host's verb instead.
+CLAUDE_RESTORE = "--set chat"
 
 # Why resolve_preference() returned the name it returned.
 RECORDED = "recorded"
@@ -96,14 +100,18 @@ def resolve_preference(path=None):
     return (value if value else DEFAULT), source
 
 
-def status_line(path=None):
-    """One line naming the profile, the reason, and the resolved path."""
+def status_line(path=None, restore=None):
+    """One line naming the profile, the reason, and the resolved path.
+
+    ``restore`` is the host's command for returning to an active profile. The
+    Claude flag is the default; the Codex entrypoint passes its own verb.
+    """
     profile, source = resolve_preference(path)
     path = preference_path(path)
     if source == RECORDED:
         line = "grounded profile: %s (recorded at %s)" % (profile, path)
         if profile == "off":
-            line += "; run --set chat to restore"
+            line += "; run %s to restore" % (restore or CLAUDE_RESTORE)
         return line
     if source == ABSENT:
         return "grounded profile: %s (default, no preference at %s)" % (

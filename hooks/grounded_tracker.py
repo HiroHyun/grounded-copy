@@ -11,7 +11,8 @@ Two roles with a boundary between them:
   in the same turn the user typed the command.
 
 An earlier build also parsed whole-prompt control instructions here.
-references/setup.md records the removal and the evidence behind it.
+skills/grounded-copy/references/setup.md records the removal and the evidence
+behind it.
 
 Usage:
     grounded_tracker.py [--plugin-root DIR]
@@ -31,9 +32,12 @@ import _hook_io  # noqa: E402
 import _policy  # noqa: E402
 import _preference  # noqa: E402
 
-# Adapter seam: a copied entrypoint may set these paths for its host.
+# Adapter seams: a copied entrypoint sets these for its host. The skill path
+# needs none — every layout puts SKILL.md at the same place under the plugin
+# root. scripts/build_codex_adapter.py rewrites each seam and fails the build
+# when one goes missing.
 PREFERENCE_PATH = None
-SKILL_PATH = None
+RESTORE_HINT = None
 
 EXIT_OK = 0
 EXIT_PERSISTENCE = 1
@@ -56,7 +60,7 @@ def set_mode(argv, hook_dir):
     raw = argv[index + 1] if index + 1 < len(argv) else ""
     path = _preference_path(argv)
     if not raw.strip():
-        print(_preference.status_line(path))
+        print(_preference.status_line(path, RESTORE_HINT))
         return EXIT_OK
 
     profile = _preference.canonical_argument(raw)
@@ -72,9 +76,9 @@ def set_mode(argv, hook_dir):
         print(detail)
         return EXIT_PERSISTENCE
 
-    print(_preference.status_line(path))
+    print(_preference.status_line(path, RESTORE_HINT))
     print()
-    skill = _policy.read_skill(_hook_io.plugin_root(argv, hook_dir), SKILL_PATH)
+    skill = _policy.read_skill(_hook_io.plugin_root(argv, hook_dir))
     source = "recorded at " + _preference.preference_path(path)
     print(_policy.governing_directive(skill, profile, source))
     return EXIT_OK
@@ -88,7 +92,7 @@ def main(argv):
     if "--set" in argv:
         return set_mode(argv, hook_dir)
     if "--status" in argv:
-        print(_preference.status_line(_preference_path(argv)))
+        print(_preference.status_line(_preference_path(argv), RESTORE_HINT))
         return EXIT_OK
 
     _hook_io.drain_stdin()

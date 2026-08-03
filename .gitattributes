@@ -1,17 +1,20 @@
 # run.sh executes under `sh`, which fails on CRLF line endings. Pin the
 # endings per type so a clone on any platform gets working hooks.
 #
-# Everything but run.cmd is pinned to LF for a second reason:
-# scripts/build_codex_adapter.py copies canonical files into the adapter
-# byte-for-byte and generates two files of its own with LF, and
-# `--check` compares the result byte-for-byte on Linux and Windows. A
-# platform-dependent checkout would report drift on Windows for the
+# Everything but the two Windows launchers is pinned to LF for a second
+# reason: scripts/build_codex_adapter.py mirrors canonical files into
+# dist/codex/grounded-copy byte-for-byte and generates six files of its own
+# with LF, and `--check` compares the result byte-for-byte on Linux and
+# Windows. A platform-dependent checkout would report drift on Windows for the
 # generated files alone.
 *.sh text eol=lf
 *.py text eol=lf
 *.cmd text eol=crlf
+*.ps1 text eol=crlf
 *.md text eol=lf
 *.json text eol=lf
 *.yml text eol=lf
+*.yaml text eol=lf
 LICENSE text eol=lf
 .gitattributes text eol=lf
+.gitignore text eol=lf

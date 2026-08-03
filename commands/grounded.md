@@ -51,14 +51,15 @@ If a command line carries a literal dollar-brace placeholder where an absolute
 path belongs, the substitution failed: report that and stop. On a Windows
 setup where `sh` is absent from PATH, run the same script through
 `hooks/run.cmd` with double quotes around the path, matching the launcher swap
-in `references/setup.md`; `cmd` reads `'` as an ordinary character.
+in `skills/grounded-copy/references/setup.md`; `cmd` reads `'` as an ordinary
+character.
 
 Profiles: `chat` carries the core rules, `copy` adds the marketing register and
 two closures, and `off` stops the session policy and the turn reminder. The
 recorded value persists across restarts until another `--set` replaces it.
 
-`### Profile lifecycle` in `references/setup.md` is the one description of how
-the profile preference, the session policy, the turn reminder, and the
-effective policy relate. The preference lives at
+`### Profile lifecycle` in `skills/grounded-copy/references/setup.md` is the
+one description of how the profile preference, the session policy, the turn
+reminder, and the effective policy relate. The preference lives at
 `<config-dir>/grounded-copy/profile`, where config-dir is `$CLAUDE_CONFIG_DIR`
 when set and `~/.claude` otherwise.

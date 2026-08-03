@@ -1,14 +1,22 @@
 # Setup: one skill, both agents
 
 The SKILL.md rules and `scripts/copy_lint.py` are agent-agnostic. Only the
-loading mechanism differs. Vendor the folder into the repo once:
+loading mechanism differs.
+
+The canonical directory is `skills/grounded-copy/` in the repository, and its
+internal shape is what every install path carries: a Claude Code plugin
+install, a `~/.claude/skills/grounded-copy` clone, a Skills CLI install, the
+generated Codex package, and a vendored copy. Every path `SKILL.md` names
+resolves against the directory holding it, so one pointer works everywhere.
+Vendor the folder into the repo once:
 
 ```
 <repo>/
 ├── .style/grounded-copy/
 │   ├── SKILL.md
 │   ├── references/
-│   └── scripts/copy_lint.py
+│   ├── scripts/copy_lint.py
+│   └── tests/
 ├── CLAUDE.md
 └── AGENTS.md
 ```
@@ -45,9 +53,11 @@ Both hooks are read-only. `### Profile lifecycle` below defines every term
 above and names the one path that records a preference.
 `### Measured recurring cost` gives the figures and the method.
 
-`_policy.py` reads `SKILL.md` at runtime and emits the intro with its example
-pair plus four core sections: the banned move with its seven shapes, positive
-forms, scope and precedence, and sourcing. Run
+`_policy.py` reads `skills/grounded-copy/SKILL.md` under the plugin root at
+runtime — the same relative path in a checkout, a plugin install, a clone, and
+the Codex package — and emits the intro with its example pair plus four core
+sections: the banned move with its seven shapes, positive forms, scope and
+precedence, and sourcing. Run
 `python hooks/grounded_activate.py --self-test` after editing `SKILL.md`; it
 asserts the structure, checks each payload against its published budget, and
 prints the size delta against the recorded baseline.
@@ -61,8 +71,9 @@ Modules, split by domain responsibility:
 | `hooks/_hook_io.py` | hook transport: the stdin drain and plugin-root resolution |
 | `hooks/grounded_activate.py` | the `SessionStart` entry point and `--self-test` |
 | `hooks/grounded_tracker.py` | the `UserPromptSubmit` entry point, `--set`, and `--status` |
-| `scripts/copy_lint.py` | the deterministic gate: patterns, findings, exit codes |
-| `scripts/build_codex_adapter.py` | building the Codex adapter from the canonical files, and `--check` |
+| `skills/grounded-copy/scripts/copy_lint.py` | the deterministic gate: patterns, findings, exit codes |
+| `scripts/build_codex_adapter.py` | building the Codex package from the canonical files, and `--check` |
+| `install.py` | detecting agents and driving each host's own install verbs |
 
 `_hook_io.py` earns its own file on use: both entry points call both of its
 functions, and `plugin_root()` carries three resolution rules whose duplication
@@ -157,7 +168,10 @@ the words `--set` accepts.
 
 `--self-test` prints those two figures and fails when a payload passes its
 budget. `### Measured recurring cost` gives what each hook writes to stdout,
-which adds 106 bytes to the rules, and the method behind both.
+which adds 106 bytes to the rules under Claude Code, and the method behind
+both. The Codex package runs 100 bytes: its switch line names
+`$grounded-profile chat|copy|off`, six bytes shorter than the Claude slash
+command, which the entrypoint seam supplies.
 
 **One writer, one path.** `_preference.write_preference()` is the sole writer
 and `grounded_tracker.py --set` is its only caller.
@@ -227,7 +241,9 @@ Windows 11.
 | `SKILL.md`, loaded when the skill triggers | 8,703 |
 
 **Two boundaries, one payload.** A session-policy row is the rules body plus
-the header, the switch line, and the blank lines between them: 106 bytes.
+the header, the switch line, and the blank lines between them: 106 bytes under
+Claude Code, 100 in the Codex package, whose switch line names the shorter
+`$grounded-profile` verb.
 `python hooks/grounded_activate.py --self-test` prints the body alone, which is
 the figure `### Profile lifecycle` gives per profile. A governing directive is
 that body plus 248 bytes plus the resolved preference path, which its header
@@ -250,36 +266,47 @@ start.
 
 ### Distribution
 
-Three compatible paths ship from this repository. `README.md` carries the user
-commands for each.
+Three compatible paths ship from this repository, and `install.py` drives all
+three from one command. `README.md` carries the user commands for each.
 
 | Path | Manifest | What it installs |
 |---|---|---|
-| portable skill (Skills CLI) | none; the root `SKILL.md` is the skill source | `SKILL.md`, both references, `copy_lint.py` |
+| portable skill (Skills CLI) | none; `skills/grounded-copy/SKILL.md` is the skill source | the whole skill directory: `SKILL.md`, both references, `copy_lint.py`, both corpora |
 | Claude Code marketplace | `.claude-plugin/marketplace.json`, plus `.claude-plugin/plugin.json` | the whole repository as one plugin: skill, hooks, command |
-| Codex marketplace | `.agents/plugins/marketplace.json`, plus the adapter's `.codex-plugin/plugin.json` | `adapters/codex/grounded-copy`: lifecycle hooks, skills, references, linter, and launchers |
+| Codex marketplace | `.agents/plugins/marketplace.json`, plus the package's `.codex-plugin/plugin.json` | `dist/codex/grounded-copy`: lifecycle hooks, skills, references, corpora, linter, and launchers |
 
 The Claude Code marketplace lists one plugin whose `source` is `"./"`, so the
-repository root is the plugin. `"skills": ["./"]` names the root `SKILL.md`
-explicitly, which fixes the skill's invocation name to the frontmatter `name`
-on every version; the auto-load of a root `SKILL.md` needs 2.1.142 or later.
-A relative source resolves against a local copy of the marketplace, so users
-add this marketplace from git; a direct URL to the JSON file downloads that
-file alone and leaves the relative source unresolved.
+repository root is the plugin, laid out the way a Claude Code plugin is laid
+out: `skills/`, `commands/`, `hooks/`, and `.claude-plugin/plugin.json`.
+`"skills": ["./skills/"]` names the directory explicitly, which fixes the
+skill's invocation name to the frontmatter `name` on every version and keeps
+discovery off the generated tree under `dist/`. A relative source resolves
+against a local copy of the marketplace, so users add this marketplace from
+git; a direct URL to the JSON file downloads that file alone and leaves the
+relative source unresolved.
 
-The Codex plugin specification places skills at `skills/<skill-name>/SKILL.md`,
-and the Skills CLI and Claude Code both read the repository-root `SKILL.md`.
-`scripts/build_codex_adapter.py` resolves that by copying the canonical files
-into the adapter byte-for-byte and generating the adapter-owned hooks,
-controller skill, manifest, and README. `--check` compares the complete
-inventory and exits 1 on any difference, and
-CI runs it on both platforms, so the reuse claim is a tested property.
+**One canonical directory, three hosts.** The Codex plugin specification
+places skills at `skills/<skill-name>/SKILL.md`, the Skills CLI reads the same
+convention, and Claude Code reads `skills/` by default. `skills/grounded-copy/`
+satisfies all three at once, so `scripts/build_codex_adapter.py` mirrors that
+directory into the generated tree at the same relative path and generates the
+package-owned hooks, controller skill, manifest, and README. Every path
+`SKILL.md` names resolves in a checkout and in each install, which
+`tests/test_hooks.py::test_every_path_skill_md_names_exists` asserts. `--check`
+compares the complete inventory and exits 1 on any difference, and CI runs it
+on both platforms, so the reuse claim is a tested property.
 
-The adapter is a generated plugin: it ships `hooks/hooks.json`, the shared
+The Codex tree is a generated plugin: it ships `hooks/hooks.json`, the shared
 hook runtime and launchers, `skills/grounded-copy/`, and the explicit
-`skills/grounded-profile/` controller. The generated inventory excludes
-repository test corpora and Claude-only files. `tests/test_codex_adapter.py`
-asserts the inventory, byte identity, and the MIT notice.
+`skills/grounded-profile/` controller. The builder walks the skill directory,
+so a new reference file ships with no builder edit; `__pycache__` and build
+residue stay out. Claude-only files (`commands/`, `.claude-plugin/`) and the
+repository's own Python suites stay behind. `tests/test_codex_adapter.py`
+pins the inventory, asserts byte identity, and asserts the MIT notice.
+
+`dist/` is generated and tracked. `--check` compares committed bytes, and the
+Codex catalog points `codex plugin add` at that path inside a clone, so the
+directory travels with the repository.
 
 Measured on codex-cli 0.144.1, Windows 11, against this repository as a local
 marketplace source:
@@ -287,9 +314,9 @@ marketplace source:
 | Question | Result |
 |---|---|
 | Which catalog does Codex read when a repository carries both? | `.agents/plugins/marketplace.json`. `codex plugin list` prints that path under the marketplace name, and the legacy `.claude-plugin/marketplace.json` alongside it stays unread |
-| Does the local source resolve? | Yes — `grounded-copy@hirohyun-plugins` resolves to `adapters/codex/grounded-copy` |
+| Does the local source resolve? | Yes — `grounded-copy@hirohyun-plugins` resolves to the catalog's `source.path`, `./dist/codex/grounded-copy` since 0.4.0 and `./adapters/codex/grounded-copy` when this was measured |
 | Subcommand names | `codex plugin add` and `codex plugin remove`; `install` and `uninstall` return "unrecognized subcommand". Marketplace verbs are `add`, `list`, `upgrade`, `remove` |
-| Install location | `~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.2.0`, holding the manifest, `LICENSE`, `README.md`, and `skills/grounded-copy/` |
+| Install location | `~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>`, holding the manifest, `LICENSE`, `README.md`, and `skills/grounded-copy/`. The measurement predates the hooks work and the version bump; a 0.4.0 install also holds `hooks/` and `skills/grounded-profile/`, and each earlier version keeps its own cache directory until `codex plugin remove` clears it |
 | Does the linter run from the installed copy? | Yes — `good-samples.md` exits 0 and `bad-samples.md` exits 1 from the cache path |
 
 The two catalogs carrying one name is settled by that first row: Codex reads
@@ -349,27 +376,37 @@ nothing outside it. One class per domain term:
 `tests/test_launchers.py` covers argument forwarding, closed-set dispatch,
 exit-code propagation, and hostile paths, and skips the `run.cmd` cases off
 Windows. `tests/test_codex_adapter.py` covers byte identity against the
-canonical files, the manifest fields, the MIT notice, the skills-only scope,
-and a red-capable drift case that builds the adapter into a temporary mirror,
+canonical files, the pinned generated inventory, the manifest fields, the MIT
+notice, one version number across four manifests, the Codex profile verb, and
+a red-capable drift case that builds the package into a temporary mirror,
 confirms it checks clean, then drifts one copy and asserts `--check` exits 1.
 `tests/test_corpus.py` asserts every per-locale rule fires on a line in
-`tests/bad-samples.md`; 38 of the 57 English rules carry no line yet, which is
-what bounds that assertion to the locale set. CI runs all four files on
-`ubuntu-latest` and `windows-latest`.
+`skills/grounded-copy/tests/bad-samples.md`; 38 of the 57 English rules carry
+no line yet, which is what bounds that assertion to the locale set.
+`tests/test_installer.py` describes a machine and asserts the commands
+`install.py` would run on it, so detection and command construction are
+covered with no agent installed. CI runs all five files on `ubuntu-latest` and
+`windows-latest`.
+
+Two directories carry the name `tests`. `tests/` at the repository root holds
+the Python suites; `skills/grounded-copy/tests/` holds the two corpora, which
+travel with the skill because `SKILL.md` points a reader at them.
 
 These are the deterministic criteria. Whether the model then follows the
 injected text is behavioral, and `**Enforcement boundary**` above states what
 Phase 1 does about it.
 
-Promoting every rule to blocking made two `tests/good-samples.md` lines fail,
-a required disclaimer and a billing fact. Both moved to `tests/bad-samples.md`,
+Promoting every rule to blocking made two `good-samples.md` lines fail,
+a required disclaimer and a billing fact. Both moved to `bad-samples.md`,
 and the `off` profile is what a writer reaches for when copy has to carry one
 of those forms.
 
 ### Dev loop
 
-`SKILL.md` edits apply live in the current session. Changes under `hooks/`
-need `/reload-plugins` or a restart.
+`skills/grounded-copy/SKILL.md` edits apply live in the current session.
+Changes under `hooks/` need `/reload-plugins` or a restart. Changes under
+`skills/grounded-copy/` also want `python scripts/build_codex_adapter.py`, so
+the generated tree keeps matching.
 
 A clone made before `.gitattributes` pinned the line endings keeps its original
 bytes for every file a later pull leaves untouched, and
@@ -382,18 +419,21 @@ the clone applies the current rules to every tracked file and clears it.
 ### Rollback
 
 `claude plugin disable grounded-copy@skills-dir` stops the hooks and leaves
-the skill in place. Deleting `.claude-plugin/` and restarting returns the
-folder to a plain skill.
+the skill in place. That verb is the documented rollback: the clone loads as a
+plugin, whose skill sits at `skills/grounded-copy/SKILL.md`, so a plain-skill
+fallback wants that inner directory copied to a skills directory of its own.
 
 ### Citation cost and open scope
 
 Every banned pattern this repository documents is quoted as the example that
 defines it, so each file reports findings against its own gate. Measured
-2026-08-02: `README.md` 17, `SKILL.md` 0, `references/patterns.md` 176, and
-this file 0. CI runs `copy_lint.py` on `tests/bad-samples.md` and
-`tests/good-samples.md` and on no other path, which is what keeps the rest
-shippable. Sighting quotes belong in `references/patterns.md`; this file names
-counts and holds none of its own.
+2026-08-03: `references/patterns.md` 176, and `README.md`, `SKILL.md`,
+`CONTRIBUTING.md`, `commands/grounded.md`, `install.py`, and this file 0 each.
+Sighting quotes belong in `references/patterns.md`; every other file names
+counts and holds none of its own. CI runs `copy_lint.py` on
+`skills/grounded-copy/tests/bad-samples.md` and
+`skills/grounded-copy/tests/good-samples.md` and on no other path, which is
+what keeps the rest shippable.
 
 **Wrapped-phrase acceptance requirement.** One scope stands open.
 `scan_line()` scans one line at a time, so a comparison phrase whose two halves
@@ -465,7 +505,7 @@ Two routes, and they compose.
 **The marketplace.** `codex plugin marketplace add HiroHyun/grounded-copy`
 registers the catalog at `.agents/plugins/marketplace.json`, and
 `codex plugin add grounded-copy@hirohyun-plugins` installs the adapter from
-`adapters/codex/grounded-copy`. `codex /plugins` does the same interactively.
+`dist/codex/grounded-copy`. `codex /plugins` does the same interactively.
 Review and trust the hook definition in `/hooks` after installation. Codex
 holds plugin hooks pending review until the user trusts them. `SessionStart`
 runs for startup, resume, clear, and compact sources; the compact run restores
@@ -502,7 +542,9 @@ until it exits 0. Do not modify the linter.
 A Codex plugin registers lifecycle hooks under `hooks/hooks.json`; this adapter
 uses `PLUGIN_ROOT` for its commands and provides Windows and POSIX launchers.
 Run `python scripts/build_codex_adapter.py --check` to verify the generated
-inventory and `python scripts/copy_lint.py README.md references/setup.md` to
+inventory and
+`python skills/grounded-copy/scripts/copy_lint.py README.md skills/grounded-copy/references/setup.md`
+to
 verify this documentation.
 
 ## Gemini

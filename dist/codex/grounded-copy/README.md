@@ -6,9 +6,10 @@ controller. Hooks use `PLUGIN_ROOT`; profile state lives at
 `$CODEX_HOME/grounded-copy/profile` (default `~/.codex`). Review and trust the
 hooks after installation before relying on lifecycle output.
 
-The generated files are derived from the repository canonical runtime. Edit
-canonical files and run the builder; `--check` reports drift, missing files,
-and unexpected generated files.
+`skills/grounded-copy/` here is a byte-for-byte mirror of the same directory in
+the repository, corpora included, so every path `SKILL.md` names resolves from
+this package. Edit canonical files and run the builder; `--check` reports drift,
+missing files, and unexpected generated files.
 
 ## License
 

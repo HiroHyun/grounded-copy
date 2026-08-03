@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""What tests/bad-samples.md covers.
+"""What skills/grounded-copy/tests/bad-samples.md covers.
 
 CONTRIBUTING asks every new pattern to arrive with a line in the corpus that
 catches it. A rule with no line is a rule nobody has seen fire, which is how a
@@ -17,15 +17,20 @@ import unittest
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-LINTER = str(REPO_ROOT / "scripts" / "copy_lint.py")
-CORPUS = str(REPO_ROOT / "tests" / "bad-samples.md")
+SKILL_DIR = REPO_ROOT / "skills" / "grounded-copy"
+LINTER = str(SKILL_DIR / "scripts" / "copy_lint.py")
+CORPUS = str(SKILL_DIR / "tests" / "bad-samples.md")
 
 LOCALE_RULE = re.compile(r"^(?:zh|ru|es|ar|fr|de|ja|ko)-")
 REPORTED = re.compile(r"^\S+ ([a-z0-9-]+):", re.M)
 
 
 def locale_rules():
-    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    # The linter now sits inside the payload the Codex builder mirrors, and a
+    # .pyc written beside it would ship. The builder filters __pycache__; this
+    # keeps the file from appearing in the first place.
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(SKILL_DIR / "scripts"))
     import copy_lint
 
     return [n for n, _ in copy_lint.PATTERNS + copy_lint.OPENERS

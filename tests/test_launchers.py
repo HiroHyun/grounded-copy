@@ -70,13 +70,16 @@ class LauncherCase(unittest.TestCase):
     def probe_plugin_root(self, name):
         """A plugin root under `name`, with a marked SKILL.md.
 
-        Activation reads SKILL.md from the root it is handed and falls back to
-        the repository copy when that read fails, so the marker in stdout is
-        what proves the path arrived whole.
+        Activation reads `skills/grounded-copy/SKILL.md` under the root it is
+        handed and falls back to the repository copy when that read fails, so
+        the marker in stdout is what proves the path arrived whole. Write the
+        probe anywhere else and the fallback answers, which reads as an
+        interpreter failure rather than a lost path.
         """
         root = self.config_dir / name
-        root.mkdir(parents=True, exist_ok=True)
-        (root / "SKILL.md").write_text(
+        skill = root / "skills" / "grounded-copy"
+        skill.mkdir(parents=True, exist_ok=True)
+        (skill / "SKILL.md").write_text(
             "---\nname: probe\n---\n\n"
             "MARKER-INTRO probe intro.\n\n"
             "## The one banned move (probe)\n\n"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The policy text: what the hooks and `--set` put in front of the model.
 
-Three shapes come out of this module, and references/setup.md defines each one
+Three shapes come out of this module, and skills/grounded-copy/references/setup.md defines each one
 under `### Profile lifecycle`:
 
 - the **session policy**, which SessionStart injects
@@ -12,7 +12,7 @@ under `### Profile lifecycle`:
 Every one of them is assembled from SKILL.md at runtime, so a rule edit lands
 without a code change. The workflow, the integrity rules, and the three excluded
 closures load with the skill itself when a copy task calls for them, and so do
-the trigger catalogs and rewrite tables in references/patterns.md.
+the trigger catalogs and rewrite tables in skills/grounded-copy/references/patterns.md.
 
 Transport stays outside this module: it reads no environment and takes the
 plugin root as an argument.
@@ -20,6 +20,11 @@ plugin root as an argument.
 
 import os
 import re
+
+# Where the skill sits under the plugin root. One path covers every shipped
+# layout: the Claude plugin, a skills-directory clone, the generated Codex
+# tree, and a checkout.
+SKILL_RELATIVE = os.path.join("skills", "grounded-copy", "SKILL.md")
 
 # Sections both profiles carry, in payload order.
 CORE_HEADINGS = (
@@ -48,7 +53,12 @@ COPY_LEAD = "The copy profile adds these closures from the skill:"
 
 SESSION_HEADER = "GROUNDED PROSE ACTIVE — profile: {profile}"
 
-SWITCH_LINE = "Profile: {profile}. Switch: `/grounded-copy:grounded chat|copy|off`."
+# The Claude slash command. A copied entrypoint passes its own host's verb
+# instead; this module names one host in a default and reads no environment to
+# discover another.
+CLAUDE_SWITCH = "/grounded-copy:grounded chat|copy|off"
+
+SWITCH_LINE = "Profile: {profile}. Switch: `{switch}`."
 
 # Every clause here holds a boundary the session policy states once and the
 # turn reminder keeps in reach. `Prefer established positive terms` came out:
@@ -82,9 +92,9 @@ DIRECTIVE_LEAD_EMPTY = (
 )
 
 # Extraction sizes measured 2026-08-02 against SKILL.md, after the quoted
-# banned forms moved to references/patterns.md so SKILL.md passes copy_lint.py
+# banned forms moved to skills/grounded-copy/references/patterns.md so SKILL.md passes copy_lint.py
 # itself. These count the rules body alone; hook stdout adds the header and the
-# switch line, 106 bytes. references/setup.md records the per-session cost and
+# switch line, 106 bytes. skills/grounded-copy/references/setup.md records the per-session cost and
 # the method.
 BASELINE_BYTES = 3679
 COPY_BASELINE_BYTES = 5140
@@ -173,13 +183,17 @@ def policy_body(pieces, profile):
     return "\n\n".join(p for p in parts if p)
 
 
-def session_policy(skill_text, profile):
-    """What SessionStart injects."""
+def session_policy(skill_text, profile, switch=None):
+    """What SessionStart injects.
+
+    ``switch`` is the host's profile verb. The Claude slash command is the
+    default; the Codex entrypoint passes `$grounded-profile` through its seam.
+    """
     body = policy_body(extract(skill_text), profile)
     return "\n\n".join((
         SESSION_HEADER.format(profile=profile),
         body,
-        SWITCH_LINE.format(profile=profile),
+        SWITCH_LINE.format(profile=profile, switch=switch or CLAUDE_SWITCH),
     ))
 
 
@@ -204,24 +218,21 @@ def governing_directive(skill_text, profile, source):
     return "\n\n".join((header, DIRECTIVE_LEAD, body))
 
 
-def read_skill(plugin_root, skill_path=None):
-    """Read the skill using an explicit adapter path when supplied.
+def read_skill(plugin_root):
+    """Read the skill from the plugin root, with a source-tree fallback.
 
-    ``skill_path`` may be absolute or relative to ``plugin_root``. With no
-    value, Claude's root ``SKILL.md`` layout remains the default.
+    Every shipped layout puts the skill at the same relative path under the
+    plugin root: a Claude marketplace install, a skills-directory clone, the
+    generated Codex tree, and a plain checkout, whose root ``plugin_root()``
+    resolves as the hooks directory's parent. The second candidate covers a
+    root handed in wrong.
     """
-    candidates = []
-    if skill_path:
-        candidates.append(
-            skill_path if os.path.isabs(skill_path)
-            else os.path.join(plugin_root, skill_path)
-        )
-    else:
-        candidates.append(os.path.join(plugin_root, "SKILL.md"))
-    candidates.append(
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "SKILL.md")
-    )
-    for candidate in candidates:
+    for candidate in (
+        os.path.join(plugin_root, SKILL_RELATIVE),
+        os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "..", SKILL_RELATIVE
+        ),
+    ):
         try:
             with open(candidate, encoding="utf-8") as handle:
                 return handle.read()
@@ -230,7 +241,7 @@ def read_skill(plugin_root, skill_path=None):
     return ""
 
 
-def self_test(plugin_root, skill_path=None):
+def self_test(plugin_root):
     """Assert structure and budget, report size.
 
     An exact-size assertion would fail on every intentional SKILL.md rule
@@ -238,7 +249,7 @@ def self_test(plugin_root, skill_path=None):
     ceiling fails only when a payload passes the figure the documentation
     publishes, which is the growth this gate exists to catch.
     """
-    skill = read_skill(plugin_root, skill_path)
+    skill = read_skill(plugin_root)
     if not skill:
         print("self-test: SKILL.md unreadable")
         return 1
