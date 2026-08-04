@@ -396,7 +396,8 @@ nothing outside it. One class per domain term:
 exit-code propagation, and hostile paths, and skips the `run.cmd` cases off
 Windows. `tests/test_codex_adapter.py` covers byte identity against the
 canonical files, the pinned generated inventory, the manifest fields, the MIT
-notice, one version number across four manifests, the Codex profile verb, and
+notice, one version number across four manifests, the `<version>` placeholder
+that keeps a release out of README prose, the Codex profile verb, and
 a red-capable drift case that builds the package into a temporary mirror,
 confirms it checks clean, then drifts one copy and asserts `--check` exits 1.
 `tests/test_corpus.py` asserts every per-locale rule fires on a line in

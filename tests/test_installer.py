@@ -260,9 +260,21 @@ class ConfirmTests(unittest.TestCase):
     STEPS = [("codex: add the marketplace",
               ["codex", "plugin", "marketplace", "add"])]
 
+    class Terminal(object):
+        """stdin that claims a terminal, which is what `iex` hands the child.
+
+        The runner's own stdin decides which branch `confirm` takes, and a CI
+        job has none, so every case here would return on the no-terminal
+        branch and assert nothing about the reader.
+        """
+
+        def isatty(self):
+            return True
+
     def _confirm(self, reader):
         output = StringIO()
-        with redirect_stdout(output):
+        with mock.patch.object(install.sys, "stdin", self.Terminal()), \
+                redirect_stdout(output):
             answer = install.confirm(self.STEPS, install.Options(),
                                      reader=reader)
         return answer, output.getvalue()

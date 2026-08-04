@@ -316,11 +316,26 @@ class CodexAdapterTests(unittest.TestCase):
             (ADAPTER / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
         self.assertEqual(manifest["version"], version)
-        readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn(
-            "/grounded-copy/%s/skills/grounded-copy/" % version, readme,
-            "README names a cache path with a stale version",
-        )
+
+    def test_no_front_page_pins_a_version_in_the_codex_cache_path(self):
+        """Prose that repeats the number makes every release a prose edit.
+
+        Both pages once quoted the cache path with the version spelled out,
+        and a test asserted the two agreed. `<version>` states the shape and
+        leaves the number in the manifests, where one bump covers all four.
+        """
+        for page in ("README.md", "README.zh.md"):
+            with self.subTest(page=page):
+                text = (REPO_ROOT / page).read_text(encoding="utf-8")
+                self.assertNotRegex(
+                    text, r"/grounded-copy/\d+\.\d+\.\d+/",
+                    "%s pins a version in a path; write <version> instead"
+                    % page,
+                )
+                self.assertIn(
+                    "/grounded-copy/<version>/skills/grounded-copy/", text,
+                    "%s no longer shows the Codex cache path" % page,
+                )
 
     def test_the_codex_catalog_points_at_the_generated_tree(self):
         """A stale path here surfaces at install time on a user's machine."""
