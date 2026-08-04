@@ -1,0 +1,198 @@
+README.md	comma-not-appositive	, not
+README.md	instead-of	instead of
+README.md	ja-not-just	だけでなく
+README.md	ko-not-just	더 이상
+README.md	ko-not-just	뿐만 아니라
+README.md	ko-not-just	혁신적
+README.md	more-than-just	More than just
+README.md	opener-it-is-not	It's not
+README.md	rather-than	rather than
+README.md	vague-experts	Experts agree
+README.md	without-gerund	without training
+README.md	without-gerund	without warning
+README.zh.md	without-gerund	without training
+README.zh.md	without-gerund	without warning
+README.zh.md	zh-not-just	不仅仅是
+README.zh.md	zh-not-just	告别
+README.zh.md	zh-not-x-but-y	不是善意，是
+skills/grounded-copy/references/patterns.md	ar-not-just	أكثر من مجرد
+skills/grounded-copy/references/patterns.md	ar-not-just	ليس مجرد
+skills/grounded-copy/references/patterns.md	ar-not-just	وداعًا
+skills/grounded-copy/references/patterns.md	ar-not-just	يعيد تعريف
+skills/grounded-copy/references/patterns.md	as-opposed-to	as opposed to
+skills/grounded-copy/references/patterns.md	beyond-just	beyond just
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	dash-not-contrast	—not
+skills/grounded-copy/references/patterns.md	days-are-over	the days of X are over
+skills/grounded-copy/references/patterns.md	de-not-just	Schluss mit
+skills/grounded-copy/references/patterns.md	de-not-just	Stellen Sie sich vor
+skills/grounded-copy/references/patterns.md	de-not-just	mehr als nur
+skills/grounded-copy/references/patterns.md	de-not-just	nicht nur ein
+skills/grounded-copy/references/patterns.md	de-not-just	nie wieder
+skills/grounded-copy/references/patterns.md	de-not-just	verabschieden Sie sich
+skills/grounded-copy/references/patterns.md	doesnt-just	Don't just
+skills/grounded-copy/references/patterns.md	doesnt-just	doesn't just
+skills/grounded-copy/references/patterns.md	doesnt-just	don't just
+skills/grounded-copy/references/patterns.md	editorializing-ing	, highlighting
+skills/grounded-copy/references/patterns.md	editorializing-ing	, underscoring
+skills/grounded-copy/references/patterns.md	es-not-just	atrás quedaron
+skills/grounded-copy/references/patterns.md	es-not-just	dile adiós
+skills/grounded-copy/references/patterns.md	es-not-just	más que un
+skills/grounded-copy/references/patterns.md	es-not-just	no es solo
+skills/grounded-copy/references/patterns.md	es-not-just	no solo es
+skills/grounded-copy/references/patterns.md	es-not-just	olvídate de
+skills/grounded-copy/references/patterns.md	es-not-just	redefinimos
+skills/grounded-copy/references/patterns.md	es-not-just	va más allá
+skills/grounded-copy/references/patterns.md	far-from-just	Far from being
+skills/grounded-copy/references/patterns.md	far-from-just	far from just
+skills/grounded-copy/references/patterns.md	fr-not-just	dites adieu
+skills/grounded-copy/references/patterns.md	fr-not-just	imaginez
+skills/grounded-copy/references/patterns.md	fr-not-just	n'est pas qu'un
+skills/grounded-copy/references/patterns.md	fr-not-just	plus qu'un simple
+skills/grounded-copy/references/patterns.md	fr-not-just	redéfinit
+skills/grounded-copy/references/patterns.md	fr-not-just	va au-delà
+skills/grounded-copy/references/patterns.md	goes-beyond	goes beyond
+skills/grounded-copy/references/patterns.md	goes-beyond	goes beyond
+skills/grounded-copy/references/patterns.md	gone-are-the-days	Gone are the days
+skills/grounded-copy/references/patterns.md	gone-are-the-days	gone are the days
+skills/grounded-copy/references/patterns.md	hype-word	best-in-class
+skills/grounded-copy/references/patterns.md	hype-word	cutting-edge
+skills/grounded-copy/references/patterns.md	hype-word	delve
+skills/grounded-copy/references/patterns.md	hype-word	effortless
+skills/grounded-copy/references/patterns.md	hype-word	elevate
+skills/grounded-copy/references/patterns.md	hype-word	empower
+skills/grounded-copy/references/patterns.md	hype-word	frictionless
+skills/grounded-copy/references/patterns.md	hype-word	game-changing
+skills/grounded-copy/references/patterns.md	hype-word	hassle-free
+skills/grounded-copy/references/patterns.md	hype-word	journey
+skills/grounded-copy/references/patterns.md	hype-word	landscape
+skills/grounded-copy/references/patterns.md	hype-word	next-level
+skills/grounded-copy/references/patterns.md	hype-word	one-stop shop
+skills/grounded-copy/references/patterns.md	hype-word	revolutionary
+skills/grounded-copy/references/patterns.md	hype-word	revolutionize
+skills/grounded-copy/references/patterns.md	hype-word	seamless
+skills/grounded-copy/references/patterns.md	hype-word	seamless
+skills/grounded-copy/references/patterns.md	hype-word	state-of-the-art
+skills/grounded-copy/references/patterns.md	hype-word	supercharge
+skills/grounded-copy/references/patterns.md	hype-word	synergy
+skills/grounded-copy/references/patterns.md	hype-word	transformative
+skills/grounded-copy/references/patterns.md	hype-word	turbocharge
+skills/grounded-copy/references/patterns.md	hype-word	unleash
+skills/grounded-copy/references/patterns.md	hype-word	unlock
+skills/grounded-copy/references/patterns.md	hype-word	unlock
+skills/grounded-copy/references/patterns.md	hype-word	unmatched
+skills/grounded-copy/references/patterns.md	hype-word	unmatched
+skills/grounded-copy/references/patterns.md	hype-word	unparalleled
+skills/grounded-copy/references/patterns.md	hype-word	unprecedented
+skills/grounded-copy/references/patterns.md	hype-word	unrivaled
+skills/grounded-copy/references/patterns.md	hype-word	unsung
+skills/grounded-copy/references/patterns.md	hype-word	unwavering
+skills/grounded-copy/references/patterns.md	hype-word	world-class
+skills/grounded-copy/references/patterns.md	hype-word	world-class
+skills/grounded-copy/references/patterns.md	in-todays-world	In today's fast-paced world
+skills/grounded-copy/references/patterns.md	inflated-copula	boasts
+skills/grounded-copy/references/patterns.md	inflated-copula	testament to
+skills/grounded-copy/references/patterns.md	instead-of	instead of
+skills/grounded-copy/references/patterns.md	instead-of	instead of
+skills/grounded-copy/references/patterns.md	isnt-about	isn't about
+skills/grounded-copy/references/patterns.md	its-about	it's about Y", "—not
+skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
+skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
+skills/grounded-copy/references/patterns.md	ja-not-just	とはおさらば
+skills/grounded-copy/references/patterns.md	ja-not-just	にとどまらない
+skills/grounded-copy/references/patterns.md	ja-not-just	再定義
+skills/grounded-copy/references/patterns.md	ja-not-just	単なる〜ではない / 〜だけではない
+skills/grounded-copy/references/patterns.md	ja-not-just	想像してみてください
+skills/grounded-copy/references/patterns.md	ja-not-just	革命的
+skills/grounded-copy/references/patterns.md	ko-not-just	게임 체인저
+skills/grounded-copy/references/patterns.md	ko-not-just	단순한 〜이 아니다
+skills/grounded-copy/references/patterns.md	ko-not-just	더 이상
+skills/grounded-copy/references/patterns.md	ko-not-just	더 이상
+skills/grounded-copy/references/patterns.md	ko-not-just	뿐만 아니라
+skills/grounded-copy/references/patterns.md	ko-not-just	뿐만 아니라
+skills/grounded-copy/references/patterns.md	ko-not-just	상상해 보세요
+skills/grounded-copy/references/patterns.md	ko-not-just	에 그치지 않
+skills/grounded-copy/references/patterns.md	ko-not-just	와 작별하세요
+skills/grounded-copy/references/patterns.md	ko-not-just	재정의
+skills/grounded-copy/references/patterns.md	ko-not-just	혁신적
+skills/grounded-copy/references/patterns.md	less-a-x-than	less a catalog than
+skills/grounded-copy/references/patterns.md	less-a-x-than	less a gym than
+skills/grounded-copy/references/patterns.md	look-no-further	Look no further
+skills/grounded-copy/references/patterns.md	more-than-just	More than just
+skills/grounded-copy/references/patterns.md	more-than-just	more than just
+skills/grounded-copy/references/patterns.md	negated-copula-dash	isn't about X, it's about Y", "—
+skills/grounded-copy/references/patterns.md	negated-copula-dash	isn't complicated —
+skills/grounded-copy/references/patterns.md	negated-copula-dash	wasn't X —
+skills/grounded-copy/references/patterns.md	never-again	never again
+skills/grounded-copy/references/patterns.md	no-longer	no longer
+skills/grounded-copy/references/patterns.md	no-more-x	No more waiting
+skills/grounded-copy/references/patterns.md	no-more-x	no more X
+skills/grounded-copy/references/patterns.md	not-just	not just
+skills/grounded-copy/references/patterns.md	not-your-average	Not your average
+skills/grounded-copy/references/patterns.md	not-your-average	not your average
+skills/grounded-copy/references/patterns.md	opener-at-company-we	At Acme, we
+skills/grounded-copy/references/patterns.md	opener-imagine	Imagine
+skills/grounded-copy/references/patterns.md	opener-it-is-not	It's not
+skills/grounded-copy/references/patterns.md	opener-stop	Stop Xing
+skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of
+skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of
+skills/grounded-copy/references/patterns.md	rather-than	rather than
+skills/grounded-copy/references/patterns.md	rather-than	rather than
+skills/grounded-copy/references/patterns.md	redefine-family	redefines
+skills/grounded-copy/references/patterns.md	redefine-family	redefinimos
+skills/grounded-copy/references/patterns.md	redefine-family	redefining
+skills/grounded-copy/references/patterns.md	redefine-family	reimagines
+skills/grounded-copy/references/patterns.md	redefine-family	reinvents
+skills/grounded-copy/references/patterns.md	rhetorical-reveal	The best part?
+skills/grounded-copy/references/patterns.md	rhetorical-reveal	The best part?
+skills/grounded-copy/references/patterns.md	rhetorical-reveal	The result?
+skills/grounded-copy/references/patterns.md	ru-not-just	больше, чем просто
+skills/grounded-copy/references/patterns.md	ru-not-just	не просто
+skills/grounded-copy/references/patterns.md	ru-not-just	переосмысливает
+skills/grounded-copy/references/patterns.md	ru-not-just	попрощайтесь
+skills/grounded-copy/references/patterns.md	say-goodbye-hello	Say goodbye
+skills/grounded-copy/references/patterns.md	studies-show	Studies show
+skills/grounded-copy/references/patterns.md	think-again	Think again
+skills/grounded-copy/references/patterns.md	unlike-others	Unlike traditional
+skills/grounded-copy/references/patterns.md	unlike-others	unlike traditional
+skills/grounded-copy/references/patterns.md	vague-experts	Experts agree
+skills/grounded-copy/references/patterns.md	where-x-meets-y	Where quality meets affordability
+skills/grounded-copy/references/patterns.md	where-x-meets-y	where X meets Y
+skills/grounded-copy/references/patterns.md	while-others	While others
+skills/grounded-copy/references/patterns.md	while-others	while others
+skills/grounded-copy/references/patterns.md	without-gerund	without adding
+skills/grounded-copy/references/patterns.md	without-gerund	without adding
+skills/grounded-copy/references/patterns.md	without-gerund	without training
+skills/grounded-copy/references/patterns.md	without-the-hassle	without the hassle
+skills/grounded-copy/references/patterns.md	without-the-hassle	without the hassle
+skills/grounded-copy/references/patterns.md	worth-noting	It's worth noting
+skills/grounded-copy/references/patterns.md	zero-hassle	Zero guesswork
+skills/grounded-copy/references/patterns.md	zero-hassle	Zero hidden
+skills/grounded-copy/references/patterns.md	zero-hassle	zero guesswork
+skills/grounded-copy/references/patterns.md	zh-not-just	不仅仅是
+skills/grounded-copy/references/patterns.md	zh-not-just	不仅仅是
+skills/grounded-copy/references/patterns.md	zh-not-just	不仅是
+skills/grounded-copy/references/patterns.md	zh-not-just	不再是
+skills/grounded-copy/references/patterns.md	zh-not-just	不再是
+skills/grounded-copy/references/patterns.md	zh-not-just	不只是
+skills/grounded-copy/references/patterns.md	zh-not-just	不只是
+skills/grounded-copy/references/patterns.md	zh-not-just	不止是
+skills/grounded-copy/references/patterns.md	zh-not-just	告别
+skills/grounded-copy/references/patterns.md	zh-not-just	告别
+skills/grounded-copy/references/patterns.md	zh-not-just	重新定义
+skills/grounded-copy/references/patterns.md	zh-not-just	颠覆
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不在于…而在于
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是 Y, with the variants 并不是…而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 followed by 是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是…，是, and 而不是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是善意，是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是图便宜才买的，而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是等，而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是零食，是

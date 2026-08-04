@@ -45,3 +45,16 @@ Freshness confirmed by query, not by the node count.
 What if my order arrives damaged?
 它不是善意，是一套算出来的生意。
 Acme 不仅仅是一个工具，告别繁琐的对账流程。
+
+# One row per opener family, in Markdown table position. The specimen sits in
+# the first cell, because `lstrip` stops at the first character outside
+# `LEAD_STRIP` and every later cell opens mid-sentence. No header row, so each
+# line below still reports on its own.
+
+| It's not a website. It's your storefront. | The site takes orders and prints shipping labels. |
+| Don't just track tasks. | Acme moves a task to done when its pull request merges. |
+| Forget the spreadsheet. | Acme reads the ledger and posts the totals to Slack. |
+| Imagine a release that needs no checklist. | Acme runs the checklist and reports each result. |
+| In a world where every vendor charges more, Acme holds its price. | Acme charges $12 per seat per month. |
+| Tired of waiting on approvals? | Acme routes an approval to the first available reviewer. |
+| At Acme, we believe in simple pricing. | Acme charges one rate per seat, listed on the pricing page. |

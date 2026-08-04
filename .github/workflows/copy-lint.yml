@@ -16,6 +16,8 @@ jobs:
           fi
       - name: good samples must pass
         run: python3 skills/grounded-copy/scripts/copy_lint.py skills/grounded-copy/tests/good-samples.md
+      - name: cited files match the recorded set
+        run: python3 scripts/check_citations.py
 
   hooks:
     runs-on: ubuntu-latest

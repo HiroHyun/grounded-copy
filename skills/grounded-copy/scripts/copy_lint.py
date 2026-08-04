@@ -200,8 +200,10 @@ OPENERS = [
 
 SENTENCE_SPLIT = re.compile(r"(?<=[.!?！？。؟])\s+")
 # Straight quotes only: normalize() folds the curly forms before scan_line
-# strips a sentence, so a curly quote never reaches this set.
-LEAD_STRIP = " \t#*->—–-\"'([`0123456789."
+# strips a sentence, so a curly quote never reaches this set. `|` is here so a
+# sentence in the first cell of a Markdown table row reaches the OPENERS loop;
+# without it every anchored rule missed a specimen quoted inside a table.
+LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|"
 
 
 def normalize(text):
