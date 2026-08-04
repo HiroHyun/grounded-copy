@@ -446,13 +446,24 @@ fallback wants that inner directory copied to a skills directory of its own.
 
 Every banned pattern this repository documents is quoted as the example that
 defines it, so each file reports findings against its own gate. Measured
-2026-08-03: `references/patterns.md` 176; `README.md` 3; and `SKILL.md`,
-`CONTRIBUTING.md`, `commands/grounded.md`, `install.py`, and this file 0 each.
-The front page carries three cited draft sentences beside their rewrites; the
-catalog carries the full set. CI runs `copy_lint.py` on
+2026-08-04: `references/patterns.md` 181; `README.md` 12; `README.zh.md` 5; and
+`SKILL.md`, `CONTRIBUTING.md`, `commands/grounded.md`, `install.py`, and this
+file 0 each. Each front page carries its blocked drafts beside their rewrites
+and two `without-gerund` triggers in its profile callout; the English page adds
+four CJK triggers in its translation paragraph, and the catalog carries the full
+set. `tests/citations-baseline.txt` records the rule id and snippet each of
+those three files carries, and `scripts/check_citations.py` fails CI when that
+set moves. `copy_lint.py` itself runs in CI on
 `skills/grounded-copy/tests/bad-samples.md` and
 `skills/grounded-copy/tests/good-samples.md` and on no other path, which is
 what keeps the rest shippable.
+
+`patterns.md` gained four findings in 0.5.1 when `LEAD_STRIP` took `|`. Before
+that, `scan_line()` stripped a sentence with a set that omitted the pipe, so a
+specimen quoted in the first cell of a Markdown table row kept its leading `| `
+and every anchored `opener-*` rule missed it. Four of the catalog's own opener
+specimens sat in that position and reported nothing. `bad-samples.md` carries
+one table-position row per opener family to hold the path red-capable.
 
 **Wrapped-phrase acceptance requirement.** One scope stands open.
 `scan_line()` scans one line at a time, so a comparison phrase whose two halves

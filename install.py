@@ -115,6 +115,17 @@ def have_command(name):
     return shutil.which(name) is not None
 
 
+def resolve(name, which=shutil.which):
+    """The launch path for a bare command name.
+
+    `subprocess` hands argv[0] to CreateProcess, which applies no PATHEXT
+    search, so a bare `codex` misses the `codex.CMD` that npm installs on
+    Windows and the call raises OSError. `shutil.which` reads PATHEXT and
+    returns that path. On POSIX it returns the same file the shell would run.
+    """
+    return which(name) or name
+
+
 def detect(which=have_command):
     """Return the plugin and Skills CLIs available on PATH."""
     return {
@@ -216,7 +227,13 @@ def confirm(steps, options, reader=None):
     reader = reader or input
     try:
         answer = reader("Run these %d command(s)? [y/N] " % len(steps))
-    except (EOFError, KeyboardInterrupt):
+    except EOFError:
+        # `irm install.ps1 | iex` leaves the console attached, so the isatty
+        # check above reports a terminal and the first read still hits end of
+        # file. Same condition as that branch: no answer is obtainable.
+        print("\nNo answer available on stdin; running the plan above.")
+        return True
+    except KeyboardInterrupt:
         return False
     return answer.strip().lower() in ("y", "yes")
 
@@ -260,7 +277,7 @@ def run(steps):
     for label, argv in steps:
         print("\n==> " + label)
         try:
-            code = subprocess.call(argv)
+            code = subprocess.call([resolve(argv[0])] + argv[1:])
         except OSError as exc:
             print("    failed to start: %s" % exc)
             failed.append(label)

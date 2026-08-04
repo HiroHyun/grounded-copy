@@ -9,8 +9,7 @@
 <p align="center">
   <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/languages-9-22c55e.svg" alt="Nine languages">
-  <img src="https://img.shields.io/badge/portable_agents-17%2B-22c55e.svg" alt="17 or more portable agents">
+  <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
 </p>
 
 <p align="center">
@@ -21,6 +20,7 @@
 
 <p align="center">
   <a href="#install">Install</a> ·
+  <a href="#pick-your-profile">Profiles</a> ·
   <a href="#what-it-does">What it does</a> ·
   <a href="#before-and-after">Before and after</a> ·
   <a href="#nine-languages">Nine languages</a> ·
@@ -81,11 +81,38 @@ When the universal install and Claude plugin share a machine, Claude Code may
 list `grounded-copy@skills-dir` as `Not loaded` because the plugin owns the
 active skill name. The plugin supplies the skill and hooks.
 
-The Codex cache also carries the linter. Version 0.5.0 uses this path:
+The Codex cache also carries the linter. Version 0.5.1 uses this path:
 
 ```bash
-python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.5.0/skills/grounded-copy/scripts/copy_lint.py draft.md
+python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.5.1/skills/grounded-copy/scripts/copy_lint.py draft.md
 ```
+
+## Pick your profile
+
+Three profiles. Switch with `/grounded-copy:grounded chat|copy|off` in Claude
+Code and `$grounded-profile chat|copy|off|status` in Codex. The choice records
+at `<config-dir>/grounded-copy/profile` and holds across restarts until another
+set replaces it.
+
+| Profile | What `SessionStart` injects | Bytes | Turn reminder |
+|---|---|---:|---|
+| `chat` *(default)* | the intro and its grounded example, the banned move with its seven shapes, positive forms, scope and precedence, sourcing | 3,679 | one line naming `chat` |
+| `copy` | the same, plus the marketing register and two loophole closures | 5,140 | one line naming `copy` |
+| `off` | nothing | 0 | nothing |
+
+> [!IMPORTANT]
+> **Set `off` before working on supplied text.** The rules govern prose you
+> compose. Pointed at text that carries a contrast of its own — a translation
+> of a supplied source, a quoted passage, a legal or regulatory clause, a
+> billing statement — the model can delete that contrast and change what the
+> text says. Translation is the common case: the source sentence carries a
+> contrast the author chose, and a profile left on produces a target sentence
+> that drops it. Set `off` for that work.
+
+> [!TIP]
+> **A phrase the linter reports by design.** Any `-ing` noun after `without`
+> reads as a gerund, so "without warning" and "without training" report
+> `without-gerund`. Copy that needs one of them is written with `off`.
 
 ## What it does
 
@@ -98,16 +125,26 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.5.0/skills/groun
 - **CI gate:** the workflow requires the bad corpus to return 1 and the good
   corpus to return 0 on Ubuntu and Windows.
 
+Two layers do the work. The hooks put the rules in the model's context at
+session start, after each compaction, and on each prompt, and the model follows
+them at the rate a model follows any instruction. `copy_lint.py` returns exit
+code 1 on findings, which holds for whatever you point it at: a draft, a diff,
+a CI path.
+
 ## Before and after
 
-These source examples intentionally cite three blocked patterns. The catalog
-contains a concrete rewrite for every documented shape.
+Each left cell quotes a blocked pattern, and the rule column names the id
+`copy_lint.py` prints for it. The catalog carries a rewrite for every
+documented shape.
 
-| Blocked draft | Grounded rewrite |
-|---|---|
-| “More than just a project tracker.” | “Acme tracks tasks, links each one to its pull request, and posts a daily status digest to Slack.” |
-| “Say goodbye to hidden fees.” | “The listed price is the complete price; the invoice adds nothing.” |
-| “Experts agree Acme leads the market.” | “Acme holds 34% of the segment, per Gartner’s 2025 market report.” |
+| Blocked draft | Grounded rewrite | Rule |
+|---|---|---|
+| "It's not a website. It's your storefront." | "The site takes orders, processes payments in 135 currencies, and prints shipping labels." | `opener-it-is-not` |
+| "Acme is a partner, not a vendor." | "Acme assigns each client a strategist who joins quarterly planning." | `comma-not-appositive` |
+| "We ship every Friday rather than hoarding features." | "We ship every Friday." | `rather-than` |
+| "Acme answers tickets instead of queuing them." | "Acme replies to every ticket within four business hours." | `instead-of` |
+| "More than just a project tracker." | "Acme links every task to its pull request and posts a daily digest to Slack." | `more-than-just` |
+| "Experts agree Acme leads the market." | "Acme holds 34% of the segment, per Gartner’s 2025 market report." | `vague-experts` |
 
 See the full [pattern catalog](skills/grounded-copy/references/patterns.md).
 
@@ -121,9 +158,11 @@ The linter covers nine languages at three documented depths.
 | Structural | Chinese, Japanese, Korean | a bounded gap between negation and assertion, plus enumerated triggers |
 | Enumerated | Russian, Spanish, Arabic, French, German | trigger lists of 6 to 18 phrases across minimizing, era-ending, transcendence, and rhetorical-bait families |
 
-The target-language trigger lists form a floor. Translators also apply the
-rule from the catalog: translate the grounded source and preserve its concrete
-facts.
+The target-language trigger lists form a floor, and the catalog's translator
+rule carries the rest: translate the grounded source, keep its concrete facts,
+and hold the contrast out of the target sentence. Japanese だけでなく and Korean
+뿐만 아니라, 더 이상, and 혁신적 each also carry a plain coordinating sense, and
+the regex reports those uses too.
 
 ## Documentation
 

@@ -28,6 +28,20 @@ the assertion, which reports phrasings outside the list, or a trigger list,
 which reports the listed phrases. `## Nine languages` in `README.md`
 publishes the tier per language, so a PR that changes one updates it.
 
+## Files that quote their own triggers
+
+Three files quote the patterns they document: both READMEs and
+`references/patterns.md`. `tests/citations-baseline.txt` records the rule id
+and snippet each one carries, and CI fails when that set moves. A finding you
+did not intend is prose to rewrite. A specimen you added on purpose is
+recorded with `python3 scripts/check_citations.py --write`, and the diff is
+the review surface.
+
+The direction is what makes this legal under `SKILL.md` § Integrity rules. A
+consumer of the linter that asserts the finding set may only tighten the gate.
+Anything that lets a finding through is the banned thing, whatever it is
+called.
+
 ## Ground rules
 
 - `skills/grounded-copy/scripts/copy_lint.py` stays zero-dependency Python 3

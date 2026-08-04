@@ -23,6 +23,7 @@ compromises", "hassle-free", "frictionless").
 | "Far from being a reseller, Acme roasts its own beans." | "Acme roasts in-house; every bag ships within 48 hours of roasting." |
 | "Acme is less a gym than a coaching program." | "Acme pairs every member with a coach who reviews training logs weekly." |
 | "We ship every Friday rather than hoarding features." | "We ship every Friday." |
+| "Acme answers tickets instead of queuing them." | "Acme replies to every ticket within four business hours." |
 | "Acme goes beyond file storage." | "Acme stores, versions, and full-text-searches every document, and syncs across five device types." |
 | "We're redefining online booking." | "Acme books 40,000 appointments a month across 12 countries." |
 | "Order direct without the hassle of middlemen." | "You order directly from the maker's own workshop stock." |

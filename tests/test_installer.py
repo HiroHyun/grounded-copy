@@ -164,7 +164,64 @@ class PlanTests(unittest.TestCase):
         self.assertIn("grounded-copy@hirohyun-plugins", output.getvalue())
 
 
+class ResolveTests(unittest.TestCase):
+    """What `subprocess` needs that a bare name does not supply.
+
+    CreateProcess applies no PATHEXT search, and npm installs `codex.ps1`,
+    `codex.cmd`, and an extensionless `codex` with no `.exe` among them, so a
+    bare argv[0] raises OSError on Windows and the step reports "failed to
+    start". `shutil.which` reads PATHEXT and returns the shim that launches.
+    """
+
+    def test_a_bare_name_becomes_the_path_which_reports(self):
+        self.assertEqual(
+            install.resolve("codex", which=lambda _n: r"C:\fake\codex.CMD"),
+            r"C:\fake\codex.CMD",
+        )
+
+    def test_a_name_off_the_path_is_handed_back_unchanged(self):
+        self.assertEqual(install.resolve("codex", which=lambda _n: None),
+                         "codex")
+
+
 class RunTests(unittest.TestCase):
+    def _record(self, steps, returncode=0):
+        """Run the steps, capturing each argv `subprocess.call` receives."""
+        calls = []
+
+        def record(argv):
+            calls.append(argv)
+            return returncode
+
+        with mock.patch.object(install.subprocess, "call", record), \
+                mock.patch.object(install, "resolve",
+                                  lambda name: r"C:\fake\%s.CMD" % name), \
+                redirect_stdout(StringIO()):
+            code = install.run(steps)
+        return code, calls
+
+    def test_the_launch_uses_the_resolved_path_and_the_original_arguments(self):
+        steps = install.plan(install.Options(),
+                             machine(commands=("codex",), npx=False))
+        code, calls = self._record(steps)
+        self.assertEqual(code, install.EXIT_OK)
+        self.assertEqual([argv[0] for argv in calls],
+                         [r"C:\fake\codex.CMD"] * len(calls))
+        self.assertEqual([argv[1:] for argv in calls],
+                         [argv[1:] for _label, argv in steps])
+
+    def test_a_step_that_cannot_start_is_reported(self):
+        def boom(_argv):
+            raise OSError(5, "Access is denied")
+
+        output = StringIO()
+        with mock.patch.object(install.subprocess, "call", boom), \
+                redirect_stdout(output):
+            code = install.run([("codex: add the marketplace",
+                                 ["codex", "plugin", "marketplace", "add"])])
+        self.assertEqual(code, install.EXIT_FAILED)
+        self.assertIn("failed to start", output.getvalue())
+
     def test_claude_uninstall_clears_only_grounded_copy_cache(self):
         with tempfile.TemporaryDirectory() as config:
             marketplace = (Path(config) / "plugins" / "cache" /
@@ -188,6 +245,49 @@ class RunTests(unittest.TestCase):
             self.assertEqual(code, install.EXIT_OK)
             self.assertFalse((marketplace / install.PLUGIN).exists())
             self.assertTrue(sibling.exists())
+
+
+class ConfirmTests(unittest.TestCase):
+    """The prompt, on the two stdin conditions the one-liner produces.
+
+    Under `irm install.ps1 | iex` the child process keeps the console, so
+    `sys.stdin.isatty()` reports a terminal and the no-terminal branch is
+    skipped, and the first read still hits end of file. Reading that as a
+    refusal printed "Cancelled." and exited 0, which is why the published
+    Windows command installed nothing and reported success.
+    """
+
+    STEPS = [("codex: add the marketplace",
+              ["codex", "plugin", "marketplace", "add"])]
+
+    def _confirm(self, reader):
+        output = StringIO()
+        with redirect_stdout(output):
+            answer = install.confirm(self.STEPS, install.Options(),
+                                     reader=reader)
+        return answer, output.getvalue()
+
+    def test_end_of_file_runs_the_plan_and_says_so(self):
+        def eof(_prompt):
+            raise EOFError
+
+        answer, output = self._confirm(eof)
+        self.assertTrue(answer)
+        self.assertIn("No answer available on stdin", output)
+
+    def test_an_interrupt_still_cancels(self):
+        def interrupt(_prompt):
+            raise KeyboardInterrupt
+
+        answer, _output = self._confirm(interrupt)
+        self.assertFalse(answer)
+
+    def test_a_typed_answer_decides(self):
+        for typed, expected in (("y", True), ("YES", True), ("", False),
+                                ("n", False)):
+            with self.subTest(typed=typed):
+                answer, _output = self._confirm(lambda _p, t=typed: t)
+                self.assertEqual(answer, expected)
 
 
 class ArgumentTests(unittest.TestCase):
