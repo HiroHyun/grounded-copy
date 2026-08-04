@@ -81,11 +81,14 @@ When the universal install and Claude plugin share a machine, Claude Code may
 list `grounded-copy@skills-dir` as `Not loaded` because the plugin owns the
 active skill name. The plugin supplies the skill and hooks.
 
-The Codex cache also carries the linter. Version 0.5.1 uses this path:
+The Codex cache also carries the linter, under a directory named for the
+installed version:
 
 ```bash
-python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.5.1/skills/grounded-copy/scripts/copy_lint.py draft.md
+python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/grounded-copy/scripts/copy_lint.py draft.md
 ```
+
+`codex plugin list` prints the number that goes in `<version>`.
 
 ## Pick your profile
 

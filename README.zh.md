@@ -69,11 +69,13 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 
 当通用安装与 Claude 插件共用一台机器时，Claude Code 可能显示 `grounded-copy@skills-dir` 为 `Not loaded`，因为插件拥有当前技能名称。插件会提供技能和钩子。
 
-Codex 缓存也包含检查器。0.5.1 版本使用此路径：
+Codex 缓存也包含检查器，位于以所装版本号命名的目录下：
 
 ```bash
-python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/0.5.1/skills/grounded-copy/scripts/copy_lint.py draft.md
+python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/grounded-copy/scripts/copy_lint.py draft.md
 ```
+
+`codex plugin list` 会打印填入 `<version>` 的号码。
 
 <a id="pick-your-profile"></a>
 ## 选择配置
