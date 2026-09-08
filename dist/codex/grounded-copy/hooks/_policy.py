@@ -97,8 +97,8 @@ DIRECTIVE_LEAD_EMPTY = (
 # itself. These count the rules body alone; hook stdout adds the header and the
 # switch line, 106 bytes. The READMEs publish the same figures under "What each
 # mode costs", and `grounded_activate.py --self-test` reports the current ones.
-BASELINE_BYTES = 3900
-COPY_BASELINE_BYTES = 5452
+BASELINE_BYTES = 3693
+COPY_BASELINE_BYTES = 5118
 TURN_BASELINE_BYTES = 218
 
 # (floor, ceiling) per payload. The ceiling bounds growth against the figure the

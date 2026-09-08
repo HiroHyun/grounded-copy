@@ -140,8 +140,8 @@ $grounded-profile status
 
 | 模式 | 会话开始时增加的字节 | 每轮提醒 |
 |---|---:|---|
-| `chat`（默认） | 3,900 | 一行，写明 `chat` |
-| `copy` | 5,452 | 一行，写明 `copy` |
+| `chat`（默认） | 3,693 | 一行，写明 `chat` |
+| `copy` | 5,118 | 一行，写明 `copy` |
 | `off` | 0 | 无 |
 
 以上是规则正文的字节数。钩子输出还有 106 字节的头部和切换提示，每轮提醒为 218 字节。
@@ -240,4 +240,4 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 - [写作规则](skills/grounded-copy/SKILL.md)：智能体读取的指令。
 - [表达示例](skills/grounded-copy/references/patterns.md)：需要检查的措辞和改写方法。
 - [贡献指南](CONTRIBUTING.md)：如何提交修改。
-- [许可证](LICENSE)：AGPL-3.0-only。版权所有 2026 HiroHyun。0.5.2 及更早的版本按 MIT 许可证发布。
+- [许可证](LICENSE)：AGPL-3.0-only。版权所有 2026 HiroHyun。
