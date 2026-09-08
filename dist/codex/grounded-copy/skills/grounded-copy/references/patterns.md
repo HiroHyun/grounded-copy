@@ -141,6 +141,34 @@ Related tail pattern — editorializing participles: ", highlighting our
 commitment to quality", ", underscoring its value". Delete the tail and
 state the fact it gestured at.
 
+## Suspended lists
+
+A pair of dashes holds the clause open. Three or four examples sit in the gap.
+The reader carries the subject across the list to reach the verb.
+`dash-pair-list` reports it, and the block pass gives that rule a paragraph as
+its unit, so a dash pair that opens on one line and closes on the next still
+reports. The rule reads `,`, `，`, and `、` as the separator, so a Chinese or
+Japanese dash pair reports on the same terms.
+
+Cut the list, in this order:
+
+1. Delete the interrupter. The sentence often needs none of the items.
+2. Keep the one example the reader needs, inside the clause: "such as a legal
+   disclaimer".
+3. Keep every item only where each one changes what the reader does. Then
+   write the items as a list under the sentence.
+
+A colon in place of the dashes, parentheses in place of the dashes, and a
+split into two sentences each keep the same suspended list. None of the three
+is a rewrite.
+
+| Bad | Good |
+|---|---|
+| "Copy that has to carry one — a legal disclaimer, regulatory text, a translation of supplied source — is written with the profile off." | "Copy that must carry one, such as a legal disclaimer, is written with the profile off." |
+| "Pointed at text that carries a contrast of its own — a translation, a quoted passage, a legal clause, a billing statement — the model can delete that contrast." | "Pointed at a translation of a supplied source, the model can delete the contrast the source carries." |
+| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme covers email, live chat, phone, and the help centre with one queue." |
+| "The hook — a read of the preference, a read of the skill file, a write to stdout — runs in 40 ms." | "The hook runs in 40 ms." |
+
 ## Positive forms
 
 | Bad | Good |

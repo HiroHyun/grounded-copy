@@ -99,16 +99,15 @@ set replaces it.
 
 | Profile | What `SessionStart` injects | Bytes | Turn reminder |
 |---|---|---:|---|
-| `chat` *(default)* | the intro and its grounded example, the banned move with its seven shapes, positive forms, scope and precedence, sourcing | 3,679 | one line naming `chat` |
-| `copy` | the same, plus the marketing register and two loophole closures | 5,140 | one line naming `copy` |
+| `chat` *(default)* | the intro and its grounded example, the banned move with its seven shapes, positive forms, scope and precedence, sourcing, suspended lists | 3,638 | one line naming `chat` |
+| `copy` | the same, plus the marketing register and two loophole closures | 5,099 | one line naming `copy` |
 | `off` | nothing | 0 | nothing |
 
 > [!IMPORTANT]
 > **Set `off` before working on supplied text.** The rules govern prose you
-> compose. Pointed at text that carries a contrast of its own — a translation
-> of a supplied source, a quoted passage, a legal or regulatory clause, a
-> billing statement — the model can delete that contrast and change what the
-> text says. Translation is the common case: the source sentence carries a
+> compose. Pointed at a translation of a supplied source, the model can delete
+> the contrast the source carries and change what the text says. Translation
+> is the common case: the source sentence carries a
 > contrast the author chose, and a profile left on produces a target sentence
 > that drops it. Set `off` for that work.
 
@@ -119,8 +118,8 @@ set replaces it.
 
 ## What it does
 
-- **Rule:** `SKILL.md` defines seven contrast shapes, positive constraint
-  terms, sourcing rules, and a concrete rewrite method.
+- **Rule:** `SKILL.md` defines seven contrast shapes, suspended lists,
+  positive constraint terms, sourcing rules, and a concrete rewrite method.
 - **Linter:** `copy_lint.py` uses the Python 3 standard library and returns
   exit code 0 for a clean file, 1 for findings, and 2 for usage or I/O errors.
 - **Session policy:** Claude Code and Codex plugins inject the selected policy
@@ -148,6 +147,7 @@ documented shape.
 | "Acme answers tickets instead of queuing them." | "Acme replies to every ticket within four business hours." | `instead-of` |
 | "More than just a project tracker." | "Acme links every task to its pull request and posts a daily digest to Slack." | `more-than-just` |
 | "Experts agree Acme leads the market." | "Acme holds 34% of the segment, per Gartner’s 2025 market report." | `vague-experts` |
+| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme covers email, live chat, phone, and the help centre with one queue." | `dash-pair-list` |
 
 See the full [pattern catalog](skills/grounded-copy/references/patterns.md).
 
@@ -157,7 +157,7 @@ The linter covers nine languages at three documented depths.
 
 | Tier | Languages | What the regexes match |
 |---|---|---|
-| Full | English | 57 rules, with one or more rules for each shape |
+| Full | English | 58 rules, with one or more rules for each shape |
 | Structural | Chinese, Japanese, Korean | a bounded gap between negation and assertion, plus enumerated triggers |
 | Enumerated | Russian, Spanish, Arabic, French, German | trigger lists of 6 to 18 phrases across minimizing, era-ending, transcendence, and rhetorical-bait families |
 

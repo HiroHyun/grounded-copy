@@ -40,13 +40,13 @@ A skill loads when the model judges its description relevant. The description
 names chat replies, commit bodies, and code comments alongside the copy
 surfaces, matching what `## Scope and precedence` governs, and the judgment is
 still made per turn. Two hooks put the core rules in every session on a session
-event instead, at 3,679 bytes where the skill costs 8,735.
+event instead, at 3,638 bytes where the skill costs 8,747.
 
 `.claude-plugin/plugin.json` registers both hooks:
 
 | Hook | Script | Output |
 |---|---|---|
-| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 3,785 bytes under `chat`, repeated after each compaction |
+| `SessionStart` (no matcher) | `hooks/grounded_activate.py` | the session policy, 3,744 bytes under `chat`, repeated after each compaction |
 | `UserPromptSubmit` | `hooks/grounded_tracker.py` | the turn reminder, 218 bytes |
 
 Both hooks are read-only. `### Profile lifecycle` below defines every term
@@ -54,10 +54,10 @@ above and names the one path that records a preference.
 `### Measured recurring cost` gives the figures and the method.
 
 `_policy.py` reads `skills/grounded-copy/SKILL.md` under the plugin root at
-runtime — the same relative path in a checkout, a plugin install, a clone, and
-the Codex package — and emits the intro with its example pair plus four core
-sections: the banned move with its seven shapes, positive forms, scope and
-precedence, and sourcing. Run
+runtime, at the same relative path in every shipped layout. It emits the intro
+with its example pair plus five core sections: the banned move with its seven
+shapes, positive forms, scope and precedence, sourcing, and suspended lists.
+Run
 `python hooks/grounded_activate.py --self-test` after editing `SKILL.md`; it
 asserts the structure, checks each payload against its published budget, and
 prints the size delta against the recorded baseline.
@@ -148,9 +148,12 @@ other surface points here.
 model's context. Both are read-only with respect to model output: they observe
 nothing the model produces and block nothing. Everything they achieve is
 guidance, and compliance with guidance is probabilistic. Deterministic
-interception needs an output-side gate — a `Stop` hook, a file gate, a
-commit-body gate — and Phase 1 ships none of them, so a chat reply reaches the
-user with no scan. The turn reminder holds a role `SessionStart` leaves open:
+interception needs an output-side gate, such as a `Stop` hook, and the plugin
+ships none, so a chat reply reaches the user with no scan. 0.5.2 holds that
+boundary by decision. A `Stop` hook costs one process launch per turn, and it
+cannot separate quoted source from the model's own prose.
+`### Hard enforcement (hook)` below carries the file gate a user can install
+instead. The turn reminder holds a role `SessionStart` leaves open:
 per-turn recency against the per-turn injections other plugins make.
 `SessionStart` returns after each compaction and says nothing about the turns
 between.
@@ -162,8 +165,8 @@ the words `--set` accepts.
 
 | Profile | Session policy | Turn reminder |
 |---|---|---|
-| `chat` | the intro with its grounded example, the banned move with its seven shapes, positive forms, scope and precedence, and sourcing — 3,679 bytes of rules | one line naming `chat` |
-| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor — 5,140 bytes | one line naming `copy` |
+| `chat` | the intro with its grounded example, the banned move with its seven shapes, positive forms, scope and precedence, sourcing, and suspended lists, at 3,638 bytes of rules | one line naming `chat` |
+| `copy` | the same, plus the marketing register and two closures covering translation and the linter's standing as a floor, at 5,099 bytes | one line naming `copy` |
 | `off` | none | none |
 
 `--self-test` prints those two figures and fails when a payload passes its
@@ -228,17 +231,17 @@ records a preference.
 
 ### Measured recurring cost
 
-UTF-8 bytes of each hook's stdout, measured 2026-08-02 on Claude Code 2.1.220,
+UTF-8 bytes of each hook's stdout, measured 2026-09-08 on Claude Code 2.1.220,
 Windows 11.
 
 | Payload | Bytes |
 |---|---|
-| `chat` session policy, per `SessionStart` | 3,785 |
-| `copy` session policy, per `SessionStart` | 5,246 |
+| `chat` session policy, per `SessionStart` | 3,744 |
+| `copy` session policy, per `SessionStart` | 5,205 |
 | turn reminder, per prompt | 218 |
-| `chat` governing directive, per switch | 3,986 |
-| `copy` governing directive, per switch | 5,447 |
-| `SKILL.md`, loaded when the skill triggers | 8,735 |
+| `chat` governing directive, per switch | 3,945 |
+| `copy` governing directive, per switch | 5,406 |
+| `SKILL.md`, loaded when the skill triggers | 8,747 |
 
 **Two boundaries, one payload.** A session-policy row is the rules body plus
 the header, the switch line, and the blank lines between them: 106 bytes under
@@ -251,8 +254,8 @@ interpolates, so both directive rows measure a 59-character path and move with
 it.
 
 One 60-turn `chat` session with one compaction and one profile switch:
-3,785 × 2 + 218 × 60 + 3,986 = 24,636 bytes, against 41,594 before the payload
-cut, a 40.1% reduction.
+3,744 × 2 + 218 × 60 + 3,945 = 24,513 bytes, against 41,594 before the payload
+cut, a 41.1% reduction.
 
 Every token figure in this repository is an estimate at bytes ÷ 4 and is
 labelled as one. No token count here comes from a tokenizer.
@@ -447,7 +450,7 @@ fallback wants that inner directory copied to a skills directory of its own.
 
 Every banned pattern this repository documents is quoted as the example that
 defines it, so each file reports findings against its own gate. Measured
-2026-08-04: `references/patterns.md` 181; `README.md` 12; `README.zh.md` 5; and
+2026-09-08: `references/patterns.md` 186; `README.md` 13; `README.zh.md` 6; and
 `SKILL.md`, `CONTRIBUTING.md`, `commands/grounded.md`, `install.py`, and this
 file 0 each. Each front page carries its blocked drafts beside their rewrites
 and two `without-gerund` triggers in its profile callout; the English page adds
@@ -459,6 +462,12 @@ set moves. `copy_lint.py` itself runs in CI on
 `skills/grounded-copy/tests/good-samples.md` and on no other path, which is
 what keeps the rest shippable.
 
+0.5.2 moved the set by seven. `patterns.md` gained five with its
+`## Suspended lists` section. Each front page gained one `dash-pair-list` row
+in its before-and-after table, and the English page lost none: its profile
+callout carried a suspended list, and the rewrite of that callout took the
+finding out as the new row put one back.
+
 `patterns.md` gained four findings in 0.5.1 when `LEAD_STRIP` took `|`. Before
 that, `scan_line()` stripped a sentence with a set that omitted the pipe, so a
 specimen quoted in the first cell of a Markdown table row kept its leading `| `
@@ -466,13 +475,21 @@ and every anchored `opener-*` rule missed it. Four of the catalog's own opener
 specimens sat in that position and reported nothing. `bad-samples.md` carries
 one table-position row per opener family to hold the path red-capable.
 
-**Wrapped-phrase acceptance requirement.** One scope stands open.
-`scan_line()` scans one line at a time, so a comparison phrase whose two halves
-land on either side of a Markdown line wrap produces zero findings. Every file
-in this repository is hard-wrapped near column 76, so the exemption already
-applies to the shipped corpus. Requirement: a phrase split across a wrap
-reports the same finding as the same phrase on one line, with the line number
-pointing at the first line of the match. A red-capable test writes each shipped
+**Two scan units.** `scan_line()` reads one line and runs `PATTERNS` and
+`OPENERS`. `scan_blocks()` reads one paragraph, with the lines joined and each
+Markdown marker stripped, and runs `BLOCK_PATTERNS`. `iter_blocks()` keeps the
+start offset of every source line, so a block finding reports the line that
+opens the match. 0.5.2 added the block pass for `dash-pair-list`: measured over
+this repository, the line unit found 1 of the 9 suspended lists it carries.
+
+**Wrapped-phrase acceptance requirement.** One scope stands open. `PATTERNS`
+still runs per line, so a comparison phrase whose two halves land on either
+side of a Markdown line wrap produces zero findings. Every file in this
+repository is hard-wrapped near column 76, so the exemption already applies to
+the shipped corpus. Requirement: a phrase split across a wrap reports the same
+finding as the same phrase on one line, with the line number pointing at the
+first line of the match. The block pass is the machinery; the work is to move
+each multi-word pattern onto it. A red-capable test writes each shipped
 multi-word pattern in both forms and asserts the finding counts match.
 Formatting creates no exemption.
 
@@ -491,11 +508,12 @@ Or, for repo-scoped enforcement that survives long sessions, add to
 ```markdown
 ## Copy style (mandatory)
 
-Before writing, editing, or translating ANY user-facing copy — headlines,
-value props, CTAs, meta descriptions, alt text, locale files — read
-`.style/grounded-copy/SKILL.md` and follow it.
+Before writing, editing, or translating ANY user-facing copy, read
+`.style/grounded-copy/SKILL.md` and follow it. User-facing copy covers
+headlines, value props, CTAs, meta descriptions, alt text, and locale files.
 
-Every copy change must pass the gate before you report the task done:
+Every copy change must pass the gate before you report the task done. Name the
+result for a file you linted; write no gate line in a chat reply.
 
     python3 .style/grounded-copy/scripts/copy_lint.py <changed files>
 
@@ -567,7 +585,8 @@ checkout with no install step:
 
 Read `.style/grounded-copy/SKILL.md` before producing any user-facing copy.
 Run `python3 .style/grounded-copy/scripts/copy_lint.py <files>` and iterate
-until it exits 0. Do not modify the linter.
+until it exits 0. Do not modify the linter. Name the result for a file you
+linted; write no gate line in a chat reply.
 ```
 
 A Codex plugin registers lifecycle hooks under `hooks/hooks.json`; this adapter
