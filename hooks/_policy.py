@@ -95,10 +95,10 @@ DIRECTIVE_LEAD_EMPTY = (
 # Extraction sizes measured 2026-09-08 against SKILL.md, after the quoted
 # banned forms moved to skills/grounded-copy/references/patterns.md so SKILL.md passes copy_lint.py
 # itself. These count the rules body alone; hook stdout adds the header and the
-# switch line, 106 bytes. skills/grounded-copy/references/setup.md records the per-session cost and
-# the method.
-BASELINE_BYTES = 3638
-COPY_BASELINE_BYTES = 5099
+# switch line, 106 bytes. The READMEs publish the same figures under "What each
+# mode costs", and `grounded_activate.py --self-test` reports the current ones.
+BASELINE_BYTES = 3900
+COPY_BASELINE_BYTES = 5452
 TURN_BASELINE_BYTES = 218
 
 # (floor, ceiling) per payload. The ceiling bounds growth against the figure the

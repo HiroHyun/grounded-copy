@@ -1,3 +1,23 @@
+# 0.5.3
+
+## English
+
+- The front page shows the banner, the badges, and the section links again, and the technical detail sits in collapsible sections.
+- The opening example writes release notes for an app. The earlier example rewrote this README.
+- Both READMEs call the tool an agent, and the Chinese page uses 智能体.
+- The license is AGPL-3.0-only. Releases through 0.5.2 stay under the MIT license.
+- The setup guide drops its repository-maintenance section, so each installed copy is 2,611 bytes smaller.
+- The per-mode byte counts on the front page match the current measurement, 3,900 for `chat` and 5,452 for `copy`.
+
+## 简体中文
+
+- 首页恢复了横幅、徽章和章节链接，技术细节收进可折叠区块。
+- 开头示例改成为一款应用撰写更新说明。此前的示例是改写这份 README。
+- 两份 README 都把工具称为智能体，中文页使用“智能体”。
+- 许可证改为 AGPL-3.0-only。0.5.2 及更早的版本仍按 MIT 许可证发布。
+- 安装说明删去仓库维护章节，每份安装副本因此减少 2,611 字节。
+- 首页的各模式字节数与当前测量一致：`chat` 为 3,900，`copy` 为 5,452。
+
 # 0.5.2
 
 ## English
