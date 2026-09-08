@@ -1,22 +1,9 @@
 README.md	comma-not-appositive	, not
 README.md	dash-pair-list	— email, live chat, phone, and the help centre —
-README.md	instead-of	instead of
-README.md	ja-not-just	だけでなく
-README.md	ko-not-just	더 이상
-README.md	ko-not-just	뿐만 아니라
-README.md	ko-not-just	혁신적
 README.md	more-than-just	More than just
-README.md	opener-it-is-not	It's not
-README.md	rather-than	rather than
-README.md	vague-experts	Experts agree
-README.md	without-gerund	without training
-README.md	without-gerund	without warning
 README.zh.md	dash-pair-list	— 邮件、在线客服、电话、帮助中心 —
-README.zh.md	without-gerund	without training
-README.zh.md	without-gerund	without warning
 README.zh.md	zh-not-just	不仅仅是
-README.zh.md	zh-not-just	告别
-README.zh.md	zh-not-x-but-y	不是善意，是
+README.zh.md	zh-not-x-but-y	不是供应商，而是
 skills/grounded-copy/references/patterns.md	ar-not-just	أكثر من مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	ليس مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	وداعًا
@@ -35,7 +22,7 @@ skills/grounded-copy/references/patterns.md	dash-pair-list	— a legal disclaime
 skills/grounded-copy/references/patterns.md	dash-pair-list	— a read of the preference, a read of the skill file, a write to stdout —
 skills/grounded-copy/references/patterns.md	dash-pair-list	— a translation, a quoted passage, a legal clause, a billing statement —
 skills/grounded-copy/references/patterns.md	dash-pair-list	— email, live chat, phone, and the help centre —
-skills/grounded-copy/references/patterns.md	dash-pair-list	—not X, but Y", "not your average X", the appositive "X, not Y", the prepositional ", not by X", and the negated-setup dash "isn't/wasn't X —
+skills/grounded-copy/references/patterns.md	dash-pair-list	—not X, but Y", "not your average X", "X, not Y", ", not by X", and a denial followed by a dash "isn't/wasn't X —
 skills/grounded-copy/references/patterns.md	days-are-over	the days of X are over
 skills/grounded-copy/references/patterns.md	de-not-just	Schluss mit
 skills/grounded-copy/references/patterns.md	de-not-just	Stellen Sie sich vor
@@ -176,6 +163,7 @@ skills/grounded-copy/references/patterns.md	while-others	while others
 skills/grounded-copy/references/patterns.md	without-gerund	without adding
 skills/grounded-copy/references/patterns.md	without-gerund	without adding
 skills/grounded-copy/references/patterns.md	without-gerund	without training
+skills/grounded-copy/references/patterns.md	without-gerund	without warning
 skills/grounded-copy/references/patterns.md	without-the-hassle	without the hassle
 skills/grounded-copy/references/patterns.md	without-the-hassle	without the hassle
 skills/grounded-copy/references/patterns.md	worth-noting	It's worth noting
@@ -183,22 +171,16 @@ skills/grounded-copy/references/patterns.md	zero-hassle	Zero guesswork
 skills/grounded-copy/references/patterns.md	zero-hassle	Zero hidden
 skills/grounded-copy/references/patterns.md	zero-hassle	zero guesswork
 skills/grounded-copy/references/patterns.md	zh-not-just	不仅仅是
-skills/grounded-copy/references/patterns.md	zh-not-just	不仅仅是
 skills/grounded-copy/references/patterns.md	zh-not-just	不仅是
 skills/grounded-copy/references/patterns.md	zh-not-just	不再是
-skills/grounded-copy/references/patterns.md	zh-not-just	不再是
-skills/grounded-copy/references/patterns.md	zh-not-just	不只是
 skills/grounded-copy/references/patterns.md	zh-not-just	不只是
 skills/grounded-copy/references/patterns.md	zh-not-just	不止是
 skills/grounded-copy/references/patterns.md	zh-not-just	告别
-skills/grounded-copy/references/patterns.md	zh-not-just	告别
 skills/grounded-copy/references/patterns.md	zh-not-just	重新定义
 skills/grounded-copy/references/patterns.md	zh-not-just	颠覆
-skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不在于…而在于
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是
-skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是 Y, with the variants 并不是…而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 followed by 是
-skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是…，是, and 而不是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是…而是, 不在于…而在于, 不是…，是, and 而不是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是善意，是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是图便宜才买的，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是等，而是

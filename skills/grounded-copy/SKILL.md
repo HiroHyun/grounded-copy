@@ -1,169 +1,100 @@
 ---
 name: grounded-copy
-description: Enforces grounded, contrast-free prose. Every value proposition and every claim states what the subject IS or DOES with concrete nouns, verbs, and specifics, and carries no negation, contrast, or hype vocabulary. Use this skill whenever writing, editing, translating, reviewing, or localizing ANY user-facing copy: headlines, taglines, value propositions, landing pages, product descriptions, About pages, CTAs, button labels, meta/OG descriptions, alt text, email subjects and bodies, social posts, ad copy, brochures, or locale/i18n string files. Use it for every other stretch of prose a person reads: chat replies, commit bodies, pull request descriptions, code comments, documentation, plans, and reports. Use it even if the user does not mention style rules. Also use when the user says "on-brand", "our writing style", "no AI clichés", or asks to check copy.
+description: Write clear prose using concrete facts. Use when writing, editing, translating, or reviewing text that people read, including chat replies, documentation, product copy, reports, commit messages, and code comments. Also use when asked to check copy or remove AI clichés. Preserve supplied facts and follow the user's requested style.
 ---
 
 # Grounded Copy
 
-Copy describes things by what they ARE. Every value proposition is a direct
-declarative statement built on concrete nouns, verbs, and specifics: the
-feature, the number, the mechanism.
+Copy describes things by what they ARE. Tell the reader what the product does, how it works, or what they can do next. Use concrete nouns and verbs. Include a number only when the source supports it.
 
-Grounded: "The tracker links every task to its pull request and posts a
-status digest to Slack each morning."
+Grounded: "The tracker links every task to its pull request and posts a status digest to Slack each morning."
 
-## The one banned move (and every disguise it wears)
+## The one banned move
 
-The banned move is **defining the subject by placing it against
-something** — against what it is *not*, against what *others* do worse,
-against what *era* has ended.
+Avoid explaining a subject through a contrast with an alternative. State its features or behavior directly. The pattern guide groups this habit into seven forms:
 
-Seven shapes, one rule. `references/patterns.md` carries the trigger
-phrases for each shape and pairs every one with a rewrite.
+1. **Comparison with an alternative.** A claim depends on what another option lacks.
+2. **Reversal reveals.** A denial sets up the claim that follows it.
+3. **Era-ending.** A sentence announces that an old way of working has ended.
+4. **Competitor put-downs.** A claim starts by criticizing a rival or group.
+5. **Rhetorical bait.** A question or command introduces the writer's own answer.
+6. **Collision framing.** Two abstract qualities are described as meeting.
+7. **Corporate throat-clearing.** A company preamble delays the useful fact.
 
-1. **Placed against an alternative** — negated intensifiers, comparative
-   clauses, transcendence verbs, absence framing.
-2. **Reversal reveals** — a negated clause staging the assertion that
-   follows it, joined by a comma, a dash, or a sentence break.
-3. **Era-ending** — the old way declared finished, the past waved off.
-4. **Competitor put-downs** — a rival class named as the foil.
-5. **Rhetorical bait** — a question or command that stages its own answer.
-6. **Collision framing** — two abstractions announced as meeting.
-7. **Corporate throat-clearing** — a company preamble before the claim.
+Every shape blocks with no exception while the profile is active. When required wording contains one, such as a legal disclaimer, use the profile off. Follow an explicit user request that overrides this rule.
 
-Write none of them, and invent no new costume. Every shape blocks with no
-exception; copy that must carry one, such as a legal disclaimer, is
-written with the profile off. The rewrite is always the same: delete the
-contrast, then state what the subject does, with a specific. A booster
-word does the same in one word; `## Marketing register` holds that
-catalog.
+To rewrite, identify the useful claim and state it directly. Keep the facts from the source. Read `references/patterns.md` for phrases and examples. A new phrase can use the same pattern, so review the whole passage as well as individual sentences.
 
 ## Positive forms
 
-Where an established positive term carries the constraint unambiguously,
-write the term: **read-only**, **immutable**, **append-only**,
-**idempotent**, **dry run**, **single-writer**, **fixed-width**,
-**allowlist**, **constant-time**, **exit code 2**.
+Use a familiar positive term when it describes the behavior accurately: **read-only**, **immutable**, **append-only**, **idempotent**, **dry run**, **single-writer**, **fixed-width**, **allowlist**, **constant-time**, or **exit code 2**.
 
-Where no term exists, state the constraint plainly as what holds.
+Explain a technical term when the reader needs help with it. If a term would make the sentence harder to understand, describe the actual behavior in plain words. Preserve every limit that affects the reader's next step.
 
 ## Scope and precedence
 
-- **Scope.** Every stretch of prose written for a person to read: chat
-  replies, commit bodies, pull request descriptions, code comments,
-  documentation, plans, reports, and all user-facing copy.
-- **Verbatim source material.** Text the user supplied or a system
-  returned, such as a pasted error or a real named customer's words, is
-  reproduced character for character; write the prose around it under
-  these rules. An invented testimonial, a hypothetical quote, and a
-  tagline are your own prose.
-- **Governed everywhere else.** Your prose stays governed wherever it
-  sits: inside quotation marks, Markdown fences, code comments, commit
-  bodies, and command examples. A fence is a formatting choice and grants
-  no exemption.
-- **User precedence.** When the user directs you to write a banned
-  pattern, comply and name the rule it conflicts with in one sentence.
-  User instructions outrank this skill.
+- **Scope.** Apply these rules to prose people read. This includes chat replies, documentation, plans, reports, commit bodies, pull request descriptions, code comments, and product copy.
+- **Verbatim source material.** Copy supplied quotes and tool output exactly when reproducing them. Write the surrounding explanation under these rules. An invented testimonial or sample tagline is your own prose and follows the same rules.
+- **Governed everywhere else.** Your prose follows the rules inside quotation marks, Markdown fences, code comments, and command examples. Formatting does not change who wrote the text.
+- **User precedence.** The user's explicit instructions take priority. If the user asks for a pattern this skill rejects, write it and briefly name the conflicting rule. Preserve the meaning of supplied text during translation. Use the profile off when faithful wording requires it.
 
 ## Sourcing
 
-An unnamed authority offers praise where a checkable fact belongs.
-Name the source, the figure, and the date, or state the measurable
-claim. An editorializing participle carries the same defect: a clause
-hung off a comma that praises the subject. Delete the tail and state the
-fact it gestured at. `## Vague attribution` in `references/patterns.md`
-has the forms.
+Support a claim with a fact the reader can check. Name the source, the figure, and the date when citing a measurement. Give the actual feature or behavior when a number is unnecessary. Treat sample numbers as examples; replace them with verified values before publication.
+
+Remove praise that adds no information to a sentence. Keep the fact it was meant to describe. If the source lacks a needed detail, ask for it or write a claim supported by the available information.
 
 ## Suspended lists
 
-A pair of dashes that holds a clause open around a list of examples is
-banned. Name the one example the reader needs, inside the clause. Where
-every item changes what the reader does, write the items as a list under
-the sentence. A colon, a parenthesis, or a second sentence keeps the same
-shape and fixes nothing.
+A list inserted between paired dashes can separate the subject from its verb. This form is banned. Name the one example the reader needs inside the sentence. Delete examples that add no useful information. If each item affects what the reader does, put the items in a list below the sentence.
+
+Changing the dashes to a colon or parentheses keeps the same problem. Rebuild the sentence so the main point is easy to follow. Review lists split across lines or sentences too.
 
 ## Marketing register
 
-These rules govern marketing and web copy; the core rules above govern
-every register. Scope here is every user-facing string: headlines,
-subheads, CTAs, button labels, meta and OG descriptions, alt text, email
-subjects, social posts, ad variants, brochure text, and locale files.
+Apply this section to product pages and promotional text. It covers headlines, button labels, descriptions, alt text, email, social posts, ads, and translated interface text.
 
-**Hype vocabulary.** Replace the word with the fact it was hiding. The
-register runs to booster verbs, superlative adjectives, and figurative
-nouns standing in for a specific. `## Hype vocabulary` in
-`references/patterns.md` enumerates it and rewrites each entry.
+**Hype vocabulary.** Replace vague praise with the feature or fact it refers to. The pattern guide lists common examples. Check the meaning of unfamiliar synonyms too. A word that fits both a perfume ad and a SaaS deck may say little about the actual product. Ask what the reader learns from it, then write that detail.
 
-Register test for an unlisted synonym: a word that could appear unchanged
-in a perfume ad and a SaaS deck is hype. Replace it.
+**Plain negation.** Keep a negative statement when it explains a limit the reader needs to act on. For example, "does not support batching" tells a developer how to use an API. State other claims positively. Apply the same care to short labels and headings as to paragraphs.
 
-**Plain negation.** Keep a negation when it states a limit the reader acts
-on — "does not support batching", "ships within the EU only". State every
-other point positively.
+## Loophole closures
 
-## Loophole closures — read these before claiming compliance
+Use these checks during review:
 
-Agents under output pressure rationalize around style rules. Each
-rationalization below is pre-emptively rejected:
-
-- **"The banned string doesn't appear."** The rule bans the *move*, not
-  the string. "Most vendors bury their fees. Acme prints them." is the
-  reversal pattern split across two sentences — still banned. A contrast
-  spread across sentences, paragraphs, or a headline/subhead pair counts.
-- **"It's a different language."** The rules apply conceptually in every
-  locale, and every locale has its own stock phrase for the minimizing
-  shape. `## Multilingual equivalents` in `references/patterns.md` lists
-  the eight covered so far. Translate the grounded English, and keep
-  contrast out of the translation.
-- **"A synonym isn't on the list."** The hype list bans a whole register,
-  and the register is wider than any ten words. Apply the register test in
-  `## Marketing register`. When unsure, replace the word with the specific
-  fact it was hiding.
-- **"The linter passed, so it's fine."** The linter is a floor; holding
-  the ceiling is your job. Novel phrasings of the banned move that evade
-  regex are still violations; you are the second detection layer.
-- **"I'll adjust the linter/config."** Never. See integrity rules.
+- **"The banned string doesn't appear."** Check the structure of the argument. A contrast can span two sentences, separate paragraphs, or a heading and its description. Rewrite the claim around the subject's own behavior.
+- **"It's a different language."** Apply the rules to the meaning in every language. Read the multilingual section of `references/patterns.md` before writing in Chinese, Russian, Spanish, Arabic, French, German, Japanese, or Korean. Keep the source facts and write idiomatic sentences. When the task requires faithful translation of a supplied contrast, follow the user's instructions and use the profile off.
+- **"A synonym isn't on the list."** Review what the word means in context. Replace vague praise with a supported fact, even when the checker accepts the word.
+- **"The linter passed, so it's fine."** A pass means the checker found no matching patterns. It does not verify facts or judge every sentence. Read the draft for unsupported claims, awkward wording, and contrasts spread across sentences. The human-language review remains part of the task.
+- **"I'll adjust the linter/config."** Fix the prose when a check fails. Keep the checker and its rules intact. The integrity rules below apply throughout the task.
 
 ## Workflow
 
-1. Draft the copy following the positive rule: subject + verb + specific.
-2. Self-scan against the seven shapes above, including cross-sentence
-   contrast and non-English text.
-3. Save the draft (or pipe it) and run the gate:
+1. Identify the reader, the task, and the facts supplied. Draft sentences that explain what the subject does.
+2. Read the draft for the seven patterns above. Check meaning and natural phrasing in each language.
+3. Run the checker on the saved files:
 
+   ```bash
+   python3 <skill-path>/scripts/copy_lint.py file1.md locales/en.json
    ```
-   python3 <skill-path>/scripts/copy_lint.py file1.md locales/en.json ...
+
+   To check text from a pipe:
+
+   ```bash
    cat draft.md | python3 <skill-path>/scripts/copy_lint.py --stdin
    ```
 
-4. Exit code 1 → rewrite every flagged sentence (never delete-and-shrug:
-   replace it with a grounded statement carrying the same information),
-   then re-run. Repeat until exit code 0.
-5. Present copy to the user after a PASS. Name the linter result in a task
-   summary for a file you linted. A chat reply runs no gate, so it carries
-   no gate line.
+4. Exit code 1 means the checker found matches. Rewrite the flagged sentences using the same facts, then run it again. Exit code 2 means a command or file error; fix that error and rerun.
+5. Present the files after a pass. Report the check result for files you checked. A normal chat reply needs no check-result line.
 
-## Integrity rules (non-negotiable)
+## Integrity rules
 
-- Never edit, wrap, subclass, monkey-patch, or replace `copy_lint.py`,
-  its pattern list, or its exit-code behavior.
-- Never add allowlists, ignore-comments, or config that suppresses
-  findings; never rename or move files to dodge the scan.
-- Never mark the task complete while the linter reports errors.
+- Keep `copy_lint.py`, its patterns, and its exit codes intact. Do not edit or replace them to make a draft pass.
+- Do not add allowlists, ignore comments, or settings that hide findings. Keep filenames and paths independent of check results.
+- Complete the rewrite and rerun the checker before reporting the task complete.
 
 ## References
 
-- `references/patterns.md` — one section per shape with its full trigger
-  list and a bad → good rewrite for every entry, plus the hype,
-  attribution, positive-form, and multilingual tables. Read it when a
-  rewrite is hard, or before writing copy in zh/ru/es/ar/fr/de/ja/ko.
-- `tests/bad-samples.md` and `tests/good-samples.md` — the linter's own
-  corpora, which sit beside this file in every install path that copies the
-  skill directory. After a change to the linter,
-  `copy_lint.py tests/bad-samples.md` must FAIL and
-  `copy_lint.py tests/good-samples.md` must PASS.
-- `references/setup.md` — wiring the skill into Claude Code (CLAUDE.md /
-  hooks) and Codex (AGENTS.md) so both agents load it and run the gate.
-  `### Profile lifecycle` there is the one description of how the profile
-  preference, the session policy, the turn reminder, and the effective
-  policy relate.
+- `references/patterns.md` contains the phrases the rules describe, with sample rewrites and multilingual examples.
+- `references/setup.md` explains installation, profiles, and checks for a project. Its Profile lifecycle section describes how saved settings reach a session.
+- `tests/bad-samples.md` and `tests/good-samples.md` are the checker's sample files. A checker change must leave the bad samples at exit code 1 and the good samples at exit code 0.

@@ -1,56 +1,45 @@
 # Contributing
 
-## Adding a pattern
+Choose one pattern or one language for each pull request. Explain the writing problem and show the sentence your change should catch.
 
-1. **Evidence.** Quote at least one real-world sighting of the pattern in
-   published marketing copy (link or screenshot in the PR description).
-2. **Failing test.** Add a line to
-   `skills/grounded-copy/tests/bad-samples.md` that only your new pattern
-   catches.
-3. **Over-match note.** Every rule blocks, and no rule carries an
-   exception. Search for factual uses of the same string and name them in
-   the PR description ("no more than 21 days", "mehr als ein Jahr", the
-   `-ing` nouns `without-gerund` reads as gerunds), so a reader knows what
-   else the regex reports. Copy needing one of those forms is written with
-   the profile off, which `README.md` documents.
-4. **Catalog entry.** Add a bad → good row to
-   `skills/grounded-copy/references/patterns.md`. The good cell must itself
-   pass the linter.
+## Add a pattern
 
-## Adding a language
+1. Link to a published example, or attach a screenshot in the pull request.
+2. Add a sentence to `skills/grounded-copy/tests/bad-samples.md` that your new rule catches.
+3. Look for ordinary factual uses of the same wording. Describe any matches that readers might need to keep.
+4. Add a draft and rewrite to `skills/grounded-copy/references/patterns.md`. Check that the rewrite passes.
 
-Follow the same four steps per pattern. A locale PR names the
-constructions that also carry factual uses in that language; they block
-alongside the rest, and the over-match note records them.
+Each rule reports every match. If a task needs wording that a rule rejects, the writer can use the `off` profile. A manual checker run still reports that wording.
 
-State which tier the rule reaches: a bounded gap between the negation and
-the assertion, which reports phrasings outside the list, or a trigger list,
-which reports the listed phrases. `## Nine languages` in `README.md`
-publishes the tier per language, so a PR that changes one updates it.
+## Add a language
 
-## Files that quote their own triggers
+Follow the same steps for each new rule. Explain whether it matches a list of phrases or a sentence pattern. Include examples of factual wording that it also matches. Update the language summary in both READMEs if the coverage changes.
 
-Three files quote the patterns they document: both READMEs and
-`references/patterns.md`. `tests/citations-baseline.txt` records the rule id
-and snippet each one carries, and CI fails when that set moves. A finding you
-did not intend is prose to rewrite. A specimen you added on purpose is
-recorded with `python3 scripts/check_citations.py --write`, and the diff is
-the review surface.
+## Edit documentation
 
-The direction is what makes this legal under `SKILL.md` § Integrity rules. A
-consumer of the linter that asserts the finding set may only tighten the gate.
-Anything that lets a finding through is the banned thing, whatever it is
-called.
+Write for someone trying to use the tool. Explain the task, give the command, and describe what happens next. Use verified facts. Label invented examples so readers can distinguish them from product claims.
 
-## Ground rules
+Run the copy checker on changed prose. The README comparison tables and pattern guide quote rejected wording on purpose. Check each finding in those files, then run:
 
-- `skills/grounded-copy/scripts/copy_lint.py` stays zero-dependency Python 3
-  stdlib. Each line runs the 53 whole-line patterns; each sentence in it runs
-  the 13 anchored openers. Every nested quantifier stays bounded, so scan time
-  holds linear in the length of the line.
-- One severity and the 0/1/2 exit contract: 0 clean, 1 findings, 2 usage
-  or IO error.
-- Changes to the linter and to `skills/grounded-copy/tests/` ship in the same
-  PR; CI runs the self-test on both corpora. The Python suites at `tests/` are
-  a separate tree.
-- One pattern or one language per PR.
+```bash
+python3 scripts/check_citations.py
+```
+
+If you changed a quoted example, record the new findings with `python3 scripts/check_citations.py --write`. Review the diff in `tests/citations-baseline.txt`. Findings in ordinary prose need a rewrite. Keep the checker and its rules intact.
+
+After a skill or reference edit, rebuild the Codex package:
+
+```bash
+python3 scripts/build_codex_adapter.py
+python3 scripts/build_codex_adapter.py --check
+```
+
+Commit the generated files too. For a `SKILL.md` edit, also run `python3 hooks/grounded_activate.py --self-test`; the hooks read some headings and bullet labels directly.
+
+## Change the checker
+
+The checker uses the Python 3 standard library. Keep regular expressions bounded and preserve the exit codes: `0` for a pass, `1` for findings, and `2` for command or file errors.
+
+Submit checker changes with the relevant sample-file changes. The bad samples must return `1`; the good samples must return `0`. Run the existing tests that cover the change. Add tests when they verify new behavior or a bug fix.
+
+The sample files are in `skills/grounded-copy/tests/`. The Python test suites are in the root `tests/` directory. The [setup guide](skills/grounded-copy/references/setup.md) explains the package layout and CI checks.
