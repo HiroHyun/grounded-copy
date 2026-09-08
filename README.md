@@ -137,8 +137,8 @@ $grounded-profile status
 
 | Profile | Bytes added at session start | Turn reminder |
 |---|---:|---|
-| `chat` (default) | 3,900 | one line naming `chat` |
-| `copy` | 5,452 | one line naming `copy` |
+| `chat` (default) | 3,693 | one line naming `chat` |
+| `copy` | 5,118 | one line naming `copy` |
 | `off` | 0 | none |
 
 Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 218 bytes.
@@ -236,4 +236,4 @@ Some ordinary Japanese and Korean phrases also match; `ja-not-just` and `ko-not-
 - [Writing rules](skills/grounded-copy/SKILL.md): the instructions the agent reads.
 - [Pattern guide](skills/grounded-copy/references/patterns.md): phrases to review and sample rewrites.
 - [Contributing](CONTRIBUTING.md): how to propose changes.
-- [License](LICENSE): AGPL-3.0-only. Copyright 2026 HiroHyun. Releases through 0.5.2 were published under the MIT license.
+- [License](LICENSE): AGPL-3.0-only. Copyright 2026 HiroHyun.

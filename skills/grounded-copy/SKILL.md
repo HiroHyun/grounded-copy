@@ -21,15 +21,15 @@ Avoid explaining a subject through a contrast with an alternative. State its fea
 6. **Collision framing.** Two abstract qualities are described as meeting.
 7. **Corporate throat-clearing.** A company preamble delays the useful fact.
 
-Every shape blocks with no exception while the profile is active. When required wording contains one, such as a legal disclaimer, use the profile off. Follow an explicit user request that overrides this rule.
+Every shape blocks with no exception while the profile is active. When required wording contains one, such as a legal disclaimer, use the profile off.
 
-To rewrite, identify the useful claim and state it directly. Keep the facts from the source. Read `references/patterns.md` for phrases and examples. A new phrase can use the same pattern, so review the whole passage as well as individual sentences.
+To rewrite, name the useful claim and keep the facts from the source. Read `references/patterns.md` for phrases and examples. A new phrase can use the same pattern, so review the whole passage as well as individual sentences.
 
 ## Positive forms
 
 Use a familiar positive term when it describes the behavior accurately: **read-only**, **immutable**, **append-only**, **idempotent**, **dry run**, **single-writer**, **fixed-width**, **allowlist**, **constant-time**, or **exit code 2**.
 
-Explain a technical term when the reader needs help with it. If a term would make the sentence harder to understand, describe the actual behavior in plain words. Preserve every limit that affects the reader's next step.
+If a term would make the sentence harder to understand, describe the behavior in plain words. Preserve every limit that affects the reader's next step.
 
 ## Scope and precedence
 
@@ -48,15 +48,15 @@ Remove praise that adds no information to a sentence. Keep the fact it was meant
 
 A list inserted between paired dashes can separate the subject from its verb. This form is banned. Name the one example the reader needs inside the sentence. Delete examples that add no useful information. If each item affects what the reader does, put the items in a list below the sentence.
 
-Changing the dashes to a colon or parentheses keeps the same problem. Rebuild the sentence so the main point is easy to follow. Review lists split across lines or sentences too.
+Changing the dashes to a colon or parentheses keeps the same problem. Review lists split across lines or sentences too.
 
 ## Marketing register
 
 Apply this section to product pages and promotional text. It covers headlines, button labels, descriptions, alt text, email, social posts, ads, and translated interface text.
 
-**Hype vocabulary.** Replace vague praise with the feature or fact it refers to. The pattern guide lists common examples. Check the meaning of unfamiliar synonyms too. A word that fits both a perfume ad and a SaaS deck may say little about the actual product. Ask what the reader learns from it, then write that detail.
+**Hype vocabulary.** Replace vague praise with the feature or fact it refers to. The pattern guide lists common examples. Check the meaning of unfamiliar synonyms too. A word that fits both a perfume ad and a SaaS deck may say little about the actual product.
 
-**Plain negation.** Keep a negative statement when it explains a limit the reader needs to act on. For example, "does not support batching" tells a developer how to use an API. State other claims positively. Apply the same care to short labels and headings as to paragraphs.
+**Plain negation.** Keep a negative statement when it explains a limit the reader needs to act on. For example, "does not support batching" tells a developer how to use an API. State other claims positively.
 
 ## Loophole closures
 

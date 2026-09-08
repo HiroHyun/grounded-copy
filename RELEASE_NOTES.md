@@ -7,7 +7,7 @@
 - Both READMEs call the tool an agent, and the Chinese page uses 智能体.
 - The license is AGPL-3.0-only. Releases through 0.5.2 stay under the MIT license.
 - The setup guide drops its repository-maintenance section, so each installed copy is 2,611 bytes smaller.
-- The per-mode byte counts on the front page match the current measurement, 3,900 for `chat` and 5,452 for `copy`.
+- The writing rules drop six repeated sentences, so each session loads 3,693 bytes for `chat` and 5,118 for `copy`.
 
 ## 简体中文
 
@@ -16,7 +16,7 @@
 - 两份 README 都把工具称为智能体，中文页使用“智能体”。
 - 许可证改为 AGPL-3.0-only。0.5.2 及更早的版本仍按 MIT 许可证发布。
 - 安装说明删去仓库维护章节，每份安装副本因此减少 2,611 字节。
-- 首页的各模式字节数与当前测量一致：`chat` 为 3,900，`copy` 为 5,452。
+- 写作规则删去六处重复表述，每次会话因此加载 3,693 字节（`chat`）和 5,118 字节（`copy`）。
 
 # 0.5.2
 
