@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/HiroHyun/grounded-copy",
   "repository": "https://github.com/HiroHyun/grounded-copy",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "keywords": ["copywriting", "style", "linter", "i18n", "hooks"],
   "skills": ["./skills/"],
   "hooks": {

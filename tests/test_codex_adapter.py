@@ -4,7 +4,7 @@
 The adapter reuses canonical skill and runtime files by copy, so the reuse
 claim needs a test that fails when a copy drifts. These cases cover the Codex
 plugin layout, lifecycle hooks, profile controller, generated inventory, and
-the MIT notice that travels with a redistributed package.
+the license notice that travels with a redistributed package.
 """
 
 import json
@@ -152,7 +152,7 @@ class CodexAdapterTests(unittest.TestCase):
             (ADAPTER / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
         self.assertEqual(manifest["name"], "grounded-copy")
-        self.assertEqual(manifest["license"], "MIT")
+        self.assertEqual(manifest["license"], "AGPL-3.0-only")
         self.assertEqual(manifest["skills"], "./skills/")
         for field in ("version", "description", "repository", "homepage"):
             self.assertIn(field, manifest)
@@ -162,13 +162,14 @@ class CodexAdapterTests(unittest.TestCase):
         header = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")[:400]
         self.assertIn("name: grounded-copy", header)
 
-    def test_the_mit_notice_travels_with_the_package(self):
+    def test_the_license_notice_travels_with_the_package(self):
         notice = (ADAPTER / "LICENSE").read_text(encoding="utf-8")
-        self.assertIn("MIT License", notice)
-        self.assertIn("Permission is hereby granted", notice)
+        self.assertIn("GNU AFFERO GENERAL PUBLIC LICENSE", notice)
+        self.assertIn("Version 3, 19 November 2007", notice)
+        self.assertIn("13. Remote Network Interaction", notice)
 
-    def test_every_catalog_entry_and_manifest_declares_mit(self):
-        """`README.md` claims both manifests and both catalog entries say MIT.
+    def test_every_catalog_entry_and_manifest_declares_the_license(self):
+        """`README.md` claims both manifests and both catalog entries say AGPL.
 
         The adapter manifest is covered above; these are the other three, so the
         README sentence is a tested claim rather than a maintained one.
@@ -183,11 +184,11 @@ class CodexAdapterTests(unittest.TestCase):
                     p for p in catalog["plugins"] if p["name"] == "grounded-copy"
                 ]
                 self.assertEqual(len(entries), 1, "one entry per catalog")
-                self.assertEqual(entries[0].get("license"), "MIT")
+                self.assertEqual(entries[0].get("license"), "AGPL-3.0-only")
         manifest = json.loads(
             (REPO_ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
-        self.assertEqual(manifest["license"], "MIT")
+        self.assertEqual(manifest["license"], "AGPL-3.0-only")
 
     def test_the_adapter_ships_hooks_and_no_claude_commands(self):
         for name in ("hooks",):

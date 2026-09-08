@@ -7,6 +7,12 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-2ea44f.svg" alt="AGPL-3.0-only License"></a>
+  <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
+</p>
+
+<p align="center">
   <a href="README.md">English</a> ·
   <a href="README.zh.md">简体中文</a>
 </p>
@@ -134,9 +140,11 @@ $grounded-profile status
 
 | 模式 | 会话开始时增加的字节 | 每轮提醒 |
 |---|---:|---|
-| `chat`（默认） | 3,638 | 一行，写明 `chat` |
-| `copy` | 5,099 | 一行，写明 `copy` |
+| `chat`（默认） | 3,900 | 一行，写明 `chat` |
+| `copy` | 5,452 | 一行，写明 `copy` |
 | `off` | 0 | 无 |
+
+以上是规则正文的字节数。钩子输出还有 106 字节的头部和切换提示，每轮提醒为 218 字节。在克隆目录中运行 `python3 hooks/grounded_activate.py --self-test` 可以自行测量。
 
 选择保存在 `<config-dir>/grounded-copy/profile`。
 
@@ -234,4 +242,4 @@ CI 会在 Ubuntu 和 Windows 上对两份测试文件运行检查脚本。反例
 - [写作规则](skills/grounded-copy/SKILL.md)：智能体读取的指令。
 - [表达示例](skills/grounded-copy/references/patterns.md)：需要检查的措辞和改写方法。
 - [贡献指南](CONTRIBUTING.md)：如何提交修改。
-- [MIT 许可证](LICENSE)。
+- [许可证](LICENSE)：AGPL-3.0-only。版权所有 2026 HiroHyun。0.5.2 及更早的版本按 MIT 许可证发布。
