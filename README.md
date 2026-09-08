@@ -23,7 +23,7 @@
 
 # grounded-copy
 
-You ask an agent (Claude Code, Codex, Cursor, and other AI coding tools) to write a README. It describes your product with broad claims, and you still have to explain what a user can do with it. `grounded-copy` tells the agent to write about the actual features, steps, and facts. You can also run its Python checker on a saved draft.
+You ask an agent (Claude Code, Codex, Cursor, and other AI coding tools) to write your release notes. It describes the update in broad terms, and you still have to say what changed. `grounded-copy` tells the agent to write about the actual features, steps, and facts. You can also run its Python checker on a saved draft.
 
 Use it when you write product pages, project docs, or everyday replies. Give the agent the facts you want to include and tell it who will read them.
 
@@ -31,7 +31,7 @@ Use it when you write product pages, project docs, or everyday replies. Give the
 
 After installation, ask your agent:
 
-> Use grounded-copy to rewrite this README for someone installing the tool for the first time. Keep the commands and technical facts. Explain what they can do after installation. Run the copy checker on the result.
+> Write the release notes for version 2.1 of our scheduling app. It adds Google Calendar sync, cuts export time from 40 seconds to 4 seconds, and fixes the duplicate-invite bug. The readers are existing customers. Use grounded-copy, then run the copy checker on the result.
 
 For a product page, supply the details the copy needs:
 
