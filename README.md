@@ -1,177 +1,134 @@
-<p align="center">
-  <img src="assets/banner.png" alt="grounded-copy: Every claim states a feature, a number, or a mechanism." width="960">
-</p>
+# grounded-copy
 
-<p align="center">
-  <strong>A prose style gate for every stretch of text a person reads.</strong>
-</p>
+[English](README.md) · [简体中文](README.zh.md)
 
-<p align="center">
-  <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f.svg" alt="MIT License"></a>
-  <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
-</p>
+Writing rules and a copy checker for AI assistants.
 
-<p align="center">
-  <strong>Read this in other languages:</strong>
-  <a href="README.md">English</a> ·
-  <a href="README.zh.md">简体中文</a>
-</p>
+You ask an assistant to write a README. It describes your product with broad claims, and you still have to explain what a user can do with it. `grounded-copy` tells the assistant to write about the actual features, steps, and facts. You can also run its Python checker on a saved draft.
 
-<p align="center">
-  <a href="#install">Install</a> ·
-  <a href="#pick-your-profile">Profiles</a> ·
-  <a href="#what-it-does">What it does</a> ·
-  <a href="#before-and-after">Before and after</a> ·
-  <a href="#nine-languages">Nine languages</a> ·
-  <a href="#documentation">Documentation</a>
-</p>
+Use it when you write product pages, project docs, or everyday replies. Give the assistant the facts you want to include and tell it who will read them.
 
-`grounded-copy` covers chat replies, documentation, plans, reports, commit
-bodies, pull request descriptions, code comments, and product copy. It requires
-every claim to name a feature, number, or mechanism. A Python linter detects
-documented contrast patterns, hype vocabulary, and vague attribution.
+## Try it
+
+After installation, ask your assistant:
+
+> Use grounded-copy to rewrite this README for someone installing the tool for the first time. Keep the commands and technical facts. Explain what they can do after installation. Run the copy checker on the result.
+
+For a product page, supply the details the copy needs:
+
+> Write a short description of our task tracker. It links tasks to pull requests and posts a summary to Slack each morning. Use grounded-copy.
+
+The assistant uses the writing rules to draft and review the text. The checker reports phrases that match its rules. You review whether the result is accurate and reads naturally.
 
 ## Install
 
-One command installs the Claude Code and Codex plugins when their CLIs are
-available, then installs the portable skill for 17+ agents through the Skills
-CLI.
+The installer needs Python 3 and Node.js with `npx`. It installs plugins for Claude Code and Codex when it finds their CLIs. It also runs the Skills CLI to install the skill for supported assistants.
+
+**macOS, Linux, WSL, or Git Bash:**
 
 ```bash
-# macOS · Linux · WSL · Git Bash
 curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.sh | sh
 ```
 
+**Windows PowerShell:**
+
 ```powershell
-# Windows · PowerShell
 irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | iex
 ```
 
-The launchers require Python 3 and Node. They print each host command before
-running it. A checkout exposes the full flags: `sh install.sh --dry-run`,
-`python3 install.py --skills-only`, and `python3 install.py --uninstall`.
+To choose one installation method, use the commands below.
 
-### Per-host alternatives
-
-| Host | Command |
+| Install for | Commands |
 |---|---|
-| Portable skill, 17+ agents | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
-| Claude Code plugin | `claude plugin marketplace add HiroHyun/grounded-copy`<br>`claude plugin install grounded-copy@hirohyun-plugins -s user` |
-| Codex plugin | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
-| Linter from a checkout | `python3 skills/grounded-copy/scripts/copy_lint.py draft.md` |
+| Claude Code | `claude plugin marketplace add HiroHyun/grounded-copy`<br>`claude plugin install grounded-copy@hirohyun-plugins -s user` |
+| Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
+| Assistants supported by the Skills CLI | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-The portable command copies the canonical skill directory: `SKILL.md`, both
-references, the linter, and both test corpora. The Claude Code and Codex
-plugins add lifecycle hooks, three stored profiles, and a profile controller.
+The skill includes the rules, examples, and checker. The Claude Code and Codex plugins also load rules at session start and add a reminder with each prompt. These plugins let you save a writing mode.
 
-| Capability | Portable, 17+ agents | Plugin, Claude Code and Codex |
-|---|:---:|:---:|
-| Rules, catalog, nine locales, linter, and corpora | yes | yes |
-| `SessionStart` policy, repeated after compaction |  | yes |
-| `UserPromptSubmit` turn reminder |  | yes |
-| `chat`, `copy`, and `off` profiles with a stored preference |  | yes |
-| Profile controller and governing directive |  | yes |
+See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal commands.
 
-Agents evaluate the skill description on each turn. Plugin hooks run on their
-registered session events, so Claude Code and Codex receive the stored profile
-at session start, after compaction, and on each prompt.
+## Choose a writing mode
 
-When the universal install and Claude plugin share a machine, Claude Code may
-list `grounded-copy@skills-dir` as `Not loaded` because the plugin owns the
-active skill name. The plugin supplies the skill and hooks.
+The plugins call these modes *profiles*. Your choice stays saved after a restart.
 
-The Codex cache also carries the linter, under a directory named for the
-installed version:
+| Profile | Use it for |
+|---|---|
+| `chat` (default) | Everyday replies, documentation, and technical explanations. |
+| `copy` | Product pages and marketing text. Adds rules for promotional wording. |
+| `off` | Work that needs the original wording or a different writing style. |
+
+**Claude Code:**
+
+```text
+/grounded-copy:grounded chat
+/grounded-copy:grounded copy
+/grounded-copy:grounded off
+```
+
+Use `/grounded-copy:grounded` to see the current profile.
+
+**Codex:**
+
+```text
+$grounded-profile chat
+$grounded-profile copy
+$grounded-profile off
+$grounded-profile status
+```
+
+For a faithful translation, set `off` first. The rules can otherwise prompt the assistant to remove a comparison that belongs to the original text. Your explicit instructions take priority over the skill.
+
+## Check a file
+
+From a clone of this repository, run:
+
+```bash
+python3 skills/grounded-copy/scripts/copy_lint.py draft.md
+```
+
+Use `python` if that is your Python 3 command. You can pass several file paths in one call. The checker uses the Python standard library.
+
+Each finding gives a line number, a rule name, and the matched text. Revise the sentence using the facts in your source, then run the command again.
+
+| Exit code | Meaning |
+|---|---|
+| `0` | The checker found no matches. |
+| `1` | The file contains wording to review. |
+| `2` | The command arguments or a file could not be read correctly. |
+
+For a Codex plugin installation, the checker is also in the plugin cache:
 
 ```bash
 python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/grounded-copy/scripts/copy_lint.py draft.md
 ```
 
-`codex plugin list` prints the number that goes in `<version>`.
-
-## Pick your profile
-
-Three profiles. Switch with `/grounded-copy:grounded chat|copy|off` in Claude
-Code and `$grounded-profile chat|copy|off|status` in Codex. The choice records
-at `<config-dir>/grounded-copy/profile` and holds across restarts until another
-set replaces it.
-
-| Profile | What `SessionStart` injects | Bytes | Turn reminder |
-|---|---|---:|---|
-| `chat` *(default)* | the intro and its grounded example, the banned move with its seven shapes, positive forms, scope and precedence, sourcing, suspended lists | 3,638 | one line naming `chat` |
-| `copy` | the same, plus the marketing register and two loophole closures | 5,099 | one line naming `copy` |
-| `off` | nothing | 0 | nothing |
-
-> [!IMPORTANT]
-> **Set `off` before working on supplied text.** The rules govern prose you
-> compose. Pointed at a translation of a supplied source, the model can delete
-> the contrast the source carries and change what the text says. Translation
-> is the common case: the source sentence carries a
-> contrast the author chose, and a profile left on produces a target sentence
-> that drops it. Set `off` for that work.
-
-> [!TIP]
-> **A phrase the linter reports by design.** Any `-ing` noun after `without`
-> reads as a gerund, so "without warning" and "without training" report
-> `without-gerund`. Copy that needs one of them is written with `off`.
-
-## What it does
-
-- **Rule:** `SKILL.md` defines seven contrast shapes, suspended lists,
-  positive constraint terms, sourcing rules, and a concrete rewrite method.
-- **Linter:** `copy_lint.py` uses the Python 3 standard library and returns
-  exit code 0 for a clean file, 1 for findings, and 2 for usage or I/O errors.
-- **Session policy:** Claude Code and Codex plugins inject the selected policy
-  at session start and a compact reminder on each prompt.
-- **CI gate:** the workflow requires the bad corpus to return 1 and the good
-  corpus to return 0 on Ubuntu and Windows.
-
-Two layers do the work. The hooks put the rules in the model's context at
-session start, after each compaction, and on each prompt, and the model follows
-them at the rate a model follows any instruction. `copy_lint.py` returns exit
-code 1 on findings, which holds for whatever you point it at: a draft, a diff,
-a CI path.
+Use the version shown by `codex plugin list` in place of `<version>`.
 
 ## Before and after
 
-Each left cell quotes a blocked pattern, and the rule column names the id
-`copy_lint.py` prints for it. The catalog carries a rewrite for every
-documented shape.
+These are made-up examples. Use facts you can verify in your own copy. The first column deliberately contains phrases the checker reports.
 
-| Blocked draft | Grounded rewrite | Rule |
-|---|---|---|
-| "It's not a website. It's your storefront." | "The site takes orders, processes payments in 135 currencies, and prints shipping labels." | `opener-it-is-not` |
-| "Acme is a partner, not a vendor." | "Acme assigns each client a strategist who joins quarterly planning." | `comma-not-appositive` |
-| "We ship every Friday rather than hoarding features." | "We ship every Friday." | `rather-than` |
-| "Acme answers tickets instead of queuing them." | "Acme replies to every ticket within four business hours." | `instead-of` |
-| "More than just a project tracker." | "Acme links every task to its pull request and posts a daily digest to Slack." | `more-than-just` |
-| "Experts agree Acme leads the market." | "Acme holds 34% of the segment, per Gartner’s 2025 market report." | `vague-experts` |
-| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme covers email, live chat, phone, and the help centre with one queue." | `dash-pair-list` |
+| Draft | Rewrite |
+|---|---|
+| "More than just a project tracker." | "The tracker links tasks to pull requests and posts a summary to Slack each morning." |
+| "Acme is a partner, not a vendor." | "Your account manager joins your planning meeting each quarter." |
+| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme puts email, live chat, phone, and help centre requests in one queue." |
 
-See the full [pattern catalog](skills/grounded-copy/references/patterns.md).
+The [pattern guide](skills/grounded-copy/references/patterns.md) has more examples.
 
-## Nine languages
+## What to expect
 
-The linter covers nine languages at three documented depths.
+The plugin gives the assistant instructions. It does not scan or block each chat reply. Run the checker on saved files when you need a repeatable check.
 
-| Tier | Languages | What the regexes match |
-|---|---|---|
-| Full | English | 58 rules, with one or more rules for each shape |
-| Structural | Chinese, Japanese, Korean | a bounded gap between negation and assertion, plus enumerated triggers |
-| Enumerated | Russian, Spanish, Arabic, French, German | trigger lists of 6 to 18 phrases across minimizing, era-ending, transcendence, and rhetorical-bait families |
+A passing result means the text matched none of the checker's patterns. It does not verify facts or guarantee natural writing. Some ordinary phrases also match the rules. Review the meaning before you change them; use `off` when the task requires wording that the style rules would reject.
 
-The target-language trigger lists form a floor, and the catalog's translator
-rule carries the rest: translate the grounded source, keep its concrete facts,
-and hold the contrast out of the target sentence. Japanese だけでなく and Korean
-뿐만 아니라, 더 이상, and 혁신적 each also carry a plain coordinating sense, and
-the regex reports those uses too.
+The checker covers English, Chinese, Japanese, Korean, Russian, Spanish, Arabic, French, and German. English has the most detailed rules. Chinese, Japanese, and Korean checks include sentence patterns. The other languages use phrase lists. Most checks run one line at a time, so a phrase split over two lines can be missed. The check for lists between paired dashes also works across lines in a paragraph.
 
-## Documentation
+## More help
 
-- [Setup and wiring](skills/grounded-copy/references/setup.md) covers install
-  layout, profiles, hook lifecycle, context cost, CI, and rollback.
-- [Pattern catalog](skills/grounded-copy/references/patterns.md) lists every
-  documented trigger family and its rewrites.
-- [Contributing](CONTRIBUTING.md) covers patterns, languages, and test corpora.
-- [MIT License](LICENSE) covers use and redistribution.
+- [Setup](skills/grounded-copy/references/setup.md): profiles, troubleshooting, and project checks.
+- [Writing rules](skills/grounded-copy/SKILL.md): the instructions the assistant reads.
+- [Pattern guide](skills/grounded-copy/references/patterns.md): phrases to review and sample rewrites.
+- [Contributing](CONTRIBUTING.md): how to propose changes.
+- [MIT license](LICENSE).

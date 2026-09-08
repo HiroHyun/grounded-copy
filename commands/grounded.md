@@ -1,13 +1,10 @@
 ---
-description: Show or switch the grounded prose profile
+description: Show or change the grounded-copy writing mode
 argument-hint: chat|copy|off
 disable-model-invocation: true
 ---
 
-Run exactly one of the four command lines below, then report what it prints
-and change no other files. Pick the line by matching the argument you were
-given against `chat`, `copy`, and `off`. An empty argument, or any other
-value, takes the status line.
+Run one command below and report its output. Match the user's argument to `chat`, `copy`, or `off`. For an empty or unknown argument, run the status command. Limit the operation to the profile setting.
 
 `chat`:
 
@@ -27,39 +24,20 @@ sh '${CLAUDE_PLUGIN_ROOT}/hooks/run.sh' grounded_tracker.py --set copy
 sh '${CLAUDE_PLUGIN_ROOT}/hooks/run.sh' grounded_tracker.py --set off
 ```
 
-Empty argument, or a value outside those three:
+Status:
 
 ```bash
 sh '${CLAUDE_PLUGIN_ROOT}/hooks/run.sh' grounded_tracker.py --status
 ```
 
-Run the chosen line as written. This file interpolates no argument, so every
-command line in it is a constant; composing a new one would put a user-typed
-value on a shell command line.
+Use the selected command exactly as written. Keep user-supplied text out of the shell command. For an unknown argument, report the rejected value and the current profile. Leave the saved setting unchanged.
 
-For an unrecognized value, report the value that was rejected and the profile
-the status line names. The preference file holds still.
+A successful change prints status and the instructions for the new profile. Those instructions apply from this turn forward and replace the earlier grounded-copy policy for the session.
 
-Exit codes on `--set`: 0 recorded, 1 persistence failure, 2 rejected value.
-`--status` exits 0 in every state.
+For `--set`, exit code `0` means saved, `1` means saving failed, and `2` means the value was rejected. `--status` returns `0`.
 
-A recorded switch prints a governing directive after the status line. That
-directive supersedes every grounded-copy policy statement earlier in the
-transcript and governs from that turn onward.
+If the plugin path still contains a literal dollar-brace placeholder, report that path substitution failed and stop. On Windows, if `sh` is unavailable, use `hooks/run.cmd` with double quotes around the path. The setup guide shows the launcher commands.
 
-If a command line carries a literal dollar-brace placeholder where an absolute
-path belongs, the substitution failed: report that and stop. On a Windows
-setup where `sh` is absent from PATH, run the same script through
-`hooks/run.cmd` with double quotes around the path, matching the launcher swap
-in `skills/grounded-copy/references/setup.md`; `cmd` reads `'` as an ordinary
-character.
+`chat` applies the core writing rules. `copy` adds rules for promotional text. `off` stops the session rules and prompt reminder. The setting survives restarts.
 
-Profiles: `chat` carries the core rules, `copy` adds the marketing register and
-two closures, and `off` stops the session policy and the turn reminder. The
-recorded value persists across restarts until another `--set` replaces it.
-
-`### Profile lifecycle` in `skills/grounded-copy/references/setup.md` is the
-one description of how the profile preference, the session policy, the turn
-reminder, and the effective policy relate. The preference lives at
-`<config-dir>/grounded-copy/profile`, where config-dir is `$CLAUDE_CONFIG_DIR`
-when set and `~/.claude` otherwise.
+The file is `<config-dir>/grounded-copy/profile`. The config directory is `$CLAUDE_CONFIG_DIR` when set, or `~/.claude` by default. See Profile lifecycle in `skills/grounded-copy/references/setup.md` for how a saved setting reaches the session.

@@ -1,140 +1,134 @@
-<p align="center">
-  <img src="assets/banner.png" alt="grounded-copy：每条声明都写出功能、数字或机制。" width="960">
-</p>
+# grounded-copy
 
-<p align="center">
-  <strong>适用于各类可读文本的文字风格检查器。</strong>
-</p>
+[English](README.md) · [简体中文](README.zh.md)
 
-<p align="center">
-  <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-2ea44f.svg" alt="MIT License"></a>
-  <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
-</p>
+给 AI 助手用的写作规则，附带文案检查脚本。
 
-<p align="center">
-  <strong>其他语言：</strong>
-  <a href="README.md">English</a> ·
-  <a href="README.zh.md">简体中文</a>
-</p>
+你让 AI 写一份 README，它写了很多宽泛的介绍，你还得补上用户能拿这个工具做什么。`grounded-copy` 会提醒助手写清楚实际功能、操作步骤和具体事实。草稿保存成文件后，你也可以用 Python 脚本检查措辞。
 
-<p align="center">
-  <a href="#install">安装</a> ·
-  <a href="#pick-your-profile">配置</a> ·
-  <a href="#what-it-does">功能</a> ·
-  <a href="#before-and-after">改写示例</a> ·
-  <a href="#nine-languages">九种语言</a> ·
-  <a href="#documentation">文档</a>
-</p>
+写产品介绍、项目文档或日常回复时都可以用。把需要保留的事实交给助手，再告诉它读者是谁。
 
-`grounded-copy` 适用于聊天回复、文档、计划、报告、提交说明、拉取请求描述、代码注释和产品文案。它要求每条声明写出功能、数字或机制。Python 检查器会识别目录中的对比模式、夸张词和含糊归因。
+## 试着用一次
 
-<a id="install"></a>
+安装后，可以这样对助手说：
+
+> 用 grounded-copy 改写这份 README，写给第一次安装这个工具的人。保留命令和技术事实，讲清楚安装后能做什么。完成后运行文案检查。
+
+写产品介绍时，先给出具体信息：
+
+> 帮我写一小段任务管理工具的介绍。它能把任务关联到拉取请求，每天早上把摘要发到 Slack。请用 grounded-copy。
+
+助手会按规则起草并检查文字。检查脚本会列出命中规则的词句。最后还需要你确认内容是否准确、读起来是否顺畅。
+
 ## 安装
 
-一条命令会在 CLI 可用时安装 Claude Code 和 Codex 插件，并通过 Skills CLI 为 17 个以上的代理安装便携技能。
+安装脚本需要 Python 3，以及带有 `npx` 的 Node.js。它会查找 Claude Code 和 Codex 的命令行程序，为找到的程序安装插件。它也会调用 Skills CLI，为支持的助手安装技能。
+
+**macOS、Linux、WSL 或 Git Bash：**
 
 ```bash
-# macOS · Linux · WSL · Git Bash
 curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.sh | sh
 ```
 
+**Windows PowerShell：**
+
 ```powershell
-# Windows · PowerShell
 irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | iex
 ```
 
-启动器需要 Python 3 和 Node。每次执行前都会打印主机命令。在检出目录中运行 `sh install.sh --dry-run` 可查看计划，`python3 install.py --skills-only` 可安装便携路径，`python3 install.py --uninstall` 可移除已安装条目。
+也可以按需要单独安装：
 
-### 各主机命令
-
-| 主机 | 命令 |
+| 安装到哪里 | 命令 |
 |---|---|
-| 便携技能，17 个以上代理 | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
-| Claude Code 插件 | `claude plugin marketplace add HiroHyun/grounded-copy`<br>`claude plugin install grounded-copy@hirohyun-plugins -s user` |
-| Codex 插件 | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
-| 从检出目录运行检查器 | `python3 skills/grounded-copy/scripts/copy_lint.py draft.md` |
+| Claude Code | `claude plugin marketplace add HiroHyun/grounded-copy`<br>`claude plugin install grounded-copy@hirohyun-plugins -s user` |
+| Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
+| Skills CLI 支持的助手 | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-便携命令会复制规范技能目录：`SKILL.md`、两份参考资料、检查器和两套测试语料。Claude Code 和 Codex 插件会加入生命周期钩子、三个存储配置和配置控制器。
+技能包含写作规则、示例和检查脚本。Claude Code 和 Codex 插件还会在会话开始时加载规则，并在每次发送提示时加入一条提醒。插件支持保存写作模式。
 
-| 能力 | 便携版，17 个以上代理 | 插件，Claude Code 和 Codex |
-|---|:---:|:---:|
-| 规则、目录、九种语言、检查器和语料 | 是 | 是 |
-| `SessionStart` 策略，在压缩后重复执行 |  | 是 |
-| `UserPromptSubmit` 回合提醒 |  | 是 |
-| 带存储偏好的 `chat`、`copy` 和 `off` 配置 |  | 是 |
-| 配置控制器和管控指令 |  | 是 |
+[安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载命令。
 
-代理会在每个回合评估技能描述。插件钩子会在注册的会话事件运行，因此 Claude Code 和 Codex 会在会话开始、压缩后及每次提示时收到存储的配置。
+## 选择写作模式
 
-当通用安装与 Claude 插件共用一台机器时，Claude Code 可能显示 `grounded-copy@skills-dir` 为 `Not loaded`，因为插件拥有当前技能名称。插件会提供技能和钩子。
+插件把写作模式称为 *profile*。选择会保存下来，重启后仍然有效。
 
-Codex 缓存也包含检查器，位于以所装版本号命名的目录下：
+| 模式 | 适用场景 |
+|---|---|
+| `chat`（默认） | 日常回复、项目文档和技术说明。 |
+| `copy` | 产品页面和营销文案，增加对宣传用语的要求。 |
+| `off` | 需要保留原文表达，或采用其他写作风格的任务。 |
+
+**Claude Code：**
+
+```text
+/grounded-copy:grounded chat
+/grounded-copy:grounded copy
+/grounded-copy:grounded off
+```
+
+输入 `/grounded-copy:grounded` 查看当前模式。
+
+**Codex：**
+
+```text
+$grounded-profile chat
+$grounded-profile copy
+$grounded-profile off
+$grounded-profile status
+```
+
+需要忠实翻译原文时，先切换到 `off`。否则，助手可能为了遵守写作规则，删掉原文中有意义的对比。你的明确要求优先于技能规则。
+
+## 检查文件
+
+在本仓库的克隆目录中运行：
+
+```bash
+python3 skills/grounded-copy/scripts/copy_lint.py draft.md
+```
+
+如果你的 Python 3 命令是 `python`，请替换命令开头。一次可以传入多个文件路径。脚本只用到 Python 标准库。
+
+检查结果会列出行号、规则名称和命中的文字。根据原始资料修改句子，再检查一次。
+
+| 退出码 | 含义 |
+|---|---|
+| `0` | 未发现命中规则的文字。 |
+| `1` | 有需要检查的措辞。 |
+| `2` | 命令参数有误，或文件读取失败。 |
+
+通过 Codex 插件安装后，也可以使用缓存目录里的脚本：
 
 ```bash
 python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/grounded-copy/scripts/copy_lint.py draft.md
 ```
 
-`codex plugin list` 会打印填入 `<version>` 的号码。
+把 `<version>` 换成 `codex plugin list` 显示的版本号。
 
-<a id="pick-your-profile"></a>
-## 选择配置
-
-三个配置。在 Claude Code 中用 `/grounded-copy:grounded chat|copy|off` 切换，在 Codex 中用 `$grounded-profile chat|copy|off|status` 切换。所选值记录在 `<config-dir>/grounded-copy/profile`，重启后依然保留，直到下一次设置覆盖它。
-
-| 配置 | `SessionStart` 注入内容 | 字节 | 回合提醒 |
-|---|---|---:|---|
-| `chat`（默认） | 引言及其示例、被禁形态及其七种外衣、正向表述、适用范围与优先级、来源规则、悬挂列表 | 3,638 | 一行，写明 `chat` |
-| `copy` | 以上全部，加营销语域和两条漏洞封堵 | 5,099 | 一行，写明 `copy` |
-| `off` | 无 | 0 | 无 |
-
-> [!IMPORTANT]
-> **处理既有文本前请设为 `off`。** 这套规则约束的是你自己撰写的文字。处理原文的译文时，模型可能删掉原文自带的对比，从而改变文本的意思。翻译是最常见的情形：原文写下的对比出自作者的选择，配置仍然开启时，译文会丢掉这层区分。这类工作请先设为 `off`。
-
-> [!TIP]
-> **检查器按设计会报出的一类短语。** `without` 后面的 `-ing` 名词一律按动名词处理，因此 "without warning" 和 "without training" 会报 `without-gerund`。需要这类表达的文案请用 `off` 撰写。
-
-<a id="what-it-does"></a>
-## 功能
-
-- **规则：** `SKILL.md` 定义七种对比形态、悬挂列表、正向约束术语、来源规则和具体改写方法。
-- **检查器：** `copy_lint.py` 使用 Python 3 标准库；干净文件返回退出码 0，发现问题返回 1，参数或 I/O 错误返回 2。
-- **会话策略：** Claude Code 和 Codex 插件在会话开始注入所选策略，并在每次提示时注入简短提醒。
-- **CI 门禁：** 工作流要求坏语料返回 1、好语料在 Ubuntu 和 Windows 上返回 0。
-
-两层。钩子在会话开始、每次压缩后以及每次提示时把规则送入模型上下文，模型对它的遵循程度与遵循任何指令相同。`copy_lint.py` 发现问题时返回退出码 1，对任何指定目标都成立：草稿、差异、CI 路径。
-
-<a id="before-and-after"></a>
 ## 改写示例
 
-左栏引用被拦截的模式，规则栏写出 `copy_lint.py` 打印的规则 id。目录为每种记录的形态提供具体改写。
+以下内容是虚构示例。写自己的文案时，请使用经过核实的事实。左栏特意保留了会被检查脚本报出的表达。
 
-| 被拦截的草稿 | 落地改写 | 规则 |
-|---|---|---|
-| “它不仅仅是一个项目跟踪工具。” | “Acme 把每项任务关联到对应的拉取请求，并每天向 Slack 发布状态摘要。” | `zh-not-just` |
-| “告别隐藏费用。” | “标示价格就是完整价格；发票不会增加费用。” | `zh-not-just` |
-| “它不是善意，是一套算出来的生意。” | “低价来自三处结构调整：砍掉一层渠道、压缩营销预算、把周转天数做到 30 天以内。” | `zh-not-x-but-y` |
-| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 用一个队列覆盖邮件、在线客服、电话和帮助中心。” | `dash-pair-list` |
+| 草稿 | 改写 |
+|---|---|
+| “它不仅仅是一个任务管理工具。” | “它能把任务关联到拉取请求，每天早上把摘要发到 Slack。” |
+| “它不是供应商，而是合作伙伴。” | “你的客户经理每季度都会参加一次规划会。” |
+| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 把邮件、在线客服、电话和帮助中心的请求放进同一个队列。” |
 
-参见完整的[模式目录](skills/grounded-copy/references/patterns.md)。
+[表达示例](skills/grounded-copy/references/patterns.md)中有更多改写方法。
 
-<a id="nine-languages"></a>
-## 九种语言
+## 使用时需要了解的事
 
-检查器按三种已记录的深度覆盖九种语言。
+插件会向助手提供写作指令，不会逐条扫描或拦截聊天回复。需要可重复的检查时，请把文字保存为文件，再运行脚本。
 
-| 层级 | 语言 | 正则表达式匹配内容 |
-|---|---|---|
-| 完整 | 英语 | 58 条规则，每种形态至少有一条规则 |
-| 结构 | 中文、日语、韩语 | 否定与断言之间的有限距离，以及列出的触发词 |
-| 列举 | 俄语、西班牙语、阿拉伯语、法语、德语 | 覆盖弱化、时代结束、超越和设问诱导类别的 6 至 18 个触发短语 |
+检查通过表示文字没有命中脚本中的规则。脚本不能核实事实，也不能保证文字自然。有些日常表达也会命中规则，修改前请确认句意。如果任务需要保留某种被规则拦截的表达，可以切换到 `off`。
 
-目标语言的触发词表提供基础覆盖。译者也要遵循目录规则：翻译有依据的原文，并保留具体事实。
+检查脚本覆盖英语、中文、日语、韩语、俄语、西班牙语、阿拉伯语、法语和德语。英语规则最详细。中文、日语和韩语会检查部分句式，其他语言按短语表匹配。大部分检查逐行进行，分成两行的短语可能漏检。夹在成对破折号中的列表会按段落检查，换行后也能识别。
 
-<a id="documentation"></a>
-## 文档
+## 更多说明
 
-- [安装与接线](skills/grounded-copy/references/setup.md)介绍安装布局、配置、钩子生命周期、上下文成本、CI 和回滚。
-- [模式目录](skills/grounded-copy/references/patterns.md)列出每个记录的触发类别及其改写。
-- [贡献指南](CONTRIBUTING.md)介绍模式、语言和测试语料。
-- [MIT 许可证](LICENSE)说明使用与再分发条款。
+- [安装说明](skills/grounded-copy/references/setup.md)：模式切换、问题排查和项目检查。
+- [写作规则](skills/grounded-copy/SKILL.md)：助手读取的指令。
+- [表达示例](skills/grounded-copy/references/patterns.md)：需要检查的措辞和改写方法。
+- [贡献指南](CONTRIBUTING.md)：如何提交修改。
+- [MIT 许可证](LICENSE)。
