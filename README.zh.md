@@ -144,7 +144,7 @@ $grounded-profile status
 | `copy` | 5,452 | 一行，写明 `copy` |
 | `off` | 0 | 无 |
 
-以上是规则正文的字节数。钩子输出还有 106 字节的头部和切换提示，每轮提醒为 218 字节。在克隆目录中运行 `python3 hooks/grounded_activate.py --self-test` 可以自行测量。
+以上是规则正文的字节数。钩子输出还有 106 字节的头部和切换提示，每轮提醒为 218 字节。
 
 选择保存在 `<config-dir>/grounded-copy/profile`。
 
@@ -194,7 +194,7 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 [表达示例](skills/grounded-copy/references/patterns.md)中有更多改写方法。
 
 <details>
-<summary><strong>四条草稿及各自命中的规则</strong> · 以及 CI 检查的内容</summary>
+<summary><strong>四条草稿及各自命中的规则</strong></summary>
 
 <br>
 
@@ -206,8 +206,6 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 | “告别手工整理。” | “脚本每天早上自动生成摘要。” | `zh-not-just` |
 | “它不是供应商，而是合作伙伴。” | “你的客户经理每季度都会参加一次规划会。” | `zh-not-x-but-y` |
 | “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 把邮件、在线客服、电话和帮助中心的请求放进同一个队列。” | `dash-pair-list` |
-
-CI 会在 Ubuntu 和 Windows 上对两份测试文件运行检查脚本。反例文件必须返回 1，正例文件必须返回 0。
 
 </details>
 

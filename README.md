@@ -141,7 +141,7 @@ $grounded-profile status
 | `copy` | 5,452 | one line naming `copy` |
 | `off` | 0 | none |
 
-Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 218 bytes. Run `python3 hooks/grounded_activate.py --self-test` to measure them in a clone.
+Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 218 bytes.
 
 The choice is saved in `<config-dir>/grounded-copy/profile`.
 
@@ -189,7 +189,7 @@ These are made-up examples. Use facts you can verify in your own copy. The first
 The [pattern guide](skills/grounded-copy/references/patterns.md) has more examples.
 
 <details>
-<summary><strong>Seven drafts and the rule each one reports</strong> · plus what CI checks</summary>
+<summary><strong>Seven drafts and the rule each one reports</strong></summary>
 
 <br>
 
@@ -204,8 +204,6 @@ The rule column gives the rule name the checker prints for that draft.
 | "The tracker sends a summary rather than a full report." | "The tracker sends a five-line summary each morning." | `rather-than` |
 | "We answer tickets instead of filing them." | "We reply to every ticket within four business hours." | `instead-of` |
 | "Experts agree the tracker saves time." | "Teams on the tracker closed 18% more issues last quarter, in our 2026 customer survey." | `vague-experts` |
-
-CI runs the checker on both test files, on Ubuntu and on Windows. The file of bad examples must return 1, and the file of good examples must return 0.
 
 </details>
 
