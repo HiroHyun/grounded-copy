@@ -1,8 +1,19 @@
 README.md	comma-not-appositive	, not
+README.md	comma-not-appositive	, not
 README.md	dash-pair-list	— email, live chat, phone, and the help centre —
+README.md	dash-pair-list	— email, live chat, phone, and the help centre —
+README.md	instead-of	instead of
 README.md	more-than-just	More than just
+README.md	more-than-just	More than just
+README.md	opener-it-is-not	It's not
+README.md	rather-than	rather than
+README.md	vague-experts	Experts agree
+README.zh.md	dash-pair-list	— 邮件、在线客服、电话、帮助中心 —
 README.zh.md	dash-pair-list	— 邮件、在线客服、电话、帮助中心 —
 README.zh.md	zh-not-just	不仅仅是
+README.zh.md	zh-not-just	不仅仅是
+README.zh.md	zh-not-just	告别
+README.zh.md	zh-not-x-but-y	不是供应商，而是
 README.zh.md	zh-not-x-but-y	不是供应商，而是
 skills/grounded-copy/references/patterns.md	ar-not-just	أكثر من مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	ليس مجرد
