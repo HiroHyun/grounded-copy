@@ -1,6 +1,6 @@
 {
   "name": "grounded-copy",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Grounded copy rules, lifecycle hooks, and an explicit profile controller.",
   "author": {
     "name": "HiroHyun",

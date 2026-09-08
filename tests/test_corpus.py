@@ -5,7 +5,7 @@ CONTRIBUTING asks every new pattern to arrive with a line in the corpus that
 catches it. A rule with no line is a rule nobody has seen fire, which is how a
 regex that matches nothing survives review.
 
-Scope bound: this asserts coverage for the per-locale rules only. 38 of the 57
+Scope bound: this asserts coverage for the per-locale rules only. 38 of the 58
 English rules carry no corpus line today, so the same assertion over the whole
 rule set would ship red. Widening it means adding those lines first.
 """

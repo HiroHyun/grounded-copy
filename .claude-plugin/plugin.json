@@ -1,7 +1,7 @@
 {
   "name": "grounded-copy",
   "description": "Puts the grounded prose ruleset in session context at startup and repeats a one-line reminder each turn, so the rules reach chat replies as well as copy tasks.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "author": {
     "name": "HiroHyun",
     "url": "https://github.com/HiroHyun"

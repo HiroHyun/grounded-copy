@@ -12,7 +12,7 @@
         "path": "./dist/codex/grounded-copy"
       },
       "description": "Copy states what the subject is or does with concrete nouns, verbs, and specifics. The generated Codex plugin includes lifecycle hooks, the grounded-copy skill, the $grounded-profile controller, launchers, references, and a deterministic Python linter.",
-      "version": "0.5.1",
+      "version": "0.5.2",
       "license": "MIT",
       "category": "productivity",
       "policy": {

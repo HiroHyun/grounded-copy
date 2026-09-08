@@ -39,6 +39,7 @@ CORE_HEADINGS = (
     "## Positive forms",
     "## Scope and precedence",
     "## Sourcing",
+    "## Suspended lists",
 )
 
 # Rules inside those sections, asserted by their own text so a section that
@@ -56,6 +57,7 @@ CORE_RULES = (
     "**User precedence.**",
     "**read-only**",
     "Name the source, the figure",
+    "banned. Name the one example",
 )
 
 MARKETING_HEADING = "## Marketing register"

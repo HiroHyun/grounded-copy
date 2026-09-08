@@ -58,3 +58,15 @@ Acme 不仅仅是一个工具，告别繁琐的对账流程。
 | In a world where every vendor charges more, Acme holds its price. | Acme charges $12 per seat per month. |
 | Tired of waiting on approvals? | Acme routes an approval to the first available reviewer. |
 | At Acme, we believe in simple pricing. | Acme charges one rate per seat, listed on the pricing page. |
+
+# Suspended lists. The first specimen sits on one line. The second wraps
+# inside the dash pair, which is the shape the line pass cannot see and the
+# block pass reports. The table row below carries three commas between two
+# dashes across two cells and must report nothing: the pipe bounds the gap.
+
+Acme covers every channel — email, live chat, phone, and the help centre — with one queue.
+Acme routes a ticket to the on-call reviewer — a support engineer, a
+solutions engineer, or the account manager — within four business hours.
+
+| Acme answers by email — | chat, phone, and post — every day. |
+Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。

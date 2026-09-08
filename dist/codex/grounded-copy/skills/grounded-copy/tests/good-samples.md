@@ -16,3 +16,5 @@ Acme는 견적을 영업일 기준 1일 이내에 보냅니다.
 표시된 가격은 최종 가격입니다.
 El precio publicado incluye todos los cargos.
 Las cotizaciones llegan en un día hábil.
+Acme covers email, live chat, phone, and the help centre with one queue.
+Acme routes a ticket to the on-call reviewer within four business hours.

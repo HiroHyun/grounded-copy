@@ -1,6 +1,6 @@
 ---
 name: grounded-copy
-description: Enforces grounded, contrast-free prose. Every value proposition and every claim must state what the subject IS or DOES using concrete nouns, verbs, and specifics — never negation, contrast, or hype vocabulary. Use this skill whenever writing, editing, translating, reviewing, or localizing ANY user-facing copy — headlines, taglines, value propositions, landing pages, product descriptions, About pages, CTAs, button labels, meta/OG descriptions, alt text, email subjects and bodies, social posts, ad copy, brochures, or locale/i18n string files — and whenever writing any other prose a person reads — chat replies, commit bodies, pull request descriptions, code comments, documentation, plans, and reports. Use it even if the user does not mention style rules. Also use when the user says "on-brand", "our writing style", "no AI clichés", or asks to check copy.
+description: Enforces grounded, contrast-free prose. Every value proposition and every claim states what the subject IS or DOES with concrete nouns, verbs, and specifics, and carries no negation, contrast, or hype vocabulary. Use this skill whenever writing, editing, translating, reviewing, or localizing ANY user-facing copy: headlines, taglines, value propositions, landing pages, product descriptions, About pages, CTAs, button labels, meta/OG descriptions, alt text, email subjects and bodies, social posts, ad copy, brochures, or locale/i18n string files. Use it for every other stretch of prose a person reads: chat replies, commit bodies, pull request descriptions, code comments, documentation, plans, and reports. Use it even if the user does not mention style rules. Also use when the user says "on-brand", "our writing style", "no AI clichés", or asks to check copy.
 ---
 
 # Grounded Copy
@@ -10,14 +10,13 @@ declarative statement built on concrete nouns, verbs, and specifics: the
 feature, the number, the mechanism.
 
 Grounded: "The tracker links every task to its pull request and posts a
-status digest to Slack each morning." Every claim in it is checkable.
+status digest to Slack each morning."
 
 ## The one banned move (and every disguise it wears)
 
 The banned move is **defining the subject by placing it against
 something** — against what it is *not*, against what *others* do worse,
-against what *era* has ended. Grounded prose states what the subject is
-and does, and attaches a specific.
+against what *era* has ended.
 
 Seven shapes, one rule. `references/patterns.md` carries the trigger
 phrases for each shape and pairs every one with a rewrite.
@@ -33,11 +32,10 @@ phrases for each shape and pairs every one with a rewrite.
 7. **Corporate throat-clearing** — a company preamble before the claim.
 
 Write none of them, and invent no new costume. Every shape blocks with no
-exception; copy that has to carry one — a legal disclaimer, regulatory
-text, a translation of supplied source — is written with the profile off.
-The rewrite is always the same: delete the contrast, then state what the
-subject does, with a specific. A booster word does the same in one word,
-offering praise where a fact belongs; `## Marketing register` holds that
+exception; copy that must carry one, such as a legal disclaimer, is
+written with the profile off. The rewrite is always the same: delete the
+contrast, then state what the subject does, with a specific. A booster
+word does the same in one word; `## Marketing register` holds that
 catalog.
 
 ## Positive forms
@@ -55,27 +53,34 @@ Where no term exists, state the constraint plainly as what holds.
   replies, commit bodies, pull request descriptions, code comments,
   documentation, plans, reports, and all user-facing copy.
 - **Verbatim source material.** Text the user supplied or a system
-  returned — a pasted error, a file's contents, tool output, a quoted
-  document, a real named customer's words — is reproduced character for
-  character; write the prose around it under these rules. An invented
-  testimonial, a hypothetical quote, and a tagline are your own prose,
-  and quotation marks launder nothing.
+  returned, such as a pasted error or a real named customer's words, is
+  reproduced character for character; write the prose around it under
+  these rules. An invented testimonial, a hypothetical quote, and a
+  tagline are your own prose.
 - **Governed everywhere else.** Your prose stays governed wherever it
   sits: inside quotation marks, Markdown fences, code comments, commit
   bodies, and command examples. A fence is a formatting choice and grants
   no exemption.
 - **User precedence.** When the user directs you to write a banned
   pattern, comply and name the rule it conflicts with in one sentence.
-  User instructions outrank this skill; your own convenience does not.
+  User instructions outrank this skill.
 
 ## Sourcing
 
-An unnamed authority offers praise where a checkable fact belongs, which
-is the vagueness twin of contrast. Name the source, the figure, and the
-date, or state the measurable claim. An editorializing participle carries
-the same defect: a clause hung off a comma that praises the subject where a
-fact belongs. Delete the tail and state the fact it gestured at.
-`## Vague attribution` in `references/patterns.md` has the forms.
+An unnamed authority offers praise where a checkable fact belongs.
+Name the source, the figure, and the date, or state the measurable
+claim. An editorializing participle carries the same defect: a clause
+hung off a comma that praises the subject. Delete the tail and state the
+fact it gestured at. `## Vague attribution` in `references/patterns.md`
+has the forms.
+
+## Suspended lists
+
+A pair of dashes that holds a clause open around a list of examples is
+banned. Name the one example the reader needs, inside the clause. Where
+every item changes what the reader does, write the items as a list under
+the sentence. A colon, a parenthesis, or a second sentence keeps the same
+shape and fixes nothing.
 
 ## Marketing register
 
@@ -134,8 +139,9 @@ rationalization below is pre-emptively rejected:
 4. Exit code 1 → rewrite every flagged sentence (never delete-and-shrug:
    replace it with a grounded statement carrying the same information),
    then re-run. Repeat until exit code 0.
-5. Only present copy to the user after a PASS. State in your summary that
-   the copy passed `copy_lint.py`.
+5. Present copy to the user after a PASS. Name the linter result in a task
+   summary for a file you linted. A chat reply runs no gate, so it carries
+   no gate line.
 
 ## Integrity rules (non-negotiable)
 

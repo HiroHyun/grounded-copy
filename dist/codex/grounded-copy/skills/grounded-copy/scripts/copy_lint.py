@@ -2,12 +2,12 @@
 """copy_lint.py — deterministic style gate for marketing/web copy.
 
 Scans text for contrastive-reversal rhetoric, negation-framing, banned
-openers, vague attribution, and hype vocabulary
+openers, suspended lists, vague attribution, and hype vocabulary
 (EN + zh/ru/es/ar/fr/de/ja/ko equivalents).
 
-Every rule blocks. Copy that needs a banned form — a legal disclaimer, terms
-of service, regulatory copy, a billing fact, a translation of supplied source —
-is written with the grounded-copy profile off.
+Every rule blocks. Copy that needs a banned form, such as a legal disclaimer
+or a translation of supplied source, is written with the grounded-copy profile
+off.
 
 Usage:
     python copy_lint.py FILE [FILE ...]
@@ -198,12 +198,35 @@ OPENERS = [
      re.compile(r"At\s+[A-Z][\w&.]*(?:\s+[A-Z][\w&.]*){0,3},?\s+we\b")),
 ]
 
+# ---------------------------------------------------------------------------
+# Paragraph patterns (checked over one block of lines, joined)
+# ---------------------------------------------------------------------------
+# A rule here needs a unit larger than one line. Prose in this repository and
+# in most Markdown wraps near column 76, so a dash pair opens on one line and
+# closes on the next. Measured over this repository: the line unit found 1 of
+# the 9 suspended lists it carries.
+#
+# The gap class excludes the sentence enders, the semicolon, the pipe, and both
+# dashes, so a match stays inside one sentence and inside one table cell. Every
+# quantifier is bounded.
+BLOCK_GAP = r"[^—–.!?;|。！？]"
+# The list separator, in the scripts the rule set covers.
+BLOCK_COMMA = r"[,，、]"
+BLOCK_PATTERNS = [
+    ("dash-pair-list",
+     _c(r"[—–]" + BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA +
+        BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA + BLOCK_GAP + r"{1,200}?[—–]")),
+]
+
 SENTENCE_SPLIT = re.compile(r"(?<=[.!?！？。؟])\s+")
 # Straight quotes only: normalize() folds the curly forms before scan_line
 # strips a sentence, so a curly quote never reaches this set. `|` is here so a
 # sentence in the first cell of a Markdown table row reaches the OPENERS loop;
 # without it every anchored rule missed a specimen quoted inside a table.
 LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|"
+# The block pass strips the Markdown marker and keeps every dash, because a
+# dash is what the block rules match.
+BLOCK_LEAD_STRIP = " \t#*->"
 
 
 def normalize(text):
@@ -226,10 +249,63 @@ def scan_line(line, lineno, findings):
                 findings.append((lineno, name, m.group(0).strip()))
 
 
+def iter_blocks(lines):
+    """Group lines into paragraphs, blank lines separating them.
+
+    Yields (joined_text, offsets). `offsets` holds one (start, lineno) pair per
+    source line, so a match offset maps back to the line that opens it. Each
+    line loses its leading Markdown marker before the join, which keeps a
+    quoted or bulleted paragraph on the same footing as a plain one.
+    """
+    block = []
+    for lineno, line in enumerate(lines, 1):
+        if line.strip():
+            block.append((lineno, line))
+            continue
+        if block:
+            yield _join(block)
+        block = []
+    if block:
+        yield _join(block)
+
+
+def _join(block):
+    parts = []
+    offsets = []
+    position = 0
+    for lineno, line in block:
+        piece = line.lstrip(BLOCK_LEAD_STRIP)
+        offsets.append((position, lineno))
+        position += len(piece) + 1
+        parts.append(piece)
+    return " ".join(parts), offsets
+
+
+def _lineno_at(offsets, position):
+    found = offsets[0][1]
+    for start, lineno in offsets:
+        if start > position:
+            break
+        found = lineno
+    return found
+
+
+def scan_blocks(text, findings):
+    for joined, offsets in iter_blocks(text.splitlines()):
+        norm = normalize(joined)
+        for name, rx in BLOCK_PATTERNS:
+            for m in rx.finditer(norm):
+                findings.append(
+                    (_lineno_at(offsets, m.start()), name, m.group(0).strip())
+                )
+
+
 def scan_text(text):
     findings = []
     for i, line in enumerate(text.splitlines(), 1):
         scan_line(line, i, findings)
+    scan_blocks(text, findings)
+    findings.sort(key=lambda finding: finding[0])
     return findings
 
 
