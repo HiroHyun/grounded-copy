@@ -42,4 +42,6 @@ The checker uses the Python 3 standard library. Keep regular expressions bounded
 
 Submit checker changes with the relevant sample-file changes. The bad samples must return `1`; the good samples must return `0`. Run the existing tests that cover the change. Add tests when they verify new behavior or a bug fix.
 
-The sample files are in `skills/grounded-copy/tests/`. The Python test suites are in the root `tests/` directory. The [setup guide](skills/grounded-copy/references/setup.md) explains the package layout and CI checks.
+The sample files are in `skills/grounded-copy/tests/`. The Python test suites are in the root `tests/` directory. `skills/grounded-copy/` is the source for every package, and the builder copies it into `dist/codex/grounded-copy`, which the Codex marketplace installs from.
+
+`.gitattributes` sets LF for most files and CRLF for `.cmd` and `.ps1` files. The builder compares bytes, so an older clone can report line-ending differences. Inspect `git diff`, run `git add --renormalize .`, and review the staged changes.
