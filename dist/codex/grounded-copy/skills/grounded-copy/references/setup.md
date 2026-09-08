@@ -138,55 +138,6 @@ python3 .style/grounded-copy/scripts/copy_lint.py README.md content/product.md
 
 Use your actual file paths. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
 
-## Maintain this repository
-
-`skills/grounded-copy/` is the source for every package. Edit files there and regenerate the Codex package:
-
-```bash
-python3 scripts/build_codex_adapter.py
-python3 scripts/build_codex_adapter.py --check
-```
-
-The builder copies the skill directory and generates the Codex README, profile skill, and plugin configuration. Commit the generated files with their source changes. The Codex marketplace installs from `dist/codex/grounded-copy`.
-
-After editing `SKILL.md`, run:
-
-```bash
-python3 hooks/grounded_activate.py --self-test
-```
-
-The hooks extract sections by heading and two review bullets by label. Preserve those names when editing prose. The self-test checks that the sections load and that each profile stays within its byte budget. Its output reports the current sizes; byte counts are not token counts.
-
-### Files used by the plugins
-
-| File | Purpose |
-|---|---|
-| `hooks/_preference.py` | Reads and saves the profile. |
-| `hooks/_policy.py` | Reads skill sections and builds instructions and reminders. |
-| `hooks/_hook_io.py` | Reads hook input and finds the plugin directory. |
-| `hooks/grounded_activate.py` | Loads rules at session start. |
-| `hooks/grounded_tracker.py` | Adds prompt reminders and handles Claude profile commands. |
-| `scripts/build_codex_adapter.py` | Builds and checks the Codex package. |
-| `install.py` | Selects and runs installation commands. |
-
-The Claude package uses `.claude-plugin/marketplace.json`. The Codex package uses `.agents/plugins/marketplace.json`. Both use the marketplace name `hirohyun-plugins`.
-
-### Documentation examples
-
-The README comparison tables and pattern guide deliberately quote wording that the checker reports. `tests/citations-baseline.txt` records those findings. After editing them, inspect each finding and run:
-
-```bash
-python3 scripts/check_citations.py
-```
-
-If you intentionally changed a quoted example, update the record with `--write` and review its diff. Rewrite findings in ordinary prose. The checker itself keeps reporting every match.
-
-The sample files under `skills/grounded-copy/tests/` travel with the skill. The Python suites under the root `tests/` directory check the implementation. CI checks the samples, citation record, hook extraction, generated package, and existing suites. Hook and package checks run on Ubuntu and Windows.
-
-### Line endings
-
-`.gitattributes` uses LF for most files and CRLF for `.cmd` and `.ps1` files. The builder compares bytes. If an older clone reports line-ending differences, inspect `git diff`, run `git add --renormalize .`, and review the staged changes.
-
 ## Turn off or remove an installation
 
 To pause the writing rules, select the `off` profile. To remove installations managed by the installer, run this from a repository clone:

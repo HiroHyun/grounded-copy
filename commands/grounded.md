@@ -37,7 +37,3 @@ A successful change prints status and the instructions for the new profile. Thos
 For `--set`, exit code `0` means saved, `1` means saving failed, and `2` means the value was rejected. `--status` returns `0`.
 
 If the plugin path still contains a literal dollar-brace placeholder, report that path substitution failed and stop. On Windows, if `sh` is unavailable, use `hooks/run.cmd` with double quotes around the path. The setup guide shows the launcher commands.
-
-`chat` applies the core writing rules. `copy` adds rules for promotional text. `off` stops the session rules and prompt reminder. The setting survives restarts.
-
-The file is `<config-dir>/grounded-copy/profile`. The config directory is `$CLAUDE_CONFIG_DIR` when set, or `~/.claude` by default. See Profile lifecycle in `skills/grounded-copy/references/setup.md` for how a saved setting reaches the session.
