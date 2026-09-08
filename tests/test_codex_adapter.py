@@ -32,6 +32,7 @@ CODEX_TRACKER = ADAPTER / "hooks" / "grounded_tracker.py"
 GENERATED_INVENTORY = {
     ".codex-plugin/plugin.json",
     "LICENSE",
+    "NOTICE",
     "README.md",
     "hooks/_hook_io.py",
     "hooks/_policy.py",
@@ -165,6 +166,8 @@ class CodexAdapterTests(unittest.TestCase):
     def test_the_license_notice_travels_with_the_package(self):
         notice = (ADAPTER / "LICENSE").read_text(encoding="utf-8")
         self.assertIn("GNU AFFERO GENERAL PUBLIC LICENSE", notice)
+        holder = (ADAPTER / "NOTICE").read_text(encoding="utf-8")
+        self.assertIn("Copyright (C) 2026 HiroHyun", holder)
         self.assertIn("Version 3, 19 November 2007", notice)
         self.assertIn("13. Remote Network Interaction", notice)
 

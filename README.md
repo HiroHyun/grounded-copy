@@ -236,4 +236,4 @@ Some ordinary Japanese and Korean phrases also match; `ja-not-just` and `ko-not-
 - [Writing rules](skills/grounded-copy/SKILL.md): the instructions the agent reads.
 - [Pattern guide](skills/grounded-copy/references/patterns.md): phrases to review and sample rewrites.
 - [Contributing](CONTRIBUTING.md): how to propose changes.
-- [License](LICENSE): AGPL-3.0-only. Copyright 2026 HiroHyun.
+- [License](LICENSE): AGPL-3.0-only. [NOTICE](NOTICE) carries the copyright.

@@ -240,4 +240,4 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 - [写作规则](skills/grounded-copy/SKILL.md)：智能体读取的指令。
 - [表达示例](skills/grounded-copy/references/patterns.md)：需要检查的措辞和改写方法。
 - [贡献指南](CONTRIBUTING.md)：如何提交修改。
-- [许可证](LICENSE)：AGPL-3.0-only。版权所有 2026 HiroHyun。
+- [许可证](LICENSE)：AGPL-3.0-only。版权声明见 [NOTICE](NOTICE)。
