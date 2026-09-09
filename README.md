@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="assets/banner.png" alt="grounded-copy: writing rules and a copy checker for AI agents." width="960">
+  <img src="assets/banner.png" alt="grounded-copy: Output rules and a copy checker for AI agents." width="960">
 </p>
 
 <p align="center">
-  <strong>Writing rules and a copy checker for AI agents.</strong>
+  <strong>Output rules and a copy checker for AI agents.</strong>
 </p>
 
 <p align="center">
@@ -29,9 +29,9 @@
 
 # grounded-copy
 
-You ask an agent (Claude Code, Codex, Cursor, and other AI coding tools) to write your release notes. It describes the update in broad terms, and you still have to say what changed. `grounded-copy` tells the agent to write about the actual features, steps, and facts. You can also run its Python checker on a saved draft.
+AI coding agents (Claude Code, Codex, Cursor) love filler phrases, endless em-dashes, and convoluted phrasing for simple ideas. `grounded-copy` forces your agent to state plain facts directly.
 
-Use it when you write product pages, project docs, or everyday replies. Give the agent the facts you want to include and tell it who will read them.
+When writing copy, AI defaults to absurd hype and sensational claims. `grounded-copy` anchors the output to concrete specs, exact steps, and verifiable facts. It also includes a Python linter script to scan saved drafts for banned fluff.
 
 ## Try it
 
@@ -39,11 +39,11 @@ After installation, ask your agent:
 
 > Write the release notes for version 2.1 of our scheduling app. It adds Google Calendar sync, cuts export time from 40 seconds to 4 seconds, and fixes the duplicate-invite bug. The readers are existing customers. Use grounded-copy, then run the copy checker on the result.
 
-For a product page, supply the details the copy needs:
+For Claude Code or Codex plugin installs, start a new chat with:
 
-> Write a short description of our task tracker. It links tasks to pull requests and posts a summary to Slack each morning. Use grounded-copy.
+> Switch grounded-copy to chat mode.
 
-The agent uses the writing rules to draft and review the text. The checker reports phrases that match its rules. You review whether the result is accurate and reads naturally.
+The agent will follow the rule set and drop decorative filler.
 
 ## Install
 
@@ -74,7 +74,7 @@ The skill includes the rules, examples, and checker. The Claude Code and Codex p
 See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal commands.
 
 <details>
-<summary><strong>More ways in</strong> · installer flags, what each method gives you, a known name collision</summary>
+<summary><strong>More ways in</strong> · Click to expand</summary>
 
 <br>
 
@@ -131,7 +131,7 @@ $grounded-profile status
 > **For a faithful translation, set `off` first.** The rules can otherwise prompt the agent to remove a comparison that belongs to the original text. Your explicit instructions take priority over the skill.
 
 <details>
-<summary><strong>What each mode costs</strong> · bytes added per session, the turn reminder, where the choice is saved</summary>
+<summary><strong>What each mode costs</strong> · Click to expand</summary>
 
 <br>
 
@@ -178,7 +178,7 @@ Use the version shown by `codex plugin list` in place of `<version>`.
 
 ## Before and after
 
-These are made-up examples. Use facts you can verify in your own copy. The first column deliberately contains phrases the checker reports.
+These are made-up examples. Use facts you can verify in your own copy.
 
 | Draft | Rewrite |
 |---|---|
@@ -216,7 +216,7 @@ A passing result means the text matched none of the checker's patterns. It does 
 The checker covers English, Chinese, Japanese, Korean, Russian, Spanish, Arabic, French, and German. English has the most detailed rules. Chinese, Japanese, and Korean checks include sentence patterns. The other languages use phrase lists. Most checks run one line at a time, so a phrase split over two lines can be missed. The check for lists between paired dashes also works across lines in a paragraph.
 
 <details>
-<summary><strong>Language coverage in detail</strong> · 58 English rules, sentence patterns, phrase lists</summary>
+<summary><strong>i18n</strong> · Click to expand</summary>
 
 <br>
 
@@ -236,4 +236,4 @@ Some ordinary Japanese and Korean phrases also match; `ja-not-just` and `ko-not-
 - [Writing rules](skills/grounded-copy/SKILL.md): the instructions the agent reads.
 - [Pattern guide](skills/grounded-copy/references/patterns.md): phrases to review and sample rewrites.
 - [Contributing](CONTRIBUTING.md): how to propose changes.
-- [License](LICENSE): AGPL-3.0-only. [NOTICE](NOTICE) carries the copyright.
+- [License](LICENSE): AGPL-3.0 [NOTICE](NOTICE) carries the copyright.

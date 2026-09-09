@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="assets/banner.png" alt="grounded-copy：给 AI 智能体用的写作规则，附带文案检查脚本。" width="960">
+  <img src="assets/banner.png" alt="grounded-copy：给 AI 智能体用的输出规则，附带文案检查脚本。" width="960">
 </p>
 
 <p align="center">
-  <strong>给 AI 智能体用的写作规则，附带文案检查脚本。</strong>
+  <strong>给 AI 智能体用的输出规则，附带文案检查脚本。</strong>
 </p>
 
 <p align="center">
@@ -29,22 +29,23 @@
 
 # grounded-copy
 
-你让智能体（Claude Code、Codex、Cursor 等 AI 编程工具）写一份版本更新说明，它写了很多宽泛的介绍，你还得补上这一版到底改了什么。`grounded-copy` 会提醒智能体写清楚实际功能、操作步骤和具体事实。草稿保存成文件后，你也可以用 Python 脚本检查措辞。
+你与智能体（Claude code、Codex、Cursor 等）对话，发现TA在短短一段话中频繁使用不是而是，意义不明的破折号，还有更多说不上来的怪异感，明明应该浅显易懂的输出却变得绕口晦涩。`grounded-copy`会时刻提醒智能体，你不需要费心说明。
 
-写产品介绍、项目文档或日常回复时都可以用。把需要保留的事实交给智能体，再告诉它读者是谁。
+你让智能体写文案的时候，TA用词总是夸张，动不动就来一句“核弹眩晕瘫坐”。`grounded-copy`就会提醒智能体写清楚实际功能、操作步骤和具体事实。草稿保存成文件后，你也可以用 Python 脚本检查措辞。
+
 
 <a id="try-it"></a>
 ## 试着用一次
 
-安装后，可以这样对智能体说：
+安装技能后，可以这样对智能体说：
 
-> 帮我写一份日程应用 2.1 版的更新说明。这个版本新增了 Google 日历同步，把导出耗时从 40 秒缩短到 4 秒，并修复了重复发送邀请的问题。读者是现有用户。请用 grounded-copy，完成后运行文案检查。
+> 帮我写一份日程应用 2.1 版的更新说明。这个版本新增了 Google 日历同步，把导出耗时从 40 秒缩短到 4 秒，并修复了重复发送邀请的问题。 请用 grounded-copy，完成后运行文案检查。
 
-写产品介绍时，先给出具体信息：
+选择安装使用 Claude/Codex 插件的话，开启新对话时只要说：
 
-> 帮我写一小段任务管理工具的介绍。它能把任务关联到拉取请求，每天早上把摘要发到 Slack。请用 grounded-copy。
+> 将grounded-copy切换到chat模式与我对话。
 
-智能体会按规则起草并检查文字。检查脚本会列出命中规则的词句。最后还需要你确认内容是否准确、读起来是否顺畅。
+智能体会按规则与你对话，避免死板无谓的句式。
 
 <a id="install"></a>
 ## 安装
@@ -76,7 +77,7 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 [安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载命令。
 
 <details>
-<summary><strong>更多安装方式</strong> · 命令行参数、两种安装方式的差别、一个已知的名称冲突</summary>
+<summary><strong>更多安装方式</strong> · 点击展开</summary>
 
 <br>
 
@@ -134,7 +135,7 @@ $grounded-profile status
 > **需要忠实翻译原文时，先切换到 `off`。** 否则，智能体可能为了遵守写作规则，删掉原文中有意义的对比。你的明确要求优先于技能规则。
 
 <details>
-<summary><strong>每种模式的开销</strong> · 每次会话增加的字节数、每轮提醒、选择保存在哪里</summary>
+<summary><strong>每种模式的开销</strong> · 点击展开</summary>
 
 <br>
 
@@ -183,7 +184,7 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 <a id="before-and-after"></a>
 ## 改写示例
 
-以下内容是虚构示例。写自己的文案时，请使用经过核实的事实。左栏特意保留了会被检查脚本报出的表达。
+以下内容是虚构示例，仅供参考。
 
 | 草稿 | 改写 |
 |---|---|
@@ -219,7 +220,7 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 检查脚本覆盖英语、中文、日语、韩语、俄语、西班牙语、阿拉伯语、法语和德语。英语规则最详细。中文、日语和韩语会检查部分句式，其他语言按短语表匹配。大部分检查逐行进行，分成两行的短语可能漏检。夹在成对破折号中的列表会按段落检查，换行后也能识别。
 
 <details>
-<summary><strong>各语言的覆盖细节</strong> · 58 条英语规则、句式检查、短语表</summary>
+<summary><strong>多语言现状</strong> · 点击展开</summary>
 
 <br>
 
@@ -240,4 +241,4 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 - [写作规则](skills/grounded-copy/SKILL.md)：智能体读取的指令。
 - [表达示例](skills/grounded-copy/references/patterns.md)：需要检查的措辞和改写方法。
 - [贡献指南](CONTRIBUTING.md)：如何提交修改。
-- [许可证](LICENSE)：AGPL-3.0-only。版权声明见 [NOTICE](NOTICE)。
+- [许可证](LICENSE)：AGPL-3.0 版权声明见 [NOTICE](NOTICE)。
