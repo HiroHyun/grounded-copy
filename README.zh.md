@@ -31,7 +31,7 @@
 
 你与智能体（Claude code、Codex、Cursor 等）对话，发现TA在短短一段话中频繁使用不是而是，意义不明的破折号，还有更多说不上来的怪异感，明明应该浅显易懂的输出却变得绕口晦涩。`grounded-copy`会时刻提醒智能体，你不需要费心说明。
 
-你让智能体写文案的时候，TA用词总是夸张，动不动就来一句“核弹眩晕瘫坐”。`grounded-copy`就会提醒智能体写清楚实际功能、操作步骤和具体事实。草稿保存成文件后，你也可以用 Python 脚本检查措辞。
+你让智能体写文案的时候，TA用词总是夸张，动不动就来一句“核弹级发布”，宽泛又空洞。`grounded-copy`就会提醒智能体写清楚实际功能、操作步骤和具体事实。草稿保存成文件后，你也可以用 Python 脚本检查措辞。
 
 
 <a id="try-it"></a>
@@ -241,4 +241,4 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 - [写作规则](skills/grounded-copy/SKILL.md)：智能体读取的指令。
 - [表达示例](skills/grounded-copy/references/patterns.md)：需要检查的措辞和改写方法。
 - [贡献指南](CONTRIBUTING.md)：如何提交修改。
-- [许可证](LICENSE)：AGPL-3.0 版权声明见 [NOTICE](NOTICE)。
+- [许可证](LICENSE)：AGPL-3.0-only 版权声明见 [NOTICE](NOTICE)。
