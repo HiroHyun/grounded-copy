@@ -140,7 +140,7 @@ $grounded-profile status
 <br>
 
 | 模式 | 会话开始时增加的字节 | 每轮提醒 |
-|---|---:|---|
+|:---:|:---:|:---:|
 | `chat`（默认） | 3,693 | 一行，写明 `chat` |
 | `copy` | 5,118 | 一行，写明 `copy` |
 | `off` | 0 | 无 |
@@ -149,10 +149,10 @@ $grounded-profile status
 
 选择保存在 `<config-dir>/grounded-copy/profile`。
 
+</details>
+
 > [!TIP]
 > **有些日常表达也会命中规则。** `without-gerund` 规则会报出 `without` 后面的所有 `-ing` 名词。如果任务需要保留某种被规则拦截的表达，可以切换到 `off`。
-
-</details>
 
 <a id="check-a-file"></a>
 ## 检查文件
