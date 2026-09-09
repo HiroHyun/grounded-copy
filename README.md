@@ -136,7 +136,7 @@ $grounded-profile status
 <br>
 
 | Profile | Bytes added at session start | Turn reminder |
-|---|---:|---|
+|:---:|:---:|:---:|
 | `chat` (default) | 3,693 | one line naming `chat` |
 | `copy` | 5,118 | one line naming `copy` |
 | `off` | 0 | none |
@@ -145,10 +145,10 @@ Those counts are the rules themselves. The hook adds 106 more bytes for its head
 
 The choice is saved in `<config-dir>/grounded-copy/profile`.
 
+</details>
+
 > [!TIP]
 > **Some ordinary phrases also match the rules.** The `without-gerund` rule reports any `-ing` noun after `without`. Use `off` when the task requires wording that the style rules would reject.
-
-</details>
 
 ## Check a file
 
