@@ -1,6 +1,6 @@
 ---
 name: grounded-copy
-description: Write clear prose using concrete facts. Use when writing, editing, translating, or reviewing text that people read, including chat replies, documentation, product copy, reports, commit messages, and code comments. Also use when asked to check copy or remove AI clichés. Preserve supplied facts and follow the user's requested style.
+description: Write clear prose using concrete facts. Use when writing, editing, translating, or reviewing text that people read, including chat replies, documentation, product copy, reports, commit messages, and code comments. Also use when asked to check copy or remove AI clichés. Select relevant facts, keep claims accurate, and follow the user's requested style.
 ---
 
 # Grounded Copy
@@ -23,7 +23,7 @@ Avoid explaining a subject through a contrast with an alternative. State its fea
 
 Every shape blocks with no exception while the profile is active. When required wording contains one, such as a legal disclaimer, use the profile off.
 
-To rewrite, name the useful claim and keep the facts from the source. Read `references/patterns.md` for phrases and examples. A new phrase can use the same pattern, so review the whole passage as well as individual sentences.
+To rewrite, name the useful claim and use facts supported by the source. Read `references/patterns.md` for phrases and examples. A new phrase can use the same pattern, so review the whole passage as well as individual sentences.
 
 ## Positive forms
 
@@ -42,13 +42,17 @@ If a term would make the sentence harder to understand, describe the behavior in
 
 Support a claim with a fact the reader can check. Name the source, the figure, and the date when citing a measurement. Give the actual feature or behavior when a number is unnecessary. Treat sample numbers as examples; replace them with verified values before publication.
 
-Remove praise that adds no information to a sentence. Keep the fact it was meant to describe. If the source lacks a needed detail, ask for it or write a claim supported by the available information.
+Select facts for the reader's purpose. Omit incidental details. Keep the claims you include accurate, with any qualification that changes the conclusion or next step. Honor explicit requests for complete coverage or verbatim reproduction.
+
+Remove empty praise. If a needed fact is missing, ask for it or limit the claim to the available evidence.
 
 ## Suspended lists
 
 A list inserted between paired dashes can separate the subject from its verb. This form is banned. Name the one example the reader needs inside the sentence. Delete examples that add no useful information. If each item affects what the reader does, put the items in a list below the sentence.
 
 Changing the dashes to a colon or parentheses keeps the same problem. Review lists split across lines or sentences too.
+
+In English and other languages, review adjacent sentences for dense lists and repeated frames. Omit enumerations that restate one point. Splitting them across sentences or bullets keeps the same catalog. Read Paragraph review in `references/patterns.md`. For Chinese prose, also read Chinese paragraph review for translationese, redundant words, and register shifts.
 
 ## Marketing register
 
@@ -63,15 +67,15 @@ Apply this section to product pages and promotional text. It covers headlines, b
 Use these checks during review:
 
 - **"The banned string doesn't appear."** Check the structure of the argument. A contrast can span two sentences, separate paragraphs, or a heading and its description. Rewrite the claim around the subject's own behavior.
-- **"It's a different language."** Apply the rules to the meaning in every language. Read the multilingual section of `references/patterns.md` before writing in Chinese, Russian, Spanish, Arabic, French, German, Japanese, or Korean. Keep the source facts and write idiomatic sentences. When the task requires faithful translation of a supplied contrast, follow the user's instructions and use the profile off.
+- **"It's a different language."** Apply the rules to the meaning in every language. Read the multilingual section of `references/patterns.md` before writing in Chinese, Russian, Spanish, Arabic, French, German, Japanese, or Korean. Keep retained claims accurate and write idiomatic sentences. When the task requires faithful translation of a supplied contrast, follow the user's instructions and use the profile off.
 - **"A synonym isn't on the list."** Review what the word means in context. Replace vague praise with a supported fact, even when the checker accepts the word.
 - **"The linter passed, so it's fine."** A pass means the checker found no matching patterns. It does not verify facts or judge every sentence. Read the draft for unsupported claims, awkward wording, and contrasts spread across sentences. The human-language review remains part of the task.
 - **"I'll adjust the linter/config."** Fix the prose when a check fails. Keep the checker and its rules intact. The integrity rules below apply throughout the task.
 
 ## Workflow
 
-1. Identify the reader, the task, and the facts supplied. Draft sentences that explain what the subject does.
-2. Read the draft for the seven patterns above. Check meaning and natural phrasing in each language.
+1. Identify what the reader needs to understand or do. Select the facts that serve that purpose and omit incidental details. Read Paragraph review before drafting; Chinese tasks also use Chinese paragraph review. Use a register suited to the reader.
+2. Review the whole passage for the seven patterns above and repeated enumeration, including English noun lists and action chains. Delete details that add no useful meaning, including accurate details. Check retained claims against the source and honor explicit completeness requirements. Use a list when the reader needs its individual items.
 3. Run the checker on the saved files:
 
    ```bash
@@ -84,7 +88,7 @@ Use these checks during review:
    cat draft.md | python3 <skill-path>/scripts/copy_lint.py --stdin
    ```
 
-4. Exit code 1 means the checker found matches. Rewrite the flagged sentences using the same facts, then run it again. Exit code 2 means a command or file error; fix that error and rerun.
+4. Exit code 1 means the checker found matches. Rewrite the flagged sentences using supported facts relevant to the task, then run it again. Exit code 2 means a command or file error; fix that error and rerun.
 5. Present the files after a pass. Report the check result for files you checked. A normal chat reply needs no check-result line.
 
 ## Integrity rules

@@ -192,7 +192,7 @@ skills/grounded-copy/references/patterns.md	zh-not-just	颠覆
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 followed by 是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是…而是, 不在于…而在于, 不是…，是, and 而不是
-skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是善意，是
-skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是图便宜才买的，而是
-skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是等，而是
-skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是零食，是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是免费帮忙，是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是提交后立即生效，而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是看中价格，而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是等待，而是

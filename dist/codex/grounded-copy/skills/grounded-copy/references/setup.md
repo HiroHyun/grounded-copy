@@ -10,6 +10,16 @@ The default is `chat`. Try asking the assistant to rewrite a short paragraph usi
 
 The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles and automatic session reminders come with the Claude Code and Codex plugins.
 
+### After an update
+
+Claude Code loads the plugin from the repository-root package. Codex uses the generated adapter. Skills CLI and manual installations use the canonical skill directory. Each channel carries the same writing guidance and references.
+
+Update through the tool that manages your installation. For a manually copied skill, replace the complete skill directory so its references stay in sync. After updating a plugin, reload it and start a new session to load the revised policy. Check the installed version through the host's plugin list; a source checkout can contain changes awaiting publication.
+
+For English and other languages, read [Paragraph review](patterns.md#paragraph-review). Chinese writing also uses [Chinese paragraph review](patterns.md#chinese-paragraph-review). The examples show how to select useful detail and reduce repeated enumeration. This requires contextual review by the agent; `copy_lint.py` retains its existing pattern checks.
+
+The shared policy selects facts relevant to the task and allows incidental details to be omitted. Exact reproduction applies to verbatim quotations. Explicit requests for complete coverage still govern the result. Reload the updated plugin and start a fresh session so earlier preservation instructions leave the active context.
+
 ## Install from a clone
 
 The launchers need Python 3. The Skills CLI also needs Node.js and `npx`.
@@ -122,7 +132,7 @@ Add this instruction to the project's `CLAUDE.md`, `AGENTS.md`, or the instructi
 
 ```markdown
 Read `.style/grounded-copy/SKILL.md` when writing or editing prose.
-Preserve the supplied facts and follow the user's requested style.
+Select facts relevant to the task, keep claims accurate, and follow the user's requested style.
 Run `python3 .style/grounded-copy/scripts/copy_lint.py <changed files>`.
 Rewrite flagged copy and rerun the check. Keep the checker intact.
 Report the result for files you checked.

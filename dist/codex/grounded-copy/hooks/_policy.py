@@ -61,15 +61,13 @@ CLAUDE_SWITCH = "/grounded-copy:grounded chat|copy|off"
 
 SWITCH_LINE = "Profile: {profile}. Switch: `{switch}`."
 
-# Every clause here holds a boundary the session policy states once and the
-# turn reminder keeps in reach. `Prefer established positive terms` came out:
-# `## Positive forms` carries it at session start. The fence clause stays
-# because a fence is where the observed slips landed, and the rules govern
-# inside one.
+# The reminder carries the sourcing rule's selection cue each turn. Exact
+# reproduction applies to quotations; other source material may be summarized.
 TURN_REMINDER = (
     "GROUNDED PROSE ({profile}). State what the subject is or does. No "
     "contrast, era-ending, or hype. Rules hold in quotes, fences, and "
-    "comments; given source text stays verbatim. A user instruction outranks "
+    "comments. Select relevant facts; verbatim quotations stay exact. "
+    "A user instruction outranks "
     "this; name the rule."
 )
 
@@ -92,14 +90,13 @@ DIRECTIVE_LEAD_EMPTY = (
     "rules for this profile arrive at the next session start."
 )
 
-# Extraction sizes measured 2026-09-08 against SKILL.md, after the quoted
-# banned forms moved to skills/grounded-copy/references/patterns.md so SKILL.md passes copy_lint.py
-# itself. These count the rules body alone; hook stdout adds the header and the
-# switch line, 106 bytes. The READMEs publish the same figures under "What each
+# Extraction sizes measured 2026-09-15 against SKILL.md, including fact selection
+# and paragraph review across languages. These count the rules body alone; hook stdout
+# adds the header and switch line, 106 bytes. The READMEs publish the same figures under "What each
 # mode costs", and `grounded_activate.py --self-test` reports the current ones.
-BASELINE_BYTES = 3693
-COPY_BASELINE_BYTES = 5118
-TURN_BASELINE_BYTES = 218
+BASELINE_BYTES = 4212
+COPY_BASELINE_BYTES = 5645
+TURN_BASELINE_BYTES = 239
 
 # (floor, ceiling) per payload. The ceiling bounds growth against the figure the
 # documentation published when the range was set: a payload that passes it fails

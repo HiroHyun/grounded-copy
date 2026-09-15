@@ -137,11 +137,11 @@ $grounded-profile status
 
 | Profile | Bytes added at session start | Turn reminder |
 |:---:|:---:|:---:|
-| `chat` (default) | 3,693 | one line naming `chat` |
-| `copy` | 5,118 | one line naming `copy` |
+| `chat` (default) | 4,212 | one line naming `chat` |
+| `copy` | 5,645 | one line naming `copy` |
 | `off` | 0 | none |
 
-Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 218 bytes.
+Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 239 bytes.
 
 The choice is saved in `<config-dir>/grounded-copy/profile`.
 
@@ -184,7 +184,7 @@ These are made-up examples. Use facts you can verify in your own copy.
 |---|---|
 | "More than just a project tracker." | "The tracker links tasks to pull requests and posts a summary to Slack each morning." |
 | "Acme is a partner, not a vendor." | "Your account manager joins your planning meeting each quarter." |
-| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme puts email, live chat, phone, and help centre requests in one queue." |
+| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." |
 
 The [pattern guide](skills/grounded-copy/references/patterns.md) has more examples.
 
@@ -199,7 +199,7 @@ The rule column gives the rule name the checker prints for that draft.
 |---|---|---|
 | "More than just a project tracker." | "The tracker links tasks to pull requests and posts a summary to Slack each morning." | `more-than-just` |
 | "Acme is a partner, not a vendor." | "Your account manager joins your planning meeting each quarter." | `comma-not-appositive` |
-| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme puts email, live chat, phone, and help centre requests in one queue." | `dash-pair-list` |
+| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." | `dash-pair-list` |
 | "It's not a task list. It's a workflow." | "Each task moves through review, and the tracker marks it done." | `opener-it-is-not` |
 | "The tracker sends a summary rather than a full report." | "The tracker sends a five-line summary each morning." | `rather-than` |
 | "We answer tickets instead of filing them." | "We reply to every ticket within four business hours." | `instead-of` |
@@ -214,6 +214,8 @@ The plugin gives the agent instructions. It does not scan or block each chat rep
 A passing result means the text matched none of the checker's patterns. It does not verify facts or guarantee natural writing. Some ordinary phrases also match the rules. Review the meaning before you change them; use `off` when the task requires wording that the style rules would reject.
 
 The checker covers English, Chinese, Japanese, Korean, Russian, Spanish, Arabic, French, and German. English has the most detailed rules. Chinese, Japanese, and Korean checks include sentence patterns. The other languages use phrase lists. Most checks run one line at a time, so a phrase split over two lines can be missed. The check for lists between paired dashes also works across lines in a paragraph.
+
+The [paragraph review](skills/grounded-copy/references/patterns.md#paragraph-review) guides English and other languages toward useful detail and away from repeated enumeration. It includes English examples and a [Chinese supplement](skills/grounded-copy/references/patterns.md#chinese-paragraph-review). Both active plugin profiles and the portable skill carry this guidance. These judgments require context; the checker retains its existing pattern checks.
 
 <details>
 <summary><strong>i18n</strong> · Click to expand</summary>

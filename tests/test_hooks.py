@@ -214,6 +214,29 @@ class OutputEncodingTests(HookCase):
 
 
 class SessionPolicyTests(HookCase):
+    def test_paragraph_review_reaches_profile_switch_startup_and_compaction(self):
+        for profile in ("chat", "copy"):
+            switched = self.run_hook(
+                TRACKER, ["--plugin-root", str(REPO_ROOT), "--set", profile]
+            )
+            outputs = [switched, self.activate(), self.activate(
+                '{"hook_event_name":"SessionStart","source":"compact"}'
+            )]
+            for result in outputs:
+                with self.subTest(profile=profile, output=result.args):
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertIn("Chinese paragraph review", result.stdout)
+                    self.assertIn("In English and other languages", result.stdout)
+                    self.assertIn("Read Paragraph review", result.stdout)
+                    self.assertIn("Splitting them across sentences or bullets", result.stdout)
+                    self.assertIn("references/patterns.md", result.stdout)
+                    self.assertIn("Select facts for the reader's purpose", result.stdout)
+                    self.assertIn("Omit incidental details", result.stdout)
+                    self.assertIn("Honor explicit requests for complete coverage", result.stdout)
+                    for concern in ("dense lists", "repeated frames", "translationese",
+                                    "redundant words", "register shifts"):
+                        self.assertIn(concern, result.stdout)
+
     def test_both_profiles_carry_every_core_section(self):
         for value in ("chat", "copy"):
             with self.subTest(profile=value):
@@ -321,7 +344,8 @@ class TurnReminderTests(HookCase):
         "State what the subject is or does.",
         "No contrast, era-ending, or hype.",
         "Rules hold in quotes, fences, and comments",
-        "given source text stays verbatim",
+        "Select relevant facts",
+        "verbatim quotations stay exact",
         "A user instruction outranks this",
     )
     CEILING = 260

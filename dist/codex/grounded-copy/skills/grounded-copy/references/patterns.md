@@ -156,8 +156,26 @@ First remove the inserted list. Keep one example inside the sentence if the read
 |---|---|
 | "Copy that has to carry one — a legal disclaimer, regulatory text, a translation of supplied source — is written with the profile off." | "Use the profile off for required wording, such as a legal disclaimer." |
 | "Pointed at text that carries a contrast of its own — a translation, a quoted passage, a legal clause, a billing statement — the model can delete that contrast." | "The assistant can remove a comparison when translating supplied text." |
-| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme covers email, live chat, phone, and the help centre with one queue." |
+| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." |
 | "The hook — a read of the preference, a read of the skill file, a write to stdout — runs in 40 ms." | "The hook runs in 40 ms." |
+
+## Paragraph review
+
+Apply this review to English and other languages. Decide what the reader needs from the paragraph, then select the facts that serve that purpose. A fact can be accurate and still be unnecessary here. Omit incidental details and keep the resulting claim within what the source supports.
+
+In English, watch for noun lists and chains of actions that keep restating one point. Adjacent sentences can form a catalog even when each sentence names only one item. Remove details that add no useful meaning, then explain the supported relationship between the remaining ideas. A shorter summary must keep any condition that changes the reader's conclusion or next step.
+
+Changing commas to semicolons or moving each item into a bullet leaves the information burden intact. Review the whole passage again after cutting: make its point clear and connect the remaining details. Length and punctuation counts alone do not establish quality. This review is part of writing; the checker retains its existing pattern checks.
+
+These invented examples show deliberate omissions. Their contexts establish what the reader needs.
+
+| Context | Draft | Rewrite |
+|---|---|---|
+| A user-facing update about a fix for interrupted uploads. | "The fix changes chunk IDs, checksum records, and retry queues so interrupted uploads can resume." | "Interrupted uploads can now resume." |
+| Introduce a task board's purpose to a new teammate. | "The board shows owners, dates, priorities, and next steps. Teammates can see who owns each task and what happens next." | "The board shows who owns each task and what happens next." |
+| Explain how a team reviews blocked tasks. | "We read the status. We read the owner. We read the due date. We read the blocker note. We then ask the owner what is needed to unblock the task." | "We review blocked tasks and ask each owner what is needed to continue." |
+
+The first example omits implementation details that belong in an explanation of the fix. The third removes a sequence of routine actions that obscured the meeting's purpose. Use the task to decide what belongs. Explicit requests for a complete inventory still require complete coverage.
 
 ## Positive forms
 
@@ -195,11 +213,55 @@ Some listed phrases have ordinary factual uses too. Japanese だけでなく and
 
 The `zh-not-x-but-y` rule matches 不是 followed by 是 within 32 characters in one sentence. It also covers forms such as 并不是…而是, 不在于…而在于, 不是…，是, and 而不是. Read the sentence in context before changing it.
 
-| Draft | Rewrite |
-|---|---|
-| “消费者不是图便宜才买的，而是真心认可产品本身的价值。” | “在这次购车调查中，用户最常提到的两个原因是续航和车内空间。” |
-| “关键不是等，而是看你的用车场景适不适合现在入手。” | “选车前，先确认日常行驶距离和充电条件。” |
-| “它不是善意，是一套算出来的生意。” | “这家公司通过减少中间销售环节来降低价格。” |
-| “量贩零食卖的不是零食，是情绪和节奏。” | “店里按口味摆放零食，顾客可以自行搭配购买。” |
+以下情境均为教学示例。改写依据同一行给出的事实，实际使用时请换成有来源的内容。
 
-这些句子用于演示写法。实际使用时，请核实调查结果和产品信息，并保留原文中有依据的内容。
+| 已知情境 | Draft | Rewrite |
+|---|---|---|
+| 问卷要求填写一个购买主因；这20位受访者均填写了续航。 | “这20位受访者不是看中价格，而是看中续航。” | “这20位受访者填报的购买主因是续航。” |
+| 表单要求提交前填写每天的行驶距离和充电条件。 | “关键不是等待，而是先填好每天的行驶距离和充电条件。” | “提交前，请填写每天的行驶距离和充电条件。” |
+| 服务说明规定每单收取2元服务费。 | “这项服务不是免费帮忙，是每单收取2元的生意。” | “这项服务每单收取2元服务费。” |
+| 申请在提交后进入审批流程，获管理员批准后生效。 | “申请不是提交后立即生效，而是获管理员批准后生效。” | “提交的申请经管理员批准后生效。” |
+
+## Chinese paragraph review
+
+先明确读者需要知道什么，再决定写哪些事实。材料可以包含很多细节，正文应有所取舍。允许概括和删去无助于主旨的信息，包括正确的技术细节；保留下来的说法须有依据，省略关键限定不能造成误导。用户明确要求完整清单或逐字引用时，按要求处理。
+
+以下五项用于写作和审读，检查脚本目前未检测这些问题。顿号数量只可辅助观察。审读时先看内容是否值得写，再看句式是否自然。
+
+### 密集列举
+
+先写清本段要让读者理解的一件事。检查每个列举项是否影响读者理解主旨或完成操作，无助于这两者的细节可以删去。几个项目共同说明一个意思时，可直接概括。技术术语也需要经过取舍，不能仅因事实正确或原文出现就全部写入正文。
+
+把所有细节拆成短句、改成项目符号或换用逗号，仍然是在逐项复述。先删减内容，再调整句子之间的衔接。说明先后或因果时须有依据，避免给剩余事实补造关系。
+
+### 模板化句式
+
+留意相邻句子反复使用同一种起句，如“真正需要……的是……”。判断每句是否推进了论述；重复的意思可以删去，留下的内容按具体主语和动作展开。句式的变化应服务于表达。
+
+### 欧化表达
+
+检查主语、谓语和分句之间的衔接，按汉语习惯直接交代事情。引导句接冒号时，确认后文确实解释了前文；空泛的转接语可删去或并入具体陈述。冒号本身是正常标点，短句也可自然地引出说明。仅凭一种句式无法断定它源于英语翻译。
+
+### 近距离冗余
+
+检查同一句或相邻句中的重复词是否分别表达了必要信息。重复的时间范围、程度或判断若无新增含义，可合并表达。需要保持术语一致、明确指代或强调持续时间时，保留原词。避免仅为避重而换上含义不同的近义词。
+
+### 语体一致
+
+按读者和任务选择语体。日常解释可使用自然口语，申请材料和报告应采用相应的正式表达。技术术语可以配合通俗解释，判断重点是措辞是否适合这段文字。修改突兀的口语或书面套话时，保持原意；“愿意付费”不能改成“已经盈利”。文言词和商业术语也可能增加理解负担。
+
+### 按用途取舍和改写
+
+以下是新编的教学情境。改写只选用与用途相关的事实；保留下来的表述忠实于已知情境。
+
+| 情境 | Draft | Rewrite |
+|---|---|---|
+| 面向普通用户的更新说明：修复了上传中断后重复提交的问题，实现涉及分片编号、校验记录和重试队列。 | “这次更新修改了分片编号、校验记录、重试队列，解决了上传中断后重复提交的问题。” | “修复了上传中断后重复提交的问题。” |
+| 学习提醒：报名本周五截止；学员应按自己的时间选择课程。 | “真正需要留意的是本周五的报名截止时间。真正需要考虑的是自己的时间能否配合课程。” | “报名本周五截止，选课时请确认上课时间是否合适。” |
+| 编辑记录：两篇摘要都缺少实验条件。 | “对于第二篇摘要，情况也是这样的：它同样缺少实验条件。” | “第二篇摘要也缺少实验条件。” |
+| 项目计划：系统运行期间，设备状态的采集和显示均持续进行。 | “系统运行期间，将持续采集设备状态，并持续显示设备状态。” | “系统运行期间，将持续采集并显示设备状态。” |
+| 正式报告：系统提供告警记录查询，方便人员追溯故障。 | “系统提供告警记录查询，出了岔子就翻一翻。” | “系统提供告警记录查询，便于工作人员追溯故障。” |
+
+第一行省去了真实的实现细节，因为更新说明的读者只需知道问题已经修复。若任务是解释修复原理，这些细节才可能需要展开。信息是否出现，由本次任务决定。
+
+删减后检查结论是否准确。例如“目前仅向受邀用户开放测试”可写为“测试目前仅对受邀用户开放”，适用范围和测试状态仍然清楚。涉及操作的关键条件也须交代；用户要求核对完整清单时，应完整列出。普通介绍无需主动扩展成清单。

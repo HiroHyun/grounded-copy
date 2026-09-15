@@ -8,6 +8,8 @@ The plugin loads rules at session start and adds a reminder with each prompt. En
 
 The setting lives at `$CODEX_HOME/grounded-copy/profile`, or `~/.codex/grounded-copy/profile` by default.
 
+Both active profiles guide paragraph review in English and other languages. Select facts that serve the reader and omit incidental detail. The pattern guide includes English and Chinese examples. The checker retains its existing pattern checks.
+
 Read the [setup guide](skills/grounded-copy/references/setup.md) for details and the [pattern guide](skills/grounded-copy/references/patterns.md) for examples. The repository has [English](https://github.com/HiroHyun/grounded-copy#readme) and [Chinese](https://github.com/HiroHyun/grounded-copy/blob/main/README.zh.md) introductions.
 
 ## Package maintenance

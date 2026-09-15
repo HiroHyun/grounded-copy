@@ -9,6 +9,7 @@ the license notice that travels with a redistributed package.
 
 import json
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -55,6 +56,36 @@ GENERATED_INVENTORY = {
 
 
 class CodexAdapterTests(unittest.TestCase):
+    def test_claude_package_and_portable_skill_paths_resolve(self):
+        catalog = json.loads(
+            (REPO_ROOT / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
+        )
+        entry = next(p for p in catalog["plugins"] if p["name"] == "grounded-copy")
+        self.assertEqual(entry["source"], "./")
+        manifest = json.loads(
+            (REPO_ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(manifest["skills"], ["./skills/"])
+        self.assertEqual(entry["skills"], manifest["skills"])
+        for event, script in (("SessionStart", "grounded_activate.py"),
+                              ("UserPromptSubmit", "grounded_tracker.py")):
+            command = manifest["hooks"][event][0]["hooks"][0]["command"]
+            argv = shlex.split(command.replace("${CLAUDE_PLUGIN_ROOT}", REPO_ROOT.as_posix()))
+            self.assertEqual(argv[0], "sh")
+            launcher = Path(argv[1])
+            self.assertTrue(launcher.is_file(), str(launcher))
+            self.assertEqual(argv[2], script)
+            self.assertTrue((launcher.parent / script).is_file())
+        skill = (SKILL_SOURCE / "SKILL.md").read_text(encoding="utf-8")
+        for relative in ("references/patterns.md", "references/setup.md",
+                         "scripts/copy_lint.py", "tests/bad-samples.md", "tests/good-samples.md"):
+            with self.subTest(path=relative):
+                self.assertIn(relative, skill)
+                self.assertTrue((SKILL_SOURCE / relative).is_file())
+        guide = (SKILL_SOURCE / "references" / "patterns.md").read_text(encoding="utf-8")
+        self.assertIn("## Chinese paragraph review", guide)
+        self.assertIn("## Paragraph review", guide)
+
     def test_every_skill_file_ships_byte_identical(self):
         """The whole canonical directory travels, at the same relative path.
 
@@ -254,6 +285,8 @@ class CodexAdapterTests(unittest.TestCase):
             block = payload["hookSpecificOutput"]
             self.assertEqual(block["hookEventName"], "UserPromptSubmit")
             self.assertIn("GROUNDED PROSE (chat)", block["additionalContext"])
+            self.assertIn("Select relevant facts", block["additionalContext"])
+            self.assertIn("verbatim quotations stay exact", block["additionalContext"])
             self.assertEqual(self._hook(CODEX_TRACKER, ("--set", "off"), home=home).returncode, 0)
             self.assertEqual(self._hook(CODEX_TRACKER, home=home).stdout, "")
 
@@ -269,6 +302,29 @@ class CodexAdapterTests(unittest.TestCase):
             self.assertEqual(rejected.returncode, 2)
             self.assertIn("unknown profile", rejected.stdout)
             self.assertEqual((home / "grounded-copy" / "profile").read_text().strip(), "off")
+
+    def test_paragraph_review_reaches_codex_switch_startup_and_compaction(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for profile in ("chat", "copy"):
+                outputs = [self._hook(CODEX_TRACKER, ("--set", profile), home=tmp)]
+                for source in ("startup", "compact"):
+                    outputs.append(self._hook(
+                        CODEX_ACTIVATE, home=tmp, stdin=json.dumps({"source": source})
+                    ))
+                for result in outputs:
+                    with self.subTest(profile=profile, output=result.args):
+                        self.assertEqual(result.returncode, 0, result.stderr)
+                        self.assertIn("Chinese paragraph review", result.stdout)
+                        self.assertIn("In English and other languages", result.stdout)
+                        self.assertIn("Read Paragraph review", result.stdout)
+                        self.assertIn("Splitting them across sentences or bullets", result.stdout)
+                        self.assertIn("references/patterns.md", result.stdout)
+                        self.assertIn("Select facts for the reader's purpose", result.stdout)
+                        self.assertIn("Omit incidental details", result.stdout)
+                        self.assertIn("Honor explicit requests for complete coverage", result.stdout)
+                        for concern in ("dense lists", "repeated frames", "translationese",
+                                        "redundant words", "register shifts"):
+                            self.assertIn(concern, result.stdout)
 
     def test_codex_profile_failed_write_preserves_existing_preference(self):
         with tempfile.TemporaryDirectory() as tmp:

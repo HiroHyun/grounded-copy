@@ -1,3 +1,17 @@
+# 0.6.0
+
+## English
+
+- Revises the shared rules to reduce repeated enumeration in English and Chinese.
+- Adds Chinese paragraph guidance to the plugins and standalone skill. Thanks to @moAxins for the feedback.
+- Grounds Chinese rewrite examples in stated facts.
+
+## 简体中文
+
+- 调整共享写作规则，中英文均按读者需要取舍信息，减少反复列举。
+- 同步更新 Claude Code/Codex 插件和技能，新增中文段落审读指导，覆盖冗余句式和密集列举（感谢 @moAxins 的反馈）等多种问题。仅安装技能也会获得相同的指导和参考信息。
+- 为中文对比句改写示例补充已知情境，确保改写中的事实有据可依。
+
 # 0.5.4
 
 ## English

@@ -141,11 +141,11 @@ $grounded-profile status
 
 | 模式 | 会话开始时增加的字节 | 每轮提醒 |
 |:---:|:---:|:---:|
-| `chat`（默认） | 3,693 | 一行，写明 `chat` |
-| `copy` | 5,118 | 一行，写明 `copy` |
+| `chat`（默认） | 4,212 | 一行，写明 `chat` |
+| `copy` | 5,645 | 一行，写明 `copy` |
 | `off` | 0 | 无 |
 
-以上是规则正文的字节数。钩子输出还有 106 字节的头部和切换提示，每轮提醒为 218 字节。
+以上是规则正文的字节数。钩子输出还有 106 字节的头部和切换提示，每轮提醒为 239 字节。
 
 选择保存在 `<config-dir>/grounded-copy/profile`。
 
@@ -190,7 +190,7 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 |---|---|
 | “它不仅仅是一个任务管理工具。” | “它能把任务关联到拉取请求，每天早上把摘要发到 Slack。” |
 | “它不是供应商，而是合作伙伴。” | “你的客户经理每季度都会参加一次规划会。” |
-| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 把邮件、在线客服、电话和帮助中心的请求放进同一个队列。” |
+| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 将客户请求集中到一个队列中处理。” |
 
 [表达示例](skills/grounded-copy/references/patterns.md)中有更多改写方法。
 
@@ -206,7 +206,7 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 | “它不仅仅是一个任务管理工具。” | “它能把任务关联到拉取请求，每天早上把摘要发到 Slack。” | `zh-not-just` |
 | “告别手工整理。” | “脚本每天早上自动生成摘要。” | `zh-not-just` |
 | “它不是供应商，而是合作伙伴。” | “你的客户经理每季度都会参加一次规划会。” | `zh-not-x-but-y` |
-| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 把邮件、在线客服、电话和帮助中心的请求放进同一个队列。” | `dash-pair-list` |
+| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 将客户请求集中到一个队列中处理。” | `dash-pair-list` |
 
 </details>
 
@@ -218,6 +218,8 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 检查通过表示文字没有命中脚本中的规则。脚本不能核实事实，也不能保证文字自然。有些日常表达也会命中规则，修改前请确认句意。如果任务需要保留某种被规则拦截的表达，可以切换到 `off`。
 
 检查脚本覆盖英语、中文、日语、韩语、俄语、西班牙语、阿拉伯语、法语和德语。英语规则最详细。中文、日语和韩语会检查部分句式，其他语言按短语表匹配。大部分检查逐行进行，分成两行的短语可能漏检。夹在成对破折号中的列表会按段落检查，换行后也能识别。
+
+[段落审读指南](skills/grounded-copy/references/patterns.md#paragraph-review)要求中英文等语言的写作均按读者需要取舍信息，减少反复列举，并提供英文示例和[中文补充指导](skills/grounded-copy/references/patterns.md#chinese-paragraph-review)。插件的 `chat` 与 `copy` 模式及独立技能均包含这份指导。段落质量需要结合语境判断，检查脚本保留原有的模式匹配规则。
 
 <details>
 <summary><strong>多语言现状</strong> · 点击展开</summary>
