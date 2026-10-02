@@ -8,8 +8,9 @@ value comes back in the tracker's message as a repr and exits 2, so a mangled
 argument shows up as a changed string and a swallowed exit code shows up as a 0.
 
 Scope bound: the launcher cases measure what the launchers do with the
-arguments a shell already parsed. PowerShellHookCommandTests covers the parsing
-before a launcher starts, for the hook strings the hosts hand to PowerShell.
+arguments a shell already parsed. WindowsHookCommandTests covers the parsing
+before a launcher starts, for the hook strings hosts hand to PowerShell and
+cmd.exe.
 """
 
 import json
@@ -56,11 +57,12 @@ ADAPTER = REPO_ROOT / "dist" / "codex" / "grounded-copy"
 SETUP_GUIDE = REPO_ROOT / "skills" / "grounded-copy" / "references" / "setup.md"
 POWERSHELLS = [name for name in ("pwsh", "powershell") if shutil.which(name)]
 
-# A plugin root holding a space, an apostrophe, `;`, `&`, and `%`, which
-# PowerShell keeps literal inside double quotes. HOSTILE_NAME adds `$` and a
-# backtick, which PowerShell expands there. Codex substitutes ${PLUGIN_ROOT} as
-# text, so a root holding either character stays beyond the `&` form's reach.
-POWERSHELL_ROOT_NAME = "gc 'x;y&z v%"
+# A plugin root holding a space, an apostrophe, `;`, parentheses, and `%`,
+# which pass through both PowerShell double quotes and `cmd /d /c`. Codex
+# substitutes ${PLUGIN_ROOT} as text, so two limits remain: PowerShell expands
+# a `$` or backtick in the root, and `cmd /c` splits a root holding `&`.
+# HOSTILE_NAME carries all three.
+WINDOWS_ROOT_NAME = "gc o'k;x (v) 5%"
 
 # The override references/setup.md gives for Claude Code without Git Bash.
 CLAUDE_POWERSHELL_COMMANDS = (
@@ -290,40 +292,44 @@ class RunCmdTests(LauncherCase):
         self.assertEqual(result.stdout, "")
 
 
-@unittest.skipUnless(os.name == "nt", "PowerShell hook commands run on Windows only")
-class PowerShellHookCommandTests(LauncherCase):
-    """Hook strings run the way each host hands them to PowerShell.
+@unittest.skipUnless(os.name == "nt", "Windows hook commands run on Windows only")
+class WindowsHookCommandTests(LauncherCase):
+    """Hook strings run the way each host hands them to its Windows shell.
 
-    Codex Desktop runs `commandWindows` through `pwsh -NoProfile -Command` after
-    replacing ${PLUGIN_ROOT} as text. Claude Code without Git Bash runs hook
-    commands the same way after rewriting ${CLAUDE_PLUGIN_ROOT} to
-    ${env:CLAUDE_PLUGIN_ROOT}. PowerShell parses a quoted path in command
-    position as a string, so a script name after it is a ParserError and the
-    hook exits 1 before run.cmd starts. The `&` call operator runs the path.
+    Codex Desktop 0.159.2 runs `commandWindows` through
+    `pwsh -NoProfile -Command` after replacing ${PLUGIN_ROOT} as text; another
+    build could use cmd.exe, so the Codex strings run under both. Claude Code
+    without Git Bash runs hook commands through PowerShell after rewriting
+    ${CLAUDE_PLUGIN_ROOT} to ${env:CLAUDE_PLUGIN_ROOT}. PowerShell parses a
+    quoted path in command position as a string, so a script name after it is
+    a ParserError and the hook exits 1 before run.cmd starts.
 
     PowerShell localizes its error text, so these cases read the exit code and
     stdout, and pass stderr along as the failure message.
     """
 
-    def setUp(self):
-        super().setUp()
-        if not POWERSHELLS:
-            self.skipTest("neither pwsh nor powershell is on PATH")
-
     def plugin_root(self, *trees):
         """Copy each (source, relative destination) tree under one root."""
-        root = self.config_dir / POWERSHELL_ROOT_NAME
+        root = self.config_dir / WINDOWS_ROOT_NAME
         ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
         for source, relative in trees:
             shutil.copytree(str(source), str(root / relative), ignore=ignore)
         return root
 
-    def assertHooksRun(self, commands, env):
-        for shell in POWERSHELLS:
+    def assertHooksRun(self, commands, env, shells):
+        if not shells:
+            self.skipTest("neither pwsh nor powershell is on PATH")
+        for shell in shells:
             for event, command in commands:
                 with self.subTest(shell=shell, event=event):
+                    if shell == "cmd":
+                        # A raw command line, as a host that quotes for
+                        # cmd.exe would pass it.
+                        argv = 'cmd.exe /d /s /c "' + command + '"'
+                    else:
+                        argv = [shell, "-NoProfile", "-NonInteractive", "-Command", command]
                     result = self.launch(
-                        [shell, "-NoProfile", "-NonInteractive", "-Command", command],
+                        argv,
                         env=env,
                         stdin=json.dumps({"hook_event_name": event, "session_id": "test"}),
                     )
@@ -336,7 +342,7 @@ class PowerShellHookCommandTests(LauncherCase):
                         output = json.loads(result.stdout)["hookSpecificOutput"]
                         self.assertEqual(output["hookEventName"], "UserPromptSubmit")
 
-    def test_codex_command_windows_runs_under_powershell(self):
+    def test_codex_command_windows_runs_under_powershell_and_cmd(self):
         root = self.plugin_root((ADAPTER, ""))
         hooks = json.loads((root / "hooks" / "hooks.json").read_text(encoding="utf-8"))
         commands = [
@@ -345,7 +351,10 @@ class PowerShellHookCommandTests(LauncherCase):
             for event in ("SessionStart", "UserPromptSubmit")
         ]
         # An empty CODEX_HOME holds no profile file, which resolves to chat.
-        self.assertHooksRun(commands, {"CODEX_HOME": str(self.config_dir / "codex-home")})
+        self.assertHooksRun(
+            commands, {"CODEX_HOME": str(self.config_dir / "codex-home")},
+            POWERSHELLS + ["cmd"],
+        )
 
     def test_claude_setup_guide_override_runs_under_powershell(self):
         guide = SETUP_GUIDE.read_text(encoding="utf-8")
@@ -359,7 +368,7 @@ class PowerShellHookCommandTests(LauncherCase):
             (event, command.replace("${CLAUDE_PLUGIN_ROOT}", "${env:CLAUDE_PLUGIN_ROOT}"))
             for event, command in CLAUDE_POWERSHELL_COMMANDS
         ]
-        self.assertHooksRun(commands, {"CLAUDE_PLUGIN_ROOT": str(root)})
+        self.assertHooksRun(commands, {"CLAUDE_PLUGIN_ROOT": str(root)}, POWERSHELLS)
 
 
 if __name__ == "__main__":

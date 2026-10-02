@@ -117,13 +117,16 @@ MANIFEST = json.dumps({
     "skills": "./skills/", "hooks": "./hooks/hooks.json",
 }, indent=2) + "\n"
 
-# Codex on Windows runs commandWindows through `pwsh -NoProfile -Command`.
-# PowerShell parses a leading quoted path as a string and rejects the script
-# name after it. The call operator `&` runs the quoted run.cmd path with the
-# script name as its argument.
+# Codex Desktop 0.159.2 runs commandWindows through `pwsh -NoProfile -Command`,
+# which parses a leading quoted path as a string and rejects the script name
+# after it. Each string starts with the bare word `cmd`, which PowerShell and
+# cmd.exe both run as a command, so the line works under either shell. `/d`
+# skips the cmd AutoRun registry entry, which could print into hook output.
+# A root holding `&` splits under `cmd /c`; tests/test_launchers.py measures
+# the characters that pass.
 HOOKS = json.dumps({"hooks": {
-    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": '& "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_activate.py'}]}],
-    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": '& "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_tracker.py'}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_activate.py'}]}],
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_tracker.py'}]}],
 }}, indent=2) + "\n"
 
 PROFILE_SKILL = """---
