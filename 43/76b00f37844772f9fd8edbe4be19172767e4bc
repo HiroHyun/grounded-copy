@@ -1,0 +1,33 @@
+tests/test_codex_adapter.py
+  s_12648ab0a46534::t_c4fe217b703be3 14,35-36,62-94
+README.zh.md
+  s_12648ab0a46534::t_87c2bec6e17b94 2
+.claude-plugin/marketplace.json
+  s_12648ab0a46534::t_9f0da4f02b1466 12
+.claude-plugin/plugin.json
+  s_12648ab0a46534::t_9f0da4f02b1466 3
+scripts/build_codex_adapter.py
+  s_12648ab0a46534::t_9f0da4f02b1466 112,118-143,276-277
+README.md
+  s_12648ab0a46534::t_87c2bec6e17b94 2
+.agents/plugins/marketplace.json
+  s_12648ab0a46534::t_9f0da4f02b1466 14
+dist/codex/grounded-copy/.codex-plugin/plugin.json
+  s_12648ab0a46534::t_2131dd01a7cbf5 4,19-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4376b00f37844772f9fd8edbe4be19172767e4bc",
+  "prompts": {},
+  "sessions": {
+    "s_12648ab0a46534": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0fc85-3cf0-7260-8a9c-295afe8e8c78",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
