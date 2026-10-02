@@ -1,0 +1,19 @@
+RELEASE_NOTES.md
+  s_366de63ac39655::t_c6947f2ebb7a30 6-8,13-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7341ae3e4275314769ada61b08ce036765a02c0b",
+  "prompts": {},
+  "sessions": {
+    "s_366de63ac39655": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1186c96-545c-4953-a66b-99aa509c369a",
+        "model": "unknown"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
