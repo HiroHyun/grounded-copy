@@ -354,6 +354,15 @@ class CodexAdapterTests(unittest.TestCase):
         rendered = json.dumps(hooks)
         self.assertIn("PLUGIN_ROOT", rendered)
         self.assertIn("commandWindows", rendered)
+        # Codex runs commandWindows through PowerShell, which needs the call
+        # operator to run a quoted path. test_launchers runs these on Windows.
+        for event, script in (("SessionStart", "grounded_activate.py"),
+                              ("UserPromptSubmit", "grounded_tracker.py")):
+            with self.subTest(event=event):
+                self.assertEqual(
+                    hooks["hooks"][event][0]["hooks"][0]["commandWindows"],
+                    '& "${PLUGIN_ROOT}\\hooks\\run.cmd" ' + script,
+                )
         for corpus in ("bad-samples.md", "good-samples.md"):
             with self.subTest(corpus=corpus):
                 self.assertTrue((SKILL_DIR / "tests" / corpus).exists())

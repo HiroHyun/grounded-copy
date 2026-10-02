@@ -117,9 +117,13 @@ MANIFEST = json.dumps({
     "skills": "./skills/", "hooks": "./hooks/hooks.json",
 }, indent=2) + "\n"
 
+# Codex on Windows runs commandWindows through `pwsh -NoProfile -Command`.
+# PowerShell parses a leading quoted path as a string and rejects the script
+# name after it. The call operator `&` runs the quoted run.cmd path with the
+# script name as its argument.
 HOOKS = json.dumps({"hooks": {
-    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": '"${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_activate.py'}]}],
-    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": '"${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_tracker.py'}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": '& "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_activate.py'}]}],
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": '& "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_tracker.py'}]}],
 }}, indent=2) + "\n"
 
 PROFILE_SKILL = """---

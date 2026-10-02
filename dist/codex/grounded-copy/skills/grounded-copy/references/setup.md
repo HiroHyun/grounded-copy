@@ -95,14 +95,16 @@ Both launchers look for `python` and then `python3`, using the first command tha
 
 ### Claude Code hooks on Windows
 
-The Claude manifest uses `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. If `sh` is unavailable to Claude Code, change both hook commands in your installed plugin manifest to use the Windows launcher:
+The Claude manifest uses `sh "${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"`. Claude Code runs plugin hooks in Git Bash when it finds one, and Git Bash supplies `sh`. Install Git for Windows, or set `CLAUDE_CODE_GIT_BASH_PATH` to its `bash.exe`, and the manifest works as shipped.
 
-```text
-"${CLAUDE_PLUGIN_ROOT}/hooks/run.cmd" grounded_activate.py
-"${CLAUDE_PLUGIN_ROOT}/hooks/run.cmd" grounded_tracker.py
+Without Git Bash, Claude Code runs hooks in PowerShell, where `sh` is missing and each hook exits with code 1. To use the Windows launcher, change the two hook entries in your installed plugin manifest:
+
+```json
+"SessionStart": [{"hooks": [{"type": "command", "shell": "powershell", "command": "& \"${CLAUDE_PLUGIN_ROOT}\\hooks\\run.cmd\" grounded_activate.py", "timeout": 5}]}],
+"UserPromptSubmit": [{"hooks": [{"type": "command", "shell": "powershell", "command": "& \"${CLAUDE_PLUGIN_ROOT}\\hooks\\run.cmd\" grounded_tracker.py", "timeout": 5}]}]
 ```
 
-Keep double quotes around the path. Reload the plugin after editing the commands. An upgrade can replace edits in the installed cache.
+Keep the `&` call operator: PowerShell reads a command that starts with a quoted path as a string and rejects the script name after it. Reload the plugin after editing the commands. An upgrade can replace edits in the installed cache.
 
 If an error shows a literal `${CLAUDE_PLUGIN_ROOT}` or `${PLUGIN_ROOT}`, the host did not substitute the plugin path. Check the plugin configuration before running the command again.
 

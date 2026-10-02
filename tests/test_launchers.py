@@ -7,12 +7,12 @@ below read those promises out of observable behavior: an unrecognized `--set`
 value comes back in the tracker's message as a repr and exits 2, so a mangled
 argument shows up as a changed string and a swallowed exit code shows up as a 0.
 
-Scope bound: these cases measure what the launchers do with the arguments a
-shell already parsed. The shell parsing that happens before a launcher starts
-lives at the manifest seam, which references/setup.md records as an open
-residual under `### Shell-facing values`.
+Scope bound: the launcher cases measure what the launchers do with the
+arguments a shell already parsed. PowerShellHookCommandTests covers the parsing
+before a launcher starts, for the hook strings the hosts hand to PowerShell.
 """
 
+import json
 import os
 import shutil
 import subprocess
@@ -51,6 +51,24 @@ HOSTILE_NAME = "gc $t`e;s&t v"
 POSIX_HOSTILE_NAME = HOSTILE_NAME + '"'
 
 UNKNOWN_SCRIPTS = ("evil.py", "../../etc/passwd", "grounded_tracker", "")
+
+ADAPTER = REPO_ROOT / "dist" / "codex" / "grounded-copy"
+SETUP_GUIDE = REPO_ROOT / "skills" / "grounded-copy" / "references" / "setup.md"
+POWERSHELLS = [name for name in ("pwsh", "powershell") if shutil.which(name)]
+
+# A plugin root holding a space, an apostrophe, `;`, `&`, and `%`, which
+# PowerShell keeps literal inside double quotes. HOSTILE_NAME adds `$` and a
+# backtick, which PowerShell expands there. Codex substitutes ${PLUGIN_ROOT} as
+# text, so a root holding either character stays beyond the `&` form's reach.
+POWERSHELL_ROOT_NAME = "gc 'x;y&z v%"
+
+# The override references/setup.md gives for Claude Code without Git Bash.
+CLAUDE_POWERSHELL_COMMANDS = (
+    ("SessionStart",
+     r'& "${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd" grounded_activate.py'),
+    ("UserPromptSubmit",
+     r'& "${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd" grounded_tracker.py'),
+)
 
 
 class LauncherCase(unittest.TestCase):
@@ -98,18 +116,19 @@ class LauncherCase(unittest.TestCase):
         except OSError as exc:
             self.skipTest("filesystem refused the hostile name: %s" % exc)
 
-    def launch(self, argv):
-        env = os.environ.copy()
-        env.pop("CLAUDE_PLUGIN_ROOT", None)
-        env["CLAUDE_CONFIG_DIR"] = str(self.config_dir)
+    def launch(self, argv, env=None, stdin=""):
+        merged = os.environ.copy()
+        merged.pop("CLAUDE_PLUGIN_ROOT", None)
+        merged["CLAUDE_CONFIG_DIR"] = str(self.config_dir)
+        merged.update(env or {})
         return subprocess.run(
-            argv, env=env, cwd=str(REPO_ROOT),
+            argv, env=merged, cwd=str(REPO_ROOT),
             # Both entrypoints call drain_stdin(), which reads to EOF. With no
             # input the child inherits the caller's stdin, so the suite hangs
             # wherever that stays open — measured against a backgrounded shell,
-            # where the run sat for an hour. An empty string closes the pipe,
-            # matching the host, which writes the event and closes.
-            input="",
+            # where the run sat for an hour. A string closes the pipe after
+            # writing, matching the host, which writes the event and closes.
+            input=stdin,
             text=True, encoding="utf-8", capture_output=True,
         )
 
@@ -269,6 +288,78 @@ class RunCmdTests(LauncherCase):
         result = self.launch(["cmd", "/c", str(RUN_CMD)])
         self.assertEqual(result.returncode, EXIT_OK)
         self.assertEqual(result.stdout, "")
+
+
+@unittest.skipUnless(os.name == "nt", "PowerShell hook commands run on Windows only")
+class PowerShellHookCommandTests(LauncherCase):
+    """Hook strings run the way each host hands them to PowerShell.
+
+    Codex Desktop runs `commandWindows` through `pwsh -NoProfile -Command` after
+    replacing ${PLUGIN_ROOT} as text. Claude Code without Git Bash runs hook
+    commands the same way after rewriting ${CLAUDE_PLUGIN_ROOT} to
+    ${env:CLAUDE_PLUGIN_ROOT}. PowerShell parses a quoted path in command
+    position as a string, so a script name after it is a ParserError and the
+    hook exits 1 before run.cmd starts. The `&` call operator runs the path.
+
+    PowerShell localizes its error text, so these cases read the exit code and
+    stdout, and pass stderr along as the failure message.
+    """
+
+    def setUp(self):
+        super().setUp()
+        if not POWERSHELLS:
+            self.skipTest("neither pwsh nor powershell is on PATH")
+
+    def plugin_root(self, *trees):
+        """Copy each (source, relative destination) tree under one root."""
+        root = self.config_dir / POWERSHELL_ROOT_NAME
+        ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
+        for source, relative in trees:
+            shutil.copytree(str(source), str(root / relative), ignore=ignore)
+        return root
+
+    def assertHooksRun(self, commands, env):
+        for shell in POWERSHELLS:
+            for event, command in commands:
+                with self.subTest(shell=shell, event=event):
+                    result = self.launch(
+                        [shell, "-NoProfile", "-NonInteractive", "-Command", command],
+                        env=env,
+                        stdin=json.dumps({"hook_event_name": event, "session_id": "test"}),
+                    )
+                    if event == "SessionStart":
+                        self.assertMarkers(
+                            result, "GROUNDED PROSE ACTIVE", "Profile: chat. Switch:"
+                        )
+                    else:
+                        self.assertMarkers(result, "GROUNDED PROSE (chat)")
+                        output = json.loads(result.stdout)["hookSpecificOutput"]
+                        self.assertEqual(output["hookEventName"], "UserPromptSubmit")
+
+    def test_codex_command_windows_runs_under_powershell(self):
+        root = self.plugin_root((ADAPTER, ""))
+        hooks = json.loads((root / "hooks" / "hooks.json").read_text(encoding="utf-8"))
+        commands = [
+            (event, hooks["hooks"][event][0]["hooks"][0]["commandWindows"]
+             .replace("${PLUGIN_ROOT}", str(root)))
+            for event in ("SessionStart", "UserPromptSubmit")
+        ]
+        # An empty CODEX_HOME holds no profile file, which resolves to chat.
+        self.assertHooksRun(commands, {"CODEX_HOME": str(self.config_dir / "codex-home")})
+
+    def test_claude_setup_guide_override_runs_under_powershell(self):
+        guide = SETUP_GUIDE.read_text(encoding="utf-8")
+        for _event, command in CLAUDE_POWERSHELL_COMMANDS:
+            self.assertTrue(json.dumps(command) in guide,
+                            "setup.md lacks the override %s" % json.dumps(command))
+        root = self.plugin_root(
+            (REPO_ROOT / "hooks", "hooks"), (REPO_ROOT / "skills", "skills")
+        )
+        commands = [
+            (event, command.replace("${CLAUDE_PLUGIN_ROOT}", "${env:CLAUDE_PLUGIN_ROOT}"))
+            for event, command in CLAUDE_POWERSHELL_COMMANDS
+        ]
+        self.assertHooksRun(commands, {"CLAUDE_PLUGIN_ROOT": str(root)})
 
 
 if __name__ == "__main__":

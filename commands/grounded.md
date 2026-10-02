@@ -36,4 +36,13 @@ A successful change prints status and the instructions for the new profile. Thos
 
 For `--set`, exit code `0` means saved, `1` means saving failed, and `2` means the value was rejected. `--status` returns `0`.
 
-If the plugin path still contains a literal dollar-brace placeholder, report that path substitution failed and stop. On Windows, if `sh` is unavailable, use `hooks/run.cmd` with double quotes around the path. The setup guide shows the launcher commands.
+If the plugin path still contains a literal dollar-brace placeholder, report that path substitution failed and stop.
+
+On Windows without `sh`, run the matching PowerShell command. The `&` call operator starts the quoted launcher path:
+
+```powershell
+& '${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd' grounded_tracker.py --set chat
+& '${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd' grounded_tracker.py --set copy
+& '${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd' grounded_tracker.py --set off
+& '${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd' grounded_tracker.py --status
+```

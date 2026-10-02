@@ -1,3 +1,15 @@
+# 0.6.1
+
+## English
+
+- Fixes the Codex plugin hooks on Windows. Codex runs them through PowerShell, which now starts the launcher with the `&` call operator.
+- Corrects the Windows instructions for Claude Code without Git Bash. The setup guide and `/grounded-copy:grounded` give PowerShell commands that start the launcher.
+
+## 简体中文
+
+- 修复 Codex 插件在 Windows 上的钩子。Codex 通过 PowerShell 运行钩子，现在用 `&` 调用运算符运行启动器。
+- 更正未安装 Git Bash 时 Claude Code 的 Windows 说明。安装指南和 `/grounded-copy:grounded` 提供可运行启动器的 PowerShell 命令。
+
 # 0.6.0
 
 ## English
