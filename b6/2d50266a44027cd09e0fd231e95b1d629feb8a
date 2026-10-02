@@ -1,0 +1,37 @@
+tests/test_codex_adapter.py
+  s_366de63ac39655::t_727238dbbff9ca 357-358,364
+dist/codex/grounded-copy/hooks/hooks.json
+  s_366de63ac39655::t_b04e06acc6f437 9,20
+tests/test_launchers.py
+  s_366de63ac39655::t_81cc70d9c09d78 371
+  s_366de63ac39655::t_1c27842324e2f7 11-13
+  s_366de63ac39655::t_b2646c7797b9de 60-65
+  s_366de63ac39655::t_7cf3d73de7cede 295-297,299-305,313,319-322,325-330,332
+  s_366de63ac39655::t_a350b85c167c1f 345
+  s_366de63ac39655::t_8451662dd84a64 354-357
+RELEASE_NOTES.md
+  s_366de63ac39655::t_67c72381162d8e 5
+  s_366de63ac39655::t_fa4508b46a17b0 10
+scripts/build_codex_adapter.py
+  s_366de63ac39655::t_c194423eb15f1b 128
+  s_366de63ac39655::t_2b35fda7315e27 129
+  s_366de63ac39655::t_7b7d6b96fae7a3 120-126
+.github/workflows/copy-lint.yml
+  s_366de63ac39655::t_fd9f5d46da1080 33-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b62d50266a44027cd09e0fd231e95b1d629feb8a",
+  "prompts": {},
+  "sessions": {
+    "s_366de63ac39655": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1186c96-545c-4953-a66b-99aa509c369a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
