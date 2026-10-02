@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="grounded-copy：给 AI 智能体用的输出规则，附带文案检查脚本。" width="960">
+  <img src="assets/banner.png" alt="Grounded Copy：帮助 AI 清楚直接地表达。" width="960">
 </p>
 
 <p align="center">

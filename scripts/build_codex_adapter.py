@@ -109,12 +109,38 @@ def _codex_entrypoint(name):
 
 MANIFEST = json.dumps({
     "name": "grounded-copy", "version": VERSION,
-    "description": "Grounded copy rules, lifecycle hooks, and an explicit profile controller.",
+    "description": "Help AI write clearly and get to the point.",
     "author": {"name": "HiroHyun", "url": "https://github.com/HiroHyun"},
     "homepage": "https://github.com/HiroHyun/grounded-copy",
     "repository": "https://github.com/HiroHyun/grounded-copy",
     "license": "AGPL-3.0-only", "keywords": ["copywriting", "style", "linter", "i18n"],
     "skills": "./skills/", "hooks": "./hooks/hooks.json",
+    "interface": {
+        "displayName": "Grounded Copy",
+        "shortDescription": "Help AI write clearly and get to the point.",
+        "longDescription": (
+            "Grounded Copy guides AI agents to explain ideas in plain language, "
+            "use concrete facts, and remove filler. It applies writing rules to "
+            "everyday replies and technical explanations, with a separate mode "
+            "for marketing copy. A Python checker flags supported wording "
+            "patterns in saved drafts for review."
+        ),
+        "developerName": "HiroHyun",
+        "category": "Productivity",
+        "capabilities": ["Instructions", "Lifecycle hooks"],
+        "websiteURL": "https://github.com/HiroHyun/grounded-copy",
+        "defaultPrompt": [
+            "Switch Grounded Copy to chat mode and keep your replies clear and direct.",
+            "Rewrite this text in plain language. Keep the meaning and facts, and remove filler.",
+            "Write copy from the facts I provide, then run the copy checker on the saved draft.",
+        ],
+        "brandColor": "#2457D6",
+        "brandColorDark": "#91B4FF",
+        "logo": "./assets/logo.png",
+        "logoDark": "./assets/logo-dark.png",
+        "composerIcon": "./assets/logo.png",
+        "composerIconDark": "./assets/logo-dark.png",
+    },
 }, indent=2) + "\n"
 
 # Codex Desktop 0.159.2 runs commandWindows through `pwsh -NoProfile -Command`,
@@ -247,6 +273,8 @@ def _skill_payloads():
 
 def payloads():
     items = _skill_payloads()
+    for name in ("logo.png", "logo-dark.png"):
+        items.append(_copy_source("assets/" + name, "assets/" + name))
     items.append(_copy_source("LICENSE", "LICENSE"))
     items.append(_copy_source("NOTICE", "NOTICE"))
     items.append(_copy_source("hooks/_policy.py", "hooks/_policy.py"))

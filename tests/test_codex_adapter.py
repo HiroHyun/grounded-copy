@@ -11,6 +11,7 @@ import json
 import os
 import shlex
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -31,6 +32,8 @@ CODEX_TRACKER = ADAPTER / "hooks" / "grounded_tracker.py"
 # that walk under review, so an added or dropped file is a decision someone
 # made here.
 GENERATED_INVENTORY = {
+    "assets/logo.png",
+    "assets/logo-dark.png",
     ".codex-plugin/plugin.json",
     "LICENSE",
     "NOTICE",
@@ -56,6 +59,39 @@ GENERATED_INVENTORY = {
 
 
 class CodexAdapterTests(unittest.TestCase):
+    def test_listing_metadata_and_packaged_icons(self):
+        manifest = json.loads(
+            (ADAPTER / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+        )
+        listing = manifest["interface"]
+        self.assertEqual(listing["displayName"], "Grounded Copy")
+        self.assertEqual(listing["shortDescription"],
+                         "Help AI write clearly and get to the point.")
+        self.assertEqual(listing["developerName"], manifest["author"]["name"])
+        self.assertEqual(listing["websiteURL"], manifest["homepage"])
+        self.assertEqual(listing["category"], "Productivity")
+        self.assertEqual(listing["capabilities"], ["Instructions", "Lifecycle hooks"])
+        self.assertTrue(listing["longDescription"])
+        prompts = listing["defaultPrompt"]
+        self.assertEqual(len(prompts), 3)
+        self.assertEqual(len(set(prompts)), 3)
+        for prompt in prompts:
+            self.assertTrue(0 < len(prompt) <= 128)
+            self.assertNotIn("\n", prompt)
+        for field, filename in (("logo", "logo.png"), ("logoDark", "logo-dark.png"),
+                                ("composerIcon", "logo.png"),
+                                ("composerIconDark", "logo-dark.png")):
+            with self.subTest(field=field):
+                self.assertEqual(listing[field], "./assets/" + filename)
+                data = (ADAPTER / "assets" / filename).read_bytes()
+                self.assertEqual(data, (REPO_ROOT / "assets" / filename).read_bytes())
+                self.assertLess(len(data), 5 * 1024 * 1024)
+                self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+                width, height = struct.unpack(">II", data[16:24])
+                self.assertEqual(width, height)
+                self.assertTrue(48 <= width <= 4096)
+                self.assertEqual(data[25], 6, "icons must retain RGBA transparency")
+
     def test_claude_package_and_portable_skill_paths_resolve(self):
         catalog = json.loads(
             (REPO_ROOT / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8")
