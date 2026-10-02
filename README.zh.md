@@ -184,14 +184,6 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 <a id="before-and-after"></a>
 ## 改写示例
 
-以下内容是虚构示例，仅供参考。
-
-| 草稿 | 改写 |
-|---|---|
-| “它不仅仅是一个任务管理工具。” | “它能把任务关联到拉取请求，每天早上把摘要发到 Slack。” |
-| “它不是供应商，而是合作伙伴。” | “你的客户经理每季度都会参加一次规划会。” |
-| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 将客户请求集中到一个队列中处理。” |
-
 [表达示例](skills/grounded-copy/references/patterns.md)中有更多改写方法。
 
 <details>

@@ -178,14 +178,6 @@ Use the version shown by `codex plugin list` in place of `<version>`.
 
 ## Before and after
 
-These are made-up examples. Use facts you can verify in your own copy.
-
-| Draft | Rewrite |
-|---|---|
-| "More than just a project tracker." | "The tracker links tasks to pull requests and posts a summary to Slack each morning." |
-| "Acme is a partner, not a vendor." | "Your account manager joins your planning meeting each quarter." |
-| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." |
-
 The [pattern guide](skills/grounded-copy/references/patterns.md) has more examples.
 
 <details>

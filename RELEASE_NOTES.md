@@ -3,12 +3,16 @@
 ## English
 
 - Fixes the Codex plugin hooks on Windows. Each hook now starts the launcher through `cmd /d /c`, which runs under PowerShell and cmd.exe.
-- Corrects the Windows instructions for Claude Code without Git Bash. The setup guide and `/grounded-copy:grounded` give PowerShell commands that start the launcher.
+- Claude Code hooks run on Windows with or without Git Bash. Each hook starts a launcher that Git Bash and PowerShell both run.
+- `/grounded-copy:grounded` lists PowerShell commands for Windows without Git Bash.
+- The READMEs drop the before-and-after table; the pattern guide keeps the English versions of those examples.
 
 ## 简体中文
 
 - 修复 Codex 插件在 Windows 上的钩子。钩子现在通过 `cmd /d /c` 运行启动器，在 PowerShell 和 cmd.exe 下均可运行。
-- 更正未安装 Git Bash 时 Claude Code 的 Windows 说明。安装指南和 `/grounded-copy:grounded` 提供可运行启动器的 PowerShell 命令。
+- Claude Code 钩子在 Windows 上无论是否安装 Git Bash 都能运行。每个钩子启动一个 Git Bash 和 PowerShell 都能运行的启动器。
+- `/grounded-copy:grounded` 为未安装 Git Bash 的 Windows 提供 PowerShell 命令。
+- README 删除改写示例对照表，表达示例指南保留这些示例的英文版。
 
 # 0.6.0
 
