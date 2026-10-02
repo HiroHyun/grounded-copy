@@ -1,0 +1,47 @@
+RELEASE_NOTES.md
+  s_366de63ac39655::t_593df013f323fc 1-9,12
+  s_366de63ac39655::t_1a2a8e2fa658b2 10-11
+scripts/build_codex_adapter.py
+  s_366de63ac39655::t_298823f7247cd9 125
+  s_366de63ac39655::t_78590a391e4885 126
+  s_366de63ac39655::t_af100796ade019 120-123
+tests/test_codex_adapter.py
+  s_366de63ac39655::t_ae955a98f4cf0e 357-365
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_366de63ac39655::t_e0d79e2a857839 98,100-104,107
+.claude-plugin/plugin.json
+  s_366de63ac39655::t_8d5aba7590faea 4
+.claude-plugin/marketplace.json
+  s_366de63ac39655::t_8d5aba7590faea 13
+skills/grounded-copy/references/setup.md
+  s_366de63ac39655::t_8d3501f0767904 98,100-104,107
+tests/test_launchers.py
+  s_366de63ac39655::t_771629c5e27890 68,70
+  s_366de63ac39655::t_eaed0f2013e77f 353-354
+  s_366de63ac39655::t_55a6f24c12cec7 10-12,15,55-67,69,71-72,119-123,125,129-131,293-352,355-362
+  s_366de63ac39655::t_639d546fe71664 363-364
+commands/grounded.md
+  s_366de63ac39655::t_e517d05ecf8165 39-48
+dist/codex/grounded-copy/hooks/hooks.json
+  s_366de63ac39655::t_e0d79e2a857839 9,20
+.agents/plugins/marketplace.json
+  s_366de63ac39655::t_8d5aba7590faea 15
+dist/codex/grounded-copy/.codex-plugin/plugin.json
+  s_366de63ac39655::t_e0d79e2a857839 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3da362bdcc8bf9545430dabeca1f0960c349eb7d",
+  "prompts": {},
+  "sessions": {
+    "s_366de63ac39655": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1186c96-545c-4953-a66b-99aa509c369a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
