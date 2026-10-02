@@ -69,12 +69,17 @@ class CodexAdapterTests(unittest.TestCase):
         self.assertEqual(entry["skills"], manifest["skills"])
         for event, script in (("SessionStart", "grounded_activate.py"),
                               ("UserPromptSubmit", "grounded_tracker.py")):
+            # The hook dot-sources a launcher that bash, sh, zsh, and
+            # PowerShell all start; each half names the same entrypoint.
             command = manifest["hooks"][event][0]["hooks"][0]["command"]
             argv = shlex.split(command.replace("${CLAUDE_PLUGIN_ROOT}", REPO_ROOT.as_posix()))
-            self.assertEqual(argv[0], "sh")
+            self.assertEqual(argv[0], ".")
+            self.assertEqual(len(argv), 2)
             launcher = Path(argv[1])
             self.assertTrue(launcher.is_file(), str(launcher))
-            self.assertEqual(argv[2], script)
+            body = launcher.read_bytes()
+            self.assertIn(b'@"%~dp0run.cmd" ' + script.encode(), body)
+            self.assertIn(b'/hooks/run.sh" ' + script.encode() + b" #", body)
             self.assertTrue((launcher.parent / script).is_file())
         skill = (SKILL_SOURCE / "SKILL.md").read_text(encoding="utf-8")
         for relative in ("references/patterns.md", "references/setup.md",

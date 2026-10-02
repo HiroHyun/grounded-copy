@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run.sh\" grounded_activate.py",
+            "command": ". \"${CLAUDE_PLUGIN_ROOT}/hooks/claude_activate.cmd\"",
             "timeout": 5,
             "statusMessage": "Loading grounded prose rules..."
           }
@@ -29,7 +29,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/run.sh\" grounded_tracker.py",
+            "command": ". \"${CLAUDE_PLUGIN_ROOT}/hooks/claude_tracker.cmd\"",
             "timeout": 5
           }
         ]

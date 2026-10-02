@@ -26,8 +26,8 @@ RUN_SH = REPO_ROOT / "hooks" / "run.sh"
 RUN_CMD = REPO_ROOT / "hooks" / "run.cmd"
 
 # run.sh finds its own directory by trimming argv0 at the last `/`, matching the
-# `"${CLAUDE_PLUGIN_ROOT}/hooks/run.sh"` form the manifest writes. as_posix()
-# reproduces that separator on every platform.
+# `.../hooks/run.sh` form the Codex manifest and the Claude launchers write.
+# as_posix() reproduces that separator on every platform.
 
 SH = shutil.which("sh")
 
@@ -54,23 +54,28 @@ POSIX_HOSTILE_NAME = HOSTILE_NAME + '"'
 UNKNOWN_SCRIPTS = ("evil.py", "../../etc/passwd", "grounded_tracker", "")
 
 ADAPTER = REPO_ROOT / "dist" / "codex" / "grounded-copy"
-SETUP_GUIDE = REPO_ROOT / "skills" / "grounded-copy" / "references" / "setup.md"
+CLAUDE_MANIFEST = REPO_ROOT / ".claude-plugin" / "plugin.json"
+HOOK_EVENTS = ("SessionStart", "UserPromptSubmit")
 POWERSHELLS = [name for name in ("pwsh", "powershell") if shutil.which(name)]
+
+# Claude Code on Windows runs hooks in the Git Bash it finds at this path, and
+# in PowerShell when none is installed. Elsewhere it runs them in a POSIX
+# shell; every one present here takes a turn.
+GIT_BASH = r"C:\Program Files\Git\bin\bash.exe"
+POSIX_SHELLS = [name for name in ("sh", "bash", "dash", "zsh") if shutil.which(name)]
 
 # A plugin root holding a space, an apostrophe, `;`, parentheses, and `%`,
 # which pass through both PowerShell double quotes and `cmd /d /c`. Codex
 # substitutes ${PLUGIN_ROOT} as text, so two limits remain: PowerShell expands
 # a `$` or backtick in the root, and `cmd /c` splits a root holding `&`.
 # HOSTILE_NAME carries all three.
-WINDOWS_ROOT_NAME = "gc o'k;x (v) 5%"
+PLUGIN_ROOT_NAME = "gc o'k;x (v) 5%"
 
-# The override references/setup.md gives for Claude Code without Git Bash.
-CLAUDE_POWERSHELL_COMMANDS = (
-    ("SessionStart",
-     r'& "${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd" grounded_activate.py'),
-    ("UserPromptSubmit",
-     r'& "${CLAUDE_PLUGIN_ROOT}\hooks\run.cmd" grounded_tracker.py'),
-)
+
+def claude_hook_commands():
+    """The shipped Claude hook command for each event, as the manifest writes it."""
+    hooks = json.loads(CLAUDE_MANIFEST.read_text(encoding="utf-8"))["hooks"]
+    return [(event, hooks[event][0]["hooks"][0]["command"]) for event in HOOK_EVENTS]
 
 
 class LauncherCase(unittest.TestCase):
@@ -292,33 +297,39 @@ class RunCmdTests(LauncherCase):
         self.assertEqual(result.stdout, "")
 
 
-@unittest.skipUnless(os.name == "nt", "Windows hook commands run on Windows only")
-class WindowsHookCommandTests(LauncherCase):
-    """Hook strings run the way each host hands them to its Windows shell.
+class HookCommandCase(LauncherCase):
+    """Run a host's hook strings through the shell that host would use.
 
-    Codex Desktop 0.159.2 runs `commandWindows` through
-    `pwsh -NoProfile -Command` after replacing ${PLUGIN_ROOT} as text; another
-    build could use cmd.exe, so the Codex strings run under both. Claude Code
-    without Git Bash runs hook commands through PowerShell after rewriting
-    ${CLAUDE_PLUGIN_ROOT} to ${env:CLAUDE_PLUGIN_ROOT}. PowerShell parses a
-    quoted path in command position as a string, so a script name after it is
-    a ParserError and the hook exits 1 before run.cmd starts.
-
-    PowerShell localizes its error text, so these cases read the exit code and
+    Shells localize their error text, so these cases read the exit code and
     stdout, and pass stderr along as the failure message.
     """
 
-    def plugin_root(self, *trees):
+    def plugin_root(self, *trees, name=PLUGIN_ROOT_NAME):
         """Copy each (source, relative destination) tree under one root."""
-        root = self.config_dir / WINDOWS_ROOT_NAME
+        root = self.config_dir / name
         ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
         for source, relative in trees:
             shutil.copytree(str(source), str(root / relative), ignore=ignore)
         return root
 
+    def claude_root(self):
+        """Claude hands the root over as an environment variable, which every
+        shell expands without re-parsing, so the hostile name applies here."""
+        name = HOSTILE_NAME if os.name == "nt" else POSIX_HOSTILE_NAME
+        root = self.plugin_root(
+            (REPO_ROOT / "hooks", "hooks"), (REPO_ROOT / "skills", "skills"), name=name
+        )
+        # .gitattributes ships the launchers CRLF. A checkout that ignored it
+        # would hand the POSIX shells LF and skip the carriage-return path, so
+        # the copies carry CRLF whatever the checkout did.
+        for launcher in (root / "hooks").glob("claude_*.cmd"):
+            body = launcher.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+            launcher.write_bytes(body)
+        return root
+
     def assertHooksRun(self, commands, env, shells):
         if not shells:
-            self.skipTest("neither pwsh nor powershell is on PATH")
+            self.skipTest("no shell of this kind is installed")
         for shell in shells:
             for event, command in commands:
                 with self.subTest(shell=shell, event=event):
@@ -326,8 +337,10 @@ class WindowsHookCommandTests(LauncherCase):
                         # A raw command line, as a host that quotes for
                         # cmd.exe would pass it.
                         argv = 'cmd.exe /d /s /c "' + command + '"'
-                    else:
+                    elif shell in ("pwsh", "powershell"):
                         argv = [shell, "-NoProfile", "-NonInteractive", "-Command", command]
+                    else:
+                        argv = [shell, "-c", command]
                     result = self.launch(
                         argv,
                         env=env,
@@ -342,13 +355,26 @@ class WindowsHookCommandTests(LauncherCase):
                         output = json.loads(result.stdout)["hookSpecificOutput"]
                         self.assertEqual(output["hookEventName"], "UserPromptSubmit")
 
+
+@unittest.skipUnless(os.name == "nt", "Windows hook commands run on Windows only")
+class WindowsHookCommandTests(HookCommandCase):
+    """Codex Desktop 0.159.2 runs `commandWindows` through
+    `pwsh -NoProfile -Command` after replacing ${PLUGIN_ROOT} as text; another
+    build could use cmd.exe, so the Codex strings run under both.
+
+    Claude Code runs its hook commands in Git Bash when it finds one and in
+    PowerShell otherwise, rewriting ${CLAUDE_PLUGIN_ROOT} to
+    ${env:CLAUDE_PLUGIN_ROOT} for PowerShell and handing Git Bash the root with
+    forward slashes. The shipped command runs under both.
+    """
+
     def test_codex_command_windows_runs_under_powershell_and_cmd(self):
         root = self.plugin_root((ADAPTER, ""))
         hooks = json.loads((root / "hooks" / "hooks.json").read_text(encoding="utf-8"))
         commands = [
             (event, hooks["hooks"][event][0]["hooks"][0]["commandWindows"]
              .replace("${PLUGIN_ROOT}", str(root)))
-            for event in ("SessionStart", "UserPromptSubmit")
+            for event in HOOK_EVENTS
         ]
         # An empty CODEX_HOME holds no profile file, which resolves to chat.
         self.assertHooksRun(
@@ -356,20 +382,46 @@ class WindowsHookCommandTests(LauncherCase):
             POWERSHELLS + ["cmd"],
         )
 
-    def test_claude_setup_guide_override_runs_under_powershell(self):
-        guide = SETUP_GUIDE.read_text(encoding="utf-8")
-        for _event, command in CLAUDE_POWERSHELL_COMMANDS:
-            self.assertTrue(json.dumps(command) in guide,
-                            "setup.md lacks the override %s" % json.dumps(command))
-        root = self.plugin_root(
-            (REPO_ROOT / "hooks", "hooks"), (REPO_ROOT / "skills", "skills")
-        )
+    def test_claude_manifest_runs_under_powershell(self):
+        root = self.claude_root()
         commands = [
             (event, command.replace("${CLAUDE_PLUGIN_ROOT}", "${env:CLAUDE_PLUGIN_ROOT}"))
-            for event, command in CLAUDE_POWERSHELL_COMMANDS
+            for event, command in claude_hook_commands()
         ]
-        self.assertHooksRun(commands, {"CLAUDE_PLUGIN_ROOT": str(root)}, POWERSHELLS)
+        # Claude Code picks PowerShell only where Git Bash is missing, so no
+        # `sh` is on that PATH. A test run from Git Bash or a CI image would
+        # otherwise lend the hook one.
+        path = os.pathsep.join(
+            entry for entry in os.environ.get("PATH", "").split(os.pathsep)
+            if not os.path.isfile(os.path.join(entry, "sh.exe"))
+        )
+        self.assertHooksRun(
+            commands, {"CLAUDE_PLUGIN_ROOT": str(root), "PATH": path}, POWERSHELLS
+        )
 
+    def test_claude_manifest_runs_under_git_bash(self):
+        root = self.claude_root()
+        shells = [GIT_BASH] if os.path.isfile(GIT_BASH) else []
+        self.assertHooksRun(
+            claude_hook_commands(),
+            {"CLAUDE_PLUGIN_ROOT": str(root).replace("\\", "/")},
+            shells,
+        )
+
+
+@unittest.skipIf(os.name == "nt", "POSIX hook shells run off Windows")
+class PosixHookCommandTests(HookCommandCase):
+    """Claude Code runs its hook commands in a POSIX shell on macOS and Linux.
+
+    The launchers keep CRLF endings for cmd.exe, so this run also proves each
+    POSIX shell reads past the carriage returns.
+    """
+
+    def test_claude_manifest_runs_under_each_posix_shell(self):
+        root = self.claude_root()
+        self.assertHooksRun(
+            claude_hook_commands(), {"CLAUDE_PLUGIN_ROOT": str(root)}, POSIX_SHELLS
+        )
 
 if __name__ == "__main__":
     unittest.main()
