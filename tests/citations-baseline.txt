@@ -107,12 +107,16 @@ skills/grounded-copy/references/patterns.md	is-more-than-a	was more than a
 skills/grounded-copy/references/patterns.md	isnt-about	isn't about
 skills/grounded-copy/references/patterns.md	isnt-about	wasn't about
 skills/grounded-copy/references/patterns.md	its-about	it's about Y", "—not
+skills/grounded-copy/references/patterns.md	ja-not-just	だけじゃない
 skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
 skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
+skills/grounded-copy/references/patterns.md	ja-not-just	ではなく、火曜日です
 skills/grounded-copy/references/patterns.md	ja-not-just	とはおさらば
 skills/grounded-copy/references/patterns.md	ja-not-just	にとどまらない
+skills/grounded-copy/references/patterns.md	ja-not-just	にとどまりません
 skills/grounded-copy/references/patterns.md	ja-not-just	再定義
 skills/grounded-copy/references/patterns.md	ja-not-just	単なる〜ではない / 〜だけではない
+skills/grounded-copy/references/patterns.md	ja-not-just	単なる〜ではなく / 〜ではなく
 skills/grounded-copy/references/patterns.md	ja-not-just	想像してみてください
 skills/grounded-copy/references/patterns.md	ja-not-just	革命的
 skills/grounded-copy/references/patterns.md	ko-not-just	게임 체인저

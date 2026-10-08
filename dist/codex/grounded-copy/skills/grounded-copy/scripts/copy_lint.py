@@ -255,12 +255,19 @@ PATTERNS = [
         r"nie\s+wieder|neu\s+definiert|definiert\s+\w+\s+neu|"
         r"geht\s+über\s+\w+\s+hinaus|revolutionier\w*|"
         r"vergessen\s+Sie|stellen\s+Sie\s+sich\s+vor")),
+    # The last arm is the bare "X ではなく、Y です". It needs the comma, so
+    # 今日は雨ではなく雪です passes. A correction written with the comma
+    # reports, the way 不是…是 does in Chinese.
     ("ja-not-just",
      _c(r"単なる[^。！？\n]{0,20}(?:ではありません|ではない|じゃない)|"
         r"ただの[^。！？\n]{0,20}(?:ではありません|ではない|じゃない)|"
         r"だけでは(?:ありません|ない)|にとどまら(?:ない|ず)|"
         r"はもう不要|とはおさらば|再定義|常識を覆す|革命的|"
-        r"想像してみてください|だけでなく|さようなら|を超えた")),
+        r"想像してみてください|だけでなく|さようなら|を超えた|"
+        r"(?:単なる|ただの)[^。！？\n]{0,20}(?:ではなく|じゃなく)|"
+        r"だけじゃない|だけではなく|にとどまりません|"
+        r"に留まら(?:ない|ず)|に留まりません|"
+        r"ではなく[、,][^。！？\n]{1,20}(?:です|だ|である)")),
     ("ko-not-just",
      _c(r"단순한\s*[^.!?。\n]{0,20}(?:아닙니다|아니다|아니에요)|"
         r"에\s*그치지\s*않|[와과]\s*작별하세요|작별을\s*고하세요|"

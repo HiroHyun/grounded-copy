@@ -235,6 +235,7 @@ The rules also match the forms below. X and Y mark a sentence pattern. The last 
 | Locale | More patterns | An ordinary sentence that also reports |
 |---|---|---|
 | zh | 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y | 他不光是一个人去的。 |
+| ja | だけじゃない / にとどまりません / 単なる〜ではなく / 〜ではなく、〜です | 会議は月曜日ではなく、火曜日です。 |
 
 ### Chinese comparisons
 

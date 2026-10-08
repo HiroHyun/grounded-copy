@@ -194,6 +194,12 @@ class ReversalGapTests(unittest.TestCase):
         ("zh-not-x-but-y", "它不是善意，是一套算出来的生意。"),  # shipped
         ("zh-not-x-but-y", "我并非作者，只是普通用户。"),
         ("zh-not-x-but-y", "与其说它是工具，不如说它是平台。"),
+        # Japanese.
+        ("ja-not-just", "Acmeは単なるツールではありません。"),  # shipped
+        ("ja-not-just", "Acmeは単なるツールではなく、基盤です。"),
+        ("ja-not-just", "ファイル保存だけじゃない。"),
+        ("ja-not-just", "Acmeはツールにとどまりません。"),
+        ("ja-not-just", "これはバグではなく、仕様です。"),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -226,6 +232,7 @@ class ReversalGapTests(unittest.TestCase):
         "Note: Stop the server before the upgrade.",
         "Step 1: Stop services.",
         "并非所有文件都是只读的。",
+        "今日は雨ではなく雪です。",
     )
 
     def test_each_shape_reports_its_rule(self):
