@@ -1,0 +1,21 @@
+README.md
+  s_366de63ac39655::t_eba3fbca6a93ed 221
+README.zh.md
+  s_366de63ac39655::t_109fadbfd8b210 225
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d7ed532d8537823d80cb16224d310da28351a728",
+  "prompts": {},
+  "sessions": {
+    "s_366de63ac39655": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1186c96-545c-4953-a66b-99aa509c369a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
