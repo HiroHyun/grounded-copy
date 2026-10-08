@@ -218,7 +218,7 @@ The [paragraph review](skills/grounded-copy/references/patterns.md#paragraph-rev
 |---|---|
 | English | 60 rules |
 | Chinese, Japanese, Korean | sentence patterns, plus a list of phrases |
-| Russian, Spanish, Arabic, French, German | a list of 6 to 18 phrases each |
+| Russian, Spanish, Arabic, French, German | a phrase list for each language |
 
 Some ordinary Japanese and Korean phrases also match; `ja-not-just` and `ko-not-just` report those.
 

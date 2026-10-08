@@ -222,7 +222,7 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 |---|---|
 | 英语 | 60 条规则 |
 | 中文、日语、韩语 | 部分句式，以及一份短语表 |
-| 俄语、西班牙语、阿拉伯语、法语、德语 | 各有一份 6 至 18 条的短语表 |
+| 俄语、西班牙语、阿拉伯语、法语、德语 | 各有一份短语表 |
 
 有些日语和韩语的日常表达也会命中，`ja-not-just` 和 `ko-not-just` 会报出这类用法。
 
