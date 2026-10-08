@@ -167,6 +167,16 @@ class ReversalGapTests(unittest.TestCase):
         ("while-others", "While others hide their fees, Acme lists them."),  # shipped
         ("while-others", "Whereas most tools hide rates, Acme publishes them."),
         ("while-others", "Where others see noise, Acme sees signal."),
+        # Markup and look-alike characters inside a phrase.
+        ("not-just", "Acme is **not** just a tool."),
+        ("not-just", "Acme is not *just* a tool."),
+        ("not-just", "Acme is not <em>just</em> a tool."),
+        ("not-just", "Acme is not​just a tool."),
+        ("doesnt-just", "Acme doesnʼt just store files."),
+        ("dash-not-contrast", "Acme is a partner ― not a vendor."),
+        ("hype-word", "Acme is a game‑changer."),
+        ("opener-it-is-not", "_It's not a website._"),
+        ("opener-imagine", "<p>Imagine a release with no checklist.</p>"),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -187,6 +197,10 @@ class ReversalGapTests(unittest.TestCase):
         "I have not so much as looked at it.",
         "Unlike the v1 API, v2 paginates by cursor.",
         "It runs in places where other modules might be loaded.",
+        "Call _unlock_mutex before the write.",
+        "Pass *args and **kwargs to the planner.",
+        "Use *.md and *.txt globs.",
+        "2 * 3 * 4 is 24.",
     )
 
     def test_each_shape_reports_its_rule(self):
@@ -198,6 +212,18 @@ class ReversalGapTests(unittest.TestCase):
         for sentence in self.KEPT:
             with self.subTest(sentence=sentence):
                 self.assertEqual(reported(sentence), set())
+
+    def test_a_fold_keeps_the_block_pass_line_number(self):
+        """normalize() deletes markup, and the block pass maps offsets to lines.
+
+        Line 1 loses 15 characters. The dash on line 2 sits 5 characters in,
+        so offsets taken before the fold would place it on line 1.
+        """
+        text = ("**Bold** <b>tags</b> and __more__ markers open this line.\n"
+                "Acme — email, live chat, phone — runs one queue.\n")
+        hits = [(lineno, rule) for lineno, rule, _ in linter().scan_text(text)
+                if rule == "dash-pair-list"]
+        self.assertEqual(hits, [(2, "dash-pair-list")])
 
 
 if __name__ == "__main__":

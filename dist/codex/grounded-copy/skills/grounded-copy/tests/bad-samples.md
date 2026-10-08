@@ -104,3 +104,10 @@ Unlike traditional agencies, we publish our rates.
 Unlike competitors, Acme publishes its rates.
 While others hide their fees, Acme lists them.
 Whereas most tools hide rates, Acme publishes them.
+
+# Markup inside a phrase. Each line reported nothing while a pair of emphasis
+# markers or an inline tag sat between the words of a pattern.
+
+Acme is **not** just a tool.
+_It's not a website._
+<p>Imagine a release with no checklist.</p>

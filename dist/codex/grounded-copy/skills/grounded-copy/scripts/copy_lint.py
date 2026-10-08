@@ -308,9 +308,33 @@ LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|"
 BLOCK_LEAD_STRIP = " \t#*->"
 
 
+# Characters that change how a phrase looks to a pattern and leave how it reads
+# to a person: curly quotes, dash and hyphen look-alikes, and characters with
+# no width. U+200B separates words, so it becomes a space.
+_FOLD = str.maketrans({
+    "’": "'", "‘": "'", "“": '"', "”": '"',
+    "―": "—", "−": "—", "⸺": "—", "﹘": "—", "－": "—",
+    "‐": "-", "‑": "-", "‒": "-",
+    "​": " ", "‌": None, "‍": None, "⁠": None,
+    "﻿": None, "­": None,
+})
+# An apostrophe look-alike between two letters: "doesnʼt", "doesn`t".
+_APOSTROPHE = re.compile(r"(?<=\w)[`´ʼ＇′](?=\w)")
+_TAG = re.compile(r"</?[A-Za-z][^<>\n]{0,80}>")
+# A Markdown emphasis pair. The closing marker repeats the opening one, so
+# `_private_name`, `*args`, and `2 * 3 * 4` stay as written.
+_EMPHASIS = re.compile(
+    r"(?<![\w*_])(\*{1,3}|_{1,3})(?=\S)([^*_\n]{1,80}?)(?<=\S)\1(?![\w*_])")
+
+
 def normalize(text):
-    return (text.replace("’", "'").replace("‘", "'")
-                .replace("“", '"').replace("”", '"'))
+    """Fold look-alike characters and drop inline markup.
+
+    A finding quotes the folded text. The result can be shorter than the
+    input, so a caller that maps offsets to lines folds each line first.
+    """
+    text = _APOSTROPHE.sub("'", text.translate(_FOLD))
+    return _EMPHASIS.sub(r"\2", _TAG.sub("", text))
 
 
 def scan_line(line, lineno, findings):
@@ -353,7 +377,9 @@ def _join(block):
     offsets = []
     position = 0
     for lineno, line in block:
-        piece = line.lstrip(BLOCK_LEAD_STRIP)
+        # Fold before measuring: normalize() can shorten a line, and the
+        # offsets below must index the text the patterns run on.
+        piece = normalize(line).lstrip(BLOCK_LEAD_STRIP)
         offsets.append((position, lineno))
         position += len(piece) + 1
         parts.append(piece)
@@ -371,9 +397,8 @@ def _lineno_at(offsets, position):
 
 def scan_blocks(text, findings):
     for joined, offsets in iter_blocks(text.splitlines()):
-        norm = normalize(joined)
         for name, rx in BLOCK_PATTERNS:
-            for m in rx.finditer(norm):
+            for m in rx.finditer(joined):
                 findings.append(
                     (_lineno_at(offsets, m.start()), name, m.group(0).strip())
                 )

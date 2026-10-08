@@ -27,3 +27,4 @@ The worker is not running. It is scheduled for 09:00.
 Try not to restart the server, but if you must, drain it first.
 Memory use is less of an issue than CPU time.
 Unlike the v1 API, v2 paginates by cursor.
+Call _unlock_mutex before the write, and pass *args to the planner.
