@@ -44,11 +44,17 @@ skills/grounded-copy/references/patterns.md	doesnt-just	doesn't just
 skills/grounded-copy/references/patterns.md	doesnt-just	don't just
 skills/grounded-copy/references/patterns.md	editorializing-ing	, highlighting
 skills/grounded-copy/references/patterns.md	editorializing-ing	, underscoring
+skills/grounded-copy/references/patterns.md	es-not-just	No solo
 skills/grounded-copy/references/patterns.md	es-not-just	atrás quedaron
 skills/grounded-copy/references/patterns.md	es-not-just	dile adiós
 skills/grounded-copy/references/patterns.md	es-not-just	más que un
+skills/grounded-copy/references/patterns.md	es-not-just	no es simplemente
 skills/grounded-copy/references/patterns.md	es-not-just	no es solo
+skills/grounded-copy/references/patterns.md	es-not-just	no es sólo
+skills/grounded-copy/references/patterns.md	es-not-just	no solamente
+skills/grounded-copy/references/patterns.md	es-not-just	no solo
 skills/grounded-copy/references/patterns.md	es-not-just	no solo es
+skills/grounded-copy/references/patterns.md	es-not-just	no únicamente
 skills/grounded-copy/references/patterns.md	es-not-just	olvídate de
 skills/grounded-copy/references/patterns.md	es-not-just	redefinimos
 skills/grounded-copy/references/patterns.md	es-not-just	va más allá

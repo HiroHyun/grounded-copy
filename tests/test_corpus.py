@@ -211,6 +211,11 @@ class ReversalGapTests(unittest.TestCase):
         ("ru-not-just", "Acme не только хранит файлы."),
         ("ru-not-just", "Acme — нечто большее, чем инструмент."),
         ("ru-not-just", "Забудьте о таблицах."),
+        # Spanish.
+        ("es-not-just", "Acme no es solo una herramienta."),  # shipped
+        ("es-not-just", "Acme no es sólo una herramienta."),
+        ("es-not-just", "Acme no solo almacena archivos."),
+        ("es-not-just", "Acme no es simplemente una herramienta."),
     )
 
     # Ordinary sentences that share a surface form with a row above.

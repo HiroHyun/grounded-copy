@@ -240,7 +240,9 @@ PATTERNS = [
      _c(r"no\s+es\s+solo|no\s+solo\s+es|no\s+se\s+trata\s+solo|"
         r"más\s+que\s+(?:un|una)(?:\s+simple)?\b|más\s+que\s+solo|"
         r"dile?\s+adiós|redefinim\w*|va\s+más\s+allá|olvíd(?:ate|ese)\s+de|"
-        r"atrás\s+quedaron|sin\s+complicaciones")),
+        r"atrás\s+quedaron|sin\s+complicaciones|"
+        r"no\s+(?:es\s+|se\s+trata\s+)?(?:s[oó]lo|solamente|únicamente)\b|"
+        r"no\s+es\s+simplemente|más\s+que\s+sólo")),
     ("ar-not-just",
      _c(r"ليس\s+مجرد|ليست\s+مجرد|أكثر\s+من\s+مجرد|وداعًا|وداعا|"
         r"يعيد\s+تعريف")),

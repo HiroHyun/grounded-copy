@@ -136,3 +136,6 @@ Acme는 그저 도구가 아닙니다.
 Acme не только хранит файлы.
 Acme — нечто большее, чем инструмент.
 Забудьте о таблицах.
+Acme no es sólo una herramienta.
+Acme no solo almacena archivos.
+Acme no es simplemente una herramienta.
