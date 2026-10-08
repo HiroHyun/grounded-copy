@@ -227,6 +227,11 @@ class ReversalGapTests(unittest.TestCase):
         ("de-not-just", "Acme speichert nicht nur Dateien."),
         ("de-not-just", "Acme ist nicht bloß ein Werkzeug."),
         ("de-not-just", "Acme ist viel mehr als ein Werkzeug."),
+        # Arabic.
+        ("ar-not-just", "Acme ليس مجرد تطبيق."),  # shipped
+        ("ar-not-just", "لسنا مجرد أداة."),
+        ("ar-not-just", "Acme ليس مجرّد أداة."),
+        ("ar-not-just", "إعادة تعريف العمل."),
     )
 
     # Ordinary sentences that share a surface form with a row above.

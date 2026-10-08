@@ -145,3 +145,6 @@ Acme ne se limite pas au stockage.
 Acme speichert nicht nur Dateien.
 Acme ist nicht bloß ein Werkzeug.
 Acme ist viel mehr als ein Werkzeug.
+لسنا مجرد أداة.
+Acme ليس مجرّد أداة.
+إعادة تعريف العمل.

@@ -243,9 +243,13 @@ PATTERNS = [
         r"atrás\s+quedaron|sin\s+complicaciones|"
         r"no\s+(?:es\s+|se\s+trata\s+)?(?:s[oó]lo|solamente|únicamente)\b|"
         r"no\s+es\s+simplemente|más\s+que\s+sólo")),
+    # Every person of the negated copula before the word for "mere", which
+    # is also written with a shadda, U+0651, on its third letter.
     ("ar-not-just",
      _c(r"ليس\s+مجرد|ليست\s+مجرد|أكثر\s+من\s+مجرد|وداعًا|وداعا|"
-        r"يعيد\s+تعريف")),
+        r"يعيد\s+تعريف|"
+        r"(?:ليس|ليست|لست|لسنا|ليسوا)\s+مجر\u0651?د|"
+        r"أكثر\s+من\s+مجر\u0651?د|إعادة\s+تعريف")),
     ("fr-not-just",
      _c(r"n'est\s+pas\s+(?:qu'un|qu'une|seulement|simplement|juste)|"
         r"pas\s+(?:seulement|simplement)\s+un|"
