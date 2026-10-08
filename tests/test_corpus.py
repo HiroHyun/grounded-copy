@@ -206,6 +206,11 @@ class ReversalGapTests(unittest.TestCase):
         ("ko-not-just", "Acme는 그저 도구가 아닙니다."),
         ("ko-not-just", "Acme는 도구뿐 아니라 플랫폼도 제공합니다."),
         ("ko-not-just", "저는 작성자가 아니라 사용자입니다."),
+        # Russian.
+        ("ru-not-just", "Acme — это не просто CRM."),  # shipped
+        ("ru-not-just", "Acme не только хранит файлы."),
+        ("ru-not-just", "Acme — нечто большее, чем инструмент."),
+        ("ru-not-just", "Забудьте о таблицах."),
     )
 
     # Ordinary sentences that share a surface form with a row above.

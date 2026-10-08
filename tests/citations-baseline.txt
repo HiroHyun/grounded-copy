@@ -181,9 +181,15 @@ skills/grounded-copy/references/patterns.md	rhetorical-reveal	The best part?
 skills/grounded-copy/references/patterns.md	rhetorical-reveal	The best part?
 skills/grounded-copy/references/patterns.md	rhetorical-reveal	The result?
 skills/grounded-copy/references/patterns.md	ru-not-just	больше, чем просто
+skills/grounded-copy/references/patterns.md	ru-not-just	забудьте о
+skills/grounded-copy/references/patterns.md	ru-not-just	не всего лишь
 skills/grounded-copy/references/patterns.md	ru-not-just	не просто
+skills/grounded-copy/references/patterns.md	ru-not-just	не только
+skills/grounded-copy/references/patterns.md	ru-not-just	не только
+skills/grounded-copy/references/patterns.md	ru-not-just	нечто большее
 skills/grounded-copy/references/patterns.md	ru-not-just	переосмысливает
 skills/grounded-copy/references/patterns.md	ru-not-just	попрощайтесь
+skills/grounded-copy/references/patterns.md	ru-not-just	это не про
 skills/grounded-copy/references/patterns.md	say-goodbye-hello	Say goodbye
 skills/grounded-copy/references/patterns.md	say-goodbye-hello	say goodbye
 skills/grounded-copy/references/patterns.md	studies-show	Studies show
