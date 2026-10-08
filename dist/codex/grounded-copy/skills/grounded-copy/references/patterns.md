@@ -240,6 +240,7 @@ The rules also match the forms below. X and Y mark a sentence pattern. The last 
 | ru | не только / не всего лишь / нечто большее, чем / это не про / забудьте о | Я не только программист. |
 | es | no es sólo / no solo + verbo / no solamente / no únicamente / no es simplemente | No solo en Madrid llueve. |
 | fr | n'est pas uniquement / n'est pas que / est plus qu'un / ne se limite pas / ne fait pas que | C'est plus qu'un an. |
+| de | nicht nur + Verb / nicht bloß / nicht lediglich / mehr als bloß / viel mehr als | Das kostet viel mehr als 5 Euro. |
 
 ### Chinese comparisons
 

@@ -261,7 +261,9 @@ PATTERNS = [
         r"weit\s+mehr\s+als|verabschieden\s+Sie\s+sich|schluss\s+mit|"
         r"nie\s+wieder|neu\s+definiert|definiert\s+\w+\s+neu|"
         r"geht\s+über\s+\w+\s+hinaus|revolutionier\w*|"
-        r"vergessen\s+Sie|stellen\s+Sie\s+sich\s+vor")),
+        r"vergessen\s+Sie|stellen\s+Sie\s+sich\s+vor|"
+        r"nicht\s+(?:nur|bloß|bloss|lediglich)\b|"
+        r"mehr\s+als\s+(?:bloß|bloss)|viel\s+mehr\s+als")),
     # The last arm is the bare "X ではなく、Y です". It needs the comma, so
     # 今日は雨ではなく雪です passes. A correction written with the comma
     # reports, the way 不是…是 does in Chinese.

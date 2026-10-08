@@ -142,3 +142,6 @@ Acme no es simplemente una herramienta.
 Acme n'est pas uniquement un outil.
 Acme est bien plus qu'un outil.
 Acme ne se limite pas au stockage.
+Acme speichert nicht nur Dateien.
+Acme ist nicht bloß ein Werkzeug.
+Acme ist viel mehr als ein Werkzeug.

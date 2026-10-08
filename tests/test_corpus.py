@@ -222,6 +222,11 @@ class ReversalGapTests(unittest.TestCase):
         ("fr-not-just", "Acme est bien plus qu'un outil."),
         ("fr-not-just", "Acme ne se limite pas au stockage."),
         ("fr-not-just", "Acme ne fait pas que stocker des fichiers."),
+        # German.
+        ("de-not-just", "Acme ist nicht nur ein Werkzeug."),  # shipped
+        ("de-not-just", "Acme speichert nicht nur Dateien."),
+        ("de-not-just", "Acme ist nicht bloß ein Werkzeug."),
+        ("de-not-just", "Acme ist viel mehr als ein Werkzeug."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -257,6 +262,7 @@ class ReversalGapTests(unittest.TestCase):
         "今日は雨ではなく雪です。",
         "Il ne reste plus qu'un jour.",
         "Il ne mange pas que du pain.",
+        "Er ist nicht allein zu Hause.",
     )
 
     def test_each_shape_reports_its_rule(self):

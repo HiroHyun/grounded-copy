@@ -34,10 +34,16 @@ skills/grounded-copy/references/patterns.md	dash-pair-list	—not X, but Y", "no
 skills/grounded-copy/references/patterns.md	days-are-over	the days of X are over
 skills/grounded-copy/references/patterns.md	de-not-just	Schluss mit
 skills/grounded-copy/references/patterns.md	de-not-just	Stellen Sie sich vor
+skills/grounded-copy/references/patterns.md	de-not-just	mehr als bloß
 skills/grounded-copy/references/patterns.md	de-not-just	mehr als nur
+skills/grounded-copy/references/patterns.md	de-not-just	nicht bloß
+skills/grounded-copy/references/patterns.md	de-not-just	nicht lediglich
+skills/grounded-copy/references/patterns.md	de-not-just	nicht nur
 skills/grounded-copy/references/patterns.md	de-not-just	nicht nur ein
 skills/grounded-copy/references/patterns.md	de-not-just	nie wieder
 skills/grounded-copy/references/patterns.md	de-not-just	verabschieden Sie sich
+skills/grounded-copy/references/patterns.md	de-not-just	viel mehr als
+skills/grounded-copy/references/patterns.md	de-not-just	viel mehr als
 skills/grounded-copy/references/patterns.md	doesnt-just	Don't just
 skills/grounded-copy/references/patterns.md	doesnt-just	can't just
 skills/grounded-copy/references/patterns.md	doesnt-just	doesn't just
