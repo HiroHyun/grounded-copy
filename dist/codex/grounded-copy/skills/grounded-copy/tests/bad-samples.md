@@ -118,3 +118,11 @@ _It's not a website._
 
   "hero": "Forget the spreadsheet.",
 Note: imagine a release with no checklist.
+
+# A phrase split by a line wrap. Each pair reported nothing while the
+# patterns ran on one line at a time. The finding carries the first line.
+
+Acme is not
+just a tool.
+Acme is a partner,
+not a vendor.

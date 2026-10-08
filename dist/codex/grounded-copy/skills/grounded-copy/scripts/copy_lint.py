@@ -306,9 +306,10 @@ SENTENCE_SPLIT = re.compile(
 # strips a sentence, so a curly quote never reaches this set. `|` is here so a
 # sentence in the first cell of a Markdown table row reaches the OPENERS loop;
 # without it every anchored rule missed a specimen quoted inside a table. The
-# last five cover a `+` bullet, a bullet dot, a strikethrough, and the close
-# of an empty checkbox.
-LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|+•·~]"
+# last six cover a `+` bullet, a bullet dot, a strikethrough, the close of an
+# empty checkbox, and an underscore that opens emphasis closed on a later
+# line, where normalize() finds no pair to fold.
+LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|+•·~]_"
 # The block pass strips the Markdown marker and keeps every dash, because a
 # dash is what the block rules match.
 BLOCK_LEAD_STRIP = " \t#*->"
@@ -362,10 +363,12 @@ def scan_line(line, lineno, findings):
 def iter_blocks(lines):
     """Group lines into paragraphs, blank lines separating them.
 
-    Yields (joined_text, offsets). `offsets` holds one (start, lineno) pair per
-    source line, so a match offset maps back to the line that opens it. Each
-    line loses its leading Markdown marker before the join, which keeps a
-    quoted or bulleted paragraph on the same footing as a plain one.
+    Yields (joined_text, offsets, wraps). `offsets` holds one (start, lineno)
+    pair per source line, so a match offset maps back to the line that opens
+    it. `wraps` holds the start offset of each line that continues the line
+    above it. Each line loses its leading Markdown marker before the join,
+    which keeps a quoted or bulleted paragraph on the same footing as a plain
+    one.
     """
     block = []
     for lineno, line in enumerate(lines, 1):
@@ -379,18 +382,27 @@ def iter_blocks(lines):
         yield _join(block)
 
 
+# A line that opens a list item, a heading, or a table row starts a new unit.
+# The wrap pass joins a line to the one above only when it carries no such
+# marker, so "- cheap," and "- not slow" stay two items.
+_MARKER = re.compile(r"[ \t>]*(?:[-+*]\s|#{1,6}\s|\||\d+[.)]\s)")
+
+
 def _join(block):
     parts = []
     offsets = []
+    wraps = []
     position = 0
     for lineno, line in block:
         # Fold before measuring: normalize() can shorten a line, and the
         # offsets below must index the text the patterns run on.
         piece = normalize(line).lstrip(BLOCK_LEAD_STRIP)
         offsets.append((position, lineno))
+        if position and not _MARKER.match(line):
+            wraps.append(position)
         position += len(piece) + 1
         parts.append(piece)
-    return " ".join(parts), offsets
+    return " ".join(parts), offsets, wraps
 
 
 def _lineno_at(offsets, position):
@@ -403,12 +415,47 @@ def _lineno_at(offsets, position):
 
 
 def scan_blocks(text, findings):
-    for joined, offsets in iter_blocks(text.splitlines()):
+    for joined, offsets, wraps in iter_blocks(text.splitlines()):
         for name, rx in BLOCK_PATTERNS:
             for m in rx.finditer(joined):
                 findings.append(
                     (_lineno_at(offsets, m.start()), name, m.group(0).strip())
                 )
+        if wraps:
+            _scan_wraps(joined, offsets, wraps, findings)
+
+
+def _scan_wraps(joined, offsets, wraps, findings):
+    """Report a phrase whose halves sit on either side of a line wrap.
+
+    scan_line has reported every match that fits on one line. A match counts
+    here when it spans a line join and the same rule matches nothing from the
+    same start once the text stops at that join. The finding carries the line
+    that opens the match.
+    """
+    def split_by_wrap(rx, m):
+        for wrap in wraps:
+            if m.start() < wrap <= m.end():
+                return not rx.match(joined, m.start(), wrap - 1)
+        return False
+
+    for name, rx in PATTERNS:
+        for m in rx.finditer(joined):
+            if split_by_wrap(rx, m):
+                findings.append(
+                    (_lineno_at(offsets, m.start()), name, m.group(0).strip())
+                )
+    start = 0
+    for sep in list(SENTENCE_SPLIT.finditer(joined)) + [None]:
+        end = sep.start() if sep else len(joined)
+        lead = end - len(joined[start:end].lstrip(LEAD_STRIP))
+        for name, rx in OPENERS:
+            m = rx.match(joined, lead, end)
+            if m and split_by_wrap(rx, m):
+                findings.append(
+                    (_lineno_at(offsets, lead), name, m.group(0).strip())
+                )
+        start = sep.end() if sep else end
 
 
 def scan_text(text):

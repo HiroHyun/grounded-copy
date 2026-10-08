@@ -236,5 +236,67 @@ class ReversalGapTests(unittest.TestCase):
         self.assertEqual(hits, [(2, "dash-pair-list")])
 
 
+class WrappedPhraseTests(unittest.TestCase):
+    """A phrase split by a line wrap reports as it does on one line.
+
+    PATTERNS and OPENERS once ran per line only, so a phrase whose halves sat
+    on either side of a wrap reported nothing. The finding carries the line
+    that opens the phrase.
+    """
+
+    def found(self, text):
+        return [(lineno, rule) for lineno, rule, _ in linter().scan_text(text)]
+
+    def test_a_wrapped_phrase_reports_at_its_first_line(self):
+        cases = (
+            ("Acme is not\njust a tool.", "not-just"),
+            ("Acme is a partner,\nnot a vendor.", "comma-not-appositive"),
+            ("I'm not the plugin's\nauthor, I just use it.", "not-just"),
+            ("Done. It's\nnot a website.", "opener-it-is-not"),
+            ("> Acme ships weekly rather\n> than monthly.", "rather-than"),
+        )
+        for text, rule in cases:
+            with self.subTest(text=text):
+                self.assertIn((1, rule), self.found(text))
+
+    def test_a_phrase_on_one_line_reports_once(self):
+        cases = (
+            "Acme is not just a tool,\nand it ships weekly.",
+            # Trailing whitespace lets the per-line pass match "not" plus a
+            # space, and the join adds a second space after it.
+            "Acme is a partner — not \nyour vendor.",
+        )
+        for text in cases:
+            with self.subTest(text=text):
+                self.assertEqual(len(self.found(text)), 1, self.found(text))
+
+    def test_two_list_items_stay_apart(self):
+        self.assertEqual(self.found("- cheap,\n- not slow"), [])
+        self.assertEqual(self.found("| fast, | a |\n| not slow | b |"), [])
+
+    def test_every_corpus_finding_survives_a_wrap(self):
+        """Break each corpus line inside its finding and scan it again.
+
+        The break goes at the first space of the reported snippet. A break
+        that would leave a list, heading, or table marker at the start of
+        line 2 is skipped, since that line reads as a new item.
+        """
+        copy_lint = linter()
+        checked = 0
+        for line in Path(CORPUS).read_text(encoding="utf-8").splitlines():
+            for _, rule, snippet in copy_lint.scan_text(line):
+                at, space = line.find(snippet), snippet.find(" ")
+                if at < 0 or space < 0:
+                    continue
+                tail = line[at + space + 1:]
+                if re.match(r"\s*(?:[-*+#|]|\d+[.)]\s)", tail):
+                    continue
+                wrapped = line[:at + space] + "\n" + tail
+                checked += 1
+                with self.subTest(rule=rule, line=line):
+                    self.assertIn((1, rule), self.found(wrapped))
+        self.assertGreater(checked, 60, "the corpus produced too few cases")
+
+
 if __name__ == "__main__":
     unittest.main()

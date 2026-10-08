@@ -205,7 +205,7 @@ The plugin gives the agent instructions. It does not scan or block each chat rep
 
 A passing result means the text matched none of the checker's patterns. It does not verify facts or guarantee natural writing. Some ordinary phrases also match the rules. Review the meaning before you change them; use `off` when the task requires wording that the style rules would reject.
 
-The checker covers English, Chinese, Japanese, Korean, Russian, Spanish, Arabic, French, and German. English has the most detailed rules. Chinese, Japanese, and Korean checks include sentence patterns. The other languages use phrase lists. Most checks run one line at a time, so a phrase split over two lines can be missed. The check for lists between paired dashes also works across lines in a paragraph.
+The checker covers English, Chinese, Japanese, Korean, Russian, Spanish, Arabic, French, and German. English has the most detailed rules. Chinese, Japanese, and Korean checks include sentence patterns. The other languages use phrase lists. A phrase that wraps onto the next line of a paragraph still reports, at the line where it starts. The checker reads through Markdown emphasis, inline HTML tags, and look-alike quotes and dashes.
 
 The [paragraph review](skills/grounded-copy/references/patterns.md#paragraph-review) guides English and other languages toward useful detail and away from repeated enumeration. It includes English examples and a [Chinese supplement](skills/grounded-copy/references/patterns.md#chinese-paragraph-review). Both active plugin profiles and the portable skill carry this guidance. These judgments require context; the checker retains its existing pattern checks.
 

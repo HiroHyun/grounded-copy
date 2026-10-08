@@ -109,7 +109,7 @@ When both the Skills CLI copy and the plugin are installed, Claude Code may show
 
 The checker matches text patterns. Some phrases also have ordinary factual uses. Read the sentence in context and preserve its meaning. Use `off` for work that requires such wording. Running the checker manually still reports the same matches.
 
-Most rules scan one line at a time. Phrases split over two lines can be missed. The `dash-pair-list` rule scans paragraphs and can find a list whose opening and closing dashes are on different lines.
+Rules scan each line, then each paragraph for a phrase that wraps onto the next line. A finding carries the line where the phrase starts. The `dash-pair-list` rule scans paragraphs too and can find a list whose opening and closing dashes are on different lines.
 
 ## Add the skill to a project
 
