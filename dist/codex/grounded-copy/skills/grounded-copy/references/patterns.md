@@ -116,6 +116,8 @@ Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
 | "Look no further than Acme." | "Acme runs the three checks listed above." |
 | "It's worth noting that every plan includes support." | "Every plan includes support." |
 
+An opener reports at the start of a sentence, and also after a colon. That covers a JSON or YAML value and the text after a label. A plain note in that position reports: "Note: it is not currently possible to query by name."
+
 ## 6. Collision framing
 
 Name a material, price, feature, or action. Pairing abstract qualities leaves the details unclear.

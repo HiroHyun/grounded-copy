@@ -160,6 +160,8 @@ skills/grounded-copy/references/patterns.md	not-your-average	not your average
 skills/grounded-copy/references/patterns.md	opener-at-company-we	At Acme, we
 skills/grounded-copy/references/patterns.md	opener-imagine	Imagine
 skills/grounded-copy/references/patterns.md	opener-it-is-not	It's not
+skills/grounded-copy/references/patterns.md	opener-it-is-not	It's not
+skills/grounded-copy/references/patterns.md	opener-it-is-not	it is not
 skills/grounded-copy/references/patterns.md	opener-stop	Stop Xing
 skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of
 skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of

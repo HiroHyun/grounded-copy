@@ -177,6 +177,14 @@ class ReversalGapTests(unittest.TestCase):
         ("hype-word", "Acme is a game‑changer."),
         ("opener-it-is-not", "_It's not a website._"),
         ("opener-imagine", "<p>Imagine a release with no checklist.</p>"),
+        # An opener behind a key, a label, a quoted sentence, or a bullet.
+        ("opener-forget", '  "hero": "Forget the spreadsheet.",'),
+        ("opener-forget", "hero: Forget the spreadsheet."),
+        ("opener-it-is-not", "Note: it's not a website."),
+        ("opener-imagine", 'He said "ship." Imagine the result.'),
+        ("opener-forget", "+ Forget the spreadsheet."),
+        ("opener-forget", "• Forget the spreadsheet."),
+        ("opener-imagine", "- [ ] Imagine a release."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -201,6 +209,8 @@ class ReversalGapTests(unittest.TestCase):
         "Pass *args and **kwargs to the planner.",
         "Use *.md and *.txt globs.",
         "2 * 3 * 4 is 24.",
+        "Usage: python copy_lint.py FILE",
+        "The cache wins 3:1 over the index.",
     )
 
     def test_each_shape_reports_its_rule(self):

@@ -297,12 +297,18 @@ BLOCK_PATTERNS = [
         BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA + BLOCK_GAP + r"{1,200}?[—–]")),
 ]
 
-SENTENCE_SPLIT = re.compile(r"(?<=[.!?！？。؟])\s+")
+# A sentence ender or a colon, then whitespace. The colon opens a JSON or YAML
+# value and the text after a label such as "Note:". The second alternative
+# covers an ender that sits inside a closing quote or bracket.
+SENTENCE_SPLIT = re.compile(
+    r"(?<=[.!?！？。؟:])\s+|(?<=[.!?][\"')\]])\s+")
 # Straight quotes only: normalize() folds the curly forms before scan_line
 # strips a sentence, so a curly quote never reaches this set. `|` is here so a
 # sentence in the first cell of a Markdown table row reaches the OPENERS loop;
-# without it every anchored rule missed a specimen quoted inside a table.
-LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|"
+# without it every anchored rule missed a specimen quoted inside a table. The
+# last five cover a `+` bullet, a bullet dot, a strikethrough, and the close
+# of an empty checkbox.
+LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|+•·~]"
 # The block pass strips the Markdown marker and keeps every dash, because a
 # dash is what the block rules match.
 BLOCK_LEAD_STRIP = " \t#*->"
