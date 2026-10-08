@@ -41,6 +41,7 @@ Start with the fact. A denial followed by a reveal makes the reader work through
 Triggers: "It's not X, it's Y", "isn't about X, it's about Y", "—not X, but Y",
 "not your average X", "X, not Y",
 ", not by X", and a denial followed by a dash "isn't/wasn't X — it Y".
+The denial can also set up "just", "only", "merely", or "simply": "not X, just Y".
 
 | Draft | Rewrite |
 |---|---|
@@ -49,8 +50,11 @@ Triggers: "It's not X, it's Y", "isn't about X, it's about Y", "—not X, but Y"
 | "Acme is a partner, not a vendor." | "Acme assigns each client a strategist who joins quarterly planning." |
 | "Acme isn't complicated — it books the job in one tap." | "Acme books the job in one tap." |
 | "Freshness confirmed by query, not by the node count." | "The freshness query returned the current result." |
+| "I'm not the plugin's author, just a user." | "I use this plugin; a friend wrote it." |
 
 The `comma-not-appositive` rule also catches `, not by`, `, not from`, and `, not through`. It can match an object that starts with a quote, backtick, or bracket.
+
+The `not-just` rule also reports a denial and `just`, `only`, `merely`, or `simply` on either side of a comma or dash. The denial opens with a negated form of "be" or with "not" and a word such as "the" or "my". A plain limit of that shape reports too: "Windows is not supported, only Linux and macOS."
 
 ## 3. Era-ending
 

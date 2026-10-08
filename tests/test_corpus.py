@@ -5,9 +5,9 @@ CONTRIBUTING asks every new pattern to arrive with a line in the corpus that
 catches it. A rule with no line is a rule nobody has seen fire, which is how a
 regex that matches nothing survives review.
 
-Scope bound: this asserts coverage for the per-locale rules only. 38 of the 58
-English rules carry no corpus line today, so the same assertion over the whole
-rule set would ship red. Widening it means adding those lines first.
+Scope bound: this asserts coverage for the per-locale rules only. Some English
+rules carry no corpus line today, so the same assertion over the whole rule set
+would ship red. Widening it means adding those lines first.
 """
 
 import os
@@ -26,7 +26,7 @@ LOCALE_RULE = re.compile(r"^(?:zh|ru|es|ar|fr|de|ja|ko)-")
 REPORTED = re.compile(r"^\S+ ([a-z0-9-]+):", re.M)
 
 
-def locale_rules():
+def linter():
     # The linter now sits inside the payload the Codex builder mirrors, and a
     # .pyc written beside it would ship. The builder filters __pycache__; this
     # keeps the file from appearing in the first place.
@@ -34,8 +34,18 @@ def locale_rules():
     sys.path.insert(0, str(SKILL_DIR / "scripts"))
     import copy_lint
 
+    return copy_lint
+
+
+def locale_rules():
+    copy_lint = linter()
     return [n for n, _ in copy_lint.PATTERNS + copy_lint.OPENERS
             if LOCALE_RULE.match(n)]
+
+
+def reported(text):
+    """The rule names the linter reports for `text`, scanned in process."""
+    return {name for _, name, _ in linter().scan_text(text)}
 
 
 def run_linter(path, env=None):
@@ -89,6 +99,42 @@ class LocaleCoverageTests(unittest.TestCase):
             languages, {"zh", "ru", "es", "ar", "fr", "de", "ja", "ko"},
             "README publishes a tier per language; the rule set moved",
         )
+
+
+class ReversalGapTests(unittest.TestCase):
+    """A reversal reports with words between its two halves.
+
+    `not-just` once needed "not" and "just" adjacent, so "I'm not the author,
+    just a user." reported nothing. Each REPORTS row pins one such shape. A
+    row marked shipped holds the form its rule matched before the rule
+    widened, so a widening that drops the old match fails here.
+    """
+
+    REPORTS = (
+        ("not-just", "Acme is not just a tool."),  # shipped
+        ("not-just", "I'm not the author, just a user."),
+        ("not-just", "I'm not the plugin's author, I just use it."),
+        ("not-just", "This isn't magic, just math."),
+        ("not-just", "I'm not the author. Just a user."),
+        ("not-just", "I'm not the author - just a user."),
+        ("not-just", "Acme is not really just a tool."),
+    )
+
+    # Ordinary sentences that share a surface form with a row above.
+    KEPT = (
+        "Do not edit the file, just run the script.",
+        "Not yet, only the first step is done.",
+    )
+
+    def test_each_shape_reports_its_rule(self):
+        for rule, sentence in self.REPORTS:
+            with self.subTest(sentence=sentence):
+                self.assertIn(rule, reported(sentence))
+
+    def test_kept_sentences_report_nothing(self):
+        for sentence in self.KEPT:
+            with self.subTest(sentence=sentence):
+                self.assertEqual(reported(sentence), set())
 
 
 if __name__ == "__main__":

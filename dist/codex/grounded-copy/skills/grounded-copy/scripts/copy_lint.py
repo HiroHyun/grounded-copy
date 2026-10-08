@@ -33,11 +33,34 @@ def _c(pattern):
 
 
 # ---------------------------------------------------------------------------
+# Shared pieces of the two-part reversal rules
+# ---------------------------------------------------------------------------
+# A reversal has two halves, a denial and the claim it sets up, and a writer
+# puts words between them: "I'm not the author, just a user." Every quantifier
+# here is bounded. The gap class excludes the sentence enders and both dashes,
+# so a match stays inside one clause.
+_NEG_COP = (r"(?:\b(?:am|is|are|was|were)\s+not|'(?:m|re|s)\s+not|"
+            r"\b(?:is|are|was|were|ai)n't)")
+_DET = r"(?:an?|the|my|your|our|his|her|its|their|this|that|\w+'s)"
+_GAP = r"[^,.!?;:\n—–]{1,40}"
+_SEP = r"(?:[,;]|\s*[—–]|\s+-{1,2})\s*"
+_JUST = r"(?:just|only|merely|simply)\b"
+# The denial opens with a negated be-verb, or with "not" and a determiner. An
+# instruction ("do not edit the file, just run the script") has neither.
+_DENIAL = r"(?:" + _NEG_COP + r"|\bnot\s+" + _DET + r")\s+"
+_PRON = r"(?:(?:I|we|you|it|they|he|she)\s+)?"
+
+# ---------------------------------------------------------------------------
 # Anywhere-in-sentence patterns
 # ---------------------------------------------------------------------------
 PATTERNS = [
     # --- contrastive reversal / negation framing (English) ---
-    ("not-just", _c(r"\bnot\s+(just|only|merely|simply)\b")),
+    # Three forms: the two words adjacent or one adverb apart, the denial and
+    # "just" either side of a comma or dash, and the same pair as two sentences.
+    ("not-just",
+     _c(r"\bnot\s+(?:(?:really|actually|even|quite|necessarily|always)\s+)?"
+        + _JUST + "|" + _DENIAL + _GAP + _SEP + _PRON + _JUST
+        + "|" + _DENIAL + _GAP + r"\.\s+just\b")),
     ("doesnt-just",
      _c(r"\b(?:doesn't|don't|didn't|won't|isn't|aren't|wasn't|weren't)\s+"
         r"(?:just|only|merely|simply)\b")),

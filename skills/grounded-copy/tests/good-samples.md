@@ -18,3 +18,5 @@ El precio publicado incluye todos los cargos.
 Las cotizaciones llegan en un día hábil.
 Acme covers email, live chat, phone, and the help centre with one queue.
 Acme routes a ticket to the on-call reviewer within four business hours.
+Do not edit the file, just run the script.
+Not yet, only the first step is done.

@@ -70,3 +70,13 @@ solutions engineer, or the account manager — within four business hours.
 
 | Acme answers by email — | chat, phone, and post — every day. |
 Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。
+
+# The denial and the claim with words between them. The first line holds the
+# adjacent form. Each later line reported nothing while `not-just` needed its
+# two words side by side.
+
+Acme is not just a tool.
+I'm not the author, just a user.
+I'm not the plugin's author, I just use it.
+This isn't magic, just math.
+I'm not the author. Just a user.
