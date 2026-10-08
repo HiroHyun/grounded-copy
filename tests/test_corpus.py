@@ -185,6 +185,14 @@ class ReversalGapTests(unittest.TestCase):
         ("opener-forget", "+ Forget the spreadsheet."),
         ("opener-forget", "• Forget the spreadsheet."),
         ("opener-imagine", "- [ ] Imagine a release."),
+        # Chinese.
+        ("zh-not-just", "Acme 不仅仅是一个工具。"),  # shipped
+        ("zh-not-just", "Acme 不僅僅是一個工具。"),
+        ("zh-not-just", "Acme 不光是一个工具。"),
+        ("zh-not-just", "告別繁瑣的對賬流程。"),
+        ("zh-not-x-but-y", "它不是善意，是一套算出来的生意。"),  # shipped
+        ("zh-not-x-but-y", "我并非作者，只是普通用户。"),
+        ("zh-not-x-but-y", "与其说它是工具，不如说它是平台。"),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -211,6 +219,7 @@ class ReversalGapTests(unittest.TestCase):
         "2 * 3 * 4 is 24.",
         "Usage: python copy_lint.py FILE",
         "The cache wins 3:1 over the index.",
+        "并非所有文件都是只读的。",
     )
 
     def test_each_shape_reports_its_rule(self):

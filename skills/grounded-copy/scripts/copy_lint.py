@@ -210,14 +210,24 @@ PATTERNS = [
         r"emphasizing|reflecting|signaling|cementing)\b")),
 
     # --- multilingual equivalents (zh / ru / es / ar) ---
+    # Each locale rule keeps its shipped alternatives first and appends the
+    # new ones, so a shipped match keeps its snippet.
+    #
+    # Simplified and Traditional forms. 不[仅僅]{1,2}(?:只)?是 covers 不仅是,
+    # 不仅仅是, 不僅僅是, and 不仅仅只是.
     ("zh-not-just",
      _c(r"不仅仅是|不只是|不仅是|不止是|不再是|不只提供|告别|"
-        r"重新定义|颠覆")),
+        r"重新定义|颠覆|"
+        r"不[仅僅]{1,2}(?:只)?是|不光是|不[单單]{1,2}是|告別|重新定義|顛覆")),
     # The reversal reveal: negate, then assert. The connector slot (而 / 或 /
     # 却 / one word / nothing) sits inside the gap class, so the pattern holds
-    # one bounded quantifier and cannot backtrack past it.
+    # one bounded quantifier and cannot backtrack past it. The 并非 arm needs
+    # a comma before the claim, so 并非所有文件都是只读的 passes.
     ("zh-not-x-but-y",
-     _c(r"不是[^。！？；\n]{0,32}是|而不是|不在于[^。！？；\n]{0,32}而在于")),
+     _c(r"不是[^。！？；\n]{0,32}是|而不是|不在于[^。！？；\n]{0,32}而在于|"
+        r"不在於[^。！？；\n]{0,32}而在於|"
+        r"[并並]非[^。！？；，,\n]{1,20}[，,]\s*(?:而是|只是|是)|"
+        r"[与與]其[说說][^。！？；\n]{0,32}不如[说說]")),
     ("ru-not-just",
      _c(r"не\s+просто|больше,?\s+чем\s+просто|это\s+не\s+о\b|"
         r"попрощайтесь|переосмысл\w*|прощай(?:те)?,")),

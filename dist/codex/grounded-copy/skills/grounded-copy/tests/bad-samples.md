@@ -126,3 +126,11 @@ Acme is not
 just a tool.
 Acme is a partner,
 not a vendor.
+
+# Forms next to the shipped locale phrases. Each line reported nothing while
+# its rule needed the listed phrase with nothing in between.
+
+Acme 不僅僅是一個工具，告別繁瑣的對賬流程。
+Acme 不光是一个工具。
+我并非作者，只是普通用户。
+与其说它是工具，不如说它是平台。

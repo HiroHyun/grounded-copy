@@ -232,6 +232,12 @@ When translating a draft written under these rules, keep its facts and use natur
 
 Some listed phrases have ordinary factual uses too. Japanese だけでなく and Korean 뿐만 아니라, 더 이상, and 혁신적 can appear in such uses and still produce findings.
 
+The rules also match the forms below. X and Y mark a sentence pattern. The last column gives a plain sentence in the same shape.
+
+| Locale | More patterns | An ordinary sentence that also reports |
+|---|---|---|
+| zh | 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y | 他不光是一个人去的。 |
+
 ### Chinese comparisons
 
 The `zh-not-x-but-y` rule matches 不是 followed by 是 within 32 characters in one sentence. It also covers forms such as 并不是…而是, 不在于…而在于, 不是…，是, and 而不是. Read the sentence in context before changing it.

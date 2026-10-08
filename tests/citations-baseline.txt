@@ -206,11 +206,18 @@ skills/grounded-copy/references/patterns.md	zero-hassle	Zero hidden
 skills/grounded-copy/references/patterns.md	zero-hassle	zero guesswork
 skills/grounded-copy/references/patterns.md	zh-not-just	不仅仅是
 skills/grounded-copy/references/patterns.md	zh-not-just	不仅是
+skills/grounded-copy/references/patterns.md	zh-not-just	不僅僅是
+skills/grounded-copy/references/patterns.md	zh-not-just	不光是
+skills/grounded-copy/references/patterns.md	zh-not-just	不光是
 skills/grounded-copy/references/patterns.md	zh-not-just	不再是
+skills/grounded-copy/references/patterns.md	zh-not-just	不单是
 skills/grounded-copy/references/patterns.md	zh-not-just	不只是
 skills/grounded-copy/references/patterns.md	zh-not-just	不止是
+skills/grounded-copy/references/patterns.md	zh-not-just	告別
 skills/grounded-copy/references/patterns.md	zh-not-just	告别
 skills/grounded-copy/references/patterns.md	zh-not-just	重新定义
+skills/grounded-copy/references/patterns.md	zh-not-just	重新定義
+skills/grounded-copy/references/patterns.md	zh-not-just	顛覆
 skills/grounded-copy/references/patterns.md	zh-not-just	颠覆
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 followed by 是
@@ -219,3 +226,5 @@ skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是免费帮忙，
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是提交后立即生效，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是看中价格，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是等待，而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	与其说 X，不如说
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	并非 X，而是
