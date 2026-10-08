@@ -1,0 +1,61 @@
+skills/grounded-copy/scripts/copy_lint.py
+  s_d65647d98c2860::t_a4fcbbc159a8d8 261-263
+tests/citations-baseline.txt
+  s_366de63ac39655::t_762ded79706f8c 37,39-41,45-46
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  s_fc75c16721365b::t_4040c256bbddea 245
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_fc75c16721365b::t_6df0e23c7cd5c2 261-263
+dist/codex/grounded-copy/skills/grounded-copy/tests/bad-samples.md
+  s_fc75c16721365b::t_6133ca7dd8ab28 152-154
+dist/codex/grounded-copy/skills/grounded-copy/tests/good-samples.md
+  s_fc75c16721365b::t_8ab92b8df68833 35
+skills/grounded-copy/references/patterns.md
+  s_d65647d98c2860::t_be5bac47b3ae51 245
+skills/grounded-copy/tests/bad-samples.md
+  s_676be2cf6244bc::t_ac8361c83af0bf 152-154
+skills/grounded-copy/tests/good-samples.md
+  s_fc75c16721365b::t_dbb8eebdf053ba 35
+tests/test_corpus.py
+  s_d65647d98c2860::t_e3d0a119c7885e 224-228,259
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "561a35b8948959458c01f9937047944804570164",
+  "prompts": {},
+  "sessions": {
+    "s_366de63ac39655": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c1186c96-545c-4953-a66b-99aa509c369a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    },
+    "s_676be2cf6244bc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3c9ec480-6808-4e0b-a6f0-7ce28bac331e",
+        "model": "unknown"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    },
+    "s_d65647d98c2860": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1e223a2a-6522-4954-9dbd-eeaab980c5ec",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    },
+    "s_fc75c16721365b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1a56600c-3bd2-4eef-8e0c-d2a88a0b2ab9",
+        "model": "unknown"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
