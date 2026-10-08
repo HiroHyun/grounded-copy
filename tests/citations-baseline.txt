@@ -132,6 +132,8 @@ skills/grounded-copy/references/patterns.md	never-again	never again
 skills/grounded-copy/references/patterns.md	no-longer	no longer
 skills/grounded-copy/references/patterns.md	no-more-x	No more waiting
 skills/grounded-copy/references/patterns.md	no-more-x	no more X
+skills/grounded-copy/references/patterns.md	no-x-just-y	No X, just
+skills/grounded-copy/references/patterns.md	no-x-just-y	No hidden fees, just
 skills/grounded-copy/references/patterns.md	not-just	'm not the plugin's author, just
 skills/grounded-copy/references/patterns.md	not-just	is not supported, only
 skills/grounded-copy/references/patterns.md	not-just	not just

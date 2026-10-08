@@ -220,7 +220,7 @@ python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/g
 
 | 语言 | 检查脚本匹配的内容 |
 |---|---|
-| 英语 | 58 条规则 |
+| 英语 | 59 条规则 |
 | 中文、日语、韩语 | 部分句式，以及一份短语表 |
 | 俄语、西班牙语、阿拉伯语、法语、德语 | 各有一份 6 至 18 条的短语表 |
 

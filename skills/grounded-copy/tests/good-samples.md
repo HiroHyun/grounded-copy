@@ -20,3 +20,5 @@ Acme covers email, live chat, phone, and the help centre with one queue.
 Acme routes a ticket to the on-call reviewer within four business hours.
 Do not edit the file, just run the script.
 Not yet, only the first step is done.
+No fix was needed, just a restart.
+No password is stored, only a hash.

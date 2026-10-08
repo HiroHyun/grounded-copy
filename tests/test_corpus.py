@@ -118,12 +118,18 @@ class ReversalGapTests(unittest.TestCase):
         ("not-just", "I'm not the author. Just a user."),
         ("not-just", "I'm not the author - just a user."),
         ("not-just", "Acme is not really just a tool."),
+        ("no-x-just-y", "No hidden fees, just simple pricing."),
+        ("no-x-just-y", "No fluff. Just facts."),
+        ("no-x-just-y", "Nothing fancy, just a script."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
     KEPT = (
         "Do not edit the file, just run the script.",
         "Not yet, only the first step is done.",
+        "No fix was needed, just a restart.",
+        "No password is stored, only a hash.",
+        "It has no fees, just a flat rate.",
     )
 
     def test_each_shape_reports_its_rule(self):

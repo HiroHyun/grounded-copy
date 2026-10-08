@@ -216,7 +216,7 @@ The [paragraph review](skills/grounded-copy/references/patterns.md#paragraph-rev
 
 | Languages | What the checker matches |
 |---|---|
-| English | 58 rules |
+| English | 59 rules |
 | Chinese, Japanese, Korean | sentence patterns, plus a list of phrases |
 | Russian, Spanish, Arabic, French, German | a list of 6 to 18 phrases each |
 

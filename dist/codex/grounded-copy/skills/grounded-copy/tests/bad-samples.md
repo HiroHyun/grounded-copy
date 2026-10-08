@@ -80,3 +80,5 @@ I'm not the author, just a user.
 I'm not the plugin's author, I just use it.
 This isn't magic, just math.
 I'm not the author. Just a user.
+No hidden fees, just simple pricing.
+No fluff. Just facts.

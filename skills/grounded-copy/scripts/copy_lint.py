@@ -64,6 +64,12 @@ PATTERNS = [
     ("doesnt-just",
      _c(r"\b(?:doesn't|don't|didn't|won't|isn't|aren't|wasn't|weren't)\s+"
         r"(?:just|only|merely|simply)\b")),
+    # The slogan "No hidden fees, just simple pricing." One or two words after
+    # "no", then "just", with no word in front of "no". A status line with a
+    # verb in the denial ("No fix was needed, just a restart.") runs longer.
+    ("no-x-just-y",
+     _c(r"(?<!\w\s)\b(?:no|zero|nothing)\s+(?:[\w'-]+\s+)?[\w'-]+[,.;]\s+"
+        r"just\b")),
     ("more-than-just", _c(r"\bmore\s+than\s+just\b")),
     ("is-more-than-a", _c(r"\b(?:is|are)\s+more\s+than\s+an?\b")),
     ("goes-beyond", _c(r"\bgo(?:es|ing)?\s+(?:far\s+|well\s+)?beyond\b")),
