@@ -217,6 +217,8 @@ class ReversalGapTests(unittest.TestCase):
         "I have not so much as looked at it.",
         "Unlike the v1 API, v2 paginates by cursor.",
         "It runs in places where other modules might be loaded.",
+        "The run found no ordinary sentence that reports.",
+        "No ordinary user can write to /etc.",
         "Call _unlock_mutex before the write.",
         "Pass *args and **kwargs to the planner.",
         "Use *.md and *.txt globs.",

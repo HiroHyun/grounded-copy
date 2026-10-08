@@ -137,9 +137,12 @@ PATTERNS = [
     ("negated-copula-dash",
      _c(r"(?:\b(?:am|is|was|are|were)(?:n't|\s+not)|'(?:m|s|re)\s+not)\s+"
         r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)")),
+    # "no ordinary X" needs a be-verb in front. "The run found no ordinary
+    # sentence that reports" has none.
     ("not-your-average",
      _c(r"\bnot\s+your\s+(?:average|typical|ordinary|everyday|usual)\b"
-        r"|\bno\s+(?:ordinary|mere)\b|\bnot\s+(?:just\s+)?another\b")),
+        r"|(?:\b(?:is|was|are|were)|'s)\s+no\s+(?:ordinary|mere)\b"
+        r"|\bnot\s+(?:just\s+)?another\b")),
     ("unlike-others",
      _c(r"\bunlike\s+(?:most|many|other|others|traditional|typical|"
         r"ordinary|conventional|"

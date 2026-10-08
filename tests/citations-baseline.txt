@@ -155,7 +155,7 @@ skills/grounded-copy/references/patterns.md	not-x-its-y	The file isn't missing, 
 skills/grounded-copy/references/patterns.md	not-x-its-y	isn't about X, it's
 skills/grounded-copy/references/patterns.md	not-your-average	Not another
 skills/grounded-copy/references/patterns.md	not-your-average	Not your average
-skills/grounded-copy/references/patterns.md	not-your-average	no ordinary
+skills/grounded-copy/references/patterns.md	not-your-average	is no ordinary
 skills/grounded-copy/references/patterns.md	not-your-average	not your average
 skills/grounded-copy/references/patterns.md	opener-at-company-we	At Acme, we
 skills/grounded-copy/references/patterns.md	opener-imagine	Imagine
