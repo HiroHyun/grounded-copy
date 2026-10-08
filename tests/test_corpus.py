@@ -134,6 +134,16 @@ class ReversalGapTests(unittest.TestCase):
          "Acme isn't complicated - it books the job in one tap."),
         ("negated-copula-dash", "I'm not the author — I use the plugin."),
         ("negated-copula-dash", "That's not a bug -- it's a feature."),
+        ("doesnt-just", "Acme doesn't just store files."),  # shipped
+        ("doesnt-just", "You can't just store files."),
+        ("doesnt-just", "Acme never just stores files."),
+        ("doesnt-just", "Acme cannot simply store files."),
+        ("more-than-just", "Acme is more than just a tool."),  # shipped
+        ("more-than-just", "Acme does more than simply store files."),
+        ("is-more-than-a", "Acme is more than a tool."),  # shipped
+        ("is-more-than-a", "Acme was more than a tool."),
+        ("is-more-than-a", "The tracker's more than a list."),
+        ("is-more-than-a", "Acme is so much more than a tool."),
     )
 
     # Ordinary sentences that share a surface form with a row above.

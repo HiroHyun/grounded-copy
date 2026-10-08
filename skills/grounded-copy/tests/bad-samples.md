@@ -87,3 +87,7 @@ This isn't a bug. It's a feature.
 The problem is not speed. The problem is trust.
 Acme is a partner - not a vendor.
 That's not a bug -- it's a feature.
+Acme is more than just a tool.
+You can't just store files.
+Acme does more than simply store files.
+Acme was more than a tool.

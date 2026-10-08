@@ -32,6 +32,8 @@ compromises", "hassle-free", "frictionless").
 | "Zero guesswork. Zero hidden fees." | "Each listing carries the serial number, condition report, and full price." |
 | "A second index would add duplication without adding information." | "The existing index already represents that commit." |
 
+The `doesnt-just` rule takes every contracted auxiliary, `cannot`, and `never`, so an instruction such as "You can't just subclass list." reports. The `is-more-than-a` rule takes the past tense and the contracted forms, so a quantity such as "The log was more than a gigabyte." reports.
+
 The `without-gerund` rule matches `without` followed by an `-ing` form. It also reports ordinary phrases such as "without warning" and "without training". Preserve the meaning of required text and use the profile off for that work.
 
 ## 2. Reversal reveals

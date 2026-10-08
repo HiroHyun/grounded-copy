@@ -39,6 +39,7 @@ skills/grounded-copy/references/patterns.md	de-not-just	nicht nur ein
 skills/grounded-copy/references/patterns.md	de-not-just	nie wieder
 skills/grounded-copy/references/patterns.md	de-not-just	verabschieden Sie sich
 skills/grounded-copy/references/patterns.md	doesnt-just	Don't just
+skills/grounded-copy/references/patterns.md	doesnt-just	can't just
 skills/grounded-copy/references/patterns.md	doesnt-just	doesn't just
 skills/grounded-copy/references/patterns.md	doesnt-just	don't just
 skills/grounded-copy/references/patterns.md	editorializing-ing	, highlighting
@@ -102,6 +103,7 @@ skills/grounded-copy/references/patterns.md	inflated-copula	boasts
 skills/grounded-copy/references/patterns.md	inflated-copula	testament to
 skills/grounded-copy/references/patterns.md	instead-of	instead of
 skills/grounded-copy/references/patterns.md	instead-of	instead of
+skills/grounded-copy/references/patterns.md	is-more-than-a	was more than a
 skills/grounded-copy/references/patterns.md	isnt-about	isn't about
 skills/grounded-copy/references/patterns.md	its-about	it's about Y", "—not
 skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
