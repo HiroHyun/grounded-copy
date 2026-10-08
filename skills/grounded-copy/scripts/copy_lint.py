@@ -319,13 +319,14 @@ BLOCK_LEAD_STRIP = " \t#*->"
 # no width. U+200B separates words, so it becomes a space.
 _FOLD = str.maketrans({
     "’": "'", "‘": "'", "“": '"', "”": '"',
-    "―": "—", "−": "—", "⸺": "—", "﹘": "—", "－": "—",
-    "‐": "-", "‑": "-", "‒": "-",
-    "​": " ", "‌": None, "‍": None, "⁠": None,
-    "﻿": None, "­": None,
+    "\u2015": "—", "\u2212": "—", "\u2e3a": "—", "\ufe58": "—", "\uff0d": "—",
+    "\u2010": "-", "\u2011": "-", "\u2012": "-",
+    "\u200b": " ", "\u200c": None, "\u200d": None, "\u2060": None,
+    "\ufeff": None, "\u00ad": None,
 })
-# An apostrophe look-alike between two letters: "doesnʼt", "doesn`t".
-_APOSTROPHE = re.compile(r"(?<=\w)[`´ʼ＇′](?=\w)")
+# An apostrophe look-alike between two letters: U+00B4, U+02BC, U+FF07,
+# U+2032, or a backtick.
+_APOSTROPHE = re.compile(r"(?<=\w)[`\u00b4\u02bc\uff07\u2032](?=\w)")
 _TAG = re.compile(r"</?[A-Za-z][^<>\n]{0,80}>")
 # A Markdown emphasis pair. The closing marker repeats the opening one, so
 # `_private_name`, `*args`, and `2 * 3 * 4` stay as written.
