@@ -239,6 +239,7 @@ The rules also match the forms below. X and Y mark a sentence pattern. The last 
 | ko | 단순히 〜이 아니다 / 그저 〜이 아니다 / 뿐 아니라 / 〜가 아니라 〜입니다 | 월요일이 아니라 화요일입니다. |
 | ru | не только / не всего лишь / нечто большее, чем / это не про / забудьте о | Я не только программист. |
 | es | no es sólo / no solo + verbo / no solamente / no únicamente / no es simplemente | No solo en Madrid llueve. |
+| fr | n'est pas uniquement / n'est pas que / est plus qu'un / ne se limite pas / ne fait pas que | C'est plus qu'un an. |
 
 ### Chinese comparisons
 

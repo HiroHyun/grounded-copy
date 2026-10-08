@@ -139,3 +139,6 @@ Acme — нечто большее, чем инструмент.
 Acme no es sólo una herramienta.
 Acme no solo almacena archivos.
 Acme no es simplemente una herramienta.
+Acme n'est pas uniquement un outil.
+Acme est bien plus qu'un outil.
+Acme ne se limite pas au stockage.

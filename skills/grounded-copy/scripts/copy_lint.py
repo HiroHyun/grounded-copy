@@ -252,7 +252,10 @@ PATTERNS = [
         r"(?:bien\s+)?plus\s+qu'un(?:e)?\s+simple|"
         r"dites\s+adieu|fini(?:s|es)?\s+les?\s|"
         r"redéfini\w*|va\s+(?:bien\s+)?au[-\s]delà|révolutionn\w*|"
-        r"oubliez\s+(?:les?|la|vos?)\b|imaginez\s")),
+        r"oubliez\s+(?:les?|la|vos?)\b|imaginez\s|"
+        r"n'est\s+pas\s+(?:que\b|uniquement)|pas\s+uniquement\s+un|"
+        r"\b(?:est|sont)\s+(?:bien\s+)?plus\s+qu'une?\b|"
+        r"ne\s+se\s+limite\s+pas|ne\s+fait\s+pas\s+que\b")),
     ("de-not-just",
      _c(r"nicht\s+nur\s+(?:ein|eine|irgendein)|mehr\s+als\s+nur|"
         r"weit\s+mehr\s+als|verabschieden\s+Sie\s+sich|schluss\s+mit|"

@@ -216,6 +216,12 @@ class ReversalGapTests(unittest.TestCase):
         ("es-not-just", "Acme no es sólo una herramienta."),
         ("es-not-just", "Acme no solo almacena archivos."),
         ("es-not-just", "Acme no es simplemente una herramienta."),
+        # French.
+        ("fr-not-just", "Acme n'est pas qu'un simple outil."),  # shipped
+        ("fr-not-just", "Acme n'est pas uniquement un outil."),
+        ("fr-not-just", "Acme est bien plus qu'un outil."),
+        ("fr-not-just", "Acme ne se limite pas au stockage."),
+        ("fr-not-just", "Acme ne fait pas que stocker des fichiers."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -249,6 +255,8 @@ class ReversalGapTests(unittest.TestCase):
         "Step 1: Stop services.",
         "并非所有文件都是只读的。",
         "今日は雨ではなく雪です。",
+        "Il ne reste plus qu'un jour.",
+        "Il ne mange pas que du pain.",
     )
 
     def test_each_shape_reports_its_rule(self):

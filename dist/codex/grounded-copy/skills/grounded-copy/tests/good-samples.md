@@ -32,3 +32,4 @@ Usage: python copy_lint.py FILE
 Note: Stop the server before the upgrade.
 并非所有文件都是只读的。
 今日は雨ではなく雪です。
+Il ne reste plus qu'un jour.

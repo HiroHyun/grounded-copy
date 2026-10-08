@@ -61,8 +61,14 @@ skills/grounded-copy/references/patterns.md	es-not-just	va más allá
 skills/grounded-copy/references/patterns.md	far-from-just	Far from being
 skills/grounded-copy/references/patterns.md	far-from-just	far from just
 skills/grounded-copy/references/patterns.md	fr-not-just	dites adieu
+skills/grounded-copy/references/patterns.md	fr-not-just	est plus qu'un
+skills/grounded-copy/references/patterns.md	fr-not-just	est plus qu'un
 skills/grounded-copy/references/patterns.md	fr-not-just	imaginez
 skills/grounded-copy/references/patterns.md	fr-not-just	n'est pas qu'un
+skills/grounded-copy/references/patterns.md	fr-not-just	n'est pas que
+skills/grounded-copy/references/patterns.md	fr-not-just	n'est pas uniquement
+skills/grounded-copy/references/patterns.md	fr-not-just	ne fait pas que
+skills/grounded-copy/references/patterns.md	fr-not-just	ne se limite pas
 skills/grounded-copy/references/patterns.md	fr-not-just	plus qu'un simple
 skills/grounded-copy/references/patterns.md	fr-not-just	redéfinit
 skills/grounded-copy/references/patterns.md	fr-not-just	va au-delà
