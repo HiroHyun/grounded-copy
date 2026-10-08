@@ -119,10 +119,13 @@ skills/grounded-copy/references/patterns.md	ja-not-just	単なる〜ではない
 skills/grounded-copy/references/patterns.md	ja-not-just	単なる〜ではなく / 〜ではなく
 skills/grounded-copy/references/patterns.md	ja-not-just	想像してみてください
 skills/grounded-copy/references/patterns.md	ja-not-just	革命的
+skills/grounded-copy/references/patterns.md	ko-not-just	가 아니라 〜입니다 | 월요일이 아니라 화요일입니다
 skills/grounded-copy/references/patterns.md	ko-not-just	게임 체인저
 skills/grounded-copy/references/patterns.md	ko-not-just	단순한 〜이 아니다
+skills/grounded-copy/references/patterns.md	ko-not-just	단순히 〜이 아니다 / 그저 〜이 아니다
 skills/grounded-copy/references/patterns.md	ko-not-just	더 이상
 skills/grounded-copy/references/patterns.md	ko-not-just	더 이상
+skills/grounded-copy/references/patterns.md	ko-not-just	뿐 아니라
 skills/grounded-copy/references/patterns.md	ko-not-just	뿐만 아니라
 skills/grounded-copy/references/patterns.md	ko-not-just	뿐만 아니라
 skills/grounded-copy/references/patterns.md	ko-not-just	상상해 보세요

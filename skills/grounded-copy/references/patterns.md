@@ -236,6 +236,7 @@ The rules also match the forms below. X and Y mark a sentence pattern. The last 
 |---|---|---|
 | zh | 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y | 他不光是一个人去的。 |
 | ja | だけじゃない / にとどまりません / 単なる〜ではなく / 〜ではなく、〜です | 会議は月曜日ではなく、火曜日です。 |
+| ko | 단순히 〜이 아니다 / 그저 〜이 아니다 / 뿐 아니라 / 〜가 아니라 〜입니다 | 월요일이 아니라 화요일입니다. |
 
 ### Chinese comparisons
 

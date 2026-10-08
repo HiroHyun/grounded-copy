@@ -200,6 +200,12 @@ class ReversalGapTests(unittest.TestCase):
         ("ja-not-just", "ファイル保存だけじゃない。"),
         ("ja-not-just", "Acmeはツールにとどまりません。"),
         ("ja-not-just", "これはバグではなく、仕様です。"),
+        # Korean.
+        ("ko-not-just", "Acme는 단순한 도구가 아닙니다."),  # shipped
+        ("ko-not-just", "Acme는 단순한 도구가 아니라 플랫폼입니다."),
+        ("ko-not-just", "Acme는 그저 도구가 아닙니다."),
+        ("ko-not-just", "Acme는 도구뿐 아니라 플랫폼도 제공합니다."),
+        ("ko-not-just", "저는 작성자가 아니라 사용자입니다."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
