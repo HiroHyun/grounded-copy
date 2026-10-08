@@ -34,6 +34,8 @@ compromises", "hassle-free", "frictionless").
 
 The `doesnt-just` rule takes every contracted auxiliary, `cannot`, and `never`, so an instruction such as "You can't just subclass list." reports. The `is-more-than-a` rule takes the past tense and the contracted forms, so a quantity such as "The log was more than a gigabyte." reports.
 
+The `less-a-x-than` rule also reports "less about speed and more about trust" and "not so much a gym as a coaching program".
+
 The `without-gerund` rule matches `without` followed by an `-ing` form. It also reports ordinary phrases such as "without warning" and "without training". Preserve the meaning of required text and use the profile off for that work.
 
 ## 2. Reversal reveals
@@ -67,6 +69,8 @@ The `not-x-its-y` rule reports the first trigger with any subject, and as two se
 
 The `dash-not-contrast` and `negated-copula-dash` rules read a spaced hyphen or a double hyphen as a dash: "Acme is a partner - not a vendor." A plain limit written that way reports too: "The limit is 3 - not configurable."
 
+The `not-x-but-y` rule takes a contracted negation and any determiner: "The result wasn't a failure but a delay." It also takes a preposition or "because" that repeats after "but": "The error was not in the config but in the loader." A concession reports too: "The build isn't the fastest but it works." The `isnt-about` rule takes the past tense and "never about", so the idiom "He wasn't about to quit." reports. "This is no ordinary newsletter." and "Not another todo app." report under `not-your-average`.
+
 ## 3. Era-ending
 
 Give the current behavior or result. A claim about the end of an era usually adds little useful information.
@@ -93,6 +97,8 @@ Triggers: "unlike traditional/most/other X", "while others/most X, we Y".
 | "While others hide their fees, Acme lists them." | "Acme itemizes every charge on the invoice." |
 
 The same comparison can span sentences. For example: "Most vendors bury their fees. Acme prints them." Rewrite it as "Acme prints every fee on the invoice."
+
+The two rules also report "unlike competitors", "whereas most", and "where others". A comparison of two interfaces in that shape reports: "Whereas most functions return a list, this one returns an iterator."
 
 ## 5. Rhetorical bait
 

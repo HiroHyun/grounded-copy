@@ -91,3 +91,16 @@ Acme is more than just a tool.
 You can't just store files.
 Acme does more than simply store files.
 Acme was more than a tool.
+Design isn't about decoration.
+The talk wasn't about the money.
+Acme is not a vendor but a partner.
+The result wasn't a failure but a delay.
+The error was not in the config but in the loader.
+Acme is less a gym than a coaching program.
+Acme is not so much a gym as a coaching program.
+Not your average newsletter.
+This is no ordinary newsletter.
+Unlike traditional agencies, we publish our rates.
+Unlike competitors, Acme publishes its rates.
+While others hide their fees, Acme lists them.
+Whereas most tools hide rates, Acme publishes them.

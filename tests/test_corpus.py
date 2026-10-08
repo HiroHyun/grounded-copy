@@ -144,6 +144,29 @@ class ReversalGapTests(unittest.TestCase):
         ("is-more-than-a", "Acme was more than a tool."),
         ("is-more-than-a", "The tracker's more than a list."),
         ("is-more-than-a", "Acme is so much more than a tool."),
+        ("isnt-about", "Design isn't about decoration."),  # shipped
+        ("isnt-about", "The talk wasn't about the money."),
+        ("isnt-about", "Design was never about decoration."),
+        ("isnt-about", "This isn't really about speed."),
+        ("not-x-but-y", "Acme is not a vendor but a partner."),  # shipped
+        ("not-x-but-y", "The result wasn't a failure but a delay."),
+        ("not-x-but-y", "The tool is not my work but my friend's."),
+        ("not-x-but-y",
+         "We chose it not because it is cheap but because it is fast."),
+        ("not-x-but-y", "The error was not in the config but in the loader."),
+        ("less-a-x-than", "Acme is less a gym than a coaching program."),  # shipped
+        ("less-a-x-than", "It is less about speed and more about trust."),
+        ("less-a-x-than", "Acme is not so much a gym as a coaching program."),
+        ("less-a-x-than", "The change is less a rewrite and more a cleanup."),
+        ("not-your-average", "Not your average newsletter."),  # shipped
+        ("not-your-average", "This is no ordinary newsletter."),
+        ("not-your-average", "Not another todo app."),
+        ("unlike-others",
+         "Unlike traditional agencies, we publish our rates."),  # shipped
+        ("unlike-others", "Unlike competitors, Acme publishes its rates."),
+        ("while-others", "While others hide their fees, Acme lists them."),  # shipped
+        ("while-others", "Whereas most tools hide rates, Acme publishes them."),
+        ("while-others", "Where others see noise, Acme sees signal."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -159,6 +182,11 @@ class ReversalGapTests(unittest.TestCase):
         "The worker is not running. It is scheduled for 09:00.",
         "  - not supported on Windows",
         "Set the offset to 3 - 1.",
+        "Try not to restart the server, but if you must, drain it first.",
+        "Memory use is less of an issue than CPU time.",
+        "I have not so much as looked at it.",
+        "Unlike the v1 API, v2 paginates by cursor.",
+        "It runs in places where other modules might be loaded.",
     )
 
     def test_each_shape_reports_its_rule(self):

@@ -24,3 +24,6 @@ No fix was needed, just a restart.
 No password is stored, only a hash.
 If the file is not there, it is created on the first run.
 The worker is not running. It is scheduled for 09:00.
+Try not to restart the server, but if you must, drain it first.
+Memory use is less of an issue than CPU time.
+Unlike the v1 API, v2 paginates by cursor.

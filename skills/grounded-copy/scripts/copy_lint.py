@@ -92,8 +92,9 @@ PATTERNS = [
     ("goes-beyond", _c(r"\bgo(?:es|ing)?\s+(?:far\s+|well\s+)?beyond\b")),
     ("beyond-just", _c(r"\bbeyond\s+(?:just|mere|merely|simple)\b")),
     ("isnt-about",
-     _c(r"\b(?:isn't|is\s+not|aren't|are\s+not|it's\s+not)\s+"
-        r"(?:just\s+|only\s+)?about\b")),
+     _c(r"\b(?:isn't|is\s+not|aren't|are\s+not|it's\s+not|wasn't|was\s+not|"
+        r"weren't|were\s+not|(?:is|was|are|were)\s+never)\s+"
+        r"(?:(?:really|just|only|actually)\s+)?about\b")),
     ("its-about", _c(r"\bit'?s\s+about\s+\w+[^.!?\n]{0,40}\bnot\b")),
     ("no-longer", _c(r"\bno\s+longer\b")),
     ("gone-are-the-days", _c(r"\bgone\s+are\s+the\s+days\b")),
@@ -106,8 +107,15 @@ PATTERNS = [
     ("say-goodbye-hello", _c(r"\bsay\s+(?:goodbye|hello|farewell)\b")),
     ("no-more-x", _c(r"\bno\s+more\s+(?!than\b)\w+")),
     ("never-again", _c(r"\bnever\s+again\b")),
+    # Arm 1: "not" or a contracted negation, a determiner, then "but". Arm 2:
+    # a preposition or "because" after the negation and the same word after
+    # "but" ("not in the config but in the loader"). The repeat keeps "try not
+    # to restart the server, but drain it first" out.
     ("not-x-but-y",
-     _c(r"\bnot\s+(?:a|an|the|your)\b[^.!?\n]{0,60}?,?\s+but\b")),
+     _c(r"(?:\bnot|n't)\s+(?:a|an|the|your|my|our|his|her|its|their|this|"
+        r"that|these|those)\b[^.!?\n]{0,60}?,?\s+but\b"
+        r"|(?:\bnot|n't)\s+(because|to|for|by|in|on|with|from)\b"
+        r"[^.!?\n]{0,60}?,?\s+but\s+\1\b")),
     # "Acme isn't a tool, it's a platform", with any subject. Arm 1: a clause
     # start, a negated be-verb, a comma or semicolon, then a pronoun and a
     # be-verb. Arm 2: the same pair as two sentences, where a determiner
@@ -130,14 +138,23 @@ PATTERNS = [
      _c(r"(?:\b(?:am|is|was|are|were)(?:n't|\s+not)|'(?:m|s|re)\s+not)\s+"
         r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)")),
     ("not-your-average",
-     _c(r"\bnot\s+your\s+(?:average|typical|ordinary|everyday|usual)\b")),
+     _c(r"\bnot\s+your\s+(?:average|typical|ordinary|everyday|usual)\b"
+        r"|\bno\s+(?:ordinary|mere)\b|\bnot\s+(?:just\s+)?another\b")),
     ("unlike-others",
      _c(r"\bunlike\s+(?:most|many|other|others|traditional|typical|"
-        r"ordinary|conventional)\b")),
+        r"ordinary|conventional|"
+        r"(?:(?:its|our|the)\s+)?(?:competitors?|rivals?|competition))\b")),
     ("while-others",
-     _c(r"\bwhile\s+(?:most|many|others?|traditional|typical|conventional)\b")),
+     _c(r"\b(?:while|whilst|whereas)\s+(?:most|many|others?|traditional|"
+        r"typical|conventional|competitors|rivals)\b|\bwhere\s+others\b")),
     ("far-from-just", _c(r"\bfar\s+from\s+(?:just|merely|being)\b")),
-    ("less-a-x-than", _c(r"\bless\s+an?\s+\w+\s+than\b")),
+    # "less a gym than a coaching program", "less about speed and more about
+    # trust", "not so much a gym as a coaching program". The lookahead keeps
+    # the idiom "not so much as looked at it" out.
+    ("less-a-x-than",
+     _c(r"\bless\s+an?\s+\w+\s+(?:than|and\s+more)\b"
+        r"|\bless\s+about\b[^.!?\n]{0,40}\b(?:than|more\s+about)\b"
+        r"|\bnot\s+so\s+much\s+(?!as\b)[^.!?\n]{1,50}?\bas\b")),
     ("think-again", _c(r"\bthink\s+again\b")),
     ("without-the-hassle",
      _c(r"\bwithout\s+(?:the|all\s+the|any\s+of\s+the)\s+(?:hassle|hassles|"

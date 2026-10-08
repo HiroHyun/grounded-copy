@@ -105,6 +105,7 @@ skills/grounded-copy/references/patterns.md	instead-of	instead of
 skills/grounded-copy/references/patterns.md	instead-of	instead of
 skills/grounded-copy/references/patterns.md	is-more-than-a	was more than a
 skills/grounded-copy/references/patterns.md	isnt-about	isn't about
+skills/grounded-copy/references/patterns.md	isnt-about	wasn't about
 skills/grounded-copy/references/patterns.md	its-about	it's about Y", "—not
 skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
 skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
@@ -127,6 +128,8 @@ skills/grounded-copy/references/patterns.md	ko-not-just	재정의
 skills/grounded-copy/references/patterns.md	ko-not-just	혁신적
 skills/grounded-copy/references/patterns.md	less-a-x-than	less a catalog than
 skills/grounded-copy/references/patterns.md	less-a-x-than	less a gym than
+skills/grounded-copy/references/patterns.md	less-a-x-than	less about speed and more about
+skills/grounded-copy/references/patterns.md	less-a-x-than	not so much a gym as
 skills/grounded-copy/references/patterns.md	look-no-further	Look no further
 skills/grounded-copy/references/patterns.md	more-than-just	More than just
 skills/grounded-copy/references/patterns.md	more-than-just	more than just
@@ -142,12 +145,17 @@ skills/grounded-copy/references/patterns.md	no-x-just-y	No hidden fees, just
 skills/grounded-copy/references/patterns.md	not-just	'm not the plugin's author, just
 skills/grounded-copy/references/patterns.md	not-just	is not supported, only
 skills/grounded-copy/references/patterns.md	not-just	not just
+skills/grounded-copy/references/patterns.md	not-x-but-y	n't a failure but
+skills/grounded-copy/references/patterns.md	not-x-but-y	n't the fastest but
+skills/grounded-copy/references/patterns.md	not-x-but-y	not in the config but in
 skills/grounded-copy/references/patterns.md	not-x-its-y	's not a website. It's your
 skills/grounded-copy/references/patterns.md	not-x-its-y	Acme isn't a tool, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	It's not X, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	The file isn't missing, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	isn't about X, it's
+skills/grounded-copy/references/patterns.md	not-your-average	Not another
 skills/grounded-copy/references/patterns.md	not-your-average	Not your average
+skills/grounded-copy/references/patterns.md	not-your-average	no ordinary
 skills/grounded-copy/references/patterns.md	not-your-average	not your average
 skills/grounded-copy/references/patterns.md	opener-at-company-we	At Acme, we
 skills/grounded-copy/references/patterns.md	opener-imagine	Imagine
@@ -173,11 +181,15 @@ skills/grounded-copy/references/patterns.md	say-goodbye-hello	Say goodbye
 skills/grounded-copy/references/patterns.md	studies-show	Studies show
 skills/grounded-copy/references/patterns.md	think-again	Think again
 skills/grounded-copy/references/patterns.md	unlike-others	Unlike traditional
+skills/grounded-copy/references/patterns.md	unlike-others	unlike competitors
 skills/grounded-copy/references/patterns.md	unlike-others	unlike traditional
 skills/grounded-copy/references/patterns.md	vague-experts	Experts agree
 skills/grounded-copy/references/patterns.md	where-x-meets-y	Where quality meets affordability
 skills/grounded-copy/references/patterns.md	where-x-meets-y	where X meets Y
+skills/grounded-copy/references/patterns.md	while-others	Whereas most
 skills/grounded-copy/references/patterns.md	while-others	While others
+skills/grounded-copy/references/patterns.md	while-others	where others
+skills/grounded-copy/references/patterns.md	while-others	whereas most
 skills/grounded-copy/references/patterns.md	while-others	while others
 skills/grounded-copy/references/patterns.md	without-gerund	without adding
 skills/grounded-copy/references/patterns.md	without-gerund	without adding
