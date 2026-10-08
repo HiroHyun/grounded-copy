@@ -85,3 +85,5 @@ No fluff. Just facts.
 Acme isn't a tool, it's a platform.
 This isn't a bug. It's a feature.
 The problem is not speed. The problem is trust.
+Acme is a partner - not a vendor.
+That's not a bug -- it's a feature.

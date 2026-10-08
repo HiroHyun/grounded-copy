@@ -118,11 +118,14 @@ PATTERNS = [
         + r"\s+(?:an?|the|your|our|my)\b"
         + r"|\b((?:the|our|your)\s+\w+|this|that|it)\s+(?:is|was)"
         + r"(?:n't|\s+not)\s+" + _GAP + r"[.,;]\s+\1\s+(?:is|was)\b")),
-    ("dash-not-contrast", _c(r"[—–]\s*not\s+")),
+    # An em or en dash, or a spaced ASCII hyphen or double hyphen with a word
+    # in front of it. A nested bullet ("  - not supported") has no such word.
+    ("dash-not-contrast", _c(r"(?:[—–]|(?<=\S)\s+-{1,2}\s)\s*not\s+")),
     # Any object, including one opening with a backtick, a quote, or a bracket.
     ("comma-not-appositive", _c(r",\s*not\s+(?=\S)")),
     ("negated-copula-dash",
-     _c(r"\b(?:is|was|are|were)(?:n't|\s+not)\s+[^—–.!?\n;:]{1,30}[—–]")),
+     _c(r"(?:\b(?:am|is|was|are|were)(?:n't|\s+not)|'(?:m|s|re)\s+not)\s+"
+        r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)")),
     ("not-your-average",
      _c(r"\bnot\s+your\s+(?:average|typical|ordinary|everyday|usual)\b")),
     ("unlike-others",

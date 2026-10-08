@@ -125,6 +125,15 @@ class ReversalGapTests(unittest.TestCase):
         ("not-x-its-y", "- That's not a bug, that's a feature."),
         ("not-x-its-y", "This isn't a bug. It's a feature."),
         ("not-x-its-y", "The problem is not speed. The problem is trust."),
+        ("dash-not-contrast", "Acme is a partner — not a vendor."),  # shipped
+        ("dash-not-contrast", "Acme is a partner - not a vendor."),
+        ("dash-not-contrast", "Acme is a partner -- not a vendor."),
+        ("negated-copula-dash",
+         "Acme isn't complicated — it books the job in one tap."),  # shipped
+        ("negated-copula-dash",
+         "Acme isn't complicated - it books the job in one tap."),
+        ("negated-copula-dash", "I'm not the author — I use the plugin."),
+        ("negated-copula-dash", "That's not a bug -- it's a feature."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -138,6 +147,8 @@ class ReversalGapTests(unittest.TestCase):
         "- When the flag is not set, it is ignored.",
         "Note that if the name is not given, it is read from the config.",
         "The worker is not running. It is scheduled for 09:00.",
+        "  - not supported on Windows",
+        "Set the offset to 3 - 1.",
     )
 
     def test_each_shape_reports_its_rule(self):

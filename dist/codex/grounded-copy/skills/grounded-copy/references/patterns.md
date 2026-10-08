@@ -63,6 +63,8 @@ The `no-x-just-y` rule reports the slogan form: "no", "zero", or "nothing", one 
 
 The `not-x-its-y` rule reports the first trigger with any subject, and as two sentences. A condition passes: "If the file is not there, it is created." A correction of fact in the same shape reports: "The file isn't missing, it's empty." State the fact: "The file is empty."
 
+The `dash-not-contrast` and `negated-copula-dash` rules read a spaced hyphen or a double hyphen as a dash: "Acme is a partner - not a vendor." A plain limit written that way reports too: "The limit is 3 - not configurable."
+
 ## 3. Era-ending
 
 Give the current behavior or result. A claim about the end of an era usually adds little useful information.

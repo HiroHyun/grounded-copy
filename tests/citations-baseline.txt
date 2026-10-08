@@ -23,6 +23,8 @@ skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
+skills/grounded-copy/references/patterns.md	dash-not-contrast	- not
+skills/grounded-copy/references/patterns.md	dash-not-contrast	- not
 skills/grounded-copy/references/patterns.md	dash-not-contrast	—not
 skills/grounded-copy/references/patterns.md	dash-pair-list	— a legal disclaimer, regulatory text, a translation of supplied source —
 skills/grounded-copy/references/patterns.md	dash-pair-list	— a read of the preference, a read of the skill file, a write to stdout —
