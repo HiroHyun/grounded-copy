@@ -121,6 +121,10 @@ class ReversalGapTests(unittest.TestCase):
         ("no-x-just-y", "No hidden fees, just simple pricing."),
         ("no-x-just-y", "No fluff. Just facts."),
         ("no-x-just-y", "Nothing fancy, just a script."),
+        ("not-x-its-y", "Acme isn't a tool, it's a platform."),
+        ("not-x-its-y", "- That's not a bug, that's a feature."),
+        ("not-x-its-y", "This isn't a bug. It's a feature."),
+        ("not-x-its-y", "The problem is not speed. The problem is trust."),
     )
 
     # Ordinary sentences that share a surface form with a row above.
@@ -130,6 +134,10 @@ class ReversalGapTests(unittest.TestCase):
         "No fix was needed, just a restart.",
         "No password is stored, only a hash.",
         "It has no fees, just a flat rate.",
+        "If the file is not there, it is created on the first run.",
+        "- When the flag is not set, it is ignored.",
+        "Note that if the name is not given, it is read from the config.",
+        "The worker is not running. It is scheduled for 09:00.",
     )
 
     def test_each_shape_reports_its_rule(self):

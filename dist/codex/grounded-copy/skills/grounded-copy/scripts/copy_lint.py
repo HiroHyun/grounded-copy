@@ -49,6 +49,20 @@ _JUST = r"(?:just|only|merely|simply)\b"
 # instruction ("do not edit the file, just run the script") has neither.
 _DENIAL = r"(?:" + _NEG_COP + r"|\bnot\s+" + _DET + r")\s+"
 _PRON = r"(?:(?:I|we|you|it|they|he|she)\s+)?"
+# A clause start: a word with no word in front of it. Two fixed-width
+# lookbehinds do the work, so a list, quote, or table marker stays out of the
+# reported snippet.
+_CLAUSE = r"(?<![\w'\"]\s)(?<![\w'])(?=\w)"
+# A clause that opens with one of these words, or holds one of the inner set
+# before its comma, states a condition: "If the file is not there, it is
+# created." The reversal rule leaves it alone.
+_SUBORD = (r"(?:if|when|whenever|while|whilst|although|though|even|given|now|"
+           r"provided|assuming|supposing|as|since|because|where|unless|once|"
+           r"until|whether|for|after|before)\b")
+_INNER = (r"\b(?:if|when|whenever|while|whilst|although|though|because|unless|"
+          r"until|whether)\b")
+_SECOND = (r"(?:it|this|that|they|we|he|she|you|i)"
+           r"(?:'s|'re|'m|\s+(?:is|are|was|were|am))\b")
 
 # ---------------------------------------------------------------------------
 # Anywhere-in-sentence patterns
@@ -91,6 +105,19 @@ PATTERNS = [
     ("never-again", _c(r"\bnever\s+again\b")),
     ("not-x-but-y",
      _c(r"\bnot\s+(?:a|an|the|your)\b[^.!?\n]{0,60}?,?\s+but\b")),
+    # "Acme isn't a tool, it's a platform", with any subject. Arm 1: a clause
+    # start, a negated be-verb, a comma or semicolon, then a pronoun and a
+    # be-verb. Arm 2: the same pair as two sentences, where a determiner
+    # follows the second be-verb. Arm 3: the subject repeated, as in "The
+    # problem is not speed. The problem is trust."
+    ("not-x-its-y",
+     _c(_CLAUSE + r"(?!" + _SUBORD + r")(?![^,.!?;:\n—–]{0,60}?" + _INNER
+        + r")[^,.!?;:\n—–]{0,40}?" + _NEG_COP + r"\s+" + _GAP + r"[,;]\s+"
+        + _SECOND
+        + "|" + _NEG_COP + r"\s+" + _GAP + r"\.\s+" + _SECOND
+        + r"\s+(?:an?|the|your|our|my)\b"
+        + r"|\b((?:the|our|your)\s+\w+|this|that|it)\s+(?:is|was)"
+        + r"(?:n't|\s+not)\s+" + _GAP + r"[.,;]\s+\1\s+(?:is|was)\b")),
     ("dash-not-contrast", _c(r"[—–]\s*not\s+")),
     # Any object, including one opening with a backtick, a quote, or a bracket.
     ("comma-not-appositive", _c(r",\s*not\s+(?=\S)")),

@@ -82,3 +82,6 @@ This isn't magic, just math.
 I'm not the author. Just a user.
 No hidden fees, just simple pricing.
 No fluff. Just facts.
+Acme isn't a tool, it's a platform.
+This isn't a bug. It's a feature.
+The problem is not speed. The problem is trust.

@@ -22,3 +22,5 @@ Do not edit the file, just run the script.
 Not yet, only the first step is done.
 No fix was needed, just a restart.
 No password is stored, only a hash.
+If the file is not there, it is created on the first run.
+The worker is not running. It is scheduled for 09:00.

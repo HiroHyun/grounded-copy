@@ -53,12 +53,15 @@ A slogan opens the same way: "No X, just Y".
 | "Freshness confirmed by query, not by the node count." | "The freshness query returned the current result." |
 | "I'm not the plugin's author, just a user." | "I use this plugin; a friend wrote it." |
 | "No hidden fees, just simple pricing." | "Each plan shows one monthly price, tax included." |
+| "Acme isn't a tool, it's a platform." | "Acme runs the build, the tests, and the release in one pipeline." |
 
 The `comma-not-appositive` rule also catches `, not by`, `, not from`, and `, not through`. It can match an object that starts with a quote, backtick, or bracket.
 
 The `not-just` rule also reports a denial and `just`, `only`, `merely`, or `simply` on either side of a comma or dash. The denial opens with a negated form of "be" or with "not" and a word such as "the" or "my". A plain limit of that shape reports too: "Windows is not supported, only Linux and macOS."
 
 The `no-x-just-y` rule reports the slogan form: "no", "zero", or "nothing", one or two words, then "just". A longer status line such as "No fix was needed, just a restart." passes.
+
+The `not-x-its-y` rule reports the first trigger with any subject, and as two sentences. A condition passes: "If the file is not there, it is created." A correction of fact in the same shape reports: "The file isn't missing, it's empty." State the fact: "The file is empty."
 
 ## 3. Era-ending
 
