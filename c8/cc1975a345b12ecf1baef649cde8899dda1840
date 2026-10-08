@@ -1,0 +1,32 @@
+skills/grounded-copy/references/patterns.md
+  s_d65647d98c2860::t_98b372956f0d64 246
+skills/grounded-copy/scripts/copy_lint.py
+  s_d65647d98c2860::t_9a35028b294ec6 367-374
+  s_d65647d98c2860::t_5be507a79147d7 388
+  s_d65647d98c2860::t_3db10af9c7aca4 428-430,432,440,446,448
+tests/test_corpus.py
+  s_d65647d98c2860::t_fe81e5e71cf231 180-183
+  s_d65647d98c2860::t_98a27517c247bd 331
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  s_d65647d98c2860::t_ba712ea9f34122 246
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_d65647d98c2860::t_6e35e11a666793 367-374,388,428-430,432,440,446,448
+tests/citations-baseline.txt
+  s_d65647d98c2860::t_a5958332900129 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c8cc1975a345b12ecf1baef649cde8899dda1840",
+  "prompts": {},
+  "sessions": {
+    "s_d65647d98c2860": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1e223a2a-6522-4954-9dbd-eeaab980c5ec",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
