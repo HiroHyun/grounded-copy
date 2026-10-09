@@ -43,13 +43,12 @@ CORE_HEADINGS = (
 )
 
 # Rules inside those sections, asserted by their own text so a section that
-# survives extraction while losing a rule still fails.
-# SKILL.md is hard-wrapped, so each anchor stays short enough to sit on one
-# line. A phrase spanning a wrap would fail here for its formatting alone,
-# which makes this tuple a constraint on how SKILL.md may be rewrapped: each
-# anchor below pins the paragraph under `## The one banned move`,
-# `## Scope and precedence` (three bullets), `## Positive forms`, and
-# `## Sourcing`, in that order. Re-wrap those paragraphs and check here first.
+# survives extraction while losing a rule still fails. SKILL.md keeps each
+# paragraph on one long line, so an anchor holds while its words stay together
+# in the source. The anchors pin the paragraph under `## The one banned move`,
+# `## Scope and precedence` (three bullets), `## Positive forms`, `## Sourcing`,
+# and `## Suspended lists`, in that order. Reword one of those paragraphs and
+# check here first.
 CORE_RULES = (
     "Every shape blocks with no",
     "**Verbatim source material.**",
@@ -337,9 +336,8 @@ class SessionPolicyTests(HookCase):
 class TurnReminderTests(HookCase):
     # One clause per boundary the reminder keeps in reach. `Prefer established
     # positive terms` came out with the payload cut, since `## Positive forms`
-    # states it at session start; `### Measured recurring cost` in
-    # skills/grounded-copy/references/setup.md records that. The reminder also carries a byte
-    # budget, asserted below.
+    # states it at session start. The reminder also carries a byte budget,
+    # asserted below; `hooks/_policy.py` holds the figure.
     CLAUSES = (
         "State what the subject is or does.",
         "No contrast, era-ending, or hype.",
