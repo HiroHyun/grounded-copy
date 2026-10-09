@@ -12,9 +12,11 @@ README.zh.md	zh-not-just	告别
 README.zh.md	zh-not-x-but-y	不是供应商，而是
 skills/grounded-copy/references/patterns.md	ar-not-just	أكثر من مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	إعادة تعريف
+skills/grounded-copy/references/patterns.md	ar-not-just	إعادة تعريف
 skills/grounded-copy/references/patterns.md	ar-not-just	لست مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	لسنا مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	ليس مجرد
+skills/grounded-copy/references/patterns.md	ar-not-just	ليس مجرّد
 skills/grounded-copy/references/patterns.md	ar-not-just	ليسوا مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	وداعًا
 skills/grounded-copy/references/patterns.md	ar-not-just	يعيد تعريف

@@ -241,7 +241,7 @@ The rules also match the forms below. X and Y mark a sentence pattern. The last 
 | es | no es sólo / no solo + verbo / no solamente / no únicamente / no es simplemente | No solo en Madrid llueve. |
 | fr | n'est pas uniquement / n'est pas que / est plus qu'un / ne se limite pas / ne fait pas que | C'est plus qu'un an. |
 | de | nicht nur + Verb / nicht bloß / nicht lediglich / mehr als bloß / viel mehr als | Das kostet viel mehr als 5 Euro. |
-| ar | لست مجرد / لسنا مجرد / ليسوا مجرد / مجرّد / إعادة تعريف | none found |
+| ar | لست مجرد / لسنا مجرد / ليسوا مجرد / ليس مجرّد / إعادة تعريف | إعادة تعريف المتغير في الملف. |
 
 ### Chinese comparisons
 
