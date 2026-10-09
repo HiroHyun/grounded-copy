@@ -6,7 +6,7 @@ Start with the installation commands in the [English README](https://github.com/
 
 In Claude Code, run `/grounded-copy:grounded`. In Codex, run `$grounded-profile status`. The result shows the active profile and where the setting is saved.
 
-The default is `chat`. Try asking the assistant to rewrite a short paragraph using grounded-copy. To check a saved file, use the `copy_lint.py` command in the README.
+The default is `chat`. Try asking the agent to rewrite a short paragraph using grounded-copy. To check a saved file, use the `copy_lint.py` command in the README.
 
 The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles and automatic session reminders come with the Claude Code and Codex plugins.
 
@@ -56,15 +56,15 @@ The setting stays saved across restarts. Each host uses its own file:
 | Claude Code | `$CLAUDE_CONFIG_DIR/grounded-copy/profile`, or `~/.claude/grounded-copy/profile` by default |
 | Codex | `$CODEX_HOME/grounded-copy/profile`, or `~/.codex/grounded-copy/profile` by default |
 
-The plugin reads this file at session start and after context compaction. It adds the selected writing rules to the assistant's context. Each prompt also gets a short reminder of the profile.
+The plugin reads this file at session start and after context compaction. It adds the selected writing rules to the agent's context. Each prompt also gets a short reminder of the profile.
 
-A successful switch saves the setting and prints the instructions that apply from that point forward. Earlier instructions remain visible in the conversation. The new instructions tell the assistant which profile to follow now.
+A successful switch saves the setting and prints the instructions that apply from that point forward. Earlier instructions remain visible in the conversation. The new instructions tell the agent which profile to follow now.
 
 Use the profile command to change modes during a session. A manual edit of the setting file changes the next reminder, but the full rules load at the next session start.
 
 ### Enforcement boundary
 
-The hooks provide instructions to the assistant. They do not inspect or block the assistant's output. A chat reply reaches you without an automatic copy scan. Run `copy_lint.py` on files you want to check, or add it to your project's CI.
+The hooks provide instructions to the agent. They do not inspect or block the agent's output. A chat reply reaches you without an automatic copy scan. Run `copy_lint.py` on files you want to check, or add it to your project's CI.
 
 The `off` profile stops the session rules and turn reminder. It leaves the checker available as a separate command. Your explicit instructions always take priority over the skill.
 
@@ -123,7 +123,7 @@ Copy `skills/grounded-copy/` into `.style/grounded-copy/` in your project. Keep 
 └── tests/
 ```
 
-Add this instruction to the project's `CLAUDE.md`, `AGENTS.md`, or the instruction file used by your assistant:
+Add this instruction to the project's `CLAUDE.md`, `AGENTS.md`, or the instruction file used by your agent:
 
 ```markdown
 Read `.style/grounded-copy/SKILL.md` when writing or editing prose.
