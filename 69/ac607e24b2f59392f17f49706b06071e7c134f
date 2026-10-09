@@ -1,0 +1,18 @@
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  h_e10213298d5dca 319-322,402-404,406-409,417,423-424,426-428
+skills/grounded-copy/scripts/copy_lint.py
+  h_e10213298d5dca 319-322,402-404,406-409,417,423-424,426-428
+tests/test_corpus.py
+  h_e10213298d5dca 290-292,299-301,306-307
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "69ac607e24b2f59392f17f49706b06071e7c134f",
+  "prompts": {},
+  "humans": {
+    "h_e10213298d5dca": {
+      "author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
