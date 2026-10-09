@@ -316,10 +316,10 @@ SENTENCE_SPLIT = re.compile(
 # strips a sentence, so a curly quote never reaches this set. `|` is here so a
 # sentence in the first cell of a Markdown table row reaches the OPENERS loop;
 # without it every anchored rule missed a specimen quoted inside a table. The
-# last six cover a `+` bullet, a bullet dot, a strikethrough, the close of an
-# empty checkbox, and an underscore that opens emphasis closed on a later
-# line, where normalize() finds no pair to fold.
-LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|+•·~]_"
+# last five cover a `+` bullet, a bullet dot, a strikethrough, and the close
+# of an empty checkbox. The underscore stays out: it opens a private name
+# such as `_imagine.py` far more often than emphasis that normalize() left.
+LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|+•·~]"
 # The block pass strips the Markdown marker and keeps every dash, because a
 # dash is what the block rules match.
 BLOCK_LEAD_STRIP = " \t#*->"
@@ -399,11 +399,14 @@ def iter_blocks(lines):
         yield _join(block)
 
 
-# A line that opens a list item, a heading, or a table row starts a new unit,
-# and so does the line under a heading. The wrap pass joins a line to the one
-# above only when neither holds, so "- cheap," and "- not slow" stay two items.
+# A line that opens a list item, a heading, or a table row starts a new unit.
+# The wrap pass joins a line to the one above only when it carries no such
+# marker, so "- cheap," and "- not slow" stay two items.
 _MARKER = re.compile(r"[ \t>]*(?:[-+*]\s|#{1,6}\s|\||\d+[.)]\s)")
-_HEADING = re.compile(r"[ \t>]*#{1,6}\s")
+# A heading, a code fence, a setext underline, or a rule drawn with
+# underscores. The line itself joins nothing, and the line under it starts a
+# new unit.
+_BREAK = re.compile(r"[ \t>]*(?:#{1,6}\s|`{3}|~{3}|={3}|_{3})")
 
 
 def _join(block):
@@ -411,15 +414,18 @@ def _join(block):
     offsets = []
     wraps = []
     position = 0
-    under_heading = False
+    fresh = False
     for lineno, line in block:
         # Fold before measuring: normalize() can shorten a line, and the
         # offsets below must index the text the patterns run on.
         piece = normalize(line).lstrip(BLOCK_LEAD_STRIP)
         offsets.append((position, lineno))
-        if position and not under_heading and not _MARKER.match(line):
+        parted = bool(_BREAK.match(line)) or not piece
+        if position and not fresh and not parted and not _MARKER.match(line):
             wraps.append(position)
-        under_heading = bool(_HEADING.match(line))
+        # A line of markers alone, such as "---", leaves no text. It parts
+        # the lines on either side, as a _BREAK line does.
+        fresh = parted
         position += len(piece) + 1
         parts.append(piece)
     return " ".join(parts), offsets, wraps

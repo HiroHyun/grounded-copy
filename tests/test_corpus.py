@@ -287,17 +287,24 @@ class WrappedPhraseTests(unittest.TestCase):
         self.assertEqual(self.found("- cheap,\n- not slow"), [])
         self.assertEqual(self.found("| fast, | a |\n| not slow | b |"), [])
         self.assertEqual(self.found("## What it is not\njust run the script"), [])
+        self.assertEqual(self.found("I'm not it,\n---\njust a user"), [])
+        self.assertEqual(self.found("The flag is not\n```\njust_run()\n```"), [])
+        self.assertEqual(self.found("_imagine.py holds the model."), [])
 
     def test_every_corpus_finding_survives_a_wrap(self):
         """Break each corpus line inside its finding and scan it again.
 
         The break goes at the first space of the reported snippet. A break
         that would leave a list, heading, or table marker at the start of
-        line 2 is skipped, since that line reads as a new item.
+        line 2 is skipped, since that line reads as a new item. So is a line
+        normalize() changes: its finding rests on a fold, and a wrap inside
+        a markup pair leaves no pair on either line to fold.
         """
         copy_lint = linter()
         checked = 0
         for line in Path(CORPUS).read_text(encoding="utf-8").splitlines():
+            if copy_lint.normalize(line) != line:
+                continue
             for _, rule, snippet in copy_lint.scan_text(line):
                 at, space = line.find(snippet), snippet.find(" ")
                 if at < 0 or space < 0:
