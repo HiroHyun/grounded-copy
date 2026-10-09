@@ -1,13 +1,20 @@
 dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
   s_d65647d98c2860::t_ba507320d3eac5 313-317,319
+  s_d65647d98c2860::t_128e54765ecbe9 313-317,319
 dist/codex/grounded-copy/skills/grounded-copy/tests/good-samples.md
   s_d65647d98c2860::t_14d4b919f145b0 32
+  s_d65647d98c2860::t_128e54765ecbe9 32
 skills/grounded-copy/scripts/copy_lint.py
   s_d65647d98c2860::t_f0cfbeb31c4185 313-317,319
+  s_d65647d98c2860::t_189746ee76129d 313-317
+  s_d65647d98c2860::t_8d0486a2b53840 319
 skills/grounded-copy/tests/good-samples.md
   s_d65647d98c2860::t_fa3b53a20ca26e 32
+  s_d65647d98c2860::t_3834624b46b5d2 32
 tests/test_corpus.py
   s_d65647d98c2860::t_cd544213a6252d 184,225-227
+  s_d65647d98c2860::t_261acedab5f008 184
+  s_d65647d98c2860::t_7fcd9bb29d0cb8 225-227
 ---
 {
   "schema_version": "authorship/3.0.0",
