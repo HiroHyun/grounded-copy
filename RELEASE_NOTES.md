@@ -1,3 +1,25 @@
+# 0.6.2
+
+## English
+
+- The checker reports a denial followed by "just", "only", "merely", or "simply" when other words sit between them. It needed the two words side by side.
+- Two new rules. `no-x-just-y` reports a slogan that opens with "no" and continues with "just". `not-x-its-y` reports a denial with a form of "be", then a pronoun and the claim, for any subject.
+- Eleven rules take near forms of what they already matched: a spaced hyphen where a dash was needed, any contracted auxiliary before "just", the past tense, and a repeated preposition after "but".
+- The checker reads through Markdown emphasis, inline HTML tags, and look-alike quotes, dashes, and zero-width characters.
+- A phrase that wraps onto the next line of a paragraph reports at the line where it starts.
+- The Chinese rules take Traditional forms and two more sentence patterns.
+- Both READMEs list 60 English rules.
+
+## 简体中文
+
+- 否定词与“just”“only”“merely”“simply”之间隔着其他词时，检查脚本现在也会报出，此前要求两个词紧邻。
+- 新增两条规则：`no-x-just-y` 报出以“no”开头、以“just”承接的口号句；`not-x-its-y` 报出任意主语的“先否定、后断言”句式。
+- 加宽 11 条已有规则：两侧带空格的连字符按破折号处理，“just”之前可接任意缩写助动词，并支持过去时和“but”之后重复的介词。
+- 检查脚本会略过 Markdown 强调标记和行内 HTML 标签，并把形似的引号、破折号和零宽字符按标准字符处理。
+- 段落内换行的短语同样会被检出，报告的行号是短语开始的那一行。
+- 中文规则支持繁体写法，并新增两种句式。
+- 两份 README 的英语规则数更新为 60 条。
+
 # 0.6.1
 
 ## English
