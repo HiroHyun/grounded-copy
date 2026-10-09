@@ -177,6 +177,10 @@ class ReversalGapTests(unittest.TestCase):
         ("hype-word", "Acme is a game\u2011changer."),
         ("opener-it-is-not", "_It's not a website._"),
         ("opener-imagine", "<p>Imagine a release with no checklist.</p>"),
+        # Attribute text is copy too, and text in brackets that names no tag
+        # stays as written. Both reported before the tag fold existed.
+        ("not-just", '<img alt="Not just a tool" src="a.png">'),  # shipped
+        ("not-just", "x <not just b> c"),  # shipped
         # An opener behind a key, a label, a quoted sentence, or a bullet.
         ("opener-forget", '  "hero": "Forget the spreadsheet.",'),
         ("opener-forget", "hero: Forget the spreadsheet."),
@@ -282,6 +286,7 @@ class WrappedPhraseTests(unittest.TestCase):
     def test_two_list_items_stay_apart(self):
         self.assertEqual(self.found("- cheap,\n- not slow"), [])
         self.assertEqual(self.found("| fast, | a |\n| not slow | b |"), [])
+        self.assertEqual(self.found("## What it is not\njust run the script"), [])
 
     def test_every_corpus_finding_survives_a_wrap(self):
         """Break each corpus line inside its finding and scan it again.

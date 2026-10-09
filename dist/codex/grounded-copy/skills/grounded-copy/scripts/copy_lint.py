@@ -338,7 +338,14 @@ _FOLD = str.maketrans({
 # An apostrophe look-alike between two letters: U+00B4, U+02BC, U+FF07,
 # U+2032, or a backtick.
 _APOSTROPHE = re.compile(r"(?<=\w)[`\u00b4\u02bc\uff07\u2032](?=\w)")
-_TAG = re.compile(r"</?[A-Za-z][^<>\n]{0,80}>")
+# The angle brackets and name of an inline HTML tag. Group 1 keeps the
+# attributes, because alt and title text is copy a person reads. The name list
+# keeps other bracketed text, such as "<not just a tag>", as written.
+_TAG = re.compile(
+    r"</?(?:a|abbr|b|blockquote|br|cite|code|dd|del|details|div|dl|dt|em|"
+    r"h[1-6]|i|img|ins|kbd|li|mark|ol|p|pre|q|s|small|span|strong|sub|"
+    r"summary|sup|table|tbody|td|th|thead|tr|u|ul)\b([^<>\n]{0,200}?)/?>",
+    re.IGNORECASE)
 # A Markdown emphasis pair. The closing marker repeats the opening one, so
 # `_private_name`, `*args`, and `2 * 3 * 4` stay as written.
 _EMPHASIS = re.compile(
@@ -352,7 +359,7 @@ def normalize(text):
     input, so a caller that maps offsets to lines folds each line first.
     """
     text = _APOSTROPHE.sub("'", text.translate(_FOLD))
-    return _EMPHASIS.sub(r"\2", _TAG.sub("", text))
+    return _EMPHASIS.sub(r"\2", _TAG.sub(r"\1", text))
 
 
 def scan_line(line, lineno, findings):
@@ -392,10 +399,11 @@ def iter_blocks(lines):
         yield _join(block)
 
 
-# A line that opens a list item, a heading, or a table row starts a new unit.
-# The wrap pass joins a line to the one above only when it carries no such
-# marker, so "- cheap," and "- not slow" stay two items.
+# A line that opens a list item, a heading, or a table row starts a new unit,
+# and so does the line under a heading. The wrap pass joins a line to the one
+# above only when neither holds, so "- cheap," and "- not slow" stay two items.
 _MARKER = re.compile(r"[ \t>]*(?:[-+*]\s|#{1,6}\s|\||\d+[.)]\s)")
+_HEADING = re.compile(r"[ \t>]*#{1,6}\s")
 
 
 def _join(block):
@@ -403,13 +411,15 @@ def _join(block):
     offsets = []
     wraps = []
     position = 0
+    under_heading = False
     for lineno, line in block:
         # Fold before measuring: normalize() can shorten a line, and the
         # offsets below must index the text the patterns run on.
         piece = normalize(line).lstrip(BLOCK_LEAD_STRIP)
         offsets.append((position, lineno))
-        if position and not _MARKER.match(line):
+        if position and not under_heading and not _MARKER.match(line):
             wraps.append(position)
+        under_heading = bool(_HEADING.match(line))
         position += len(piece) + 1
         parts.append(piece)
     return " ".join(parts), offsets, wraps
