@@ -1,0 +1,28 @@
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  h_e10213298d5dca 240
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  h_e10213298d5dca 236-238
+dist/codex/grounded-copy/skills/grounded-copy/tests/bad-samples.md
+  h_e10213298d5dca 136-138
+skills/grounded-copy/references/patterns.md
+  h_e10213298d5dca 240
+skills/grounded-copy/scripts/copy_lint.py
+  h_e10213298d5dca 236-238
+skills/grounded-copy/tests/bad-samples.md
+  h_e10213298d5dca 136-138
+tests/citations-baseline.txt
+  h_e10213298d5dca 184-185,187-189,192
+tests/test_corpus.py
+  h_e10213298d5dca 209-213
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1896f1eeed46f35506661644af323bb61a3136e9",
+  "prompts": {},
+  "humans": {
+    "h_e10213298d5dca": {
+      "author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
