@@ -29,4 +29,5 @@ Memory use is less of an issue than CPU time.
 Unlike the v1 API, v2 paginates by cursor.
 Call _unlock_mutex before the write, and pass *args to the planner.
 Usage: python copy_lint.py FILE
+Note: Stop the server before the upgrade.
 并非所有文件都是只读的。

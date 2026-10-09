@@ -181,10 +181,7 @@ class ReversalGapTests(unittest.TestCase):
         # stays as written. Both reported before the tag fold existed.
         ("not-just", '<img alt="Not just a tool" src="a.png">'),  # shipped
         ("not-just", "x <not just b> c"),  # shipped
-        # An opener behind a key, a label, a quoted sentence, or a bullet.
-        ("opener-forget", '  "hero": "Forget the spreadsheet.",'),
-        ("opener-forget", "hero: Forget the spreadsheet."),
-        ("opener-it-is-not", "Note: it's not a website."),
+        # An opener behind a quoted sentence or a bullet.
         ("opener-imagine", 'He said "ship." Imagine the result.'),
         ("opener-forget", "+ Forget the spreadsheet."),
         ("opener-forget", "• Forget the spreadsheet."),
@@ -225,6 +222,9 @@ class ReversalGapTests(unittest.TestCase):
         "2 * 3 * 4 is 24.",
         "Usage: python copy_lint.py FILE",
         "The cache wins 3:1 over the index.",
+        # A label is no sentence boundary, so the instruction after it passes.
+        "Note: Stop the server before the upgrade.",
+        "Step 1: Stop services.",
         "并非所有文件都是只读的。",
     )
 

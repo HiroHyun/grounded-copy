@@ -310,11 +310,13 @@ BLOCK_PATTERNS = [
         BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA + BLOCK_GAP + r"{1,200}?[—–]")),
 ]
 
-# A sentence ender or a colon, then whitespace. The colon opens a JSON or YAML
-# value and the text after a label such as "Note:". The second alternative
-# covers an ender that sits inside a closing quote or bracket.
+# A sentence ender, then whitespace. The second alternative covers an ender
+# that sits inside a closing quote or bracket. A colon is no boundary: a split
+# there reported a plain instruction after a label, such as "Note: Stop the
+# server before the upgrade." An opener in a JSON or YAML value therefore sits
+# behind its key and passes.
 SENTENCE_SPLIT = re.compile(
-    r"(?<=[.!?！？。؟:])\s+|(?<=[.!?][\"')\]])\s+")
+    r"(?<=[.!?！？。؟])\s+|(?<=[.!?][\"')\]])\s+")
 # Straight quotes only: normalize() folds the curly forms before scan_line
 # strips a sentence, so a curly quote never reaches this set. `|` is here so a
 # sentence in the first cell of a Markdown table row reaches the OPENERS loop;

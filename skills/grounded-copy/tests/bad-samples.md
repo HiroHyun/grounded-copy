@@ -112,13 +112,6 @@ Acme is **not** just a tool.
 _It's not a website._
 <p>Imagine a release with no checklist.</p>
 
-# An opener behind a key or a label. Each line reported nothing while a
-# sentence could start only after a full stop, a question mark, or an
-# exclamation mark.
-
-  "hero": "Forget the spreadsheet.",
-Note: imagine a release with no checklist.
-
 # A phrase split by a line wrap. Each pair reported nothing while the
 # patterns ran on one line at a time. The finding carries the first line.
 
