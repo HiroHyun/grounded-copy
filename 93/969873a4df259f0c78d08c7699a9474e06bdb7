@@ -1,0 +1,37 @@
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  s_d65647d98c2860::t_ad737bdb78cbcb 242
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_d65647d98c2860::t_92ca930f760d50 255-258
+dist/codex/grounded-copy/skills/grounded-copy/tests/bad-samples.md
+  s_d65647d98c2860::t_cb3c271b0cb8aa 142-144
+dist/codex/grounded-copy/skills/grounded-copy/tests/good-samples.md
+  s_d65647d98c2860::t_e1ed14ec776e1c 35
+skills/grounded-copy/references/patterns.md
+  s_d65647d98c2860::t_b5a4191224e8f2 242
+skills/grounded-copy/scripts/copy_lint.py
+  s_d65647d98c2860::t_ad3311404a5b67 255-258
+skills/grounded-copy/tests/bad-samples.md
+  s_d65647d98c2860::t_641c9be69cbaf8 142-144
+skills/grounded-copy/tests/good-samples.md
+  s_d65647d98c2860::t_690ffe7764847f 35
+tests/citations-baseline.txt
+  s_d65647d98c2860::t_8313d6ab63d078 64-65,68-71
+tests/test_corpus.py
+  s_d65647d98c2860::t_bc00a3cf7ec054 219-224,258-259
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "93969873a4df259f0c78d08c7699a9474e06bdb7",
+  "prompts": {},
+  "sessions": {
+    "s_d65647d98c2860": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1e223a2a-6522-4954-9dbd-eeaab980c5ec",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
