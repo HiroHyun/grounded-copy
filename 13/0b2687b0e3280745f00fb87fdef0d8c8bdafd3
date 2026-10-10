@@ -1,0 +1,19 @@
+RELEASE_NOTES.md
+  s_2202bc8d5d4fd8::t_40709d4bb8d3a0 6,12,19,26,35-37,41-43,49-50,54-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "130b2687b0e3280745f00fb87fdef0d8c8bdafd3",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
