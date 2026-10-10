@@ -1,0 +1,31 @@
+RELEASE_NOTES.md
+  s_2202bc8d5d4fd8::t_91a5759fdc4cb3 1-14,19-22,26-29
+skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_4a7330acd62a2d 154-155
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_eccb2983150a61 154-155
+.agents/plugins/marketplace.json
+  s_2202bc8d5d4fd8::t_76d11b17661335 15
+.claude-plugin/marketplace.json
+  s_2202bc8d5d4fd8::t_76d11b17661335 13
+.claude-plugin/plugin.json
+  s_2202bc8d5d4fd8::t_76d11b17661335 4
+dist/codex/grounded-copy/.codex-plugin/plugin.json
+  s_2202bc8d5d4fd8::t_76d11b17661335 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "282c2e2caa27b412eefe7cce63ae4248eda6531d",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
