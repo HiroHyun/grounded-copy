@@ -171,7 +171,7 @@ Add the hook to your Claude Code `settings.json`. Point it at a clone of this re
 }
 ```
 
-On Windows with no Git Bash, use `cmd /d /c "C:\path\to\grounded-copy\hooks\run.cmd" grounded_gate.py` as the command.
+On Windows, Claude Code runs hooks in Git Bash when it finds one. Use the `sh` command above there too, with a path such as `C:/path/to/grounded-copy/hooks/run.sh`. On Windows with no Git Bash, hooks run in PowerShell, and the command is `cmd /d /c "C:\path\to\grounded-copy\hooks\run.cmd" grounded_gate.py`. That `cmd` form fails under Git Bash.
 
 On Codex, add the entry to `config.toml`. Point it at the `hooks` folder of the Codex package, which reads the Codex profile:
 
