@@ -1,3 +1,29 @@
+# 0.7.0
+
+## English
+
+- The `chat` rules open with one operation: state the fact, and cut the half of a sentence that sets it against something nobody raised. Three cases say what happens to a denial. Warnings, limits, corrections, and requested comparisons stay. The product lead, the developer terms, and four marketing forms now load under `copy` alone.
+- The checker takes `--profile chat|copy`. `chat` runs 30 of the 71 rules: the reversal, comparison, and dash rules and the locale rules. It leaves out 41 rules that fit marketing copy: openers, slogans, hype words, and vague sources. `copy`, or no option, runs every rule, so existing commands and CI jobs behave as before.
+- The finding line changed. A finding prints as the file, the line, the matched text, and the rule name in brackets, and each group of findings ends with one sentence that says what to cut. A script that parses the old line needs an update.
+- New in the gate: a denial whose second half opens with a plain verb, under `not-x-its-y`; `do-verb-repeat`, for a denial of "need", "want", or "mean" followed by the same verb; and `fragment-reversal`, which runs under `copy`.
+- `opener-stop` reports the paired slogan only, so a plain instruction that opens with "Stop" passes.
+- A wrapped line that continues a condition passes. An opener behind a checked box reports. `ja-not-just` needs kana on the line, so the Chinese phrase for "of the revolution" passes.
+- An optional hook, `hooks/grounded_gate.py`, checks each file as the agent saves it, for Claude Code and Codex. It follows the saved profile, and a sentence you typed in the session passes. The setup guide has the entry to add and the limits.
+- `install.py --always-on` writes a marked block into the user-level instruction file for a host that gets the skill and no plugin, so every session applies the skill. `--uninstall` removes it.
+- Session rules measure 4,032 bytes for `chat` and 6,292 for `copy`, and the turn reminder 238. Both READMEs list 62 English rules and describe `chat` and `copy` for ordinary users.
+
+## 简体中文
+
+- `chat` 规则开头只讲一个操作：陈述事实，删掉把事实与无人提起的事物对立起来的半句。三种情况说明否定句怎么处理。警告、限制、纠正和用户要求的比较保留原样。产品导语、开发者术语和四种营销句式现在只在 `copy` 模式下加载。
+- 检查脚本新增 `--profile chat|copy` 选项。`chat` 运行 71 条规则中的 30 条：反转、对比和破折号规则，以及各语言规则。它略去 41 条适用于营销文案的规则：开场句式、口号、夸张词和来源含糊的说法。`copy` 或省略选项时运行全部规则，现有命令和 CI 任务的行为保持原样。
+- 报告格式有变化。每条结果依次列出文件、行号、命中的文字和方括号里的规则名称，每组结果的末尾有一句话，说明该删掉哪一部分。解析旧格式的脚本需要更新。
+- 新增检查：否定之后接普通动词的句式归入 `not-x-its-y`；`do-verb-repeat` 报出否定 “need”“want”“mean” 后又重复同一动词的句式；`fragment-reversal` 在 `copy` 模式下运行。
+- `opener-stop` 现在只报成对的口号句，以 “Stop” 开头的普通指令可以通过。
+- 承接上一行条件从句的折行可以通过。已勾选的复选框后面的开场句式会被报出。`ja-not-just` 要求同一行出现假名，含“革命”一词的中文短语可以通过。
+- 新增可选钩子 `hooks/grounded_gate.py`，在智能体每次保存文件时检查，支持 Claude Code 和 Codex。它按已保存的模式运行，你在会话中输入过的句子可以通过。安装说明列出了需要添加的配置和限制。
+- `install.py --always-on` 会为只安装技能、未安装插件的宿主，在用户级说明文件中写入一段带标记的说明，让每个会话都应用该技能。`--uninstall` 会删除这段说明。
+- 会话规则的大小为 `chat` 4,032 字节、`copy` 6,292 字节，每轮提醒 238 字节。两份 README 的英语规则数更新为 62 条，并改用面向普通用户的说法介绍 `chat` 和 `copy`。
+
 # 0.6.2
 
 ## English
