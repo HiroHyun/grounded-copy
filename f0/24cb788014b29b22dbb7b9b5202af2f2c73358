@@ -1,0 +1,24 @@
+tests/test_hooks.py
+  s_2202bc8d5d4fd8::t_1ad539aa4d3db6 293
+skills/grounded-copy/references/patterns.md
+  s_2202bc8d5d4fd8::t_58975d7cce626b 28,34,37,52,58,60,100-134,138,148,161,163,181,191,201,221,249
+  s_2202bc8d5d4fd8::t_5fb04d440ef078 238
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  s_2202bc8d5d4fd8::t_eccb2983150a61 28,34,37,52,58,60,100-134,138,148,161,163,181,191,201,221,238,249
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f024cb788014b29b22dbb7b9b5202af2f2c73358",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
