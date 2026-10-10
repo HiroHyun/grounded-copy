@@ -1,6 +1,6 @@
 ---
 name: grounded-copy
-description: Write clearly and get to the point. State the fact, and cut the half of a sentence that sets it against something nobody raised. Use when writing, editing, translating, or reviewing text that people read, including chat replies, documentation, product copy, reports, commit messages, and code comments. Also use when asked to check copy.
+description: Write clearly and get to the point. Use when writing, editing, translating, reviewing, or checking text people read, such as chat replies, documents, and product copy.
 ---
 
 # Grounded Copy
