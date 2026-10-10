@@ -3,27 +3,27 @@
 ## English
 
 - The pattern guide puts everyday examples first and keeps marketing copy under its own heading.
-- The plugin's descriptions in Claude Code, Codex, and skill directories use plain words.
+- Rewrote the plugin's descriptions in Claude Code, Codex, and skill directories.
 - On Windows, the optional check on saved files lost its findings when it ran through PowerShell. The setup guide has the corrected command.
 
 ## 简体中文
 
 - 表达示例指南把日常示例放在前面，营销文案单独成节。
-- 插件在 Claude Code、Codex 和技能目录中的简介改用通俗说法。
+- 改写插件在 Claude Code、Codex 和技能目录中的简介。
 - 在 Windows 上，可选的保存文件检查经 PowerShell 运行时会丢失检查结果。安装说明已换成修正后的命令。
 
 # 0.7.0
 
 ## English
 
-- Chat replies get to the point. A draft that said what a thing is not, and then what it is, now says what it is. Warnings, limits, and corrections stay.
+- Chat replies get to the point. A draft now says what it is.
 - The stricter marketing rules apply in copy mode only.
 - The file checker names the line and says what to cut.
 - Start a new chat after updating.
 
 ## 简体中文
 
-- 聊天回复更直接。原先先否定一件事、再给出结论的句子，现在直接给出结论。警告、限制和纠正保留原样。
+- 聊天回复更直接，现在直接给出结论。
 - 更严格的营销文案规则只在 copy 模式下生效。
 - 文件检查会指出所在的行，并说明该删掉哪一部分。
 - 更新后请开启新对话。
@@ -32,39 +32,27 @@
 
 ## English
 
-- The checker reports a denial followed by "just", "only", "merely", or "simply" when other words sit between them. It needed the two words side by side.
-- Two new rules. `no-x-just-y` reports a slogan that opens with "no" and continues with "just". `not-x-its-y` reports a denial with a form of "be", then a pronoun and the claim, for any subject.
-- Eleven rules take near forms of what they already matched: a spaced hyphen where a dash was needed, any contracted auxiliary before "just", the past tense, and a repeated preposition after "but".
-- The checker reads through Markdown emphasis, inline HTML tags, and look-alike quotes, dashes, and zero-width characters.
-- A phrase that wraps onto the next line of a paragraph reports at the line where it starts.
-- The Chinese rules take Traditional forms and two more sentence patterns.
-- Both READMEs list 60 English rules.
+- The checker catches more ways of writing a denial followed by a claim.
+- It reads through Markdown, HTML tags, and look-alike punctuation, and across line breaks.
+- The Chinese rules cover Traditional characters.
 
 ## 简体中文
 
-- 否定词与“just”“only”“merely”“simply”之间隔着其他词时，检查脚本现在也会报出，此前要求两个词紧邻。
-- 新增两条规则：`no-x-just-y` 报出以“no”开头、以“just”承接的口号句；`not-x-its-y` 报出任意主语的“先否定、后断言”句式。
-- 加宽 11 条已有规则：两侧带空格的连字符按破折号处理，“just”之前可接任意缩写助动词，并支持过去时和“but”之后重复的介词。
-- 检查脚本会略过 Markdown 强调标记和行内 HTML 标签，并把形似的引号、破折号和零宽字符按标准字符处理。
-- 段落内换行的短语同样会被检出，报告的行号是短语开始的那一行。
-- 中文规则支持繁体写法，并新增两种句式。
-- 两份 README 的英语规则数更新为 60 条。
+- 检查脚本能识别更多“先否定、后断言”的写法。
+- 检查时会略过 Markdown 标记和 HTML 标签，并识别形似的标点和跨行的短语。
+- 中文规则支持繁体写法。
 
 # 0.6.1
 
 ## English
 
-- Fixes the Codex plugin hooks on Windows. Each hook now starts the launcher through `cmd /d /c`, which runs under PowerShell and cmd.exe.
-- Claude Code hooks run on Windows with or without Git Bash. Each hook starts a launcher that Git Bash and PowerShell both run.
-- `/grounded-copy:grounded` lists PowerShell commands for Windows without Git Bash.
-- The READMEs drop the before-and-after table; the pattern guide keeps the English versions of those examples.
+- Fixes the Codex and Claude Code hooks on Windows, with or without Git Bash.
+- The before-and-after examples moved from the READMEs to the pattern guide.
 
 ## 简体中文
 
-- 修复 Codex 插件在 Windows 上的钩子。钩子现在通过 `cmd /d /c` 运行启动器，在 PowerShell 和 cmd.exe 下均可运行。
-- Claude Code 钩子在 Windows 上无论是否安装 Git Bash 都能运行。每个钩子启动一个 Git Bash 和 PowerShell 都能运行的启动器。
-- `/grounded-copy:grounded` 为未安装 Git Bash 的 Windows 提供 PowerShell 命令。
-- README 删除改写示例对照表，表达示例指南保留这些示例的英文版。
+- 修复 Codex 和 Claude Code 插件在 Windows 上的钩子，有无 Git Bash 均可运行。
+- 改写示例从 README 移到表达示例指南。
 
 # 0.6.0
 
