@@ -290,7 +290,7 @@ class SessionPolicyTests(HookCase):
         """Directive: the register test is copy-side; sourcing is core.
 
         The anchor is the register test rather than a hype word: SKILL.md
-        holds no hype word, and `## Hype vocabulary` in
+        holds no hype word, and `### Hype vocabulary` in
         skills/grounded-copy/references/patterns.md enumerates them.
         """
         self.write_preference("chat\n")

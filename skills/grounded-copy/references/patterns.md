@@ -6,8 +6,6 @@ The examples are invented for teaching. Product names, figures, awards, and sour
 
 The quoted triggers and Draft columns deliberately contain wording the checker reports. The Rewrite columns show the intended style.
 
-With `--profile chat` the checker runs the reversal rules, the contrast-marker rules, and the suspended-list rule. With `--profile copy`, or with no option, it runs every rule.
-
 ## Everyday examples
 
 The rewrite is the draft with its contrast half removed, so it comes out shorter. Each draft below sets a fact against something nobody raised.
@@ -27,17 +25,16 @@ The rewrite is the draft with its contrast half removed, so it comes out shorter
 
 Keep the second half when the reader raised it. If someone asked about butter, "Use olive oil; butter burns at this heat." answers them.
 
-## 1. Placed against an alternative
+## Placed against an alternative
 
 Describe the subject directly. A comparison often leaves the reader waiting for the actual feature or action.
 
 Triggers: phrases that downplay the subject ("not just/only/merely/simply", "doesn't just",
 "more than just", "far from just/being"); comparisons ("rather than X",
-"instead of X", "as opposed to X", "less a catalog than a trade desk");
+"instead of X", "as opposed to X", "no longer", "less a catalog than a trade desk");
 claims about exceeding a category ("goes beyond", "beyond just", "redefines", "reimagines",
 "reinvents"); claims about removing a problem ("without the hassle/hidden fees/middlemen",
-"would add duplication without adding information", "zero guesswork/
-compromises", "hassle-free", "frictionless").
+"zero guesswork/compromises", "hassle-free", "frictionless").
 
 | Draft | Rewrite |
 |---|---|
@@ -51,17 +48,16 @@ compromises", "hassle-free", "frictionless").
 | "We're redefining online booking." | "Acme books 40,000 appointments a month across 12 countries." |
 | "Order direct without the hassle of middlemen." | "You order directly from the maker's workshop." |
 | "Zero guesswork. Zero hidden fees." | "Each listing carries the serial number, condition report, and full price." |
-| "A second index would add duplication without adding information." | "The existing index already represents that commit." |
 
-The `doesnt-just` rule takes every contracted auxiliary, `cannot`, and `never`, so an instruction such as "You can't just subclass list." reports. The `is-more-than-a` rule takes the past tense and the contracted forms, so a quantity such as "The log was more than a gigabyte." reports.
+The `doesnt-just` rule takes every contracted auxiliary, `cannot`, and `never`, so an instruction such as "You can't just unplug the router." reports. The `is-more-than-a` rule takes the past tense and the contracted forms, so a quantity such as "The log was more than a gigabyte." reports.
 
 The `less-a-x-than` rule also reports "less about speed and more about trust" and "not so much a gym as a coaching program".
 
 The `without-gerund` rule matches `without` followed by an `-ing` form. It also reports ordinary phrases such as "without warning" and "without training". Preserve the meaning of required text and use the profile off for that work.
 
-The `instead-of`, `no-longer`, and `without-gerund` rules joined the gate when Claude moved to those forms after early versions of the plugin blocked the reversal. They report ordinary substitutions, exclusions, and status lines too, so say what to do or what is true now.
+The `instead-of`, `no-longer`, and `without-gerund` rules report ordinary substitutions, exclusions, and status lines too, so say what to do or what is true now.
 
-## 2. Reversal reveals
+## Reversal reveals
 
 Start with the fact. A denial followed by a reveal makes the reader work through two claims to reach it.
 
@@ -77,7 +73,6 @@ A slogan opens the same way: "No X, just Y".
 | "Not your average newsletter." | "The newsletter delivers three vetted job listings every Tuesday, each with salary range and visa status." |
 | "Acme is a partner, not a vendor." | "Acme assigns each client a strategist who joins quarterly planning." |
 | "Acme isn't complicated — it books the job in one tap." | "Acme books the job in one tap." |
-| "Freshness confirmed by query, not by the node count." | "The freshness query returned the current result." |
 | "I'm not the plugin's author, just a user." | "I use this plugin; a friend wrote it." |
 | "No hidden fees, just simple pricing." | "Each plan shows one monthly price, tax included." |
 | "Acme isn't a tool, it's a platform." | "Acme runs the build, the tests, and the release in one pipeline." |
@@ -102,104 +97,6 @@ The `dash-not-contrast` and `negated-copula-dash` rules read a spaced hyphen or 
 
 The `not-x-but-y` rule takes a contracted negation and any determiner: "The result wasn't a failure but a delay." It also takes a preposition or "because" that repeats after "but": "The error was not in the config but in the loader." A concession reports too: "The build isn't the fastest but it works." The `isnt-about` rule takes the past tense and "never about", so the idiom "He wasn't about to quit." reports. "This is no ordinary newsletter." and "Not another todo app." report under `not-your-average`.
 
-## 3. Era-ending
-
-Give the current behavior or result. A claim about the end of an era usually adds little useful information.
-
-Triggers: "no longer", "gone are the days", "the days of X are over", "say
-goodbye/hello", "no more X", "never again", "welcome to a new era".
-
-| Draft | Rewrite |
-|---|---|
-| "Gone are the days of opaque pricing." | "Every plan shows its full monthly price, including tax, before checkout." |
-| "Say goodbye to hidden fees." | "The listed price is the complete price; the invoice adds nothing." |
-| "No more waiting weeks for a quote." | "Quotes arrive within one business day." |
-| "In today's fast-paced world, speed matters more than ever." | "Pages load in under 200 ms." |
-
-## 4. Competitor put-downs
-
-Explain what the product offers. A sentence about a rival needs evidence and can distract from the feature the reader came to understand.
-
-Triggers: "unlike traditional/most/other X", "while others/most X, we Y".
-
-| Draft | Rewrite |
-|---|---|
-| "Unlike traditional agencies, we publish our rates." | "Acme publishes its hourly rates on the pricing page." |
-| "While others hide their fees, Acme lists them." | "Acme itemizes every charge on the invoice." |
-
-The same comparison can span sentences. For example: "Most vendors bury their fees. Acme prints them." Rewrite it as "Acme prints every fee on the invoice."
-
-The two rules also report "unlike competitors", "whereas most", and "where others". A comparison of two interfaces in that shape reports: "Whereas most functions return a list, this one returns an iterator."
-
-## 5. Rhetorical bait
-
-Put the useful information first. A question that immediately answers itself often adds an unnecessary step.
-
-Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
-"Tired of", "What if", "Imagine", "Picture this", "In a world where",
-"Stop Xing. Start Ying.", "Forget X", "Don't just X".
-
-| Draft | Rewrite |
-|---|---|
-| "The best part? Every plan includes support." | "Every plan includes support." |
-| "Tired of slow responses?" | "Support replies within four business hours." |
-| "Imagine a report that writes itself." | "The report generates each Monday from the previous week's data." |
-| "Look no further than Acme." | "Acme runs the three checks listed above." |
-| "It's worth noting that every plan includes support." | "Every plan includes support." |
-
-The `opener-stop` rule reports the pair. A plain instruction passes: "Stop the server before the upgrade."
-
-## 6. Collision framing
-
-Name a material, price, feature, or action. Pairing abstract qualities leaves the details unclear.
-
-Trigger: "where X meets Y".
-
-| Draft | Rewrite |
-|---|---|
-| "Where quality meets affordability." | "Solid-oak desks from $390, each with a 10-year warranty." |
-
-## 7. Corporate throat-clearing
-
-Start with what the customer gets or what the company does.
-
-Trigger: "At [Company], we...".
-
-| Draft | Rewrite |
-|---|---|
-| "At Acme, we put customers first." | "Customers have 30 days to pay and an account manager they can contact." |
-
-## Hype vocabulary
-
-Replace broad praise with the feature or fact it refers to. Review synonyms by meaning too.
-
-Common examples: unleash, unlock, unparalleled, unwavering,
-unmatched, unprecedented, unsung, unrivaled, elevate, seamless, empower,
-revolutionize, game-changing, delve, supercharge, turbocharge, next-level,
-cutting-edge, state-of-the-art, best-in-class, world-class, transformative,
-effortless, one-stop shop, synergy; figurative "landscape" and "journey";
-and "harness", "next-gen", "revolutionary".
-
-| Draft | Rewrite |
-|---|---|
-| "seamless ordering" | "three-step ordering: pick, pay, track" |
-| "unmatched support" | "one named rep per account, reachable within business hours" |
-| "unlock new markets" | "ship to 40+ countries with customs documents prepared for you" |
-| "world-class inspection" | "120-point inspection with the report attached to every listing" |
-| "boasts a vibrant community" | "12,000 forum members, 300 posts a day" |
-| "a testament to our quality" | "winner of the 2025 Red Dot product award" |
-
-## Vague attribution
-
-Name a source that the reader can check. A claim attributed to an unnamed group still needs evidence.
-
-| Draft | Rewrite |
-|---|---|
-| "Experts agree Acme leads the market." | "The 2025 market report by [source] gives Acme a 34% share of [segment]." |
-| "Studies show users prefer simple forms." | "In Acme's May 2026 survey of 1,200 users, 78% completed the three-field form." |
-
-A trailing phrase can add praise too: ", highlighting our commitment to quality" or ", underscoring its value". Remove it and state the supported fact.
-
 ## Suspended lists
 
 A list between paired dashes can separate the subject from its verb. The reader has to hold the sentence in mind while reading the examples. The `dash-pair-list` rule checks this across a paragraph, including line breaks. It recognizes English, Chinese, and Japanese comma separators.
@@ -211,7 +108,6 @@ First remove the inserted list. Keep one example inside the sentence if the read
 | "Copy that has to carry one — a legal disclaimer, regulatory text, a translation of supplied source — is written with the profile off." | "Use the profile off for required wording, such as a legal disclaimer." |
 | "Pointed at text that carries a contrast of its own — a translation, a quoted passage, a legal clause, a billing statement — the model can delete that contrast." | "The assistant can remove a comparison when translating supplied text." |
 | "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." |
-| "The hook — a read of the preference, a read of the skill file, a write to stdout — runs in 40 ms." | "The hook runs in 40 ms." |
 
 ## Paragraph review
 
@@ -231,18 +127,107 @@ These invented examples show deliberate omissions. Their contexts establish what
 
 The first example omits implementation details that belong in an explanation of the fix. The third removes a sequence of routine actions that obscured the meeting's purpose. Use the task to decide what belongs. Explicit requests for a complete inventory still require complete coverage.
 
-## Positive forms
+## Marketing copy
 
-Use a familiar technical term when it describes the behavior accurately. Explain it in plain language when the reader needs that help.
+These sections cover product pages and promotional text. The checker reports their phrases in `copy` mode.
+
+### Era-ending
+
+Give the current behavior or result. A claim about the end of an era usually adds little useful information.
+
+Triggers: "gone are the days", "the days of X are over", "say
+goodbye/hello", "no more X", "never again", "welcome to a new era".
 
 | Draft | Rewrite |
 |---|---|
-| "the hook does not write" | "the hook is read-only" |
-| "the value does not change after construction" | "the value is immutable" |
-| "runs the migration but writes nothing" | "runs the migration as a dry run" |
-| "the log is only ever appended to" | "the log is append-only" |
-| "calling it twice changes nothing" | "the call is idempotent" |
-| "only one component may write it" | "the value has a single writer" |
+| "Gone are the days of opaque pricing." | "Every plan shows its full monthly price, including tax, before checkout." |
+| "Say goodbye to hidden fees." | "The listed price is the complete price; the invoice adds nothing." |
+| "No more waiting weeks for a quote." | "Quotes arrive within one business day." |
+| "In today's fast-paced world, speed matters more than ever." | "Pages load in under 200 ms." |
+
+### Competitor put-downs
+
+Explain what the product offers. A sentence about a rival needs evidence and can distract from the feature the reader came to understand.
+
+Triggers: "unlike traditional/most/other X", "while others/most X, we Y".
+
+| Draft | Rewrite |
+|---|---|
+| "Unlike traditional agencies, we publish our rates." | "Acme publishes its hourly rates on the pricing page." |
+| "While others hide their fees, Acme lists them." | "Acme itemizes every charge on the invoice." |
+
+The same comparison can span sentences. For example: "Most vendors bury their fees. Acme prints them." Rewrite it as "Acme prints every fee on the invoice."
+
+The two rules also report "unlike competitors", "whereas most", and "where others". A plain comparison in that shape reports: "Whereas most museums close on Monday, this one opens."
+
+### Rhetorical bait
+
+Put the useful information first. A question that immediately answers itself often adds an unnecessary step.
+
+Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
+"Tired of", "What if", "Imagine", "Picture this", "In a world where",
+"Stop Xing. Start Ying.", "Forget X", "Don't just X".
+
+| Draft | Rewrite |
+|---|---|
+| "The best part? Every plan includes support." | "Every plan includes support." |
+| "Tired of slow responses?" | "Support replies within four business hours." |
+| "Imagine a report that writes itself." | "The report generates each Monday from the previous week's data." |
+| "Look no further than Acme." | "Acme runs the three checks listed above." |
+| "It's worth noting that every plan includes support." | "Every plan includes support." |
+
+The `opener-stop` rule reports the pair. A plain instruction passes: "Stop the server before the upgrade."
+
+### Collision framing
+
+Name a material, price, feature, or action. Pairing abstract qualities leaves the details unclear.
+
+Trigger: "where X meets Y".
+
+| Draft | Rewrite |
+|---|---|
+| "Where quality meets affordability." | "Solid-oak desks from $390, each with a 10-year warranty." |
+
+### Corporate throat-clearing
+
+Start with what the customer gets or what the company does.
+
+Trigger: "At [Company], we...".
+
+| Draft | Rewrite |
+|---|---|
+| "At Acme, we put customers first." | "Customers have 30 days to pay and an account manager they can contact." |
+
+### Hype vocabulary
+
+Replace broad praise with the feature or fact it refers to. Review synonyms by meaning too.
+
+Common examples: unleash, unlock, unparalleled, unwavering,
+unmatched, unprecedented, unsung, unrivaled, elevate, seamless, empower,
+revolutionize, game-changing, delve, supercharge, turbocharge, next-level,
+cutting-edge, state-of-the-art, best-in-class, world-class, transformative,
+effortless, one-stop shop, synergy; figurative "landscape" and "journey";
+and "harness", "next-gen", "revolutionary".
+
+| Draft | Rewrite |
+|---|---|
+| "seamless ordering" | "three-step ordering: pick, pay, track" |
+| "unmatched support" | "one named rep per account, reachable within business hours" |
+| "unlock new markets" | "ship to 40+ countries with customs documents prepared for you" |
+| "world-class inspection" | "120-point inspection with the report attached to every listing" |
+| "boasts a vibrant community" | "12,000 forum members, 300 posts a day" |
+| "a testament to our quality" | "winner of the 2025 Red Dot product award" |
+
+### Vague attribution
+
+Name a source that the reader can check. A claim attributed to an unnamed group still needs evidence.
+
+| Draft | Rewrite |
+|---|---|
+| "Experts agree Acme leads the market." | "The 2025 market report by [source] gives Acme a 34% share of [segment]." |
+| "Studies show users prefer simple forms." | "In Acme's May 2026 survey of 1,200 users, 78% completed the three-field form." |
+
+A trailing phrase can add praise too: ", highlighting our commitment to quality" or ", underscoring its value". Remove it and state the supported fact.
 
 ## Multilingual equivalents (all banned)
 
@@ -250,7 +235,7 @@ Apply the writing rules to meaning in each language. The Chinese, Japanese, and 
 
 | Locale | Patterns |
 |---|---|
-| zh-Hans | 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 告别… / 重新定义 / 颠覆 / 不是 X，而是 Y |
+| zh | 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 告别… / 重新定义 / 颠覆 / 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y / 不是 X，而是 Y |
 | ru | не просто / больше, чем просто / попрощайтесь с… / переосмысливает |
 | es-419 | no es solo / no solo es / más que un(a) simple / dile adiós a / olvídate de / atrás quedaron los días / va más allá / redefinimos |
 | ar | ليس مجرد / أكثر من مجرد / وداعًا لـ / يعيد تعريف |
@@ -261,13 +246,7 @@ Apply the writing rules to meaning in each language. The Chinese, Japanese, and 
 
 When translating a draft written under these rules, keep its facts and use natural sentences in the target language. For a faithful translation of supplied text, preserve its intended comparisons and use the profile off as needed.
 
-Some listed phrases have ordinary factual uses too. Japanese だけでなく and Korean 뿐만 아니라, 더 이상, and 혁신적 can appear in such uses and still produce findings.
-
-The rules also match the forms below. X and Y mark a sentence pattern. The last column gives a plain sentence in the same shape.
-
-| Locale | More patterns | An ordinary sentence that also reports |
-|---|---|---|
-| zh | 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y | 他不光是一个人去的。 |
+Some listed phrases have ordinary factual uses too. Japanese だけでなく and Korean 뿐만 아니라, 더 이상, and 혁신적 can appear in such uses and still produce findings. A plain Chinese sentence reports too: 他不光是一个人去的。
 
 ### Chinese comparisons
 

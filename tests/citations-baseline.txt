@@ -29,12 +29,10 @@ skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
-skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	dash-not-contrast	- not
 skills/grounded-copy/references/patterns.md	dash-not-contrast	- not
 skills/grounded-copy/references/patterns.md	dash-not-contrast	—not
 skills/grounded-copy/references/patterns.md	dash-pair-list	— a legal disclaimer, regulatory text, a translation of supplied source —
-skills/grounded-copy/references/patterns.md	dash-pair-list	— a read of the preference, a read of the skill file, a write to stdout —
 skills/grounded-copy/references/patterns.md	dash-pair-list	— a translation, a quoted passage, a legal clause, a billing statement —
 skills/grounded-copy/references/patterns.md	dash-pair-list	— email, live chat, phone, and the help centre —
 skills/grounded-copy/references/patterns.md	dash-pair-list	—not X, but Y", "not your average X", "X, not Y", ", not by X", and a denial followed by a dash "isn't/wasn't X —
@@ -213,8 +211,6 @@ skills/grounded-copy/references/patterns.md	while-others	While others
 skills/grounded-copy/references/patterns.md	while-others	where others
 skills/grounded-copy/references/patterns.md	while-others	whereas most
 skills/grounded-copy/references/patterns.md	while-others	while others
-skills/grounded-copy/references/patterns.md	without-gerund	without adding
-skills/grounded-copy/references/patterns.md	without-gerund	without adding
 skills/grounded-copy/references/patterns.md	without-gerund	without paying
 skills/grounded-copy/references/patterns.md	without-gerund	without training
 skills/grounded-copy/references/patterns.md	without-gerund	without warning
