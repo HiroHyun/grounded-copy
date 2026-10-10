@@ -123,20 +123,19 @@ MANIFEST = json.dumps({
         "displayName": "Grounded Copy",
         "shortDescription": "Help AI write clearly and get to the point.",
         "longDescription": (
-            "Grounded Copy guides AI agents to explain ideas in plain language, "
-            "use concrete facts, and remove filler. It applies writing rules to "
-            "everyday interaction and ordinary documents, with a separate mode "
-            "for product pages and marketing copy. A Python checker flags supported wording "
-            "patterns in saved drafts for review."
+            "Grounded Copy makes the assistant state the fact and get to the "
+            "point, in chat replies and in the documents it writes. A separate "
+            "mode applies stricter rules to product pages and marketing copy, "
+            "and saved files can be checked on request."
         ),
         "developerName": "HiroHyun",
         "category": "Productivity",
         "capabilities": ["Instructions", "Lifecycle hooks"],
         "websiteURL": "https://github.com/HiroHyun/grounded-copy",
         "defaultPrompt": [
-            "Switch Grounded Copy to chat mode and keep your replies clear and direct.",
-            "Rewrite this text in plain language. Keep the meaning and facts, and remove filler.",
-            "Write copy from the facts I provide, then run the copy checker on the saved draft.",
+            "Explain how compound interest works, in plain words.",
+            "Summarize this document for someone who has not read it. Keep every warning and limit.",
+            "Write a product description from the facts I give you.",
         ],
         "brandColor": "#2457D6",
         "brandColorDark": "#91B4FF",
