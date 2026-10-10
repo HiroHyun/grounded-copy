@@ -1,0 +1,67 @@
+skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_bd616de6326c12 113-123
+  s_2202bc8d5d4fd8::t_caeddcbdbff92d 384-450
+  s_2202bc8d5d4fd8::t_3b62fa0493ce27 227-233
+  s_2202bc8d5d4fd8::t_3efaf6a47682e7 496-498
+  s_2202bc8d5d4fd8::t_b2bb78546a0fe9 508,512,514,516-517,519-521,528-529
+  s_2202bc8d5d4fd8::t_894a12650177f2 604-605,607-608,614,617,624-629,638-639,641-642,651-652,661-671,673-675
+  s_2202bc8d5d4fd8::t_7d2fde8506b471 161-166,174-196
+  s_2202bc8d5d4fd8::t_29ddb1cf725925 2,8-11,14-15
+  s_2202bc8d5d4fd8::t_0f3f0b65443d71 538-542
+  s_2202bc8d5d4fd8::t_712b7f9baa38b6 566-567,574,585-586,592
+  s_2202bc8d5d4fd8::t_9e6bb1b12befd9 703-710
+  s_2202bc8d5d4fd8::t_9a2451ce9927c1 728-736,740-742
+  s_2202bc8d5d4fd8::t_e93ce2b8e6c23b 67-92
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_5ad601c9ae6eea 110,144
+skills/grounded-copy/SKILL.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 82,85,91,94
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  s_2202bc8d5d4fd8::t_5ad601c9ae6eea 9-10,24-26,62-63,84-85,95-100,140,150
+  s_2202bc8d5d4fd8::t_64489daa75694d 151
+README.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 107-108,163-165,221
+README.zh.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 111-112,168-170,225
+CONTRIBUTING.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 11,13
+tests/citations-baseline.txt
+  s_2202bc8d5d4fd8::t_5ad601c9ae6eea 48,71-74,167-168,172-173,183
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_5ad601c9ae6eea 2,8-11,14-15,67-92,113-123,161-166,174-196,227-233,384-450,496-498,508,512,514,516-517,519-521,528-529,538-542,566-567,574,585-586,592,604-605,607-608,614,617,624-629,638-639,641-642,651-652,661-671,673-675,703-710,728-736,740-742
+skills/grounded-copy/references/patterns.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 9-10,24-26,62-63,84-85,95-100,140,150
+  s_2202bc8d5d4fd8::t_d4a9a9a475e8e6 151
+dist/codex/grounded-copy/skills/grounded-copy/SKILL.md
+  s_2202bc8d5d4fd8::t_5ad601c9ae6eea 82,85,91,94
+skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 110,144
+dist/codex/grounded-copy/skills/grounded-copy/tests/good-samples.md
+  s_2202bc8d5d4fd8::t_5ad601c9ae6eea 34-48
+skills/grounded-copy/tests/bad-samples.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 130-166
+skills/grounded-copy/tests/good-samples.md
+  s_2202bc8d5d4fd8::t_661d06a80992c8 34-48
+dist/codex/grounded-copy/skills/grounded-copy/tests/bad-samples.md
+  s_2202bc8d5d4fd8::t_5ad601c9ae6eea 130-166
+tests/test_corpus.py
+  s_2202bc8d5d4fd8::t_ddc14a8e7991b6 8-10,26-27,52,54,86-91,108-132,328-336,338-339,341-342,344-345,347,349-356
+  s_2202bc8d5d4fd8::t_901622f3a5310f 337,340,343,346,348
+  s_2202bc8d5d4fd8::t_7c4a629be3eaac 357
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4e7a1201a73072e40d230ffefdb92b2734ffa412",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
