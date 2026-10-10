@@ -1,0 +1,38 @@
+dist/codex/grounded-copy/skills/grounded-profile/SKILL.md
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 17
+README.md
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 74-75,109-110
+README.zh.md
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 77-78,113-114
+tests/test_installer.py
+  s_2202bc8d5d4fd8::t_a4a1807824c359 377-378,382-383
+  s_2202bc8d5d4fd8::t_33214b1ada5c1c 167-235
+scripts/build_codex_adapter.py
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 128-129,178,237
+install.py
+  s_2202bc8d5d4fd8::t_71d8670f6873f1 15-20,25-26,49-68,95,118-119,226-236,314-377,383-389,402-404
+dist/codex/grounded-copy/.codex-plugin/plugin.json
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 23
+dist/codex/grounded-copy/README.md
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 5
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 39-46,51,55-56
+skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_93a42fb9ad1fa6 39-46,51,55-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5cb35bb8680efc9c640c5a24ea7ce358f78626e2",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
