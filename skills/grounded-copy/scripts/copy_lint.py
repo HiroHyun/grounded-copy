@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""copy_lint.py — deterministic style gate for marketing/web copy.
+"""copy_lint.py — deterministic style gate for prose and web copy.
 
 Scans text for contrastive-reversal rhetoric, negation-framing, banned
 openers, suspended lists, vague attribution, and hype vocabulary
 (EN + zh/ru/es/ar/fr/de/ja/ko equivalents).
 
-Every rule blocks. Copy that needs a banned form, such as a legal disclaimer
-or a translation of supplied source, is written with the grounded-copy profile
-off.
+Every rule sits in a group, and the group names the profile that runs it.
+`--profile chat` runs the contrast rules. `--profile copy`, or no option, runs
+every rule. Copy that needs a banned form, such as a legal disclaimer or a
+translation of supplied source, is written with the grounded-copy profile off.
 
 Usage:
-    python copy_lint.py FILE [FILE ...]
-    cat draft.md | python copy_lint.py --stdin
+    python copy_lint.py [--profile chat|copy] FILE [FILE ...]
+    cat draft.md | python copy_lint.py [--profile chat|copy] --stdin
 
 Exit codes:
     0 = no findings
@@ -63,6 +64,32 @@ _INNER = (r"\b(?:if|when|whenever|while|whilst|although|though|because|unless|"
           r"until|whether)\b")
 _SECOND = (r"(?:it|this|that|they|we|he|she|you|i)"
            r"(?:'s|'re|'m|\s+(?:is|are|was|were|am))\b")
+# Pieces of the comma-spliced denial with a plain verb: "He wasn't fired, he
+# quit." The second half opens with a plain verb. A be-verb there is the first
+# arm of not-x-its-y, and "just" there is the gap form of not-just.
+_PRON_ANY = r"(?:it|they|he|she|we|you|i)"
+_STOP = r"[^,.!?;:\n—–]"
+# The noun-subject arm also stops at a parenthesis.
+_STOP_PAREN = r"[^,.!?;:\n—–()]"
+_PLAIN = (r"(?!(?:is|are|was|were|am|just|only|merely|simply|said|says)\b)"
+          r"[a-z]+")
+# A be-verb or have-verb denial after a pronoun: "wasn't", "'m not", "hasn't".
+_NEG_AUX = (r"(?:\s+(?:is|are|was|were|am|has|have|had)(?:n't|\s+not)"
+            r"|'(?:s|re|m|ve)\s+not)")
+_ADV = r"(?:(?:really|actually|just|only|simply)\s+)?"
+_DASHSEP = r"(?:[,;:]\s+|\s*[—–]\s*|\s+-{1,2}\s+)"
+# Three guards, each from lines people wrote in everyday answers. A hedge:
+# "I'm not sure about that, I would try it." A second half that is itself
+# negative, which makes a list of denials. A relative clause in front of the
+# denial: "the money that a renter isn't spending, they could invest".
+_NOT_HEDGE = r"(?!(?:sure|certain)\b)"
+_NOT_NEGATIVE = (r"(?![a-z]+n't\b)(?!(?:cannot|never)\b)"
+                 r"(?![a-z]+\s+(?:not|never)\b)")
+_NO_RELATIVE = r"(?!" + _STOP_PAREN + r"{0,60}?\b(?:that|which|who)\b)"
+# "mean" takes a singular subject ("does", "did") and a denied thing that
+# opens with no quote mark. "I don't mean" and a quoted term define a word.
+_DOES_NOT_MEAN = (r"\b(?:does|did)(?:n't|\s+not)\s+" + _ADV
+                  + r"mean\b(?!\s+[\"'])")
 
 # ---------------------------------------------------------------------------
 # Anywhere-in-sentence patterns
@@ -83,6 +110,17 @@ PATTERNS = [
     ("no-x-just-y",
      _c(r"(?<!\w\s)\b(?:no|zero|nothing)\s+(?:[\w'-]+\s+)?[\w'-]+[,.;]\s+"
         r"just\b")),
+    # The same reversal as a fragment: "Not slow, just cold." and "Not a
+    # patch. A rewrite." In a chat these are short answers and corrections
+    # ("Not a teaspoon, a tablespoon."), so the rule runs under `copy` only.
+    ("fragment-reversal",
+     _c(r"(?<!\w\s)\bnot\s+(?!" + _DET + r"\b)"
+        r"(?!yet\b|really\b|sure\b|quite\b|exactly\b|necessarily\b|always\b)"
+        r"(?:[\w'-]+\s+)?[\w'-]+(?:[,.;:]|\s*[—–]|\s+-{1,2})\s+"
+        r"(?:just|merely|simply)\b"
+        r"|(?<!\w\s)\bnot\s+an?\s+[\w'-]+(?:\s+[\w'-]+)?"
+        r"(?:[,.;:]|\s*[—–]|\s+-{1,2})\s+an?\s+[\w'-]+(?:\s+[\w'-]+)?"
+        r"(?:[.!?]|\s*$)")),
     ("more-than-just", _c(r"\bmore\s+than\s+(?:just|simply|merely)\b")),
     # Present or past, contracted or not, with up to two intensifiers: "is
     # more than a", "was so much more than a", "it's more than a".
@@ -120,7 +158,12 @@ PATTERNS = [
     # start, a negated be-verb, a comma or semicolon, then a pronoun and a
     # be-verb. Arm 2: the same pair as two sentences, where a determiner
     # follows the second be-verb. Arm 3: the subject repeated, as in "The
-    # problem is not speed. The problem is trust."
+    # problem is not speed. The problem is trust." Arm 4: the same pronoun
+    # twice with a plain verb in the second half, as in "He wasn't fired, he
+    # quit." Arm 5: a noun subject and a plain verb, comma only, as in "The
+    # printer isn't broken, it needs paper." Arms 4 and 5 also report a comma
+    # splice of two facts ("The pan isn't oven-safe, it has a plastic
+    # handle."); "because" in place of the comma repairs it.
     ("not-x-its-y",
      _c(_CLAUSE + r"(?!" + _SUBORD + r")(?![^,.!?;:\n—–]{0,60}?" + _INNER
         + r")[^,.!?;:\n—–]{0,40}?" + _NEG_COP + r"\s+" + _GAP + r"[,;]\s+"
@@ -128,7 +171,29 @@ PATTERNS = [
         + "|" + _NEG_COP + r"\s+" + _GAP + r"\.\s+" + _SECOND
         + r"\s+(?:an?|the|your|our|my)\b"
         + r"|\b((?:the|our|your)\s+\w+|this|that|it)\s+(?:is|was)"
-        + r"(?:n't|\s+not)\s+" + _GAP + r"[.,;]\s+\1\s+(?:is|was)\b")),
+        + r"(?:n't|\s+not)\s+" + _GAP + r"[.,;]\s+\1\s+(?:is|was)\b"
+        + "|" + _CLAUSE + r"(?P<pron>" + _PRON_ANY + r")" + _NEG_AUX + r"\s+"
+        + _NOT_HEDGE + _GAP + r"[,;:]\s+[\"'*_]?(?P=pron)(?:'(?:d|ll|ve))?\s+"
+        + r"[\"'*_]?" + _NOT_NEGATIVE + _PLAIN
+        + "|" + _CLAUSE + r"(?!" + _SUBORD + r")"
+        + r"(?!(?:why|how|what|who|which)\b)(?!" + _STOP + r"{0,60}?" + _INNER
+        + r")" + _NO_RELATIVE + r"(?!" + _PRON_ANY + r"\b)" + _STOP_PAREN
+        + r"{0,40}?" + _NEG_COP + r"\s+" + _STOP_PAREN + r"{1,40},\s+"
+        + r"(?:it|they|he|she)(?:'(?:d|ll|ve))?\s+" + _PLAIN)),
+    # A do-verb denial of need or want, then the same verb: "You don't need a
+    # gym, you need a routine." With "mean", also as two sentences: "This
+    # doesn't mean failure. It means the plan needs work." Any other repeated
+    # verb gives two facts ("I don't drink coffee, I drink tea.") and passes.
+    ("do-verb-repeat",
+     _c(_CLAUSE + r"(?!" + _SUBORD + r")(?!" + _STOP + r"{0,60}?" + _INNER
+        + r")" + _STOP + r"{0,40}?(?:"
+        + r"\b(?:do|does|did)(?:n't|\s+not)\s+" + _ADV + r"(need|want)\b"
+        + _STOP + r"{0,50}?" + _DASHSEP + _PRON_ANY + r"\s+" + _ADV
+        + r"\1(?:s|ed)?\b"
+        + "|" + _DOES_NOT_MEAN + _STOP + r"{0,50}?" + _DASHSEP + _PRON_ANY
+        + r"\s+" + _ADV + r"(?:means?|meant)\b)"
+        + "|" + _DOES_NOT_MEAN + _STOP + r"{0,50}?\.\s+" + _PRON_ANY + r"\s+"
+        + _ADV + r"(?:means?|meant)\b")),
     # An em or en dash, or a spaced ASCII hyphen or double hyphen with a word
     # in front of it. A nested bullet ("  - not supported") has no such word.
     ("dash-not-contrast", _c(r"(?:[—–]|(?<=\S)\s+-{1,2}\s)\s*not\s+")),
@@ -159,6 +224,13 @@ PATTERNS = [
         r"|\bless\s+about\b[^.!?\n]{0,40}\b(?:than|more\s+about)\b"
         r"|\bnot\s+so\s+much\s+(?!as\b)[^.!?\n]{1,50}?\bas\b")),
     ("think-again", _c(r"\bthink\s+again\b")),
+    # The paired slogan "Stop guessing. Start knowing.", in one sentence or
+    # two. A plain instruction ("Stop the server before the upgrade.") has no
+    # second half and passes. The rule keeps the name of the opener it
+    # narrows; it sits here because an opener sees one sentence.
+    ("opener-stop",
+     _c(_CLAUSE + r"stop\s+\w+ing\b(?:\s+[\w'-]+){0,6}[.,;!]?\s+"
+        r"(?:and\s+|then\s+)?start\s+\w+ing\b")),
     ("without-the-hassle",
      _c(r"\bwithout\s+(?:the|all\s+the|any\s+of\s+the)\s+(?:hassle|hassles|"
         r"headache|headaches|hidden|stress|guesswork|usual|middlemen|"
@@ -275,7 +347,6 @@ OPENERS = [
     ("opener-it-is-not", _c(r"it\s+is\s+not\b|it\s+isn't\b|it's\s+not\b")),
     ("opener-dont-just", _c(r"don't\s+just\b")),
     ("opener-we-are-not", _c(r"we\s+are\s+not\b|we're\s+not\b|we\s+aren't\b")),
-    ("opener-stop", _c(r"stop\s+\w+")),
     ("opener-forget", _c(r"forget\b")),
     ("opener-imagine", _c(r"imagine\b")),
     ("opener-picture-this", _c(r"picture\s+this\b")),
@@ -309,6 +380,73 @@ BLOCK_PATTERNS = [
      _c(r"[—–]" + BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA +
         BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA + BLOCK_GAP + r"{1,200}?[—–]")),
 ]
+
+# ---------------------------------------------------------------------------
+# Groups: which profile runs a rule, and what its finding says
+# ---------------------------------------------------------------------------
+# Each rule sits in one group. A `chat` group also runs under `copy`. The
+# sentence prints once under a file's findings of that group. It ends on a
+# form the checker passes, so a writer who follows it can save.
+GROUPS = (
+    ("chat",
+     'A denial or a "just" sets up the claim. Cut that half and state the '
+     'fact. A correction or limit the reader needs goes in its own sentence, '
+     'joined to its reason with "because".',
+     ("not-just", "doesnt-just", "no-x-just-y", "more-than-just",
+      "beyond-just", "far-from-just", "not-x-but-y", "not-x-its-y",
+      "dash-not-contrast", "negated-copula-dash", "comma-not-appositive",
+      "isnt-about", "its-about", "less-a-x-than", "do-verb-repeat",
+      "zh-not-just", "zh-not-x-but-y", "ru-not-just", "es-not-just",
+      "ar-not-just", "fr-not-just", "de-not-just", "ja-not-just",
+      "ko-not-just")),
+    ("chat",
+     "The sentence sets the fact against an alternative. State the fact "
+     "alone. An alternative the reader asked about goes in its own sentence.",
+     ("instead-of", "rather-than", "no-longer", "without-gerund",
+      "as-opposed-to")),
+    ("chat",
+     "A list between two dashes splits the sentence. Name one example, or "
+     "put the list below.",
+     ("dash-pair-list",)),
+    ("copy",
+     "A slogan stands where a fact belongs. Say what the product does.",
+     ("no-more-x", "never-again", "without-the-hassle", "zero-hassle",
+      "think-again", "say-goodbye-hello", "gone-are-the-days",
+      "days-are-over", "in-todays-world", "in-an-era-of", "look-no-further",
+      "where-x-meets-y", "turning-point", "redefine-family",
+      "not-your-average", "goes-beyond", "is-more-than-a", "unlike-others",
+      "while-others", "fragment-reversal")),
+    ("copy",
+     "The sentence opens with a hook. Open with the fact.",
+     ("opener-it-is-not", "opener-dont-just", "opener-we-are-not",
+      "opener-stop", "opener-forget", "opener-imagine", "opener-picture-this",
+      "opener-in-a-world", "opener-welcome-new-era", "opener-tired-sick-of",
+      "opener-ever-wondered", "opener-what-if", "opener-at-company-we",
+      "rhetorical-reveal", "worth-noting")),
+    ("copy",
+     "The word praises and tells nothing. Name the feature or the fact.",
+     ("hype-word", "inflated-copula", "serves-as", "editorializing-ing")),
+    ("copy",
+     "The claim leans on an unnamed source. Name the source or cut the claim.",
+     ("vague-experts", "studies-show")),
+)
+PROFILES = ("chat", "copy")
+_CHAT_RULES = frozenset(
+    name for profile, _, names in GROUPS if profile == "chat" for name in names)
+# Rules anchored on a clause start. On a line that carries on the sentence
+# above, the first word only looks like a clause start, so the wrap pass
+# judges these rules on the joined text.
+CLAUSE_RULES = frozenset(("not-x-its-y", "do-verb-repeat", "opener-stop"))
+# Japanese prose always holds kana. Two words of `ja-not-just` are kanji alone
+# and also occur in Chinese, where one means "of the revolution".
+_KANA = re.compile("[ぁ-ヿ]")
+
+
+def _runs(name, text, active):
+    """Whether a rule applies to this text under the active rule set."""
+    if active is not None and name not in active:
+        return False
+    return name != "ja-not-just" or bool(_KANA.search(text))
 
 # A sentence ender, then whitespace. The second alternative covers an ender
 # that sits inside a closing quote or bracket. A colon is no boundary: a split
@@ -355,6 +493,9 @@ _TAG = re.compile(
 # `_private_name`, `*args`, and `2 * 3 * 4` stay as written.
 _EMPHASIS = re.compile(
     r"(?<![\w*_])(\*{1,3}|_{1,3})(?=\S)([^*_\n]{1,80}?)(?<=\S)\1(?![\w*_])")
+# A task-list box after a list marker: "- [x] " and "- [ ] ". With the box in
+# place, an opener behind a checked box started at "x]" and passed.
+_CHECKBOX = re.compile(r"^([ \t>]*[-+*]\s+)\[[ xX]\]\s+", re.M)
 
 
 def normalize(text):
@@ -364,19 +505,28 @@ def normalize(text):
     input, so a caller that maps offsets to lines folds each line first.
     """
     text = _APOSTROPHE.sub("'", text.translate(_FOLD))
+    text = _CHECKBOX.sub(r"\1", text)
     return _EMPHASIS.sub(r"\2", _TAG.sub(r"\1", text))
 
 
-def scan_line(line, lineno, findings):
+def scan_line(line, lineno, findings, active=None, carried=False):
     norm = normalize(line)
+    lead = len(norm) - len(norm.lstrip(BLOCK_LEAD_STRIP))
     for name, rx in PATTERNS:
+        if not _runs(name, norm, active):
+            continue
         for m in rx.finditer(norm):
+            # The wrap pass judges this match with the line above in view.
+            if carried and name in CLAUSE_RULES and m.start() == lead:
+                continue
             findings.append((lineno, name, m.group(0).strip()))
     for sentence in SENTENCE_SPLIT.split(norm):
         s = sentence.lstrip(LEAD_STRIP)
         if not s:
             continue
         for name, rx in OPENERS:
+            if active is not None and name not in active:
+                continue
             m = rx.match(s)
             if m:
                 findings.append((lineno, name, m.group(0).strip()))
@@ -385,10 +535,11 @@ def scan_line(line, lineno, findings):
 def iter_blocks(lines):
     """Group lines into paragraphs, blank lines separating them.
 
-    Yields (joined_text, offsets, wraps). `offsets` holds one (start, lineno)
-    pair per source line, so a match offset maps back to the line that opens
-    it. `wraps` holds the start offset of each line that continues the line
-    above it. Each line loses its leading Markdown marker before the join,
+    Yields (joined_text, offsets, wraps, carries). `offsets` holds one (start,
+    lineno) pair per source line, so a match offset maps back to the line that
+    opens it. `wraps` holds the start offset of each line that continues the
+    line above it. `carries` holds the wraps whose line above ended
+    mid-sentence. Each line loses its leading Markdown marker before the join,
     which keeps a quoted or bulleted paragraph on the same footing as a plain
     one.
     """
@@ -412,12 +563,15 @@ _MARKER = re.compile(r"[ \t>]*(?:[-+*]\s|#{1,6}\s|\||\d+[.)]\s)")
 # underscores. The line itself joins nothing, and the line under it starts a
 # new unit.
 _BREAK = re.compile(r"[ \t>]*(?:#{1,6}\s|`{3}|~{3}|={3}|_{3})")
+# A sentence ender at the end of a line, with any closing quote or bracket.
+_SENTENCE_END = re.compile(r"[.!?！？。؟][\"')\]]*\s*$")
 
 
 def _join(block):
     parts = []
     offsets = []
     wraps = []
+    carries = set()
     position = 0
     fresh = False
     for lineno, line in block:
@@ -428,12 +582,14 @@ def _join(block):
         parted = bool(_BREAK.match(line)) or not piece
         if position and not fresh and not parted and not _MARKER.match(line):
             wraps.append(position)
+            if not _SENTENCE_END.search(parts[-1]):
+                carries.add(position)
         # A line of markers alone, such as "---", leaves no text. It parts
         # the lines on either side, as a _BREAK line does.
         fresh = parted
         position += len(piece) + 1
         parts.append(piece)
-    return " ".join(parts), offsets, wraps
+    return " ".join(parts), offsets, wraps, carries
 
 
 def _lineno_at(offsets, position):
@@ -445,24 +601,32 @@ def _lineno_at(offsets, position):
     return found
 
 
-def scan_blocks(text, findings):
-    for joined, offsets, wraps in iter_blocks(text.splitlines()):
+def scan_blocks(blocks, findings, active=None):
+    for joined, offsets, wraps, carries in blocks:
         for name, rx in BLOCK_PATTERNS:
+            if not _runs(name, joined, active):
+                continue
             for m in rx.finditer(joined):
                 findings.append(
                     (_lineno_at(offsets, m.start()), name, m.group(0).strip())
                 )
         if wraps:
-            _scan_wraps(joined, offsets, wraps, findings)
+            _scan_wraps(joined, offsets, wraps, carries, findings, active)
 
 
-def _scan_wraps(joined, offsets, wraps, findings):
+def _scan_wraps(joined, offsets, wraps, carries, findings, active=None):
     """Report a phrase whose halves sit on either side of a line wrap.
 
     scan_line has reported every match that fits on one line. A match counts
     here when it spans a line join and the same rule matches nothing from the
     same start once the text stops at that join. The finding carries the line
     that opens the match.
+
+    scan_line leaves one more case to this pass: a clause rule's match at the
+    first word of a line that carries on the sentence above. The joined text
+    decides whether that word opens a clause. After a comma it does. After a
+    plain word, as in a condition that wraps before "is not there", it does
+    not, and the rule finds nothing there.
     """
     def split_by_wrap(rx, m):
         for wrap in wraps:
@@ -471,8 +635,11 @@ def _scan_wraps(joined, offsets, wraps, findings):
         return False
 
     for name, rx in PATTERNS:
+        if not _runs(name, joined, active):
+            continue
         for m in rx.finditer(joined):
-            if split_by_wrap(rx, m):
+            opens_carry = name in CLAUSE_RULES and m.start() in carries
+            if opens_carry or split_by_wrap(rx, m):
                 findings.append(
                     (_lineno_at(offsets, m.start()), name, m.group(0).strip())
                 )
@@ -481,6 +648,8 @@ def _scan_wraps(joined, offsets, wraps, findings):
         end = sep.start() if sep else len(joined)
         lead = end - len(joined[start:end].lstrip(LEAD_STRIP))
         for name, rx in OPENERS:
+            if active is not None and name not in active:
+                continue
             m = rx.match(joined, lead, end)
             if m and split_by_wrap(rx, m):
                 findings.append(
@@ -489,11 +658,21 @@ def _scan_wraps(joined, offsets, wraps, findings):
         start = sep.end() if sep else end
 
 
-def scan_text(text):
+def scan_text(text, profile=None):
+    """Findings as (line, rule, snippet), in line order.
+
+    `profile` picks the rule set: "chat" runs the chat groups, and "copy" or
+    None runs every rule.
+    """
+    active = _CHAT_RULES if profile == "chat" else None
+    lines = text.splitlines()
+    blocks = list(iter_blocks(lines))
+    carried = {_lineno_at(offsets, at)
+               for _, offsets, _, carries in blocks for at in carries}
     findings = []
-    for i, line in enumerate(text.splitlines(), 1):
-        scan_line(line, i, findings)
-    scan_blocks(text, findings)
+    for i, line in enumerate(lines, 1):
+        scan_line(line, i, findings, active, i in carried)
+    scan_blocks(blocks, findings, active)
     findings.sort(key=lambda finding: finding[0])
     return findings
 
@@ -521,6 +700,14 @@ def _utf8_streams():
 def main(argv):
     _utf8_streams()
     args = argv[1:]
+    profile = None
+    if "--profile" in args:
+        at = args.index("--profile")
+        profile = args[at + 1] if at + 1 < len(args) else ""
+        if profile not in PROFILES:
+            print("copy_lint: --profile takes chat or copy", file=sys.stderr)
+            return 2
+        del args[at:at + 2]
     if not args:
         print(__doc__)
         return 2
@@ -538,15 +725,21 @@ def main(argv):
 
     findings = 0
     for path, text in sources:
-        for lineno, name, snippet in scan_text(text):
-            print(f"{path}:{lineno}: {name}: \"{snippet}\"")
-            findings += 1
+        found = scan_text(text, profile)
+        findings += len(found)
+        # One group at a time, with the group's sentence once under its lines.
+        for _, sentence, names in GROUPS:
+            rows = [finding for finding in found if finding[1] in names]
+            for lineno, name, snippet in rows:
+                print(f"{path}:{lineno}: \"{snippet}\" [{name}]")
+            if rows:
+                print("  " + sentence)
 
     print(f"\ncopy_lint: {findings} finding(s)")
     if findings:
-        print("FAIL — rewrite each flagged sentence as a direct statement of "
-              "what the subject IS or DOES, then re-run. Do not edit this "
-              "linter to make copy pass.")
+        print("FAIL — in each flagged sentence, state the fact and cut the "
+              "half set against it, then re-run. Do not edit this linter to "
+              "make copy pass.")
         return 1
     print("PASS")
     return 0

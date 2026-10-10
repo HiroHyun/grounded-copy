@@ -31,3 +31,18 @@ Call _unlock_mutex before the write, and pass *args to the planner.
 Usage: python copy_lint.py FILE
 Note: Stop the server before the upgrade.
 并非所有文件都是只读的。
+The pan is not oven-safe because it has a plastic handle.
+Use the freezer. The fridge stales bread faster.
+The queue takes email, live chat, and phone.
+If the cache directory named in the config
+is not there, it is created on the first run.
+Step 1: Stop the server. Step 2: Start the upgrade.
+- [x] Stop the server before the upgrade.
+工业革命的起源地在曼彻斯特。
+I'm not sure about the second step, I would test it first.
+You haven't paid a fee, you didn't sign a contract.
+The money that a renter isn't spending on rent, they could invest.
+The train sets down only (passengers are not supposed to board), it leaves early.
+By slow I don't mean lazy, I mean careful.
+"Risk" doesn't mean "loss". It means variance.
+I don't drink coffee, I drink tea.

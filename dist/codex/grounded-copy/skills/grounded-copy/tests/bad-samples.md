@@ -127,3 +127,40 @@ Acme 不僅僅是一個工具，告別繁瑣的對賬流程。
 Acme 不光是一个工具。
 我并非作者，只是普通用户。
 与其说它是工具，不如说它是平台。
+
+# One line per rule that had no line here before, so every rule is seen to
+# fire.
+Acme goes beyond file storage.
+The plan looks beyond just price.
+It's about trust, not speed.
+Gone are the days of manual invoices.
+The days of manual invoices are over.
+Say goodbye to manual invoices.
+No more waiting on hold.
+Never again lose a receipt.
+Far from being a reseller, Acme roasts its own beans.
+If you believe invoices must be slow, think again.
+Order direct without the hassle of middlemen.
+Zero guesswork on every order.
+The result? Fewer late invoices.
+Where quality meets affordability.
+Acme reimagines online booking.
+The dashboard serves as a control room.
+We're not a bank.
+Picture this: every invoice paid on time.
+Welcome to a new era of booking.
+Ever wondered where your budget goes?
+
+# The denial with a plain verb, the do-verb denial, and the two fragments.
+# Each reported nothing before these bodies joined the gate.
+He wasn't fired, he quit.
+The printer isn't broken, it needs paper.
+You don't need a gym, you need a routine.
+This doesn't mean failure. It means the plan needs work.
+Not slow, just cold.
+Not a patch. A rewrite.
+
+# The paired slogan that `opener-stop` reports, and an opener behind a
+# checked box.
+Stop guessing. Start knowing.
+- [x] Imagine a release with no checklist.

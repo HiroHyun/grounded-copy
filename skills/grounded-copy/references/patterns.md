@@ -6,6 +6,8 @@ The examples are invented for teaching. Product names, figures, awards, and sour
 
 The quoted triggers and Draft columns deliberately contain wording the checker reports. The Rewrite columns show the intended style.
 
+With `--profile chat` the checker runs the reversal rules, the contrast-marker rules, and the suspended-list rule. With `--profile copy`, or with no option, it runs every rule.
+
 ## Everyday examples
 
 The rewrite is the draft with its contrast half removed, so it comes out shorter. Each draft below sets a fact against something nobody raised.
@@ -19,6 +21,9 @@ The rewrite is the draft with its contrast half removed, so it comes out shorter
 | "Use olive oil instead of butter." | "Use olive oil." |
 | "The museum is no longer free on Sundays." | "The museum charges on Sundays." |
 | "You can cancel without paying a fee." | "Cancelling is free." |
+| "He wasn't fired, he quit." | "He quit." |
+| "The printer isn't broken, it needs paper." | "The printer needs paper." |
+| "You don't need a gym, you need a routine." | "You need a routine." |
 
 Keep the second half when the reader raised it. If someone asked about butter, "Use olive oil; butter burns at this heat." answers them.
 
@@ -54,6 +59,8 @@ The `less-a-x-than` rule also reports "less about speed and more about trust" an
 
 The `without-gerund` rule matches `without` followed by an `-ing` form. It also reports ordinary phrases such as "without warning" and "without training". Preserve the meaning of required text and use the profile off for that work.
 
+The `instead-of`, `no-longer`, and `without-gerund` rules joined the gate when Claude moved to those forms after early versions of the plugin blocked the reversal. They report ordinary substitutions, exclusions, and status lines too, so say what to do or what is true now.
+
 ## 2. Reversal reveals
 
 Start with the fact. A denial followed by a reveal makes the reader work through two claims to reach it.
@@ -74,6 +81,8 @@ A slogan opens the same way: "No X, just Y".
 | "I'm not the plugin's author, just a user." | "I use this plugin; a friend wrote it." |
 | "No hidden fees, just simple pricing." | "Each plan shows one monthly price, tax included." |
 | "Acme isn't a tool, it's a platform." | "Acme runs the build, the tests, and the release in one pipeline." |
+| "Not slow, just cold." | "The pool is 18 °C." |
+| "Not a patch. A rewrite." | "Version 2 replaces the parser." |
 
 The `comma-not-appositive` rule also catches `, not by`, `, not from`, and `, not through`. It can match an object that starts with a quote, backtick, or bracket.
 
@@ -82,6 +91,12 @@ The `not-just` rule also reports a denial and `just`, `only`, `merely`, or `simp
 The `no-x-just-y` rule reports the slogan form: "no", "zero", or "nothing", one or two words, then "just". A longer status line such as "No fix was needed, just a restart." passes.
 
 The `not-x-its-y` rule reports the first trigger with any subject, and as two sentences. A condition passes: "If the file is not there, it is created." A correction of fact in the same shape reports: "The file isn't missing, it's empty." State the fact: "The file is empty."
+
+The `not-x-its-y` rule also reports a second half that opens with a plain verb: "He wasn't fired, he quit." A comma splice of two facts has the same shape and reports too: "The pan isn't oven-safe, it has a plastic handle." Join the reason with "because": "The pan isn't oven-safe because it has a plastic handle."
+
+The `do-verb-repeat` rule reports a denial of "need" or "want" followed by the same verb, and "does not mean" followed by "it means" in one sentence or two. Another repeated verb gives two facts and passes: "I don't drink coffee, I drink tea."
+
+The `fragment-reversal` rule runs under `copy` only. In a chat the same fragments are short answers and corrections: "Not a teaspoon, a tablespoon."
 
 The `dash-not-contrast` and `negated-copula-dash` rules read a spaced hyphen or a double hyphen as a dash: "Acme is a partner - not a vendor." A plain limit written that way reports too: "The limit is 3 - not configurable."
 
@@ -122,7 +137,7 @@ Put the useful information first. A question that immediately answers itself oft
 
 Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
 "Tired of", "What if", "Imagine", "Picture this", "In a world where",
-"Stop Xing", "Forget X", "Don't just X".
+"Stop Xing. Start Ying.", "Forget X", "Don't just X".
 
 | Draft | Rewrite |
 |---|---|
@@ -131,6 +146,8 @@ Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
 | "Imagine a report that writes itself." | "The report generates each Monday from the previous week's data." |
 | "Look no further than Acme." | "Acme runs the three checks listed above." |
 | "It's worth noting that every plan includes support." | "Every plan includes support." |
+
+The `opener-stop` rule reports the pair. A plain instruction passes: "Stop the server before the upgrade."
 
 ## 6. Collision framing
 

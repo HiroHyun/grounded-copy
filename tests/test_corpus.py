@@ -5,9 +5,9 @@ CONTRIBUTING asks every new pattern to arrive with a line in the corpus that
 catches it. A rule with no line is a rule nobody has seen fire, which is how a
 regex that matches nothing survives review.
 
-Scope bound: this asserts coverage for the per-locale rules only. Some English
-rules carry no corpus line today, so the same assertion over the whole rule set
-would ship red. Widening it means adding those lines first.
+The coverage assertion runs over the whole rule set. A sentence that a rule
+should report or pass goes into the two sample files, which the exit-code checks
+run; this module tests the scanner's behaviour.
 """
 
 import os
@@ -23,7 +23,8 @@ LINTER = str(SKILL_DIR / "scripts" / "copy_lint.py")
 CORPUS = str(SKILL_DIR / "tests" / "bad-samples.md")
 
 LOCALE_RULE = re.compile(r"^(?:zh|ru|es|ar|fr|de|ja|ko)-")
-REPORTED = re.compile(r"^\S+ ([a-z0-9-]+):", re.M)
+# A finding line ends with its rule name in brackets.
+REPORTED = re.compile(r"\[([a-z0-9-]+)\]$", re.M)
 
 
 def linter():
@@ -48,9 +49,9 @@ def reported(text):
     return {name for _, name, _ in linter().scan_text(text)}
 
 
-def run_linter(path, env=None):
+def run_linter(path, env=None, options=()):
     return subprocess.run(
-        [sys.executable, LINTER, path],
+        [sys.executable, LINTER, *options, path],
         capture_output=True, text=True, encoding="utf-8", env=env,
     )
 
@@ -82,9 +83,12 @@ class LocaleCoverageTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout)
         self.reported = set(REPORTED.findall(result.stdout))
 
-    def test_every_locale_rule_reports_a_corpus_line(self):
-        rules = locale_rules()
-        self.assertEqual(len(rules), 9, "the locale rule set changed size")
+    def test_every_rule_reports_a_corpus_line(self):
+        copy_lint = linter()
+        self.assertEqual(len(locale_rules()), 9,
+                         "the locale rule set changed size")
+        rules = [name for name, _ in copy_lint.PATTERNS + copy_lint.OPENERS
+                 + copy_lint.BLOCK_PATTERNS]
         for rule in rules:
             with self.subTest(rule=rule):
                 self.assertIn(
@@ -99,6 +103,31 @@ class LocaleCoverageTests(unittest.TestCase):
             languages, {"zh", "ru", "es", "ar", "fr", "de", "ja", "ko"},
             "README publishes a tier per language; the rule set moved",
         )
+
+
+class ProfileTests(unittest.TestCase):
+    """Each rule sits in one group, and the group names its profile."""
+
+    def test_groups_cover_the_rules_and_chat_runs_no_copy_rule(self):
+        copy_lint = linter()
+        rules = sorted(name for name, _ in copy_lint.PATTERNS
+                       + copy_lint.OPENERS + copy_lint.BLOCK_PATTERNS)
+        grouped = sorted(name for _, _, names in copy_lint.GROUPS
+                         for name in names)
+        self.assertEqual(grouped, rules, "a rule has no group, or has two")
+        copy_only = {name for profile, _, names in copy_lint.GROUPS
+                     if profile == "copy" for name in names}
+
+        chat = run_linter(CORPUS, options=("--profile", "chat"))
+        self.assertEqual(chat.returncode, 1, chat.stdout)
+        reported_under_chat = set(REPORTED.findall(chat.stdout))
+        self.assertTrue(reported_under_chat)
+        self.assertEqual(reported_under_chat & copy_only, set())
+
+        every = set(REPORTED.findall(run_linter(CORPUS).stdout))
+        self.assertTrue(every & copy_only, "no option should run every rule")
+        self.assertEqual(
+            run_linter(CORPUS, options=("--profile", "bogus")).returncode, 2)
 
 
 class RewriteShorterTests(unittest.TestCase):
@@ -295,6 +324,36 @@ class WrappedPhraseTests(unittest.TestCase):
         for text, rule in cases:
             with self.subTest(text=text):
                 self.assertIn((1, rule), self.found(text))
+
+    def test_a_clause_rule_follows_the_joined_sentence(self):
+        """A wrapped sentence reports exactly when its one-line form does.
+
+        A rule anchored on a clause start once took the first word of every
+        line for one, so a condition that wrapped before its verb reported.
+        Each row holds the findings the text gives under `chat`.
+        """
+        cases = (
+            # The clause opens with "If" on the line above.
+            ("If the cache directory named in the config\n"
+             "is not there, it is created on the first run.", []),
+            # The clause opens on line 1 and its halves sit on line 2.
+            ("We tested it and the\nresult isn't a bug, it's a feature.",
+             [(1, "not-x-its-y")]),
+            # Line 1 ends with a comma, so line 2 opens the clause.
+            ("As the logs show,\nit isn't a bug, it's a feature.",
+             [(2, "not-x-its-y")]),
+            # Line 1 ends its sentence.
+            ("Results are below.\nIt isn't a bug, it's a feature.",
+             [(2, "not-x-its-y")]),
+            ("You\ndon't need a gym, you need a routine.",
+             [(1, "do-verb-repeat")]),
+        )
+        scan = linter().scan_text
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(
+                    [(lineno, rule) for lineno, rule, _ in scan(text, "chat")],
+                    expected)
 
     def test_a_phrase_on_one_line_reports_once(self):
         cases = (

@@ -104,8 +104,8 @@ The plugins call these modes *profiles*. Your choice stays saved after a restart
 
 | Profile | Use it for |
 |---|---|
-| `chat` (default) | Everyday replies, documentation, and technical explanations. |
-| `copy` | Product pages and marketing text. Adds rules for promotional wording. |
+| `chat` (default) | Everyday replies, documentation, and technical explanations. The checker runs the contrast rules. |
+| `copy` | Product pages and marketing text. Adds rules for promotional wording, and the checker runs every rule. |
 | `off` | Work that needs the original wording or a different writing style. |
 
 **Claude Code:**
@@ -160,7 +160,9 @@ python3 skills/grounded-copy/scripts/copy_lint.py draft.md
 
 Use `python` if that is your Python 3 command. You can pass several file paths in one call. The checker uses the Python standard library.
 
-Each finding gives a line number, a rule name, and the matched text. Revise the sentence using the facts in your source, then run the command again.
+Add `--profile chat` to run the contrast rules alone, the set an everyday reply needs. With no option, or with `--profile copy`, the checker runs every rule.
+
+Each finding gives a line number, the matched text, and a rule name in brackets. Under each group of findings the checker prints one sentence that says what to cut. Revise the sentence using the facts in your source, then run the command again.
 
 | Exit code | Meaning |
 |---|---|
@@ -216,7 +218,7 @@ The [paragraph review](skills/grounded-copy/references/patterns.md#paragraph-rev
 
 | Languages | What the checker matches |
 |---|---|
-| English | 60 rules |
+| English | 62 rules |
 | Chinese, Japanese, Korean | sentence patterns, plus a list of phrases |
 | Russian, Spanish, Arabic, French, German | a list of 6 to 18 phrases each |
 

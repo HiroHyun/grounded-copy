@@ -45,6 +45,7 @@ skills/grounded-copy/references/patterns.md	de-not-just	mehr als nur
 skills/grounded-copy/references/patterns.md	de-not-just	nicht nur ein
 skills/grounded-copy/references/patterns.md	de-not-just	nie wieder
 skills/grounded-copy/references/patterns.md	de-not-just	verabschieden Sie sich
+skills/grounded-copy/references/patterns.md	do-verb-repeat	You don't need a gym, you need
 skills/grounded-copy/references/patterns.md	doesnt-just	Don't just
 skills/grounded-copy/references/patterns.md	doesnt-just	can't just
 skills/grounded-copy/references/patterns.md	doesnt-just	doesn't just
@@ -67,6 +68,10 @@ skills/grounded-copy/references/patterns.md	fr-not-just	n'est pas qu'un
 skills/grounded-copy/references/patterns.md	fr-not-just	plus qu'un simple
 skills/grounded-copy/references/patterns.md	fr-not-just	redéfinit
 skills/grounded-copy/references/patterns.md	fr-not-just	va au-delà
+skills/grounded-copy/references/patterns.md	fragment-reversal	Not a patch. A rewrite.
+skills/grounded-copy/references/patterns.md	fragment-reversal	Not a teaspoon, a tablespoon.
+skills/grounded-copy/references/patterns.md	fragment-reversal	Not slow, just
+skills/grounded-copy/references/patterns.md	fragment-reversal	not X, just
 skills/grounded-copy/references/patterns.md	goes-beyond	goes beyond
 skills/grounded-copy/references/patterns.md	goes-beyond	goes beyond
 skills/grounded-copy/references/patterns.md	gone-are-the-days	Gone are the days
@@ -159,9 +164,13 @@ skills/grounded-copy/references/patterns.md	not-x-but-y	n't the fastest but
 skills/grounded-copy/references/patterns.md	not-x-but-y	not in the config but in
 skills/grounded-copy/references/patterns.md	not-x-its-y	's not a website. It's your
 skills/grounded-copy/references/patterns.md	not-x-its-y	Acme isn't a tool, it's
+skills/grounded-copy/references/patterns.md	not-x-its-y	He wasn't fired, he quit
+skills/grounded-copy/references/patterns.md	not-x-its-y	He wasn't fired, he quit
 skills/grounded-copy/references/patterns.md	not-x-its-y	It's not X, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	The file isn't missing, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	The file isn't missing, it's
+skills/grounded-copy/references/patterns.md	not-x-its-y	The pan isn't oven-safe, it has
+skills/grounded-copy/references/patterns.md	not-x-its-y	The printer isn't broken, it needs
 skills/grounded-copy/references/patterns.md	not-x-its-y	Your plant isn't dying, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	isn't about X, it's
 skills/grounded-copy/references/patterns.md	not-your-average	Not another
@@ -171,7 +180,7 @@ skills/grounded-copy/references/patterns.md	not-your-average	not your average
 skills/grounded-copy/references/patterns.md	opener-at-company-we	At Acme, we
 skills/grounded-copy/references/patterns.md	opener-imagine	Imagine
 skills/grounded-copy/references/patterns.md	opener-it-is-not	It's not
-skills/grounded-copy/references/patterns.md	opener-stop	Stop Xing
+skills/grounded-copy/references/patterns.md	opener-stop	Stop Xing. Start Ying
 skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of
 skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of
 skills/grounded-copy/references/patterns.md	rather-than	rather than

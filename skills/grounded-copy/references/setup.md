@@ -107,7 +107,7 @@ When both the Skills CLI copy and the plugin are installed, Claude Code may show
 
 ### The checker reports a sentence you need to keep
 
-The checker matches text patterns. Some phrases also have ordinary factual uses. Read the sentence in context and preserve its meaning. Use `off` for work that requires such wording. Running the checker manually still reports the same matches.
+The checker matches text patterns. Some phrases also have ordinary factual uses. Read the sentence in context and preserve its meaning. Each group of findings ends with one sentence that names a form the checker passes. Use `off` for work that requires such wording. Running the checker manually still reports the same matches.
 
 Rules scan each line, then each paragraph for a phrase that wraps onto the next line. A finding carries the line where the phrase starts. The `dash-pair-list` rule scans paragraphs too and can find a list whose opening and closing dashes are on different lines.
 
@@ -141,7 +141,7 @@ Add a command for the files your project publishes:
 python3 .style/grounded-copy/scripts/copy_lint.py README.md content/product.md
 ```
 
-Use your actual file paths. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
+Use your actual file paths. Add `--profile chat` to run the contrast rules alone; with no option the checker runs every rule. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
 
 ## Turn off or remove an installation
 

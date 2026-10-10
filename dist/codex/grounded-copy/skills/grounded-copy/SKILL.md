@@ -79,19 +79,19 @@ Use these checks during review:
 
 1. Identify what the reader needs to understand or do. Select the facts that serve that purpose and omit incidental details. Read Paragraph review before drafting; Chinese tasks also use Chinese paragraph review. Use a register suited to the reader.
 2. Review the whole passage for the banned move and repeated enumeration, including English noun lists and action chains. Delete details that add no useful meaning, including accurate details. Check retained claims against the source and honor explicit completeness requirements. Use a list when the reader needs its individual items.
-3. Run the checker on the saved files:
+3. Run the checker on the saved files with the active profile. For product and promotional text with no saved profile, pass `copy`:
 
    ```bash
-   python3 <skill-path>/scripts/copy_lint.py file1.md locales/en.json
+   python3 <skill-path>/scripts/copy_lint.py --profile chat file1.md locales/en.json
    ```
 
    To check text from a pipe:
 
    ```bash
-   cat draft.md | python3 <skill-path>/scripts/copy_lint.py --stdin
+   cat draft.md | python3 <skill-path>/scripts/copy_lint.py --profile chat --stdin
    ```
 
-4. Exit code 1 means the checker found matches. Rewrite the flagged sentences using supported facts relevant to the task, then run it again. Exit code 2 means a command or file error; fix that error and rerun.
+4. Exit code 1 means the checker found matches. Each group of findings ends with a sentence that says what to cut. Rewrite the flagged sentences using supported facts relevant to the task, then run it again. Exit code 2 means a command or file error; fix that error and rerun.
 5. Present the files after a pass. Report the check result for files you checked. A normal chat reply needs no check-result line.
 
 ## Integrity rules
