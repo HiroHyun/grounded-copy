@@ -149,7 +149,7 @@ Add a command for the files your project publishes:
 python3 .style/grounded-copy/scripts/copy_lint.py README.md content/product.md
 ```
 
-Use your actual file paths. Add `--profile chat` to run the reversal, comparison, and dash rules alone; with no option the checker runs every rule. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
+Use your actual file paths. Add `--profile chat` to check everyday writing; with no option the checker runs every rule. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
 
 ## Check files as the agent saves them
 

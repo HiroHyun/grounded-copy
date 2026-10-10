@@ -6,8 +6,8 @@ openers, suspended lists, vague attribution, and hype vocabulary
 (EN + zh/ru/es/ar/fr/de/ja/ko equivalents).
 
 Every rule sits in a group, and the group names the profile that runs it.
-`--profile chat` runs the reversal, comparison, and dash rules. `--profile
-copy`, or no option, runs every rule. Copy that needs a banned form, such as a legal disclaimer or a
+`--profile chat` runs the `chat` groups. `--profile copy`, or no option, runs
+every rule. Copy that needs a banned form, such as a legal disclaimer or a
 translation of supplied source, is written with the grounded-copy profile off.
 
 Usage:
