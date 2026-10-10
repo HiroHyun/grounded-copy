@@ -12,12 +12,18 @@ host's marketplace verbs. One universal Skills CLI step installs the portable
 skill for every agent that CLI supports. Updates and removal stay with those
 same tools, so this script owns no state and writes no file of its own.
 
+One exception, on request: `--always-on` adds a marked block to the user-level
+instruction file of Claude Code and Codex, for a host that gets the skill and
+no plugin. A skill loads when the agent judges it relevant, and the block makes
+every session apply it. Re-running replaces the block; `--uninstall` removes
+it.
+
 Every step is planned before anything runs, and `--dry-run` prints the plan and
 stops. Re-running is safe: each underlying verb is idempotent.
 
 Usage:
-    install.py [--only NAME]... [--skills-only] [--dry-run] [--list]
-               [--yes] [--uninstall] [--no-color]
+    install.py [--only NAME]... [--skills-only] [--always-on] [--dry-run]
+               [--list] [--yes] [--uninstall] [--no-color]
 """
 
 import os
@@ -39,6 +45,26 @@ EXIT_USAGE = 2
 # Hosts with a plugin CLI of their own. These carry the hooks, the profiles,
 # and the profile switch, which the portable skill leaves out.
 PLUGIN_HOSTS = ("claude", "codex")
+
+# Where `--always-on` writes: (host, variable naming its config directory, the
+# default directory, the instruction file). A plugin's SessionStart hook already
+# delivers the rules, so a host that gets its plugin in the same run is skipped.
+INSTRUCTION_FILES = (
+    ("claude", "CLAUDE_CONFIG_DIR", "~/.claude", "CLAUDE.md"),
+    ("codex", "CODEX_HOME", "~/.codex", "AGENTS.md"),
+)
+# argv[0] of a plan step that `run()` performs itself.
+WRITE_BLOCK = "write-block"
+BLOCK_START = "<!-- grounded-copy:start -->"
+BLOCK_END = "<!-- grounded-copy:end -->"
+BLOCK = "\n".join((
+    BLOCK_START,
+    "# Prose",
+    "Apply the grounded-copy skill's `chat` rules to every reply and every "
+    "file a person reads.",
+    "Load the skill once per session if its rules are not in context.",
+    BLOCK_END,
+)) + "\n"
 
 CLAUDE_PRECEDENCE_NOTE = """Claude Code may list grounded-copy@skills-dir as
 \"Not loaded\" because grounded-copy@hirohyun-plugins owns that skill name.
@@ -66,6 +92,7 @@ class Options(object):
     def __init__(self):
         self.only = []
         self.skills_only = False
+        self.always_on = False
         self.dry_run = False
         self.listing = False
         self.assume_yes = False
@@ -88,6 +115,8 @@ def parse_args(argv):
             options.only.append(argument.split("=", 1)[1].strip().lower())
         elif argument == "--skills-only":
             options.skills_only = True
+        elif argument == "--always-on":
+            options.always_on = True
         elif argument == "--dry-run":
             options.dry_run = True
         elif argument in ("--list", "-l"):
@@ -194,6 +223,17 @@ def plan(options, found):
                 ["npx", "-y", "skills", "add", REPO,
                  "--skill", SKILL, "--yes"],
             ))
+            if options.always_on:
+                for host, _variable, directory, filename in INSTRUCTION_FILES:
+                    gets_plugin = (not options.skills_only
+                                   and host in found["commands"]
+                                   and _wanted(options, host))
+                    if not gets_plugin:
+                        steps.append((
+                            "%s: add the Prose block to %s/%s"
+                            % (host, directory, filename),
+                            [WRITE_BLOCK, host],
+                        ))
     return steps
 
 
@@ -271,11 +311,82 @@ def cleanup_claude_cache(env=None, sleeper=time.sleep):
     return True
 
 
+def instruction_file(host, env=None):
+    """A host's user-level instruction file, or None when the host's config
+    directory is absent, which means the host is not on this machine."""
+    env = os.environ if env is None else env
+    for name, variable, default, filename in INSTRUCTION_FILES:
+        if name == host:
+            directory = os.path.expanduser(env.get(variable) or default)
+            if os.path.isdir(directory):
+                return os.path.join(directory, filename)
+    return None
+
+
+def edit_block(host, add, env=None):
+    """Add, replace, or remove the marked block. False means a failure.
+
+    The file is the user's own. Every byte outside the two markers stays, and
+    a file that will not read as UTF-8, or that holds one marker of the pair,
+    is left as it is.
+    """
+    path = instruction_file(host, env)
+    if path is None:
+        if add:
+            print("    no %s config directory here; skipped" % host)
+        return True
+    text = ""
+    try:
+        if os.path.exists(path):
+            with open(path, encoding="utf-8", newline="") as handle:
+                text = handle.read()
+    except (OSError, UnicodeError) as exc:
+        print("    cannot read %s: %s" % (path, exc))
+        return False
+
+    start, end = text.find(BLOCK_START), text.find(BLOCK_END)
+    if (start < 0) != (end < 0) or end < start:
+        print("    %s holds half a grounded-copy block; left as it is" % path)
+        return False
+    newline = "\r\n" if "\r\n" in text else "\n"
+    block = BLOCK.replace("\n", newline)
+    if start >= 0:
+        head, tail = text[:start], text[end + len(BLOCK_END):]
+        if tail.startswith(newline):
+            tail = tail[len(newline):]
+        if not add and head.endswith(newline * 2):
+            # The blank line this function put in front of the block.
+            head = head[:-len(newline)]
+        updated = head + (block if add else "") + tail
+    elif add:
+        if text and not text.endswith(newline):
+            text += newline
+        updated = text + (newline if text else "") + block
+    else:
+        return True
+
+    try:
+        with open(path, "w", encoding="utf-8", newline="") as handle:
+            handle.write(updated)
+    except OSError as exc:
+        print("    cannot write %s: %s" % (path, exc))
+        return False
+    print("    %s the block in %s" % ("wrote" if add else "removed", path))
+    return True
+
+
 def run(steps):
     """Execute each step, reporting the ones that fail. Returns an exit code."""
     failed = []
     for label, argv in steps:
         print("\n==> " + label)
+        if argv[0] == WRITE_BLOCK:
+            # The block points at the skill, so it waits on the steps above.
+            if failed:
+                print("    skipped: an earlier step failed")
+            elif not edit_block(argv[1], add=True):
+                failed.append(label)
+            continue
         try:
             code = subprocess.call([resolve(argv[0])] + argv[1:])
         except OSError as exc:
@@ -288,6 +399,9 @@ def run(steps):
         elif argv[:4] == ["claude", "plugin", "uninstall",
                           "%s@%s" % (PLUGIN, MARKETPLACE)]:
             cleanup_claude_cache()
+        elif argv[:4] == ["npx", "-y", "skills", "remove"]:
+            for host, _variable, _directory, _filename in INSTRUCTION_FILES:
+                edit_block(host, add=False)
     if failed:
         print("\n%d step(s) failed:" % len(failed))
         for label in failed:

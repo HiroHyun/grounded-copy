@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "Grounded Copy",
     "shortDescription": "Help AI write clearly and get to the point.",
-    "longDescription": "Grounded Copy guides AI agents to explain ideas in plain language, use concrete facts, and remove filler. It applies writing rules to everyday replies and technical explanations, with a separate mode for marketing copy. A Python checker flags supported wording patterns in saved drafts for review.",
+    "longDescription": "Grounded Copy guides AI agents to explain ideas in plain language, use concrete facts, and remove filler. It applies writing rules to everyday interaction and ordinary documents, with a separate mode for product page marketing text. A Python checker flags supported wording patterns in saved drafts for review.",
     "developerName": "HiroHyun",
     "category": "Productivity",
     "capabilities": [

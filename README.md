@@ -71,6 +71,8 @@ To choose one installation method, use the commands below.
 
 The skill includes the rules, examples, and checker. The Claude Code and Codex plugins also load rules at session start and add a reminder with each prompt. These plugins let you save a writing mode.
 
+A skill on its own loads when the agent judges it relevant. To have every session apply it, run the installer with `--skills-only --always-on`. It writes a short marked block into `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`, skips a host that gets its plugin in the same run, and removes the block on `--uninstall`.
+
 See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal commands.
 
 <details>
@@ -104,8 +106,8 @@ The plugins call these modes *profiles*. Your choice stays saved after a restart
 
 | Profile | Use it for |
 |---|---|
-| `chat` (default) | Everyday replies, documentation, and technical explanations. The checker runs the contrast rules. |
-| `copy` | Product pages and marketing text. Adds rules for promotional wording, and the checker runs every rule. |
+| `chat` (default) | Everyday interaction and ordinary document processing. The checker runs the contrast rules. |
+| `copy` | Specifically prepared for product page marketing text. The checker runs every rule. |
 | `off` | Work that needs the original wording or a different writing style. |
 
 **Claude Code:**

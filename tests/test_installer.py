@@ -164,6 +164,75 @@ class PlanTests(unittest.TestCase):
         self.assertIn("grounded-copy@hirohyun-plugins", output.getvalue())
 
 
+class AlwaysOnTests(unittest.TestCase):
+    """`--always-on` writes a marked block into a user's own instruction file.
+
+    The plan names a host only when that host gets the skill and no plugin.
+    The edit keeps every byte outside the two markers.
+    """
+
+    def test_the_plan_names_each_host_that_gets_no_plugin(self):
+        both = ("claude", "codex")
+        cases = (
+            # (option overrides, plugin CLIs found, npx, hosts with a block)
+            (dict(always_on=True, skills_only=True), both, True, list(both)),
+            (dict(always_on=True), ("claude",), True, ["codex"]),
+            (dict(always_on=True), both, True, []),
+            (dict(skills_only=True), both, True, []),
+            (dict(always_on=True, skills_only=True), both, False, []),
+            (dict(always_on=True, uninstall=True), (), True, []),
+        )
+        for overrides, commands, npx, expected in cases:
+            with self.subTest(overrides=overrides, commands=commands, npx=npx):
+                options = install.Options()
+                for key, value in overrides.items():
+                    setattr(options, key, value)
+                steps = install.plan(options, machine(commands, npx=npx))
+                self.assertEqual(
+                    [argv[1] for _label, argv in steps
+                     if argv[0] == install.WRITE_BLOCK], expected)
+
+    def test_run_writes_replaces_and_removes_the_block(self):
+        write = [("claude: add the block", [install.WRITE_BLOCK, "claude"]),
+                 ("codex: add the block", [install.WRITE_BLOCK, "codex"])]
+        remove = [("skills: remove",
+                   ["npx", "-y", "skills", "remove", install.SKILL, "--yes"])]
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp) / "claude"
+            home.mkdir()
+            target = home / "CLAUDE.md"
+            env = {"CLAUDE_CONFIG_DIR": str(home),
+                   "CODEX_HOME": str(Path(tmp) / "absent")}
+
+            def run(steps):
+                with mock.patch.dict(os.environ, env), \
+                        mock.patch.object(install.subprocess, "call",
+                                          lambda argv: 0), \
+                        redirect_stdout(StringIO()):
+                    return install.run(steps)
+
+            def content():
+                return target.read_bytes().decode("utf-8")
+
+            target.write_bytes(b"Mine.\n")
+            self.assertEqual(run(write), install.EXIT_OK)
+            self.assertEqual(content(), "Mine.\n\n" + install.BLOCK)
+            # A second run replaces the block and leaves one copy.
+            target.write_bytes(content().replace("`chat`", "old").encode())
+            self.assertEqual(run(write), install.EXIT_OK)
+            self.assertEqual(content(), "Mine.\n\n" + install.BLOCK)
+            # No Codex directory on this machine, so none is created.
+            self.assertFalse((Path(tmp) / "absent").exists())
+            self.assertEqual(run(remove), install.EXIT_OK)
+            self.assertEqual(content(), "Mine.\n")
+
+            # One marker of the pair: the file is the user's, so it stays.
+            half = "Mine.\n" + install.BLOCK_START + "\nkeep\n"
+            target.write_bytes(half.encode())
+            self.assertEqual(run(write), install.EXIT_FAILED)
+            self.assertEqual(content(), half)
+
+
 class ResolveTests(unittest.TestCase):
     """What `subprocess` needs that a bare name does not supply.
 
@@ -305,12 +374,13 @@ class ConfirmTests(unittest.TestCase):
 class ArgumentTests(unittest.TestCase):
     def test_every_documented_flag_parses(self):
         options, error = install.parse_args([
-            "--only", "claude", "--only=skills", "--skills-only", "--dry-run",
-            "--list", "--yes", "--uninstall", "--no-color",
+            "--only", "claude", "--only=skills", "--skills-only", "--always-on",
+            "--dry-run", "--list", "--yes", "--uninstall", "--no-color",
         ])
         self.assertEqual(error, "")
         self.assertEqual(options.only, ["claude", "skills"])
-        for field in ("skills_only", "dry_run", "listing", "assume_yes", "uninstall"):
+        for field in ("skills_only", "always_on", "dry_run", "listing",
+                      "assume_yes", "uninstall"):
             self.assertTrue(getattr(options, field), field)
         self.assertFalse(options.color)
 

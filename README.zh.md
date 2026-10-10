@@ -74,6 +74,8 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 
 技能包含写作规则、示例和检查脚本。Claude Code 和 Codex 插件还会在会话开始时加载规则，并在每次发送提示时加入一条提醒。插件支持保存写作模式。
 
+单独安装的技能只在智能体判断相关时加载。想让每个会话都应用它，可以用 `--skills-only --always-on` 运行安装脚本。脚本会在 `~/.claude/CLAUDE.md` 和 `~/.codex/AGENTS.md` 中写入一段带标记的简短说明；同一次运行中已安装插件的宿主会被跳过，`--uninstall` 会删除这段说明。
+
 [安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载命令。
 
 <details>
@@ -108,8 +110,8 @@ python3 install.py --uninstall
 
 | 模式 | 适用场景 |
 |---|---|
-| `chat`（默认） | 日常回复、项目文档和技术说明。检查脚本只运行对比类规则。 |
-| `copy` | 产品页面和营销文案，增加对宣传用语的要求，检查脚本运行全部规则。 |
+| `chat`（默认） | 日常交流和普通文档处理。检查脚本只运行对比类规则。 |
+| `copy` | 专为产品页面的营销文案准备。检查脚本运行全部规则。 |
 | `off` | 需要保留原文表达，或采用其他写作风格的任务。 |
 
 **Claude Code：**

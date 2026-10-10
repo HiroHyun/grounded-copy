@@ -36,16 +36,24 @@ Install the skill through the Skills CLI:
 python3 install.py --skills-only
 ```
 
+A skill loads when the agent judges it relevant. To have every session apply it, add `--always-on`:
+
+```bash
+python3 install.py --skills-only --always-on
+```
+
+The installer writes a short marked block into `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. It skips a host that gets its plugin in the same run, since the plugin already loads the rules. Run the command again to refresh the block. `--uninstall` removes it.
+
 Run `python3 install.py --help` to see all options. The installer prints each host command before running it.
 
 ## Profile lifecycle
 
-A profile is a saved writing mode. Use `chat` for everyday writing, `copy` for promotional text, and `off` for work that needs another style. Switch to `off` before translating source text whose wording and comparisons must be preserved.
+A profile is a saved writing mode. Use `chat` for everyday interaction and ordinary documents, `copy` for product page marketing text, and `off` for work that needs another style. Switch to `off` before translating source text whose wording and comparisons must be preserved.
 
 | Action | Claude Code | Codex |
 |---|---|---|
-| Everyday writing | `/grounded-copy:grounded chat` | `$grounded-profile chat` |
-| Product and marketing copy | `/grounded-copy:grounded copy` | `$grounded-profile copy` |
+| Everyday interaction and documents | `/grounded-copy:grounded chat` | `$grounded-profile chat` |
+| Product page marketing text | `/grounded-copy:grounded copy` | `$grounded-profile copy` |
 | Turn the rules off | `/grounded-copy:grounded off` | `$grounded-profile off` |
 | Show the saved setting | `/grounded-copy:grounded` | `$grounded-profile status` |
 
