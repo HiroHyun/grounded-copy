@@ -1,0 +1,55 @@
+skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_3e871c4c32d0aa 745-746
+  s_2202bc8d5d4fd8::t_03d252d0f0da7d 680-694
+hooks/_hook_io.py
+  s_2202bc8d5d4fd8::t_e56584f6c15aa6 9-10,13
+  s_2202bc8d5d4fd8::t_ed69f0639a8ebb 54-69
+tests/test_hooks.py
+  s_2202bc8d5d4fd8::t_d3ee6ba2360d7e 35
+  s_2202bc8d5d4fd8::t_57879639f711b5 674-723,726-735,737,740,742-747
+  s_2202bc8d5d4fd8::t_d64ac7034ea865 724-725,736,738-739,741
+tests/test_launchers.py
+  s_2202bc8d5d4fd8::t_d40adda99a88c2 5
+  s_2202bc8d5d4fd8::t_6ee967893d0662 300-325
+dist/codex/grounded-copy/hooks/_hook_io.py
+  s_2202bc8d5d4fd8::t_e0cff00fc7f62a 9-10,13,54-67
+  s_2202bc8d5d4fd8::t_43ec6539bbed21 68-69
+hooks/grounded_gate.py
+  s_2202bc8d5d4fd8::t_4c6e9fcb9b86df 1-255
+dist/codex/grounded-copy/hooks/run.cmd
+  s_2202bc8d5d4fd8::t_e0cff00fc7f62a 27-28,36
+dist/codex/grounded-copy/hooks/run.sh
+  s_2202bc8d5d4fd8::t_e0cff00fc7f62a 17-18,28
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_e0cff00fc7f62a 680-694,745-746
+dist/codex/grounded-copy/skills/grounded-copy/SKILL.md
+  s_2202bc8d5d4fd8::t_e0cff00fc7f62a 94-95,101
+hooks/run.cmd
+  s_2202bc8d5d4fd8::t_d40adda99a88c2 27-28,36
+hooks/run.sh
+  s_2202bc8d5d4fd8::t_d40adda99a88c2 17-18,28
+skills/grounded-copy/SKILL.md
+  s_2202bc8d5d4fd8::t_d40adda99a88c2 94-95,101
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_e0cff00fc7f62a 67,146-181
+  s_2202bc8d5d4fd8::t_35c16ad1deeb4e 182
+skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_d40adda99a88c2 67,146-181
+  s_2202bc8d5d4fd8::t_55cb1b3915121a 182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8a98f7739a768a020ee1d73e0190c2fee8b9b293",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
