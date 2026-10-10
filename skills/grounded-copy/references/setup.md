@@ -151,6 +151,8 @@ python3 .style/grounded-copy/scripts/copy_lint.py README.md content/product.md
 
 Use your actual file paths. Add `--profile chat` to check everyday writing; with no option the checker runs every rule. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
 
+A finding prints as the file, the line, the matched text, and the rule name in brackets. Version 0.7.0 changed that line, so update a script that reads the earlier form.
+
 ## Check files as the agent saves them
 
 The plugin ships an optional hook, `hooks/grounded_gate.py`, for Claude Code and Codex. After the agent writes or edits a file, the hook runs the checker on it under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. The `off` profile skips the check.

@@ -12,7 +12,7 @@
         "path": "./dist/codex/grounded-copy"
       },
       "description": "Help AI write clearly and get to the point.",
-      "version": "0.7.0",
+      "version": "0.7.1",
       "license": "AGPL-3.0-only",
       "category": "productivity",
       "policy": {
