@@ -1,0 +1,41 @@
+skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 9-10
+dist/codex/grounded-copy/skills/grounded-profile/SKILL.md
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 17
+CONTRIBUTING.md
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 13
+dist/codex/grounded-copy/README.md
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 5,7
+dist/codex/grounded-copy/.codex-plugin/plugin.json
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 23
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 51,56,152
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 9-10
+README.md
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 109-110,165,169
+  s_2202bc8d5d4fd8::t_aaf314e40ecaa8 170
+README.zh.md
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 113-114,170,174
+  s_2202bc8d5d4fd8::t_f45f8265d429a3 175
+scripts/build_codex_adapter.py
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 129,178,237,239
+skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_9d44220a4e86c9 51,56,152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7b64e0af22c339f84a9cb94fe36e48bba18243dc",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
