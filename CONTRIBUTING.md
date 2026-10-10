@@ -10,7 +10,7 @@ Choose one pattern or one language for each pull request. Explain the writing pr
 4. Add a draft and rewrite to `skills/grounded-copy/references/patterns.md`. Check that the rewrite passes.
 5. Add the rule's name to one group in `GROUPS` in `copy_lint.py`. The group sets the profile that runs the rule and the sentence its findings print.
 
-Each rule reports every match under the profiles its group names: `--profile chat` runs the contrast rules, and `--profile copy` or no option runs every rule. If a task needs wording that a rule rejects, the writer can use the `off` profile. A manual checker run still reports that wording.
+Each rule reports every match under the profiles its group names: `--profile chat` runs the reversal, comparison, and dash rules, and `--profile copy` or no option runs every rule. If a task needs wording that a rule rejects, the writer can use the `off` profile. A manual checker run still reports that wording.
 
 ## Add a language
 

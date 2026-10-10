@@ -106,8 +106,8 @@ The plugins call these modes *profiles*. Your choice stays saved after a restart
 
 | Profile | Use it for |
 |---|---|
-| `chat` (default) | Everyday interaction and ordinary document processing. The checker runs the contrast rules. |
-| `copy` | Specifically prepared for product page marketing text. The checker runs every rule. |
+| `chat` (default) | Everyday interaction and ordinary document processing. The checker runs the reversal, comparison, and dash rules. |
+| `copy` | Product pages, marketing copy, and similar text. The checker runs every rule. |
 | `off` | Work that needs the original wording or a different writing style. |
 
 **Claude Code:**
@@ -162,9 +162,11 @@ python3 skills/grounded-copy/scripts/copy_lint.py draft.md
 
 Use `python` if that is your Python 3 command. You can pass several file paths in one call. The checker uses the Python standard library.
 
-Add `--profile chat` to run the contrast rules alone, the set an everyday reply needs. With no option, or with `--profile copy`, the checker runs every rule.
+Add `--profile chat` to run the reversal, comparison, and dash rules alone, the set an everyday reply needs. With no option, or with `--profile copy`, the checker runs every rule.
 
 Each finding gives a line number, the matched text, and a rule name in brackets. Under each group of findings the checker prints one sentence that says what to cut. Revise the sentence using the facts in your source, then run the command again.
+
+To check each file as the agent saves it, see [Check files as the agent saves them](skills/grounded-copy/references/setup.md#check-files-as-the-agent-saves-them) in the setup guide.
 
 | Exit code | Meaning |
 |---|---|

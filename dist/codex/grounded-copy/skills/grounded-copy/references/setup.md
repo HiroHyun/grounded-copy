@@ -48,12 +48,12 @@ Run `python3 install.py --help` to see all options. The installer prints each ho
 
 ## Profile lifecycle
 
-A profile is a saved writing mode. Use `chat` for everyday interaction and ordinary documents, `copy` for product page marketing text, and `off` for work that needs another style. Switch to `off` before translating source text whose wording and comparisons must be preserved.
+A profile is a saved writing mode. Use `chat` for everyday interaction and ordinary documents, `copy` for product pages, marketing copy, and similar text, and `off` for work that needs another style. Switch to `off` before translating source text whose wording and comparisons must be preserved.
 
 | Action | Claude Code | Codex |
 |---|---|---|
 | Everyday interaction and documents | `/grounded-copy:grounded chat` | `$grounded-profile chat` |
-| Product page marketing text | `/grounded-copy:grounded copy` | `$grounded-profile copy` |
+| Product pages and marketing copy | `/grounded-copy:grounded copy` | `$grounded-profile copy` |
 | Turn the rules off | `/grounded-copy:grounded off` | `$grounded-profile off` |
 | Show the saved setting | `/grounded-copy:grounded` | `$grounded-profile status` |
 
@@ -149,7 +149,7 @@ Add a command for the files your project publishes:
 python3 .style/grounded-copy/scripts/copy_lint.py README.md content/product.md
 ```
 
-Use your actual file paths. Add `--profile chat` to run the contrast rules alone; with no option the checker runs every rule. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
+Use your actual file paths. Add `--profile chat` to run the reversal, comparison, and dash rules alone; with no option the checker runs every rule. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
 
 ## Check files as the agent saves them
 

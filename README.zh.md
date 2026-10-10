@@ -110,8 +110,8 @@ python3 install.py --uninstall
 
 | 模式 | 适用场景 |
 |---|---|
-| `chat`（默认） | 日常交流和普通文档处理。检查脚本只运行对比类规则。 |
-| `copy` | 专为产品页面的营销文案准备。检查脚本运行全部规则。 |
+| `chat`（默认） | 日常交流和普通文档处理。检查脚本运行反转、对比和破折号规则。 |
+| `copy` | 产品页面、营销文案等。检查脚本运行全部规则。 |
 | `off` | 需要保留原文表达，或采用其他写作风格的任务。 |
 
 **Claude Code：**
@@ -167,9 +167,11 @@ python3 skills/grounded-copy/scripts/copy_lint.py draft.md
 
 如果你的 Python 3 命令是 `python`，请替换命令开头。一次可以传入多个文件路径。脚本只用到 Python 标准库。
 
-加上 `--profile chat` 只运行对比类规则，适合日常回复。省略选项或使用 `--profile copy` 时，脚本运行全部规则。
+加上 `--profile chat` 只运行反转、对比和破折号规则，适合日常回复。省略选项或使用 `--profile copy` 时，脚本运行全部规则。
 
 检查结果会列出行号、命中的文字和方括号里的规则名称。每组结果下面有一句话，说明该删掉哪一部分。根据原始资料修改句子，再检查一次。
+
+想让智能体每次保存文件时自动检查，请看安装说明的 [Check files as the agent saves them](skills/grounded-copy/references/setup.md#check-files-as-the-agent-saves-them) 一节。
 
 | 退出码 | 含义 |
 |---|---|

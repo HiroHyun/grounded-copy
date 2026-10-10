@@ -126,7 +126,7 @@ MANIFEST = json.dumps({
             "Grounded Copy guides AI agents to explain ideas in plain language, "
             "use concrete facts, and remove filler. It applies writing rules to "
             "everyday interaction and ordinary documents, with a separate mode "
-            "for product page marketing text. A Python checker flags supported wording "
+            "for product pages and marketing copy. A Python checker flags supported wording "
             "patterns in saved drafts for review."
         ),
         "developerName": "HiroHyun",
@@ -175,7 +175,7 @@ Use this skill when the user explicitly asks to view or change the writing mode.
 
 Run `python scripts/profile.py <operation>` from this skill directory. Accept exactly `chat`, `copy`, `off`, or `status` as the operation.
 
-`chat` covers everyday interaction and ordinary document processing. `copy` is for product page marketing text. `off` stops the rules and reminders. `status` shows the saved setting.
+`chat` covers everyday interaction and ordinary document processing. `copy` is for product pages, marketing copy, and similar text. `off` stops the rules and reminders. `status` shows the saved setting.
 
 The setting is saved at `$CODEX_HOME/grounded-copy/profile`, using `~/.codex` as the default home. After a successful change, report the status and apply the printed instructions from this turn forward. If saving fails, report the error.
 """
@@ -234,9 +234,9 @@ README = """# grounded-copy for Codex
 
 This package gives Codex writing rules, a copy checker, and three writing modes.
 
-Use `$grounded-profile status` to see the current mode. Choose `$grounded-profile chat` for everyday interaction and ordinary documents, `$grounded-profile copy` for product page marketing text, or `$grounded-profile off` to turn the rules off. Your choice stays saved after a restart.
+Use `$grounded-profile status` to see the current mode. Choose `$grounded-profile chat` for everyday interaction and ordinary documents, `$grounded-profile copy` for product pages and marketing copy, or `$grounded-profile off` to turn the rules off. Your choice stays saved after a restart.
 
-The plugin loads rules at session start and adds a reminder with each prompt. Enable the hooks in Codex and complete any hook review requested by the app. The hooks guide the agent; they do not scan each reply. Run `skills/grounded-copy/scripts/copy_lint.py` on saved files to check them.
+The plugin loads rules at session start and adds a reminder with each prompt. Enable the hooks in Codex and complete any hook review requested by the app. The hooks guide the agent; they do not scan each reply. Run `skills/grounded-copy/scripts/copy_lint.py` on saved files to check them, with `--profile chat` or `--profile copy` to match your mode. The setup guide shows an optional hook that checks each file as the agent saves it.
 
 The setting lives at `$CODEX_HOME/grounded-copy/profile`, or `~/.codex/grounded-copy/profile` by default.
 
