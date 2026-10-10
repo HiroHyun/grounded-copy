@@ -1,0 +1,48 @@
+scripts/check_citations.py
+  s_2202bc8d5d4fd8::t_53d5d0ef715485 34
+tests/test_corpus.py
+  s_2202bc8d5d4fd8::t_572ab8a2bd8fca 115
+  s_2202bc8d5d4fd8::t_b6ea2d6c50cb82 104-114,116-125
+skills/grounded-copy/references/patterns.md
+  s_2202bc8d5d4fd8::t_b6ea2d6c50cb82 9-24
+dist/codex/grounded-copy/skills/grounded-copy/SKILL.md
+  s_2202bc8d5d4fd8::t_e8586748a5b1e1 8,10,14,16-18,20,22,24,53-63,66,81
+hooks/_policy.py
+  s_2202bc8d5d4fd8::t_15ce550ee5d521 91,95-97
+  s_2202bc8d5d4fd8::t_035f54cf20e6b4 66-69,105
+README.md
+  s_2202bc8d5d4fd8::t_53d5d0ef715485 140-141,144
+tests/test_codex_adapter.py
+  s_2202bc8d5d4fd8::t_53d5d0ef715485 330
+README.zh.md
+  s_2202bc8d5d4fd8::t_53d5d0ef715485 144-145,148
+tests/test_hooks.py
+  s_2202bc8d5d4fd8::t_53d5d0ef715485 47-49,52,243,299-304,339-341,343-344,346
+  s_2202bc8d5d4fd8::t_b6ea2d6c50cb82 292-293
+dist/codex/grounded-copy/hooks/_policy.py
+  s_2202bc8d5d4fd8::t_e8586748a5b1e1 66-69,91,95-97,105
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  s_2202bc8d5d4fd8::t_e8586748a5b1e1 9-24
+tests/citations-baseline.txt
+  s_2202bc8d5d4fd8::t_e8586748a5b1e1 13-18,32,113,149,164-165,179,209
+skills/grounded-copy/SKILL.md
+  s_2202bc8d5d4fd8::t_119ffe956b7d62 53-63,66
+  s_2202bc8d5d4fd8::t_d4188e7114ae4e 8,10,14,16-18,20,22,24
+  s_2202bc8d5d4fd8::t_0a8e9f1c9a3790 81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bd75ecebbd9352ed510f74d2c9c224ff99d3989d",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
