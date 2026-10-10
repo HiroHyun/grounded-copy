@@ -36,7 +36,6 @@ TRACKER = str(HOOKS / "grounded_tracker.py")
 # Sections both profiles carry.
 CORE_HEADINGS = (
     "## The one banned move",
-    "## Positive forms",
     "## Scope and precedence",
     "## Sourcing",
     "## Suspended lists",
@@ -45,16 +44,15 @@ CORE_HEADINGS = (
 # Rules inside those sections, asserted by their own text so a section that
 # survives extraction while losing a rule still fails. SKILL.md keeps each
 # paragraph on one long line, so an anchor holds while its words stay together
-# in the source. The anchors pin the paragraph under `## The one banned move`,
-# `## Scope and precedence` (three bullets), `## Positive forms`, `## Sourcing`,
-# and `## Suspended lists`, in that order. Reword one of those paragraphs and
+# in the source. The anchors pin the third case under `## The one banned move`,
+# `## Scope and precedence` (three bullets), `## Sourcing`, and
+# `## Suspended lists`, in that order. Reword one of those paragraphs and
 # check here first.
 CORE_RULES = (
-    "Every shape blocks with no",
+    "The denial is the fact.",
     "**Verbatim source material.**",
     "**Governed everywhere else.**",
     "**User precedence.**",
-    "**read-only**",
     "Name the source, the figure",
     "banned. Name the one example",
 )
@@ -242,7 +240,7 @@ class SessionPolicyTests(HookCase):
                 self.write_preference(value + "\n")
                 result = self.activate()
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertIn("Copy describes things by what they ARE", result.stdout)
+                self.assertIn("State the fact.", result.stdout)
                 for heading in CORE_HEADINGS:
                     self.assertIn(heading, result.stdout)
 
@@ -291,15 +289,19 @@ class SessionPolicyTests(HookCase):
         """Directive: the register test is copy-side; sourcing is core.
 
         The anchor is the register test rather than a hype word: SKILL.md
-        holds no hype word now, so that it passes copy_lint.py itself, and
-        `## Hype vocabulary` in skills/grounded-copy/references/patterns.md enumerates them.
+        holds no hype word, and `## Hype vocabulary` in
+        skills/grounded-copy/references/patterns.md enumerates them.
         """
         self.write_preference("chat\n")
         chat = self.activate().stdout
         self.write_preference("copy\n")
         copy = self.activate().stdout
-        self.assertNotIn("a perfume ad and a SaaS deck", chat)
-        self.assertIn("a perfume ad and a SaaS deck", copy)
+        # The product lead and the developer terms moved here from the core.
+        for anchor in ("a perfume ad and a SaaS deck",
+                       "Tell the reader what the product does",
+                       "**read-only**"):
+            self.assertNotIn(anchor, chat)
+            self.assertIn(anchor, copy)
         for text in (chat, copy):
             self.assertIn("## Sourcing", text)
 
@@ -334,16 +336,14 @@ class SessionPolicyTests(HookCase):
 # Turn reminder: what UserPromptSubmit injects
 # ---------------------------------------------------------------------------
 class TurnReminderTests(HookCase):
-    # One clause per boundary the reminder keeps in reach. `Prefer established
-    # positive terms` came out with the payload cut, since `## Positive forms`
-    # states it at session start. The reminder also carries a byte budget,
-    # asserted below; `hooks/_policy.py` holds the figure.
+    # One clause per boundary the reminder keeps in reach: the operation, what
+    # stays, the sourcing cue, and user precedence. The reminder also carries a
+    # byte budget, asserted below; `hooks/_policy.py` holds the figure.
     CLAUSES = (
-        "State what the subject is or does.",
-        "No contrast, era-ending, or hype.",
-        "Rules hold in quotes, fences, and comments",
+        "State the fact; cut the half set against something nobody raised.",
+        "Keep warnings, limits, corrections, and requested comparisons.",
         "Select relevant facts",
-        "verbatim quotations stay exact",
+        "quote exactly",
         "A user instruction outranks this",
     )
     CEILING = 260

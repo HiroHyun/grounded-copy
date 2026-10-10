@@ -6,6 +6,22 @@ The examples are invented for teaching. Product names, figures, awards, and sour
 
 The quoted triggers and Draft columns deliberately contain wording the checker reports. The Rewrite columns show the intended style.
 
+## Everyday examples
+
+The rewrite is the draft with its contrast half removed, so it comes out shorter. Each draft below sets a fact against something nobody raised.
+
+| Draft | Rewrite |
+|---|---|
+| "The file isn't missing, it's empty." | "The file is empty." |
+| "Your plant isn't dying, it's dormant." | "Your plant is dormant." |
+| "A budget is a plan, not a punishment." | "A budget is a plan." |
+| "Rinse the rice rather than skipping that step." | "Rinse the rice." |
+| "Use olive oil instead of butter." | "Use olive oil." |
+| "The museum is no longer free on Sundays." | "The museum charges on Sundays." |
+| "You can cancel without paying a fee." | "Cancelling is free." |
+
+Keep the second half when the reader raised it. If someone asked about butter, "Use olive oil; butter burns at this heat." answers them.
+
 ## 1. Placed against an alternative
 
 Describe the subject directly. A comparison often leaves the reader waiting for the actual feature or action.

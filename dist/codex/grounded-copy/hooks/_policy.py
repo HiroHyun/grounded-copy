@@ -29,7 +29,6 @@ SKILL_RELATIVE = os.path.join("skills", "grounded-copy", "SKILL.md")
 # Sections both profiles carry, in payload order.
 CORE_HEADINGS = (
     "## The one banned move",
-    "## Positive forms",
     "## Scope and precedence",
     "## Sourcing",
     "## Suspended lists",
@@ -64,11 +63,10 @@ SWITCH_LINE = "Profile: {profile}. Switch: `{switch}`."
 # The reminder carries the sourcing rule's selection cue each turn. Exact
 # reproduction applies to quotations; other source material may be summarized.
 TURN_REMINDER = (
-    "GROUNDED PROSE ({profile}). State what the subject is or does. No "
-    "contrast, era-ending, or hype. Rules hold in quotes, fences, and "
-    "comments. Select relevant facts; verbatim quotations stay exact. "
-    "A user instruction outranks "
-    "this; name the rule."
+    "GROUNDED PROSE ({profile}). State the fact; cut the half set against "
+    "something nobody raised. Keep warnings, limits, corrections, and "
+    "requested comparisons. Select relevant facts; quote exactly. "
+    "A user instruction outranks this; name the rule."
 )
 
 DIRECTIVE_HEADER = "GROUNDED PROSE — governing profile: {profile} ({source})"
@@ -90,13 +88,13 @@ DIRECTIVE_LEAD_EMPTY = (
     "rules for this profile arrive at the next session start."
 )
 
-# Extraction sizes measured 2026-09-15 against SKILL.md, including fact selection
+# Extraction sizes measured 2026-10-10 against SKILL.md, including fact selection
 # and paragraph review across languages. These count the rules body alone; hook stdout
 # adds the header and switch line, 106 bytes. The READMEs publish the same figures under "What each
 # mode costs", and `grounded_activate.py --self-test` reports the current ones.
-BASELINE_BYTES = 4212
-COPY_BASELINE_BYTES = 5645
-TURN_BASELINE_BYTES = 239
+BASELINE_BYTES = 4032
+COPY_BASELINE_BYTES = 6292
+TURN_BASELINE_BYTES = 238
 
 # (floor, ceiling) per payload. The ceiling bounds growth against the figure the
 # documentation published when the range was set: a payload that passes it fails
@@ -104,7 +102,7 @@ TURN_BASELINE_BYTES = 239
 # addition and get muted, so the band leaves room for one. The floor catches an
 # extraction that returns a stub while every structural assertion still passes.
 BYTE_RANGE = (3350, 4300)
-COPY_BYTE_RANGE = (4850, 6200)
+COPY_BYTE_RANGE = (4850, 7000)
 TURN_BYTE_RANGE = (160, 260)
 
 

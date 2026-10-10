@@ -327,7 +327,7 @@ class CodexAdapterTests(unittest.TestCase):
             self.assertEqual(block["hookEventName"], "UserPromptSubmit")
             self.assertIn("GROUNDED PROSE (chat)", block["additionalContext"])
             self.assertIn("Select relevant facts", block["additionalContext"])
-            self.assertIn("verbatim quotations stay exact", block["additionalContext"])
+            self.assertIn("quote exactly", block["additionalContext"])
             self.assertEqual(self._hook(CODEX_TRACKER, ("--set", "off"), home=home).returncode, 0)
             self.assertEqual(self._hook(CODEX_TRACKER, home=home).stdout, "")
 

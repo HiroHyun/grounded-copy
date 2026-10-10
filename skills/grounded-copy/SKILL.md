@@ -5,31 +5,23 @@ description: Write clear prose using concrete facts. Use when writing, editing, 
 
 # Grounded Copy
 
-Copy describes things by what they ARE. Tell the reader what the product does, how it works, or what they can do next. Use concrete nouns and verbs. Include a number only when the source supports it.
+State the fact. Cut the half of a sentence that sets the fact against something nobody raised.
 
-Grounded: "The tracker links every task to its pull request and posts a status digest to Slack each morning."
+Draft: "The file isn't missing, it's empty." Write: "The file is empty."
 
 ## The one banned move
 
-Avoid explaining a subject through a contrast with an alternative. State its features or behavior directly. The pattern guide groups this habit into seven forms:
+A denial followed by a claim tells the reader that someone raised the denied thing. When nobody did, the denial is a foil that makes the claim sound sharper. Delete it and keep the fact. The rewrite comes out shorter than the draft. Three cases decide what happens to a denial:
 
-1. **Comparison with an alternative.** A claim depends on what another option lacks.
-2. **Reversal reveals.** A denial sets up the claim that follows it.
-3. **Era-ending.** A sentence announces that an old way of working has ended.
-4. **Competitor put-downs.** A claim starts by criticizing a rival or group.
-5. **Rhetorical bait.** A question or command introduces the writer's own answer.
-6. **Collision framing.** Two abstract qualities are described as meeting.
-7. **Corporate throat-clearing.** A company preamble delays the useful fact.
+1. **The claim rules it out.** Cut the denial. An empty file exists, so "The file is empty." carries the whole correction.
+2. **A fact sits behind it.** State that fact. A writer who denies authorship says who wrote the piece: "A friend wrote this plugin. I use it."
+3. **The denial is the fact.** Keep it as a plain negative: "Do not mix bleach and ammonia."
 
-Every shape blocks with no exception while the profile is active. When required wording contains one, such as a legal disclaimer, use the profile off.
+A comparison nobody asked for is the same move. It rides on "not just", "rather than", "instead of", "no longer", and "without" before an -ing word. Say what to do or what is true now. Draft: "Rinse the rice rather than skipping that step." Write: "Rinse the rice." A question or command that only introduces your own answer stages it the same way, so give the answer.
 
-To rewrite, name the useful claim and use facts supported by the source. Read `references/patterns.md` for phrases and examples. A new phrase can use the same pattern, so review the whole passage as well as individual sentences.
+Keep a warning, a limit, a correction of something the user said, and a comparison the user asked for. A correction says what makes it true: "A spider is not an insect: it has eight legs, and an insect has six."
 
-## Positive forms
-
-Use a familiar positive term when it describes the behavior accurately: **read-only**, **immutable**, **append-only**, **idempotent**, **dry run**, **single-writer**, **fixed-width**, **allowlist**, **constant-time**, or **exit code 2**.
-
-If a term would make the sentence harder to understand, describe the behavior in plain words. Preserve every limit that affects the reader's next step.
+When required wording contains the move, such as a legal disclaimer, use the profile off. Read `references/patterns.md` for phrases and examples. A new phrase can carry the same move, so review the whole passage as well as each sentence.
 
 ## Scope and precedence
 
@@ -58,9 +50,20 @@ In English and other languages, review adjacent sentences for dense lists and re
 
 Apply this section to product pages and promotional text. It covers headlines, button labels, descriptions, alt text, email, social posts, ads, and translated interface text.
 
+Tell the reader what the product does, how it works, or what they can do next. Use concrete nouns and verbs. Include a number only when the source supports it.
+
+Grounded: "The tracker links every task to its pull request and posts a status digest to Slack each morning."
+
+The banned move takes four more forms here:
+
+1. **Era-ending.** A sentence announces that an old way of working has ended.
+2. **Competitor put-downs.** A claim starts by criticizing a rival or group.
+3. **Collision framing.** Two abstract qualities are described as meeting.
+4. **Corporate throat-clearing.** A company preamble delays the useful fact.
+
 **Hype vocabulary.** Replace vague praise with the feature or fact it refers to. The pattern guide lists common examples. Check the meaning of unfamiliar synonyms too. A word that fits both a perfume ad and a SaaS deck may say little about the actual product.
 
-**Plain negation.** Keep a negative statement when it explains a limit the reader needs to act on. For example, "does not support batching" tells a developer how to use an API. State other claims positively.
+**Positive terms.** Use a familiar positive term when it describes the behavior accurately: **read-only**, **immutable**, **append-only**, **idempotent**, **dry run**, **single-writer**, **fixed-width**, **allowlist**, **constant-time**, or **exit code 2**. If a term would make the sentence harder to understand, describe the behavior in plain words. Preserve every limit that affects the reader's next step.
 
 ## Loophole closures
 
@@ -75,7 +78,7 @@ Use these checks during review:
 ## Workflow
 
 1. Identify what the reader needs to understand or do. Select the facts that serve that purpose and omit incidental details. Read Paragraph review before drafting; Chinese tasks also use Chinese paragraph review. Use a register suited to the reader.
-2. Review the whole passage for the seven patterns above and repeated enumeration, including English noun lists and action chains. Delete details that add no useful meaning, including accurate details. Check retained claims against the source and honor explicit completeness requirements. Use a list when the reader needs its individual items.
+2. Review the whole passage for the banned move and repeated enumeration, including English noun lists and action chains. Delete details that add no useful meaning, including accurate details. Check retained claims against the source and honor explicit completeness requirements. Use a list when the reader needs its individual items.
 3. Run the checker on the saved files:
 
    ```bash

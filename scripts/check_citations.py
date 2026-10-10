@@ -31,6 +31,7 @@ CITED = (
     "README.md",
     "README.zh.md",
     os.path.join("skills", "grounded-copy", "references", "patterns.md"),
+    os.path.join("skills", "grounded-copy", "SKILL.md"),
 )
 
 EXIT_OK = 0

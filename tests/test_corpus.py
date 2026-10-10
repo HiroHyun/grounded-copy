@@ -101,6 +101,28 @@ class LocaleCoverageTests(unittest.TestCase):
         )
 
 
+class RewriteShorterTests(unittest.TestCase):
+    """The operation is deletion, so an everyday rewrite is its draft cut down.
+
+    Covers the Draft and Write pairs in SKILL.md and the rows under
+    `## Everyday examples` in the pattern guide.
+    """
+
+    def test_each_rewrite_is_shorter_and_passes(self):
+        skill = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")
+        guide = (SKILL_DIR / "references" / "patterns.md").read_text(
+            encoding="utf-8")
+        table = guide.split("## Everyday examples", 1)[1].split("\n## ", 1)[0]
+        pairs = (re.findall(r'Draft: "([^"]+)" Write: "([^"]+)"', skill)
+                 + re.findall(r'^\| "([^"]+)" \| "([^"]+)" \|$', table, re.M))
+        self.assertGreater(len(pairs), 6, "the pair patterns found too few")
+        for draft, rewrite in pairs:
+            with self.subTest(draft=draft):
+                self.assertTrue(reported(draft), "the draft reports nothing")
+                self.assertLess(len(rewrite), len(draft))
+                self.assertEqual(reported(rewrite), set())
+
+
 class ReversalGapTests(unittest.TestCase):
     """A reversal reports with words between its two halves.
 

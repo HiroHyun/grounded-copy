@@ -137,11 +137,11 @@ $grounded-profile status
 
 | Profile | Bytes added at session start | Turn reminder |
 |:---:|:---:|:---:|
-| `chat` (default) | 4,212 | one line naming `chat` |
-| `copy` | 5,645 | one line naming `copy` |
+| `chat` (default) | 4,032 | one line naming `chat` |
+| `copy` | 6,292 | one line naming `copy` |
 | `off` | 0 | none |
 
-Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 239 bytes.
+Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 238 bytes.
 
 The choice is saved in `<config-dir>/grounded-copy/profile`.
 

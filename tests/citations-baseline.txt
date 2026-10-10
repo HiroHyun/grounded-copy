@@ -10,12 +10,19 @@ README.zh.md	dash-pair-list	— 邮件、在线客服、电话、帮助中心 �
 README.zh.md	zh-not-just	不仅仅是
 README.zh.md	zh-not-just	告别
 README.zh.md	zh-not-x-but-y	不是供应商，而是
+skills/grounded-copy/SKILL.md	instead-of	instead of
+skills/grounded-copy/SKILL.md	no-longer	no longer
+skills/grounded-copy/SKILL.md	not-just	not just
+skills/grounded-copy/SKILL.md	not-x-its-y	The file isn't missing, it's
+skills/grounded-copy/SKILL.md	rather-than	rather than
+skills/grounded-copy/SKILL.md	rather-than	rather than
 skills/grounded-copy/references/patterns.md	ar-not-just	أكثر من مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	ليس مجرد
 skills/grounded-copy/references/patterns.md	ar-not-just	وداعًا
 skills/grounded-copy/references/patterns.md	ar-not-just	يعيد تعريف
 skills/grounded-copy/references/patterns.md	as-opposed-to	as opposed to
 skills/grounded-copy/references/patterns.md	beyond-just	beyond just
+skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
@@ -103,6 +110,7 @@ skills/grounded-copy/references/patterns.md	inflated-copula	boasts
 skills/grounded-copy/references/patterns.md	inflated-copula	testament to
 skills/grounded-copy/references/patterns.md	instead-of	instead of
 skills/grounded-copy/references/patterns.md	instead-of	instead of
+skills/grounded-copy/references/patterns.md	instead-of	instead of
 skills/grounded-copy/references/patterns.md	is-more-than-a	was more than a
 skills/grounded-copy/references/patterns.md	isnt-about	isn't about
 skills/grounded-copy/references/patterns.md	isnt-about	wasn't about
@@ -138,6 +146,7 @@ skills/grounded-copy/references/patterns.md	negated-copula-dash	isn't complicate
 skills/grounded-copy/references/patterns.md	negated-copula-dash	wasn't X —
 skills/grounded-copy/references/patterns.md	never-again	never again
 skills/grounded-copy/references/patterns.md	no-longer	no longer
+skills/grounded-copy/references/patterns.md	no-longer	no longer
 skills/grounded-copy/references/patterns.md	no-more-x	No more waiting
 skills/grounded-copy/references/patterns.md	no-more-x	no more X
 skills/grounded-copy/references/patterns.md	no-x-just-y	No X, just
@@ -152,6 +161,8 @@ skills/grounded-copy/references/patterns.md	not-x-its-y	's not a website. It's y
 skills/grounded-copy/references/patterns.md	not-x-its-y	Acme isn't a tool, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	It's not X, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	The file isn't missing, it's
+skills/grounded-copy/references/patterns.md	not-x-its-y	The file isn't missing, it's
+skills/grounded-copy/references/patterns.md	not-x-its-y	Your plant isn't dying, it's
 skills/grounded-copy/references/patterns.md	not-x-its-y	isn't about X, it's
 skills/grounded-copy/references/patterns.md	not-your-average	Not another
 skills/grounded-copy/references/patterns.md	not-your-average	Not your average
@@ -163,6 +174,7 @@ skills/grounded-copy/references/patterns.md	opener-it-is-not	It's not
 skills/grounded-copy/references/patterns.md	opener-stop	Stop Xing
 skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of
 skills/grounded-copy/references/patterns.md	opener-tired-sick-of	Tired of
+skills/grounded-copy/references/patterns.md	rather-than	rather than
 skills/grounded-copy/references/patterns.md	rather-than	rather than
 skills/grounded-copy/references/patterns.md	rather-than	rather than
 skills/grounded-copy/references/patterns.md	redefine-family	redefines
@@ -194,6 +206,7 @@ skills/grounded-copy/references/patterns.md	while-others	whereas most
 skills/grounded-copy/references/patterns.md	while-others	while others
 skills/grounded-copy/references/patterns.md	without-gerund	without adding
 skills/grounded-copy/references/patterns.md	without-gerund	without adding
+skills/grounded-copy/references/patterns.md	without-gerund	without paying
 skills/grounded-copy/references/patterns.md	without-gerund	without training
 skills/grounded-copy/references/patterns.md	without-gerund	without warning
 skills/grounded-copy/references/patterns.md	without-the-hassle	without the hassle
