@@ -1,0 +1,37 @@
+scripts/build_codex_adapter.py
+  s_2202bc8d5d4fd8::t_66c8847f6a2619 88-91
+hooks/grounded_gate.py
+  s_2202bc8d5d4fd8::t_61c5cbe2d20b29 85-108
+  s_2202bc8d5d4fd8::t_5da1a0aa1f56f7 10-13
+  s_2202bc8d5d4fd8::t_0097d642ac107e 133-154,162,168-170
+  s_2202bc8d5d4fd8::t_f46245be8a9d80 271-273,282-304
+  s_2202bc8d5d4fd8::t_461ef589c32af0 52-57
+tests/test_codex_adapter.py
+  s_2202bc8d5d4fd8::t_a62652925aafa2 45
+skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_6730272994283d 148
+  s_2202bc8d5d4fd8::t_8e9960a6b23ec4 152
+  s_2202bc8d5d4fd8::t_eb6d3037feb792 176-189,193-196
+tests/test_hooks.py
+  s_2202bc8d5d4fd8::t_2f6157f6cf5d5c 747-792
+dist/codex/grounded-copy/hooks/grounded_gate.py
+  s_2202bc8d5d4fd8::t_88b69c3004b395 1-327
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_b77f7a13605b60 148,152,176-189,193-196
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f8f315a14c2bbd84b79a38cc1a18b7dbb1973113",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
