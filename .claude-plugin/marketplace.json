@@ -4,7 +4,7 @@
     "name": "HiroHyun",
     "url": "https://github.com/HiroHyun"
   },
-  "description": "Style gates for marketing, web, and technical prose.",
+  "description": "Help AI write clearly and get to the point.",
   "plugins": [
     {
       "name": "grounded-copy",
@@ -18,7 +18,7 @@
       "homepage": "https://github.com/HiroHyun/grounded-copy",
       "repository": "https://github.com/HiroHyun/grounded-copy",
       "license": "AGPL-3.0-only",
-      "keywords": ["copywriting", "style", "linter", "i18n", "hooks"],
+      "keywords": ["writing", "plain-language", "style", "copywriting"],
       "category": "productivity",
       "skills": ["./skills/"]
     }

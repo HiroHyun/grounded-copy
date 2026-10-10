@@ -10,10 +10,10 @@
   "repository": "https://github.com/HiroHyun/grounded-copy",
   "license": "AGPL-3.0-only",
   "keywords": [
-    "copywriting",
+    "writing",
+    "plain-language",
     "style",
-    "linter",
-    "i18n"
+    "copywriting"
   ],
   "skills": "./skills/",
   "hooks": "./hooks/hooks.json",

@@ -231,6 +231,22 @@ class CodexAdapterTests(unittest.TestCase):
         for field in ("version", "description", "repository", "homepage"):
             self.assertIn(field, manifest)
 
+    def test_every_catalog_line_is_the_plugin_description(self):
+        # A catalog line that drifts from the description reaches users unseen.
+        def load(path):
+            return json.loads(path.read_text(encoding="utf-8"))
+        plugin = load(REPO_ROOT / ".claude-plugin" / "plugin.json")
+        claude = load(REPO_ROOT / ".claude-plugin" / "marketplace.json")
+        codex = load(REPO_ROOT / ".agents" / "plugins" / "marketplace.json")
+        adapter = load(ADAPTER / ".codex-plugin" / "plugin.json")
+        for line in (claude["description"], claude["plugins"][0]["description"],
+                     codex["interface"]["shortDescription"],
+                     codex["plugins"][0]["description"],
+                     adapter["description"], adapter["interface"]["shortDescription"]):
+            self.assertEqual(line, plugin["description"])
+        for keywords in (claude["plugins"][0]["keywords"], adapter["keywords"]):
+            self.assertEqual(keywords, plugin["keywords"])
+
     def test_the_skill_sits_where_the_specification_asks(self):
         self.assertTrue((SKILL_DIR / "SKILL.md").exists())
         header = (SKILL_DIR / "SKILL.md").read_text(encoding="utf-8")[:400]

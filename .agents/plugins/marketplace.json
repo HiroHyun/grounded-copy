@@ -2,7 +2,7 @@
   "name": "hirohyun-plugins",
   "interface": {
     "displayName": "HiroHyun plugins",
-    "shortDescription": "Style gates for marketing, web, and technical prose."
+    "shortDescription": "Help AI write clearly and get to the point."
   },
   "plugins": [
     {

@@ -117,7 +117,7 @@ MANIFEST = json.dumps({
     "author": {"name": "HiroHyun", "url": "https://github.com/HiroHyun"},
     "homepage": "https://github.com/HiroHyun/grounded-copy",
     "repository": "https://github.com/HiroHyun/grounded-copy",
-    "license": "AGPL-3.0-only", "keywords": ["copywriting", "style", "linter", "i18n"],
+    "license": "AGPL-3.0-only", "keywords": ["writing", "plain-language", "style", "copywriting"],
     "skills": "./skills/", "hooks": "./hooks/hooks.json",
     "interface": {
         "displayName": "Grounded Copy",
