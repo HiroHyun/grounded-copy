@@ -24,7 +24,8 @@ rem value.
 rem
 rem Exit 0 when no interpreter resolves: a style hook stays non-blocking.
 rem
-rem Usage: run.cmd grounded_activate.py|grounded_tracker.py [args...]
+rem Usage: run.cmd grounded_activate.py|grounded_tracker.py|grounded_gate.py
+rem        [args...]
 
 setlocal
 set "HOOKDIR=%~dp0"
@@ -32,6 +33,7 @@ set "HOOKDIR=%~dp0"
 set "SCRIPT="
 if /i "%~1"=="grounded_activate.py" set "SCRIPT=grounded_activate.py"
 if /i "%~1"=="grounded_tracker.py" set "SCRIPT=grounded_tracker.py"
+if /i "%~1"=="grounded_gate.py" set "SCRIPT=grounded_gate.py"
 if not defined SCRIPT exit /b 0
 
 set "PY="

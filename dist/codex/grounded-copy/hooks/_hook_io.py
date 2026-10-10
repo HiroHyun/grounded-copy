@@ -6,9 +6,11 @@ both functions here, which is what earns the module its own file: plugin_root()
 carries three resolution rules, and duplicating them across two entrypoints is
 how they drift apart.
 
-Neither entrypoint reads the event's fields, so the stdin side is a drain.
+The two lifecycle entrypoints read no field of the event, so they drain stdin.
+The gate reads the event, since it needs the saved file and the transcript.
 """
 
+import json
 import os
 import sys
 
@@ -47,6 +49,22 @@ def drain_stdin():
         sys.stdin.read()
     except Exception:
         pass
+
+
+def read_event():
+    """The hook event as a dict, or None when stdin holds no JSON object.
+
+    Read as bytes and decoded as UTF-8: a host writes UTF-8, and a Windows
+    interpreter would decode a file path by the code page otherwise.
+    """
+    try:
+        raw = getattr(sys.stdin, "buffer", sys.stdin).read()
+        if isinstance(raw, bytes):
+            raw = raw.decode("utf-8", "replace")
+        event = json.loads(raw)
+    except Exception:
+        return None
+    return event if isinstance(event, dict) else None
 
 
 def plugin_root(argv, hook_dir):

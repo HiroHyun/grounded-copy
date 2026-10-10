@@ -14,7 +14,8 @@
 #
 # Exit 0 when no interpreter resolves: a style hook stays non-blocking.
 #
-# Usage: sh run.sh grounded_activate.py|grounded_tracker.py [args...]
+# Usage: sh run.sh grounded_activate.py|grounded_tracker.py|grounded_gate.py
+#        [args...]
 
 # Parameter expansion, no external `dirname`: this script has to survive a
 # degraded PATH, which is one of the cases it exists to handle.
@@ -24,6 +25,7 @@ hookdir=${0%/*}
 case "$1" in
     grounded_activate.py) script=grounded_activate.py ;;
     grounded_tracker.py) script=grounded_tracker.py ;;
+    grounded_gate.py) script=grounded_gate.py ;;
     *) exit 0 ;;
 esac
 shift

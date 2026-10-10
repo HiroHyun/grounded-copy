@@ -64,7 +64,7 @@ Use the profile command to change modes during a session. A manual edit of the s
 
 ### Enforcement boundary
 
-The hooks provide instructions to the agent. They do not inspect or block the agent's output. A chat reply reaches you without an automatic copy scan. Run `copy_lint.py` on files you want to check, or add it to your project's CI.
+The two lifecycle hooks provide instructions to the agent. They do not inspect or block the agent's output. A chat reply reaches you without an automatic copy scan. Run `copy_lint.py` on files you want to check, add it to your project's CI, or turn on the optional hook under [Check files as the agent saves them](#check-files-as-the-agent-saves-them).
 
 The `off` profile stops the session rules and turn reminder. It leaves the checker available as a separate command. Your explicit instructions always take priority over the skill.
 
@@ -142,6 +142,43 @@ python3 .style/grounded-copy/scripts/copy_lint.py README.md content/product.md
 ```
 
 Use your actual file paths. Add `--profile chat` to run the contrast rules alone; with no option the checker runs every rule. Configure the CI job to fail on a nonzero exit code. This makes the same check available for edits from any contributor. A custom host hook can also call the checker, but its file paths and input format depend on the host.
+
+## Check files as the agent saves them
+
+The plugin ships an optional hook for Claude Code, `hooks/grounded_gate.py`. After the agent writes or edits a file, the hook runs the checker on it under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. The `off` profile skips the check.
+
+The hook checks `.md` and `.txt` files and any file under a `locale` or `locales` folder.
+
+A sentence you typed in the session passes. The hook reads your messages from the session transcript and keeps a flagged sentence when it equals one of your sentences, a span you put in quotation marks, the text after a colon, or one of your list items. When a save holds only kept sentences, Claude Code shows you a short message and the agent hears nothing.
+
+Add the hook to your Claude Code `settings.json`. Point it at a clone of this repository, since a plugin cache path changes with each update:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"/path/to/grounded-copy/hooks/run.sh\" grounded_gate.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+On Windows with no Git Bash, use `cmd /d /c "C:\path\to\grounded-copy\hooks\run.cmd" grounded_gate.py` as the command.
+
+Limits:
+
+- A draft you pasted counts as your text.
+- Text you type into a permission prompt or a plan-rejection box reaches the transcript as a tool result, and the hook leaves tool results out. Send such a sentence as a normal message.
+- The pass relies on the mark Claude Code puts on a typed prompt in its transcript. A version with no such mark gives no pass, and every finding reports.
+- The hook trusts the transcript file. The skill's integrity rules forbid an agent from writing to it.
 
 ## Turn off or remove an installation
 

@@ -2,7 +2,7 @@
 """Argument forwarding, closed-set dispatch, and exit-code propagation.
 
 Both launchers resolve an interpreter once, run the hook once, accept only the
-two shipped script names, and hand the interpreter's exit code back. The probes
+three shipped script names, and hand the interpreter's exit code back. The probes
 below read those promises out of observable behavior: an unrecognized `--set`
 value comes back in the tracker's message as a repr and exits 2, so a mangled
 argument shows up as a changed string and a swallowed exit code shows up as a 0.
@@ -295,6 +295,32 @@ class RunCmdTests(LauncherCase):
         result = self.launch(["cmd", "/c", str(RUN_CMD)])
         self.assertEqual(result.returncode, EXIT_OK)
         self.assertEqual(result.stdout, "")
+
+
+class GateLauncherTests(LauncherCase):
+    """The gate's name is in both closed sets, and its exit code 2 and its
+    stderr come back through each launcher."""
+
+    def test_each_launcher_runs_the_gate_and_returns_its_exit_code(self):
+        target = self.config_dir / "notes.md"
+        target.write_text("The file isn't missing, it's empty.\n",
+                          encoding="utf-8")
+        event = json.dumps({"hook_event_name": "PostToolUse",
+                            "tool_input": {"file_path": str(target)}})
+        launchers = []
+        if SH:
+            launchers.append([SH, RUN_SH.as_posix()])
+        if os.name == "nt":
+            launchers.append(["cmd", "/c", str(RUN_CMD)])
+        if not launchers:
+            self.skipTest("no launcher runs on this platform")
+        for launcher in launchers:
+            with self.subTest(launcher=launcher[0]):
+                result = self.launch(
+                    launcher + ["grounded_gate.py", "--plugin-root",
+                                str(REPO_ROOT)], stdin=event)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertIn("[not-x-its-y]", result.stderr)
 
 
 class HookCommandCase(LauncherCase):

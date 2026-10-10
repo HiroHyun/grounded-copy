@@ -677,6 +677,21 @@ def scan_text(text, profile=None):
     return findings
 
 
+def report(path, found):
+    """The lines a file's findings print.
+
+    One group at a time, with the group's sentence once under its findings.
+    """
+    lines = []
+    for _, sentence, names in GROUPS:
+        rows = [finding for finding in found if finding[1] in names]
+        lines.extend(f"{path}:{lineno}: \"{snippet}\" [{name}]"
+                     for lineno, name, snippet in rows)
+        if rows:
+            lines.append("  " + sentence)
+    return lines
+
+
 def _utf8_streams():
     """Read and report in UTF-8 on every platform.
 
@@ -727,13 +742,8 @@ def main(argv):
     for path, text in sources:
         found = scan_text(text, profile)
         findings += len(found)
-        # One group at a time, with the group's sentence once under its lines.
-        for _, sentence, names in GROUPS:
-            rows = [finding for finding in found if finding[1] in names]
-            for lineno, name, snippet in rows:
-                print(f"{path}:{lineno}: \"{snippet}\" [{name}]")
-            if rows:
-                print("  " + sentence)
+        for line in report(path, found):
+            print(line)
 
     print(f"\ncopy_lint: {findings} finding(s)")
     if findings:

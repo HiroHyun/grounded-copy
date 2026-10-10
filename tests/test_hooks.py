@@ -32,6 +32,7 @@ SKILL_DIR = REPO_ROOT / "skills" / "grounded-copy"
 
 ACTIVATE = str(HOOKS / "grounded_activate.py")
 TRACKER = str(HOOKS / "grounded_tracker.py")
+GATE = str(HOOKS / "grounded_gate.py")
 
 # Sections both profiles carry.
 CORE_HEADINGS = (
@@ -668,6 +669,80 @@ class SetAndStatusTests(HookCase):
     def test_status_names_the_restore_command_when_off(self):
         self.write_preference("off\n")
         self.assertIn("--set chat", self.status().stdout)
+
+
+# ---------------------------------------------------------------------------
+# The gate: what the optional PostToolUse hook does with a saved file
+# ---------------------------------------------------------------------------
+class GateHookTests(HookCase):
+    """Findings go back to the agent; a sentence the user typed is kept.
+
+    The transcript rows carry the marks Claude Code writes, read from session
+    files since the schema is undocumented: a typed prompt has origin.kind
+    "human", and a tool result sits in a user row with no origin.
+    """
+
+    TYPED = "He wasn't fired, he quit."
+    QUOTED = "Use yogurt rather than milk."
+    AGENT = "The file isn't missing, it's empty."
+
+    def gate(self, body, profile="chat", stdin=None):
+        work = self.config_dir / "work"
+        work.mkdir(exist_ok=True)
+        target = work / "notes.md"
+        target.write_text(body, encoding="utf-8")
+
+        def typed(text):
+            return {"type": "user", "origin": {"kind": "human"},
+                    "message": {"role": "user", "content": text}}
+
+        rows = (
+            typed("Save this line: " + self.TYPED),
+            typed('Then add "%s" under it.' % self.QUOTED),
+            # The agent's own sentence, as a file it read back.
+            {"type": "user", "message": {"role": "user", "content": [
+                {"type": "tool_result", "content": self.AGENT}]}},
+        )
+        transcript = work / "session.jsonl"
+        transcript.write_text(
+            "\n".join(json.dumps(row) for row in rows), encoding="utf-8")
+        self.write_preference(profile + "\n")
+        event = json.dumps({
+            "hook_event_name": "PostToolUse", "tool_name": "Write",
+            "tool_input": {"file_path": str(target)},
+            "transcript_path": str(transcript),
+        })
+        return self.run_hook(
+            GATE, ["--plugin-root", str(REPO_ROOT)],
+            event if stdin is None else stdin)
+
+    def test_the_gate_keeps_typed_sentences_and_reports_the_rest(self):
+        cases = (
+            # (name, file body, profile, exit code, stream, expected text)
+            ("typed sentence kept", self.TYPED, "chat", 0, "stdout", "kept 1"),
+            ("quoted span kept", self.QUOTED, "chat", 0, "stdout", "kept 1"),
+            ("agent sentence reported", self.AGENT, "chat", 2, "stderr",
+             "notes.md:1: "),
+            ("off is silent", self.AGENT, "off", 0, "stdout", ""),
+        )
+        for name, body, profile, code, stream, expected in cases:
+            with self.subTest(case=name):
+                result = self.gate(body + "\n", profile)
+                self.assertEqual(result.returncode, code, result.stderr)
+                self.assertIn(expected, getattr(result, stream))
+                if not expected:
+                    self.assertEqual(result.stdout + result.stderr, "")
+
+        # Both in one file: the report names the agent's line only.
+        mixed = self.gate(self.TYPED + "\n\n" + self.AGENT + "\n")
+        self.assertEqual(mixed.returncode, 2)
+        self.assertIn("notes.md:3: ", mixed.stderr)
+        self.assertNotIn("notes.md:1: ", mixed.stderr)
+        self.assertIn("1 sentence(s) the user wrote stay", mixed.stderr)
+
+        malformed = self.gate(self.AGENT + "\n", stdin="not json")
+        self.assertEqual(malformed.returncode, 0)
+        self.assertEqual(malformed.stdout + malformed.stderr, "")
 
 
 # ---------------------------------------------------------------------------

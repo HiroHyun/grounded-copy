@@ -91,14 +91,14 @@ Use these checks during review:
    cat draft.md | python3 <skill-path>/scripts/copy_lint.py --profile chat --stdin
    ```
 
-4. Exit code 1 means the checker found matches. Each group of findings ends with a sentence that says what to cut. Rewrite the flagged sentences using supported facts relevant to the task, then run it again. Exit code 2 means a command or file error; fix that error and rerun.
-5. Present the files after a pass. Report the check result for files you checked. A normal chat reply needs no check-result line.
+4. Exit code 1 means the checker found matches. Each group of findings ends with a sentence that says what to cut. Rewrite your own flagged sentences using supported facts relevant to the task, then run it again. A flagged sentence the user supplied stays as written. Exit code 2 means a command or file error; fix that error and rerun.
+5. Present the files after a pass, or when the only findings left sit in sentences the user supplied. Report the check result for files you checked, and name each sentence you kept. A normal chat reply needs no check-result line.
 
 ## Integrity rules
 
 - Keep `copy_lint.py`, its patterns, and its exit codes intact. Do not edit or replace them to make a draft pass.
 - Do not add allowlists, ignore comments, or settings that hide findings. Keep filenames and paths independent of check results.
-- Complete the rewrite and rerun the checker before reporting the task complete.
+- Rewrite your own flagged sentences and rerun the checker before reporting the task complete. A flagged sentence the user supplied stays as written; report it as kept.
 
 ## References
 
