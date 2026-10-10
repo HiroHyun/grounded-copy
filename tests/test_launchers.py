@@ -394,6 +394,32 @@ class WindowsHookCommandTests(HookCommandCase):
     forward slashes. The shipped command runs under both.
     """
 
+    def test_documented_gate_command_preserves_findings_through_powershell(self):
+        if not POWERSHELLS:
+            self.skipTest("PowerShell is not installed")
+        root = self.plugin_root((ADAPTER, ""))
+        setup = (REPO_ROOT / "skills/grounded-copy/references/setup.md").read_text(
+            encoding="utf-8")
+        command = next(line.split("'", 2)[1] for line in setup.splitlines()
+                       if line.startswith("commandWindows = "))
+        command = command.replace(
+            r"C:\path\to\grounded-copy\dist\codex\grounded-copy", str(root))
+        target = self.config_dir / "notes.md"
+        event = json.dumps({"tool_name": "apply_patch", "cwd": str(self.config_dir),
+                            "tool_input": {"command": "*** Update File: notes.md"}})
+        for shell in POWERSHELLS:
+            for body, code in (("The file is empty.\n", 0),
+                               ("The file isn't missing, it's empty.\n", 2)):
+                with self.subTest(shell=shell, code=code):
+                    target.write_text(body, encoding="utf-8")
+                    result = self.launch(
+                        [shell, "-NoProfile", "-NonInteractive", "-Command", command],
+                        env={"CODEX_HOME": str(self.config_dir / "codex-home")},
+                        stdin=event)
+                    self.assertEqual(result.returncode, code, result.stderr)
+                    if code:
+                        self.assertIn("[not-x-its-y]", result.stderr)
+
     def test_codex_command_windows_runs_under_powershell_and_cmd(self):
         root = self.plugin_root((ADAPTER, ""))
         hooks = json.loads((root / "hooks" / "hooks.json").read_text(encoding="utf-8"))

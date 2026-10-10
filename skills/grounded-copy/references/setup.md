@@ -179,7 +179,7 @@ Add the hook to your Claude Code `settings.json`. Point it at a clone of this re
 }
 ```
 
-On Windows, Claude Code runs hooks in Git Bash when it finds one. Use the `sh` command above there too, with a path such as `C:/path/to/grounded-copy/hooks/run.sh`. On Windows with no Git Bash, hooks run in PowerShell, and the command is `cmd /d /c "C:\path\to\grounded-copy\hooks\run.cmd" grounded_gate.py`. That `cmd` form fails under Git Bash.
+On Windows, Claude Code runs hooks in Git Bash when it finds one. Use the `sh` command above there too, with a path such as `C:/path/to/grounded-copy/hooks/run.sh`. On Windows with no Git Bash, hooks run in PowerShell, and the command is `cmd /d /c "C:\path\to\grounded-copy\hooks\run.cmd" grounded_gate.py; exit $LASTEXITCODE`. That `cmd` form fails under Git Bash.
 
 On Codex, add the entry to `config.toml`. Point it at the `hooks` folder of the Codex package, which reads the Codex profile:
 
@@ -190,10 +190,12 @@ matcher = "apply_patch"
 [[hooks.PostToolUse.hooks]]
 type = "command"
 command = 'sh "/path/to/grounded-copy/dist/codex/grounded-copy/hooks/run.sh" grounded_gate.py'
-commandWindows = 'cmd /d /c "C:\path\to\grounded-copy\dist\codex\grounded-copy\hooks\run.cmd" grounded_gate.py'
+commandWindows = 'cmd /d /c "C:\path\to\grounded-copy\dist\codex\grounded-copy\hooks\run.cmd" grounded_gate.py; exit $LASTEXITCODE'
 ```
 
 Codex passes the hook the patch it applied, and the hook checks each file that patch added, updated, or moved.
+
+On Windows, `exit $LASTEXITCODE` preserves the gate's exit code `2` through PowerShell. Codex uses that code to return findings to the agent. A command that omits it exits `1` when the gate reports findings, and Codex records a hook failure.
 
 Limits:
 
