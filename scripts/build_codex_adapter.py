@@ -85,6 +85,10 @@ SEAMS = {
         (b'PREFERENCE_PATH = None', CODEX_PREFERENCE),
         (b'RESTORE_HINT = None', CODEX_RESTORE),
     ),
+    # The optional gate reads the saved profile and prints no host verb.
+    "grounded_gate.py": (
+        (b'PREFERENCE_PATH = None', CODEX_PREFERENCE),
+    ),
 }
 
 

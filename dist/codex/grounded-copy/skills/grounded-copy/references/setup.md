@@ -145,11 +145,11 @@ Use your actual file paths. Add `--profile chat` to run the contrast rules alone
 
 ## Check files as the agent saves them
 
-The plugin ships an optional hook for Claude Code, `hooks/grounded_gate.py`. After the agent writes or edits a file, the hook runs the checker on it under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. The `off` profile skips the check.
+The plugin ships an optional hook, `hooks/grounded_gate.py`, for Claude Code and Codex. After the agent writes or edits a file, the hook runs the checker on it under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. The `off` profile skips the check.
 
 The hook checks `.md` and `.txt` files and any file under a `locale` or `locales` folder.
 
-A sentence you typed in the session passes. The hook reads your messages from the session transcript and keeps a flagged sentence when it equals one of your sentences, a span you put in quotation marks, the text after a colon, or one of your list items. When a save holds only kept sentences, Claude Code shows you a short message and the agent hears nothing.
+A sentence you typed in the session passes. The hook reads your messages from the session transcript and keeps a flagged sentence when it equals one of your sentences, a span you put in quotation marks, the text after a colon, or one of your list items. When a save holds only kept sentences, the host shows you a short message and the agent hears nothing.
 
 Add the hook to your Claude Code `settings.json`. Point it at a clone of this repository, since a plugin cache path changes with each update:
 
@@ -173,11 +173,27 @@ Add the hook to your Claude Code `settings.json`. Point it at a clone of this re
 
 On Windows with no Git Bash, use `cmd /d /c "C:\path\to\grounded-copy\hooks\run.cmd" grounded_gate.py` as the command.
 
+On Codex, add the entry to `config.toml`. Point it at the `hooks` folder of the Codex package, which reads the Codex profile:
+
+```toml
+[[hooks.PostToolUse]]
+matcher = "apply_patch"
+
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = 'sh "/path/to/grounded-copy/dist/codex/grounded-copy/hooks/run.sh" grounded_gate.py'
+commandWindows = 'cmd /d /c "C:\path\to\grounded-copy\dist\codex\grounded-copy\hooks\run.cmd" grounded_gate.py'
+```
+
+Codex passes the hook the patch it applied, and the hook checks each file that patch added, updated, or moved.
+
 Limits:
 
 - A draft you pasted counts as your text.
-- Text you type into a permission prompt or a plan-rejection box reaches the transcript as a tool result, and the hook leaves tool results out. Send such a sentence as a normal message.
-- The pass relies on the mark Claude Code puts on a typed prompt in its transcript. A version with no such mark gives no pass, and every finding reports.
+- A file the agent writes through a shell command goes unchecked on both hosts.
+- In Claude Code, text you type into a permission prompt or a plan-rejection box reaches the transcript as a tool result, and the hook leaves tool results out. Send such a sentence as a normal message.
+- In the Codex app, a plan you approved reaches the agent as a message from the app. The hook leaves that message out, so a sentence of the plan earns no pass.
+- The pass relies on the mark each host puts on a typed prompt in its transcript, and neither host documents that format. A version with no such mark gives no pass, and every finding reports.
 - The hook trusts the transcript file. The skill's integrity rules forbid an agent from writing to it.
 
 ## Turn off or remove an installation

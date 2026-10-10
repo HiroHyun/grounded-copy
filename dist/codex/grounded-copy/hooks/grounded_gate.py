@@ -37,7 +37,13 @@ import _hook_io  # noqa: E402
 import _preference  # noqa: E402
 
 # Adapter seam: a copied entrypoint sets this for its host.
-PREFERENCE_PATH = None
+PREFERENCE_PATH = os.path.join(
+    os.environ.get("CODEX_HOME") or os.path.join(
+        os.path.expanduser("~"), ".codex"
+    ),
+    "grounded-copy",
+    "profile",
+)
 
 EXIT_OK = 0
 EXIT_FINDINGS = 2

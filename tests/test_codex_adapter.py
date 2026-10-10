@@ -42,6 +42,7 @@ GENERATED_INVENTORY = {
     "hooks/_policy.py",
     "hooks/_preference.py",
     "hooks/grounded_activate.py",
+    "hooks/grounded_gate.py",
     "hooks/grounded_tracker.py",
     "hooks/hooks.json",
     "hooks/run.cmd",

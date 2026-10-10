@@ -744,6 +744,52 @@ class GateHookTests(HookCase):
         self.assertEqual(malformed.returncode, 0)
         self.assertEqual(malformed.stdout + malformed.stderr, "")
 
+    def test_the_codex_shape_reads_the_patch_and_the_rollout(self):
+        """Codex passes the patch text, and its rollout marks typed content.
+
+        The file's path reaches the hook only through the patch header and
+        cwd. The instruction row holds the agent's sentence under a kind that
+        a typed prompt never carries.
+        """
+        work = self.config_dir / "work"
+        work.mkdir(exist_ok=True)
+
+        def message(text, kind):
+            return {"type": "response_item", "payload": {
+                "type": "message", "role": "user",
+                "content": [{"type": "input_text", "text": text}],
+                "internal_chat_message_metadata_passthrough": {
+                    "content_item_kinds": [kind]}}}
+
+        rollout = work / "rollout.jsonl"
+        rollout.write_text("\n".join(json.dumps(row) for row in (
+            message("Save this line: " + self.TYPED, "user.text"),
+            message(self.AGENT, "agents_md.instructions"),
+        )), encoding="utf-8")
+        self.write_preference("chat\n")
+        cases = (
+            ("typed row kept", self.TYPED, 0, "stdout", "kept 1"),
+            ("instruction row reported", self.AGENT, 2, "stderr",
+             "notes.md:1: "),
+        )
+        for name, body, code, stream, expected in cases:
+            with self.subTest(case=name):
+                (work / "notes.md").write_text(body + "\n", encoding="utf-8")
+                event = json.dumps({
+                    "hook_event_name": "PostToolUse",
+                    "tool_name": "apply_patch",
+                    "tool_input": {"command": (
+                        "*** Begin Patch\n*** Add File: notes.md\n+"
+                        + body + "\n*** End Patch")},
+                    "tool_response": "Exit code: 0\nSuccess.",
+                    "cwd": str(work),
+                    "transcript_path": str(rollout),
+                })
+                result = self.run_hook(
+                    GATE, ["--plugin-root", str(REPO_ROOT)], event)
+                self.assertEqual(result.returncode, code, result.stderr)
+                self.assertIn(expected, getattr(result, stream))
+
 
 # ---------------------------------------------------------------------------
 # What SKILL.md points a reader at
