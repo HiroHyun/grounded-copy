@@ -1,14 +1,12 @@
 # Pattern guide
 
-Use this guide when the checker reports a phrase or when a draft feels vague. Each section explains a writing habit and shows how to state the useful detail directly.
+Use this guide when the checker reports a phrase or when a draft feels vague.
 
-The examples are invented for teaching. Product names, figures, awards, and source attributions in the tables are placeholders. Use facts from your own source when you rewrite. If a detail is missing, ask for it or keep the claim within what you know.
-
-The quoted triggers and Draft columns deliberately contain wording the checker reports. The Rewrite columns show the intended style.
+The examples are invented, and each Draft holds wording the checker reports. Use facts from your own source when you rewrite.
 
 ## Everyday examples
 
-The rewrite is the draft with its contrast half removed, so it comes out shorter. Each draft below sets a fact against something nobody raised.
+Each rewrite is its draft with the contrast half removed.
 
 | Draft | Rewrite |
 |---|---|
@@ -27,7 +25,7 @@ Keep the second half when the reader raised it. If someone asked about butter, "
 
 ## Placed against an alternative
 
-Describe the subject directly. A comparison often leaves the reader waiting for the actual feature or action.
+Describe the subject directly.
 
 Triggers: phrases that downplay the subject ("not just/only/merely/simply", "doesn't just",
 "more than just", "far from just/being"); comparisons ("rather than X",
@@ -49,17 +47,11 @@ claims about exceeding a category ("goes beyond", "beyond just", "redefines", "r
 | "Order direct without the hassle of middlemen." | "You order directly from the maker's workshop." |
 | "Zero guesswork. Zero hidden fees." | "Each listing carries the serial number, condition report, and full price." |
 
-The `doesnt-just` rule takes every contracted auxiliary, `cannot`, and `never`, so an instruction such as "You can't just unplug the router." reports. The `is-more-than-a` rule takes the past tense and the contracted forms, so a quantity such as "The log was more than a gigabyte." reports.
-
-The `less-a-x-than` rule also reports "less about speed and more about trust" and "not so much a gym as a coaching program".
-
-The `without-gerund` rule matches `without` followed by an `-ing` form. It also reports ordinary phrases such as "without warning" and "without training". Preserve the meaning of required text and use the profile off for that work.
-
-The `instead-of`, `no-longer`, and `without-gerund` rules report ordinary substitutions, exclusions, and status lines too, so say what to do or what is true now.
+An ordinary substitution, exclusion, or status line reports too. Say what to do or what is true now.
 
 ## Reversal reveals
 
-Start with the fact. A denial followed by a reveal makes the reader work through two claims to reach it.
+Start with the fact.
 
 Triggers: "It's not X, it's Y", "isn't about X, it's about Y", "—not X, but Y",
 "not your average X", "X, not Y",
@@ -79,29 +71,9 @@ A slogan opens the same way: "No X, just Y".
 | "Not slow, just cold." | "The pool is 18 °C." |
 | "Not a patch. A rewrite." | "Version 2 replaces the parser." |
 
-The `comma-not-appositive` rule also catches `, not by`, `, not from`, and `, not through`. It can match an object that starts with a quote, backtick, or bracket.
-
-The `not-just` rule also reports a denial and `just`, `only`, `merely`, or `simply` on either side of a comma or dash. The denial opens with a negated form of "be" or with "not" and a word such as "the" or "my". A plain limit of that shape reports too: "Windows is not supported, only Linux and macOS."
-
-The `no-x-just-y` rule reports the slogan form: "no", "zero", or "nothing", one or two words, then "just". A longer status line such as "No fix was needed, just a restart." passes.
-
-The `not-x-its-y` rule reports the first trigger with any subject, and as two sentences. A condition passes: "If the file is not there, it is created." A correction of fact in the same shape reports: "The file isn't missing, it's empty." State the fact: "The file is empty."
-
-The `not-x-its-y` rule also reports a second half that opens with a plain verb: "He wasn't fired, he quit." A comma splice of two facts has the same shape and reports too: "The pan isn't oven-safe, it has a plastic handle." Join the reason with "because": "The pan isn't oven-safe because it has a plastic handle."
-
-The `do-verb-repeat` rule reports a denial of "need" or "want" followed by the same verb, and "does not mean" followed by "it means" in one sentence or two. Another repeated verb gives two facts and passes: "I don't drink coffee, I drink tea."
-
-The `fragment-reversal` rule runs under `copy` only. In a chat the same fragments are short answers and corrections: "Not a teaspoon, a tablespoon."
-
-The `dash-not-contrast` and `negated-copula-dash` rules read a spaced hyphen or a double hyphen as a dash: "Acme is a partner - not a vendor." A plain limit written that way reports too: "The limit is 3 - not configurable."
-
-The `not-x-but-y` rule takes a contracted negation and any determiner: "The result wasn't a failure but a delay." It also takes a preposition or "because" that repeats after "but": "The error was not in the config but in the loader." A concession reports too: "The build isn't the fastest but it works." The `isnt-about` rule takes the past tense and "never about", so the idiom "He wasn't about to quit." reports. "This is no ordinary newsletter." and "Not another todo app." report under `not-your-average`.
-
 ## Suspended lists
 
-A list between paired dashes can separate the subject from its verb. The reader has to hold the sentence in mind while reading the examples. The `dash-pair-list` rule checks this across a paragraph, including line breaks. It recognizes English, Chinese, and Japanese comma separators.
-
-First remove the inserted list. Keep one example inside the sentence if the reader needs it. When every item affects the reader's next step, put the items in a list below the sentence. Replacing the dashes with parentheses or a colon leaves the same interruption.
+A list between paired dashes separates the subject from its verb. Remove the list, or keep one example in the sentence. When every item affects the reader's next step, put the items in a list below the sentence. Parentheses or a colon leave the same interruption.
 
 | Draft | Rewrite |
 |---|---|
@@ -115,9 +87,7 @@ Apply this review to English and other languages. Decide what the reader needs f
 
 In English, watch for noun lists and chains of actions that keep restating one point. Adjacent sentences can form a catalog even when each sentence names only one item. Remove details that add no useful meaning, then explain the supported relationship between the remaining ideas. A shorter summary must keep any condition that changes the reader's conclusion or next step.
 
-Changing commas to semicolons or moving each item into a bullet leaves the information burden intact. Review the whole passage again after cutting: make its point clear and connect the remaining details. Length and punctuation counts alone do not establish quality. This review is part of writing; the checker retains its existing pattern checks.
-
-These invented examples show deliberate omissions. Their contexts establish what the reader needs.
+Changing commas to semicolons or moving each item into a bullet leaves the information burden intact. Review the whole passage again after cutting: make its point clear and connect the remaining details. Length and punctuation counts alone do not establish quality.
 
 | Context | Draft | Rewrite |
 |---|---|---|
@@ -125,7 +95,7 @@ These invented examples show deliberate omissions. Their contexts establish what
 | Introduce a task board's purpose to a new teammate. | "The board shows owners, dates, priorities, and next steps. Teammates can see who owns each task and what happens next." | "The board shows who owns each task and what happens next." |
 | Explain how a team reviews blocked tasks. | "We read the status. We read the owner. We read the due date. We read the blocker note. We then ask the owner what is needed to unblock the task." | "We review blocked tasks and ask each owner what is needed to continue." |
 
-The first example omits implementation details that belong in an explanation of the fix. The third removes a sequence of routine actions that obscured the meeting's purpose. Use the task to decide what belongs. Explicit requests for a complete inventory still require complete coverage.
+Use the task to decide what belongs. Explicit requests for a complete inventory still require complete coverage.
 
 ## Marketing copy
 
@@ -133,7 +103,7 @@ These sections cover product pages and promotional text. The checker reports the
 
 ### Era-ending
 
-Give the current behavior or result. A claim about the end of an era usually adds little useful information.
+Give the current behavior or result.
 
 Triggers: "gone are the days", "the days of X are over", "say
 goodbye/hello", "no more X", "never again", "welcome to a new era".
@@ -147,7 +117,7 @@ goodbye/hello", "no more X", "never again", "welcome to a new era".
 
 ### Competitor put-downs
 
-Explain what the product offers. A sentence about a rival needs evidence and can distract from the feature the reader came to understand.
+Explain what the product offers.
 
 Triggers: "unlike traditional/most/other X", "while others/most X, we Y".
 
@@ -156,13 +126,11 @@ Triggers: "unlike traditional/most/other X", "while others/most X, we Y".
 | "Unlike traditional agencies, we publish our rates." | "Acme publishes its hourly rates on the pricing page." |
 | "While others hide their fees, Acme lists them." | "Acme itemizes every charge on the invoice." |
 
-The same comparison can span sentences. For example: "Most vendors bury their fees. Acme prints them." Rewrite it as "Acme prints every fee on the invoice."
-
-The two rules also report "unlike competitors", "whereas most", and "where others". A plain comparison in that shape reports: "Whereas most museums close on Monday, this one opens."
+The same comparison can span sentences: "Most vendors bury their fees. Acme prints them." Rewrite it as "Acme prints every fee on the invoice."
 
 ### Rhetorical bait
 
-Put the useful information first. A question that immediately answers itself often adds an unnecessary step.
+Put the useful information first.
 
 Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
 "Tired of", "What if", "Imagine", "Picture this", "In a world where",
@@ -176,11 +144,9 @@ Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
 | "Look no further than Acme." | "Acme runs the three checks listed above." |
 | "It's worth noting that every plan includes support." | "Every plan includes support." |
 
-The `opener-stop` rule reports the pair. A plain instruction passes: "Stop the server before the upgrade."
-
 ### Collision framing
 
-Name a material, price, feature, or action. Pairing abstract qualities leaves the details unclear.
+Name a material, price, feature, or action.
 
 Trigger: "where X meets Y".
 
@@ -220,7 +186,7 @@ and "harness", "next-gen", "revolutionary".
 
 ### Vague attribution
 
-Name a source that the reader can check. A claim attributed to an unnamed group still needs evidence.
+Name a source that the reader can check.
 
 | Draft | Rewrite |
 |---|---|
@@ -229,9 +195,9 @@ Name a source that the reader can check. A claim attributed to an unnamed group 
 
 A trailing phrase can add praise too: ", highlighting our commitment to quality" or ", underscoring its value". Remove it and state the supported fact.
 
-## Multilingual equivalents (all banned)
+## Multilingual equivalents
 
-Apply the writing rules to meaning in each language. The Chinese, Japanese, and Korean checks include sentence patterns with a limited gap between the matched parts. The Russian, Spanish, Arabic, French, and German checks use phrase lists. Review the rest of the text yourself.
+Apply the rules to meaning in each language. The checker knows the phrases below. Review the rest of the text yourself.
 
 | Locale | Patterns |
 |---|---|
@@ -246,11 +212,9 @@ Apply the writing rules to meaning in each language. The Chinese, Japanese, and 
 
 When translating a draft written under these rules, keep its facts and use natural sentences in the target language. For a faithful translation of supplied text, preserve its intended comparisons and use the profile off as needed.
 
-Some listed phrases have ordinary factual uses too. Japanese だけでなく and Korean 뿐만 아니라, 더 이상, and 혁신적 can appear in such uses and still produce findings. A plain Chinese sentence reports too: 他不光是一个人去的。
+Some listed phrases have ordinary uses and still report. Read the sentence in context before changing it.
 
 ### Chinese comparisons
-
-The `zh-not-x-but-y` rule matches 不是 followed by 是 within 32 characters in one sentence. It also covers forms such as 并不是…而是, 不在于…而在于, 不是…，是, and 而不是. Read the sentence in context before changing it.
 
 以下情境均为教学示例。改写依据同一行给出的事实，实际使用时请换成有来源的内容。
 
