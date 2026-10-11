@@ -1,3 +1,17 @@
+# 0.8.0
+
+## English
+
+- The plugin checks each document the assistant saves and has it fix what it just wrote.
+- In Codex, approve the new hook after updating.
+- The READMEs are shorter.
+
+## 简体中文
+
+- 插件会检查 AI 保存的每份文档，并让它改掉刚写下的问题句。
+- 更新后，请在 Codex 中批准新增的钩子。
+- README 更简短。
+
 # 0.7.1
 
 ## English
