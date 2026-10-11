@@ -652,8 +652,8 @@ def report(path, found):
 def _utf8_streams():
     """Read and report in UTF-8 on every platform.
 
-    A finding quotes the text it matched, and eight of the nine covered
-    languages are non-ASCII. Python picks the encoding for a pipe or a console
+    A finding quotes the text it matched, and Chinese text is non-ASCII.
+    Python picks the encoding for a pipe or a console
     from the platform, so on Windows at a legacy code page the quote arrives
     mojibaked, a character the code page has no room for raises
     UnicodeEncodeError, and `--stdin` decodes the draft wrong before a pattern

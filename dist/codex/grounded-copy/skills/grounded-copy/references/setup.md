@@ -20,15 +20,7 @@ The Skills CLI installation includes the writing rules, examples, checker, and s
 
 Codex stops a download after 30 seconds. If the upgrade times out, run it again. If it keeps failing, run `codex plugin marketplace remove hirohyun-plugins` and install again. Your saved mode stays.
 
-### After an update
-
-Claude Code loads the plugin from the repository-root package. Codex uses the generated adapter. Skills CLI and manual installations use the canonical skill directory. Each channel carries the same writing guidance and references.
-
-For a manually copied skill, replace the complete skill directory so its references stay in sync. After updating a plugin, reload it and start a new session to load the revised policy. Check the installed version through the host's plugin list; a source checkout can contain changes awaiting publication.
-
-For English and other languages, read [Paragraph review](patterns.md#paragraph-review). Chinese writing also uses [Chinese paragraph review](patterns.md#chinese-paragraph-review). The examples show how to select useful detail and reduce repeated enumeration. This requires contextual review by the agent; `copy_lint.py` retains its existing pattern checks.
-
-The shared policy selects facts relevant to the task and allows incidental details to be omitted. Exact reproduction applies to verbatim quotations. Explicit requests for complete coverage still govern the result. Reload the updated plugin and start a fresh session so earlier preservation instructions leave the active context.
+After updating a plugin, reload it and start a new session to load the revised rules. For a manually copied skill, replace the complete skill directory so its references stay in sync.
 
 ## Install from a clone
 
@@ -124,8 +116,6 @@ Both launchers look for `python` and then `python3`, using the first command tha
 ### Claude Code hooks on Windows
 
 Claude Code runs plugin hooks in Git Bash when it finds one and in PowerShell otherwise. Each hook command dot-sources a launcher in `hooks/`, such as `claude_activate.cmd`, that both shells start. Git Bash reads the file as a shell script and runs `run.sh`. PowerShell runs it as a batch file, which hands over to `run.cmd`. The hooks work in either shell without edits to the manifest.
-
-If an earlier version of this guide led you to edit the hook commands in your installed manifest, reinstall or update the plugin to restore the shipped commands.
 
 If an error shows a literal `${CLAUDE_PLUGIN_ROOT}` or `${PLUGIN_ROOT}`, the host did not substitute the plugin path. Check the plugin configuration before running the command again.
 
