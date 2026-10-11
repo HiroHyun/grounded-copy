@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""PostToolUse hook: check the file the agent just saved.
+"""PostToolUse hook: check what the agent just saved.
 
-Optional. The plugin manifest registers nothing for it;
-skills/grounded-copy/references/setup.md shows the entry a user adds. It runs
-copy_lint.py on the saved file under the saved profile and hands the findings
-back to the agent on stderr with exit code 2, which is the one place a
-grounded-copy hook blocks on purpose.
+Both plugins register it. It runs copy_lint.py on the saved file under the
+saved profile and hands the findings back to the agent on stderr with exit
+code 2, which is the one place a grounded-copy hook blocks on purpose.
+
+Text that was already in the file is left alone. An edit is checked on the
+lines its replacement text landed on, a Codex patch on the lines it added, and
+a whole-file write on every line.
 
 One script serves Claude Code and Codex and tells them apart by the shape of
 the event and of the transcript rows. Claude Code names the saved file; Codex
@@ -89,16 +91,23 @@ def in_scope(path):
 
 
 def saved_files(event):
-    """The files a tool call wrote.
+    """(path, what the call wrote there) for each file a tool call wrote.
 
-    Claude Code names one in tool_input.file_path. Codex passes the text of the
-    patch in tool_input.command, with one header per file, and paths relative
-    to cwd.
+    Claude Code names one file in tool_input.file_path. An edit carries its
+    replacement text, and a whole-file write carries none, which reads as None
+    here: every line is the agent's. Codex passes the text of the patch in
+    tool_input.command, with one header per file, paths relative to cwd, and a
+    `+` before each line it adds.
     """
     tool_input = event.get("tool_input") or {}
     path = tool_input.get("file_path")
     if isinstance(path, str):
-        return [path]
+        edits = [tool_input] + [
+            edit for edit in tool_input.get("edits") or []
+            if isinstance(edit, dict)]
+        chunks = [edit["new_string"] for edit in edits
+                  if isinstance(edit.get("new_string"), str)]
+        return [(path, chunks or None)]
     patch = tool_input.get("command")
     if event.get("tool_name") != "apply_patch" or not isinstance(patch, str):
         return []
@@ -108,8 +117,38 @@ def saved_files(event):
             and not response.startswith("Exit code: 0")):
         return []
     cwd = event.get("cwd") or ""
-    return [os.path.join(cwd, name.strip())
-            for name in _PATCH_FILE.findall(patch)]
+    added, name = {}, None
+    for line in patch.splitlines():
+        header = _PATCH_FILE.match(line)
+        if header:
+            name = header.group(1).strip()
+            added.setdefault(name, set())
+        elif name and line.startswith("+"):
+            added[name].add(line[1:])
+    return [(os.path.join(cwd, name), lines) for name, lines in added.items()]
+
+
+def written_lines(text, wrote):
+    """The numbers of the lines a save wrote in `text`, or None for all.
+
+    `wrote` is None, the replacement strings of an edit, or the set of lines
+    a patch added. A replacement can start and end inside a line, so it is
+    found as a span; a patch adds whole lines.
+    """
+    if wrote is None:
+        return None
+    if isinstance(wrote, set):
+        return {number for number, line in enumerate(text.splitlines(), 1)
+                if line in wrote}
+    numbers = set()
+    for chunk in wrote:
+        chunk = chunk.strip("\n")
+        at = text.find(chunk) if chunk.strip() else -1
+        while at >= 0:
+            first = text.count("\n", 0, at) + 1
+            numbers.update(range(first, first + chunk.count("\n") + 1))
+            at = text.find(chunk, at + 1)
+    return numbers
 
 
 def _claude_text(row):
@@ -274,9 +313,9 @@ def split_kept(cl, text, found, typed):
 def main(argv):
     _hook_io.utf8_streams()
     event = _hook_io.read_event() or {}
-    paths = [path for path in saved_files(event)
+    files = [(path, wrote) for path, wrote in saved_files(event)
              if in_scope(path) and os.path.isfile(path)]
-    if not paths:
+    if not files:
         return EXIT_OK
 
     profile, _source = _preference.resolve_preference(_preference_path(argv))
@@ -287,10 +326,13 @@ def main(argv):
     cl = _checker(_hook_io.plugin_root(argv, hook_dir))
     typed = None
     lines, kept = [], []
-    for path in paths:
+    for path, wrote in files:
         with io.open(path, encoding="utf-8", errors="replace") as handle:
             text = handle.read()
         found = cl.scan_text(text, profile)
+        mine = written_lines(text, wrote)
+        if mine is not None:
+            found = [finding for finding in found if finding[0] in mine]
         if not found:
             continue
         if typed is None:

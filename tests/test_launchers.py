@@ -404,14 +404,20 @@ class WindowsHookCommandTests(HookCommandCase):
                        if line.startswith("commandWindows = "))
         command = command.replace(
             r"C:\path\to\grounded-copy\dist\codex\grounded-copy", str(root))
+        # The command the plugin registers, beside the one the guide prints.
+        hooks = json.loads((root / "hooks" / "hooks.json").read_text(encoding="utf-8"))
+        shipped = (hooks["hooks"]["PostToolUse"][0]["hooks"][0]["commandWindows"]
+                   .replace("${PLUGIN_ROOT}", str(root)))
         target = self.config_dir / "notes.md"
-        event = json.dumps({"tool_name": "apply_patch", "cwd": str(self.config_dir),
-                            "tool_input": {"command": "*** Update File: notes.md"}})
-        for shell in POWERSHELLS:
+        for shell, command in [(s, c) for s in POWERSHELLS for c in (command, shipped)]:
             for body, code in (("The file is empty.\n", 0),
                                ("The file isn't missing, it's empty.\n", 2)):
-                with self.subTest(shell=shell, code=code):
+                with self.subTest(shell=shell, code=code, shipped=command is shipped):
                     target.write_text(body, encoding="utf-8")
+                    event = json.dumps({
+                        "tool_name": "apply_patch", "cwd": str(self.config_dir),
+                        "tool_input": {"command": (
+                            "*** Update File: notes.md\n+" + body)}})
                     result = self.launch(
                         [shell, "-NoProfile", "-NonInteractive", "-Command", command],
                         env={"CODEX_HOME": str(self.config_dir / "codex-home")},

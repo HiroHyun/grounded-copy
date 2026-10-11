@@ -34,6 +34,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ". \"${CLAUDE_PLUGIN_ROOT}/hooks/claude_gate.cmd\"; exit $LASTEXITCODE",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

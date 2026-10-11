@@ -53,7 +53,7 @@ To install for one agent:
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Agents supported by the Skills CLI | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-The plugins apply the rules in every chat and save your writing mode. A skill on its own loads when the agent judges it relevant.
+The plugins apply the rules in every chat, check the files the assistant saves, and save your writing mode. A skill on its own loads when the agent judges it relevant.
 
 See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal.
 

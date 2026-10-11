@@ -21,6 +21,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${PLUGIN_ROOT}/hooks/run.sh\" grounded_gate.py",
+            "commandWindows": "cmd /d /c \"${PLUGIN_ROOT}\\hooks\\run.cmd\" grounded_gate.py; exit $LASTEXITCODE"
+          }
+        ]
+      }
     ]
   }
 }

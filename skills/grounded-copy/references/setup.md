@@ -8,7 +8,7 @@ In Claude Code, run `/grounded-copy:grounded`. In Codex, run `$grounded-profile 
 
 The default is `chat`. Try asking the agent to rewrite a short paragraph using grounded-copy. To check a saved file, see [Check a file](#check-a-file).
 
-The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles and automatic session reminders come with the Claude Code and Codex plugins.
+The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles, session reminders, and the check on saved files come with the Claude Code and Codex plugins.
 
 ### After an update
 
@@ -82,7 +82,7 @@ Use the profile command to change modes during a session. A manual edit of the s
 
 ### Enforcement boundary
 
-The two lifecycle hooks provide instructions to the agent. They do not inspect or block the agent's output. A chat reply reaches you without an automatic copy scan. Run `copy_lint.py` on files you want to check, add it to your project's CI, or turn on the optional hook under [Check files as the agent saves them](#check-files-as-the-agent-saves-them).
+The session hook and the prompt hook give the agent instructions. A third hook checks the prose files the agent saves; see [Check files as the agent saves them](#check-files-as-the-agent-saves-them). A chat reply reaches you with no scan. To check any other file, run `copy_lint.py` on it or add it to your project's CI.
 
 The `off` profile stops the session rules and turn reminder. It leaves the checker available as a separate command. Your explicit instructions always take priority over the skill.
 
@@ -113,7 +113,7 @@ Both launchers look for `python` and then `python3`, using the first command tha
 
 ### Claude Code hooks on Windows
 
-Claude Code runs plugin hooks in Git Bash when it finds one and in PowerShell otherwise. Each hook command dot-sources a launcher in `hooks/`, `claude_activate.cmd` or `claude_tracker.cmd`, that both shells start. Git Bash reads the file as a shell script and runs `run.sh`. PowerShell runs it as a batch file, which hands over to `run.cmd`. The hooks work in either shell without edits to the manifest.
+Claude Code runs plugin hooks in Git Bash when it finds one and in PowerShell otherwise. Each hook command dot-sources a launcher in `hooks/`, such as `claude_activate.cmd`, that both shells start. Git Bash reads the file as a shell script and runs `run.sh`. PowerShell runs it as a batch file, which hands over to `run.cmd`. The hooks work in either shell without edits to the manifest.
 
 If an earlier version of this guide led you to edit the hook commands in your installed manifest, reinstall or update the plugin to restore the shipped commands.
 
@@ -191,13 +191,17 @@ A finding prints as the file, the line, the matched text, and the rule name in b
 
 ## Check files as the agent saves them
 
-The plugin ships an optional hook, `hooks/grounded_gate.py`, for Claude Code and Codex. After the agent writes or edits a file, the hook runs the checker on it under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. The `off` profile skips the check.
+The Claude Code and Codex plugins check each prose file the agent saves. After the agent writes or edits a file, a hook runs the checker on the text that save added, under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. Text that was already in the file is left alone. The `off` profile skips the check.
 
 The hook checks `.md` and `.txt` files and any file under a `locale` or `locales` folder.
 
 A sentence you typed in the session passes. The hook reads your messages from the session transcript and keeps a flagged sentence when it equals one of your sentences, a span you put in quotation marks, the text after a colon, or one of your list items. When a save holds only kept sentences, the host shows you a short message and the agent hears nothing.
 
-Add the hook to your Claude Code `settings.json`. Point it at a clone of this repository, since a plugin cache path changes with each update:
+In Codex, approve the new hook when the app asks for a review.
+
+If you added this hook by hand from an earlier version of this guide, remove that entry. The plugin registers the hook now, and a second entry checks each save twice.
+
+A skill installed with no plugin has no hooks. To add the check there, put the hook in your Claude Code `settings.json` and point it at a clone of this repository:
 
 ```json
 {

@@ -90,8 +90,8 @@ DIRECTIVE_LEAD_EMPTY = (
 
 # Extraction sizes measured 2026-10-10 against SKILL.md, including fact selection
 # and paragraph review across languages. These count the rules body alone; hook stdout
-# adds the header and switch line, 106 bytes. The READMEs publish the same figures under "What each
-# mode costs", and `grounded_activate.py --self-test` reports the current ones.
+# adds the header and switch line, 106 bytes. The setup guide publishes the same figures under
+# "Profile lifecycle", and `grounded_activate.py --self-test` reports the current ones.
 BASELINE_BYTES = 4032
 COPY_BASELINE_BYTES = 6292
 TURN_BASELINE_BYTES = 238

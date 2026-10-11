@@ -55,7 +55,7 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Skills CLI 支持的智能体 | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-插件会在每次对话中应用规则，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
+插件会在每次对话中应用规则，检查 AI 保存的文件，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
 
 [安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载方法。
 

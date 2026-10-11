@@ -672,7 +672,7 @@ class SetAndStatusTests(HookCase):
 
 
 # ---------------------------------------------------------------------------
-# The gate: what the optional PostToolUse hook does with a saved file
+# The gate: what the PostToolUse hook does with a saved file
 # ---------------------------------------------------------------------------
 class GateHookTests(HookCase):
     """Findings go back to the agent; a sentence the user typed is kept.
@@ -685,8 +685,9 @@ class GateHookTests(HookCase):
     TYPED = "He wasn't fired, he quit."
     QUOTED = "Use yogurt rather than milk."
     AGENT = "The file isn't missing, it's empty."
+    OLD = "The printer isn't broken, it needs paper."
 
-    def gate(self, body, profile="chat", stdin=None):
+    def gate(self, body, profile="chat", stdin=None, edit=None):
         work = self.config_dir / "work"
         work.mkdir(exist_ok=True)
         target = work / "notes.md"
@@ -707,9 +708,13 @@ class GateHookTests(HookCase):
         transcript.write_text(
             "\n".join(json.dumps(row) for row in rows), encoding="utf-8")
         self.write_preference(profile + "\n")
+        tool_input = {"file_path": str(target)}
+        if edit is not None:
+            # An edit names the text it put in; a whole-file write does not.
+            tool_input["new_string"] = edit
         event = json.dumps({
             "hook_event_name": "PostToolUse", "tool_name": "Write",
-            "tool_input": {"file_path": str(target)},
+            "tool_input": tool_input,
             "transcript_path": str(transcript),
         })
         return self.run_hook(
@@ -739,6 +744,18 @@ class GateHookTests(HookCase):
         self.assertIn("notes.md:3: ", mixed.stderr)
         self.assertNotIn("notes.md:1: ", mixed.stderr)
         self.assertIn("1 sentence(s) the user wrote stay", mixed.stderr)
+
+        # An edit is checked on the lines it wrote. A flagged sentence that
+        # was already in the file stays out of the report.
+        untouched = self.gate(self.OLD + "\n\nA plain line.\n",
+                              edit="A plain line.")
+        self.assertEqual(untouched.returncode, 0, untouched.stderr)
+        self.assertEqual(untouched.stdout + untouched.stderr, "")
+        edited = self.gate(self.OLD + "\n\n" + self.AGENT + "\n",
+                           edit=self.AGENT)
+        self.assertEqual(edited.returncode, 2)
+        self.assertIn("notes.md:3: ", edited.stderr)
+        self.assertNotIn("notes.md:1: ", edited.stderr)
 
         malformed = self.gate(self.AGENT + "\n", stdin="not json")
         self.assertEqual(malformed.returncode, 0)
@@ -789,6 +806,22 @@ class GateHookTests(HookCase):
                     GATE, ["--plugin-root", str(REPO_ROOT)], event)
                 self.assertEqual(result.returncode, code, result.stderr)
                 self.assertIn(expected, getattr(result, stream))
+
+        # A patch is checked on the lines it added.
+        (work / "notes.md").write_text(
+            self.OLD + "\n" + self.AGENT + "\n", encoding="utf-8")
+        event = json.dumps({
+            "hook_event_name": "PostToolUse", "tool_name": "apply_patch",
+            "tool_input": {"command": (
+                "*** Begin Patch\n*** Update File: notes.md\n@@\n "
+                + self.OLD + "\n+" + self.AGENT + "\n*** End Patch")},
+            "tool_response": "Exit code: 0\nSuccess.",
+            "cwd": str(work), "transcript_path": str(rollout),
+        })
+        result = self.run_hook(GATE, ["--plugin-root", str(REPO_ROOT)], event)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("notes.md:2: ", result.stderr)
+        self.assertNotIn("notes.md:1: ", result.stderr)
 
 
 # ---------------------------------------------------------------------------

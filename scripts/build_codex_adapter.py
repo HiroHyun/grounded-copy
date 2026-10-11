@@ -150,11 +150,14 @@ MANIFEST = json.dumps({
 # after it. Each string starts with the bare word `cmd`, which PowerShell and
 # cmd.exe both run as a command, so the line works under either shell. `/d`
 # skips the cmd AutoRun registry entry, which could print into hook output.
+# The gate ends with `exit $LASTEXITCODE`: PowerShell turns a native exit
+# code of 2 into 1 otherwise, and Codex reads 2 as findings for the agent.
 # A root holding `&` splits under `cmd /c`; tests/test_launchers.py measures
 # the characters that pass.
 HOOKS = json.dumps({"hooks": {
     "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_activate.py'}]}],
     "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_tracker.py'}]}],
+    "PostToolUse": [{"matcher": "apply_patch", "hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_gate.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_gate.py; exit $LASTEXITCODE'}]}],
 }}, indent=2) + "\n"
 
 PROFILE_SKILL = """---
@@ -230,15 +233,13 @@ if __name__ == "__main__":
 
 README = """# grounded-copy for Codex
 
-This package gives Codex writing rules, a copy checker, and three writing modes.
+Help AI write clearly and get to the point.
 
 Use `$grounded-profile status` to see the current mode. Choose `$grounded-profile chat` for everyday interaction and ordinary documents, `$grounded-profile copy` for product pages and marketing copy, or `$grounded-profile off` to turn the rules off. Your choice stays saved after a restart.
 
-The plugin loads rules at session start and adds a reminder with each prompt. Enable the hooks in Codex and complete any hook review requested by the app. The hooks guide the agent; they do not scan each reply. Run `skills/grounded-copy/scripts/copy_lint.py` on saved files to check them, with `--profile chat` or `--profile copy` to match your mode. The setup guide shows an optional hook that checks each file as the agent saves it.
+The plugin loads the rules at session start, adds a reminder with each prompt, and checks the prose files the agent saves. Enable the hooks in Codex and complete any hook review the app requests.
 
 The setting lives at `$CODEX_HOME/grounded-copy/profile`, or `~/.codex/grounded-copy/profile` by default.
-
-Both active profiles guide paragraph review in English and other languages. Select facts that serve the reader and omit incidental detail. The pattern guide includes English and Chinese examples. The checker retains its existing pattern checks.
 
 Read the [setup guide](skills/grounded-copy/references/setup.md) for details and the [pattern guide](skills/grounded-copy/references/patterns.md) for examples. The repository has [English](https://github.com/HiroHyun/grounded-copy#readme) and [Chinese](https://github.com/HiroHyun/grounded-copy/blob/main/README.zh.md) introductions.
 
