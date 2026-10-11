@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <strong>Output rules and a copy checker for AI agents.</strong>
+</p>
+
+<p align="center">
   <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-2ea44f.svg" alt="AGPL-3.0-only License"></a>
   <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
@@ -23,11 +27,15 @@
 
 # grounded-copy
 
-`grounded-copy` makes an AI assistant state the fact and get to the point, in chat replies and in the documents it writes. A separate mode covers product pages and marketing copy.
+`grounded-copy` makes your agent state the fact and get to the point, in chat replies and in the documents it writes. A separate mode covers product pages and marketing copy.
 
 ## Try it
 
-After installing, start a new chat and ask your question. For product pages or marketing copy, switch to `copy` mode first.
+The Claude Code and Codex plugins load the `chat` rules at the start of every session, with no instruction from you. Start a session and ask your question. In Codex, approve the plugin's hooks the first time the app asks.
+
+With the skill alone, name it in your request, such as "Use grounded-copy to answer."
+
+For product pages or marketing copy, switch to `copy` mode first.
 
 ## Install
 
@@ -53,7 +61,7 @@ To install for one agent:
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Agents supported by the Skills CLI | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-The plugins apply the rules in every chat, check the files the assistant saves, and save your writing mode. A skill on its own loads when the agent judges it relevant.
+The plugins apply the rules in every chat, check the files the agent saves, and save your writing mode. A skill on its own loads when the agent judges it relevant.
 
 See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal.
 

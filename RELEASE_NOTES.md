@@ -1,16 +1,20 @@
-# 0.8.0
+# 0.7.2
 
 ## English
 
-- The plugin checks each document the assistant saves and has it fix what it just wrote.
+- The plugin checks each document the agent saves and has it fix what it just wrote.
 - In Codex, approve the new hook after updating.
-- The READMEs are shorter.
+- The checker covers English and Chinese only.
+- A check that passed adds no line to the reply.
+- Trimmed the READMEs, the pattern guide, and other description files.
 
 ## 简体中文
 
-- 插件会检查 AI 保存的每份文档，并让它改掉刚写下的问题句。
+- 插件会检查智能体保存的每份文档，并让它改掉刚写下的问题句。
 - 更新后，请在 Codex 中批准新增的钩子。
-- README 更简短。
+- 检查脚本现在只覆盖英文和中文。
+- 检查通过时，回复中省去检查结果行。
+- 精简了 README、表达示例指南等说明文件。
 
 # 0.7.1
 
@@ -102,13 +106,13 @@
 
 - Both READMEs restore the banner and navigation, with collapsible technical details.
 - Examples show how to write app release notes. The setup guide and session instructions are shorter.
-- The license is AGPL-3.0-only. Releases through 0.5.2 stay under the MIT license.
+- The license is AGPL-3.0-only.
 
 ## 简体中文
 
 - 中英文 README 恢复横幅和导航，技术细节收进可折叠区块。
 - 示例说明如何撰写应用更新说明，并精简安装指南和会话指令。
-- 许可证改为 AGPL-3.0-only。0.5.2 及更早的版本仍按 MIT 许可证发布。
+- 许可证改为 AGPL-3.0-only。
 
 # 0.5.2
 
@@ -117,14 +121,14 @@
 - The English and Chinese READMEs explain how to install the tool and check a draft.
 - The setup guide and skill instructions use plain language and practical examples.
 - The copy checker now finds lists between paired dashes across lines in a paragraph.
-- Chat replies omit the check-result line. File tasks report the check result.
+- Chat replies omit the check-result line.
 
 ## 简体中文
 
 - 中英文 README 说明了安装步骤和草稿检查方法。
 - 安装说明和技能指令采用通俗表达，并提供实际用法示例。
 - 文案检查脚本现在能识别段落中跨行的成对破折号列表。
-- 日常聊天回复省去检查结果行。文件任务仍会报告检查结果。
+- 日常聊天回复省去检查结果行。
 
 # 0.5.1
 

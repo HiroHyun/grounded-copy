@@ -3,6 +3,10 @@
 </p>
 
 <p align="center">
+  <strong>给 AI 智能体用的输出规则，附带文案检查脚本。</strong>
+</p>
+
+<p align="center">
   <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-2ea44f.svg" alt="AGPL-3.0-only License"></a>
   <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
@@ -23,12 +27,16 @@
 
 # grounded-copy
 
-`grounded-copy` 让 AI 直接陈述事实、把话说到点上，聊天回复和它写的文档都适用。产品页面和营销文案另有一个更严格的模式。
+`grounded-copy` 让智能体直接陈述事实、把话说到点上，聊天回复和它写的文档都适用。产品页面和营销文案另有一个更严格的模式。
 
 <a id="try-it"></a>
 ## 试着用一次
 
-安装后开启新对话，直接提问。写产品页面或营销文案时，先切换到 `copy` 模式。
+Claude Code 和 Codex 插件会在每个会话开始时加载 `chat` 规则，无需你额外下指令。开启会话，直接提问即可。Codex 首次提示时，请批准插件的钩子。
+
+只安装技能时，请在请求中点名，例如“用 grounded-copy 回答”。
+
+写产品页面或营销文案时，先切换到 `copy` 模式。
 
 <a id="install"></a>
 ## 安装
@@ -55,7 +63,7 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Skills CLI 支持的智能体 | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-插件会在每次对话中应用规则，检查 AI 保存的文件，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
+插件会在每次对话中应用规则，检查智能体保存的文件，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
 
 [安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载方法。
 

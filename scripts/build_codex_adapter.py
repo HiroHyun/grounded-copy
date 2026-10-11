@@ -123,7 +123,7 @@ MANIFEST = json.dumps({
         "displayName": "Grounded Copy",
         "shortDescription": "Help AI write clearly and get to the point.",
         "longDescription": (
-            "Grounded Copy makes the assistant get to the point in chat replies "
+            "Grounded Copy makes the agent get to the point in chat replies "
             "and documents, with a separate mode for product pages and "
             "marketing copy."
         ),

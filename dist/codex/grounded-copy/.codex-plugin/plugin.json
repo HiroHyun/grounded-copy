@@ -1,6 +1,6 @@
 {
   "name": "grounded-copy",
-  "version": "0.8.0",
+  "version": "0.7.2",
   "description": "Help AI write clearly and get to the point.",
   "author": {
     "name": "HiroHyun",
@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "Grounded Copy",
     "shortDescription": "Help AI write clearly and get to the point.",
-    "longDescription": "Grounded Copy makes the assistant get to the point in chat replies and documents, with a separate mode for product pages and marketing copy.",
+    "longDescription": "Grounded Copy makes the agent get to the point in chat replies and documents, with a separate mode for product pages and marketing copy.",
     "developerName": "HiroHyun",
     "category": "Productivity",
     "capabilities": [
