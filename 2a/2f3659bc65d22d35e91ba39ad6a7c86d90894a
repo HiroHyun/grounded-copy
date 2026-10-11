@@ -1,0 +1,25 @@
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_a281c90093773f 23
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_7f750584b5068c 655-656
+skills/grounded-copy/references/setup.md
+  s_2202bc8d5d4fd8::t_9861892354375a 23
+skills/grounded-copy/scripts/copy_lint.py
+  s_2202bc8d5d4fd8::t_ed118a65af3d17 655-656
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2a2f3659bc65d22d35e91ba39ad6a7c86d90894a",
+  "prompts": {},
+  "sessions": {
+    "s_2202bc8d5d4fd8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d61b005f-3b98-479d-9666-65c28c7e77fd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
