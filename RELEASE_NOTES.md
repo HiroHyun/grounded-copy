@@ -1,3 +1,15 @@
+# 0.7.3
+
+## English
+
+- Smaller images, so the plugin downloads faster.
+- The setup guide lists the update command for each host.
+
+## 简体中文
+
+- 图片更小，插件下载更快。
+- 安装说明列出了各宿主的更新命令。
+
 # 0.7.2
 
 ## English

@@ -53,7 +53,10 @@ curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install
 irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | iex
 ```
 
-To install for one agent:
+<details>
+<summary><strong>To install for one agent</strong></summary>
+
+<br>
 
 | Install for | Commands |
 |---|---|
@@ -61,9 +64,12 @@ To install for one agent:
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Agents supported by the Skills CLI | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-The plugins apply the rules in every chat, check the files the agent saves, and save your writing mode. A skill on its own loads when the agent judges it relevant.
+</details>
 
-See [setup](skills/grounded-copy/references/setup.md) for installation checks, updates, Windows help, and removal.
+> [!TIP]
+> The plugins apply the rules in every chat, check the files the agent saves, and save your writing mode. A skill on its own loads when the agent judges it relevant.
+>
+> See [setup](skills/grounded-copy/references/setup.md) for installation checks, updates, Windows help, and removal.
 
 ## Choose a writing mode
 

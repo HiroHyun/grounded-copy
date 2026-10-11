@@ -55,7 +55,10 @@ curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install
 irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | iex
 ```
 
-只为一个智能体安装：
+<details>
+<summary><strong>只为一个智能体安装</strong></summary>
+
+<br>
 
 | 安装到哪里 | 命令 |
 |---|---|
@@ -63,9 +66,12 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Skills CLI 支持的智能体 | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-插件会在每次对话中应用规则，检查智能体保存的文件，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
+</details>
 
-[安装说明](skills/grounded-copy/references/setup.md)中有安装检查、更新命令、Windows 使用说明和卸载方法。
+> [!TIP]
+> 插件会在每次对话中应用规则，检查智能体保存的文件，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
+>
+> [安装说明](skills/grounded-copy/references/setup.md)中有安装检查、更新命令、Windows 使用说明和卸载方法。
 
 <a id="choose-a-writing-mode"></a>
 ## 选择写作模式
