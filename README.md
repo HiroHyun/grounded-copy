@@ -63,7 +63,7 @@ To install for one agent:
 
 The plugins apply the rules in every chat, check the files the agent saves, and save your writing mode. A skill on its own loads when the agent judges it relevant.
 
-See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal.
+See [setup](skills/grounded-copy/references/setup.md) for installation checks, updates, Windows help, and removal.
 
 ## Choose a writing mode
 

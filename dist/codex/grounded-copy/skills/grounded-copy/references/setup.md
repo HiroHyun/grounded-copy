@@ -10,11 +10,21 @@ The default is `chat`. Try asking the agent to rewrite a short paragraph using g
 
 The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles, session reminders, and the check on saved files come with the Claude Code and Codex plugins.
 
+### Update
+
+| Installed through | Run |
+|---|---|
+| Claude Code plugin | `claude plugin marketplace update hirohyun-plugins`, then `claude plugin update grounded-copy@hirohyun-plugins` |
+| Codex plugin | `codex plugin marketplace upgrade hirohyun-plugins` |
+| Skills CLI | `npx skills update` |
+
+Codex stops a download after 30 seconds. If the upgrade times out, run it again. If it keeps failing, run `codex plugin marketplace remove hirohyun-plugins` and install again. Your saved mode stays.
+
 ### After an update
 
 Claude Code loads the plugin from the repository-root package. Codex uses the generated adapter. Skills CLI and manual installations use the canonical skill directory. Each channel carries the same writing guidance and references.
 
-Update through the tool that manages your installation. For a manually copied skill, replace the complete skill directory so its references stay in sync. After updating a plugin, reload it and start a new session to load the revised policy. Check the installed version through the host's plugin list; a source checkout can contain changes awaiting publication.
+For a manually copied skill, replace the complete skill directory so its references stay in sync. After updating a plugin, reload it and start a new session to load the revised policy. Check the installed version through the host's plugin list; a source checkout can contain changes awaiting publication.
 
 For English and other languages, read [Paragraph review](patterns.md#paragraph-review). Chinese writing also uses [Chinese paragraph review](patterns.md#chinese-paragraph-review). The examples show how to select useful detail and reduce repeated enumeration. This requires contextual review by the agent; `copy_lint.py` retains its existing pattern checks.
 

@@ -65,7 +65,7 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 
 插件会在每次对话中应用规则，检查智能体保存的文件，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
 
-[安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载方法。
+[安装说明](skills/grounded-copy/references/setup.md)中有安装检查、更新命令、Windows 使用说明和卸载方法。
 
 <a id="choose-a-writing-mode"></a>
 ## 选择写作模式
