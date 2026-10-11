@@ -12,28 +12,6 @@ Our groundbreaking, revolutionary platform.
 Acme is a partner, not a vendor.
 Acme isn't complicated — it books the job in one tap.
 Acme ships every Friday rather than hoarding features for big releases.
-Acme n'est pas qu'un simple outil.
-Dites adieu aux frais cachés.
-Acme va bien au-delà du stockage.
-Oubliez les tableurs.
-Acme ist mehr als nur ein Werkzeug.
-Verabschieden Sie sich von versteckten Gebühren.
-Schluss mit langen Wartezeiten.
-Stellen Sie sich vor, alles liefe automatisch.
-Acmeは単なるツールではありません。
-ファイル保存だけではありません。
-面倒な手続きとはおさらば。
-業界の常識を覆す革命的なサービス。
-Acme는 단순한 도구가 아닙니다.
-Acme는 파일 저장에 그치지 않습니다.
-숨겨진 수수료와 작별하세요.
-업계를 재정의하는 게임 체인저입니다.
-Olvídate de las comisiones ocultas.
-Atrás quedaron los días de precios opacos.
-Acme — это не просто CRM, а операционная система отдела продаж.
-Попрощайтесь со скрытыми комиссиями.
-Acme ليس مجرد تطبيق، بل منصة متكاملة.
-وداعًا للرسوم الخفية.
 The guide is general information, not a substitute for legal advice.
 Invoices are billed monthly rather than per seat.
 Acme is more than a tool.

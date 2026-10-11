@@ -88,12 +88,12 @@ DIRECTIVE_LEAD_EMPTY = (
     "rules for this profile arrive at the next session start."
 )
 
-# Extraction sizes measured 2026-10-10 against SKILL.md, including fact selection
+# Extraction sizes measured 2026-10-11 against SKILL.md, including fact selection
 # and paragraph review across languages. These count the rules body alone; hook stdout
 # adds the header and switch line, 106 bytes. The setup guide publishes the same figures under
 # "Profile lifecycle", and `grounded_activate.py --self-test` reports the current ones.
 BASELINE_BYTES = 4032
-COPY_BASELINE_BYTES = 6292
+COPY_BASELINE_BYTES = 6224
 TURN_BASELINE_BYTES = 238
 
 # (floor, ceiling) per payload. The ceiling bounds growth against the figure the

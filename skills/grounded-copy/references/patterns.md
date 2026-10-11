@@ -78,7 +78,7 @@ A list between paired dashes separates the subject from its verb. Remove the lis
 | Draft | Rewrite |
 |---|---|
 | "Copy that has to carry one — a legal disclaimer, regulatory text, a translation of supplied source — is written with the profile off." | "Use the profile off for required wording, such as a legal disclaimer." |
-| "Pointed at text that carries a contrast of its own — a translation, a quoted passage, a legal clause, a billing statement — the model can delete that contrast." | "The assistant can remove a comparison when translating supplied text." |
+| "Pointed at text that carries a contrast of its own — a translation, a quoted passage, a legal clause, a billing statement — the model can delete that contrast." | "The agent can remove a comparison when translating supplied text." |
 | "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." |
 
 ## Paragraph review
@@ -195,20 +195,11 @@ Name a source that the reader can check.
 
 A trailing phrase can add praise too: ", highlighting our commitment to quality" or ", underscoring its value". Remove it and state the supported fact.
 
-## Multilingual equivalents
+## Chinese equivalents
 
-Apply the rules to meaning in each language. The checker knows the phrases below. Review the rest of the text yourself.
+The checker knows the phrases below. Review the rest of the text yourself.
 
-| Locale | Patterns |
-|---|---|
-| zh | 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 告别… / 重新定义 / 颠覆 / 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y / 不是 X，而是 Y |
-| ru | не просто / больше, чем просто / попрощайтесь с… / переосмысливает |
-| es-419 | no es solo / no solo es / más que un(a) simple / dile adiós a / olvídate de / atrás quedaron los días / va más allá / redefinimos |
-| ar | ليس مجرد / أكثر من مجرد / وداعًا لـ / يعيد تعريف |
-| fr | n'est pas qu'un simple / pas seulement / plus qu'un simple / dites adieu à / oubliez / imaginez / va au-delà / redéfinit |
-| de | nicht nur ein / mehr als nur / verabschieden Sie sich von / Schluss mit / nie wieder / definiert … neu / geht über … hinaus / Stellen Sie sich vor |
-| ja | 単なる〜ではない / 〜だけではない / 〜だけでなく / 〜にとどまらない / 〜とはおさらば / 再定義 / 革命的 / 想像してみてください |
-| ko | 단순한 〜이 아니다 / 뿐만 아니라 / 〜에 그치지 않는다 / 〜와 작별하세요 / 더 이상 / 재정의 / 게임 체인저 / 상상해 보세요 |
+Triggers: 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 告别… / 重新定义 / 颠覆 / 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y / 不是 X，而是 Y
 
 When translating a draft written under these rules, keep its facts and use natural sentences in the target language. For a faithful translation of supplied text, preserve its intended comparisons and use the profile off as needed.
 

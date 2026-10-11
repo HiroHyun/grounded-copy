@@ -284,9 +284,9 @@ PATTERNS = [
      _c(r",\s+(?:highlighting|underscoring|showcasing|demonstrating|"
         r"emphasizing|reflecting|signaling|cementing)\b")),
 
-    # --- multilingual equivalents (zh / ru / es / ar) ---
-    # Each locale rule keeps its shipped alternatives first and appends the
-    # new ones, so a shipped match keeps its snippet.
+    # --- Chinese equivalents ---
+    # Each rule keeps its shipped alternatives first and appends the new
+    # ones, so a shipped match keeps its snippet.
     #
     # Simplified and Traditional forms. 不[仅僅]{1,2}(?:只)?是 covers 不仅是,
     # 不仅仅是, 不僅僅是, and 不仅仅只是.
@@ -303,41 +303,6 @@ PATTERNS = [
         r"不在於[^。！？；\n]{0,32}而在於|"
         r"[并並]非[^。！？；，,\n]{1,20}[，,]\s*(?:而是|只是|是)|"
         r"[与與]其[说說][^。！？；\n]{0,32}不如[说說]")),
-    ("ru-not-just",
-     _c(r"не\s+просто|больше,?\s+чем\s+просто|это\s+не\s+о\b|"
-        r"попрощайтесь|переосмысл\w*|прощай(?:те)?,")),
-    ("es-not-just",
-     _c(r"no\s+es\s+solo|no\s+solo\s+es|no\s+se\s+trata\s+solo|"
-        r"más\s+que\s+(?:un|una)(?:\s+simple)?\b|más\s+que\s+solo|"
-        r"dile?\s+adiós|redefinim\w*|va\s+más\s+allá|olvíd(?:ate|ese)\s+de|"
-        r"atrás\s+quedaron|sin\s+complicaciones")),
-    ("ar-not-just",
-     _c(r"ليس\s+مجرد|ليست\s+مجرد|أكثر\s+من\s+مجرد|وداعًا|وداعا|"
-        r"يعيد\s+تعريف")),
-    ("fr-not-just",
-     _c(r"n'est\s+pas\s+(?:qu'un|qu'une|seulement|simplement|juste)|"
-        r"pas\s+(?:seulement|simplement)\s+un|"
-        r"(?:bien\s+)?plus\s+qu'un(?:e)?\s+simple|"
-        r"dites\s+adieu|fini(?:s|es)?\s+les?\s|"
-        r"redéfini\w*|va\s+(?:bien\s+)?au[-\s]delà|révolutionn\w*|"
-        r"oubliez\s+(?:les?|la|vos?)\b|imaginez\s")),
-    ("de-not-just",
-     _c(r"nicht\s+nur\s+(?:ein|eine|irgendein)|mehr\s+als\s+nur|"
-        r"weit\s+mehr\s+als|verabschieden\s+Sie\s+sich|schluss\s+mit|"
-        r"nie\s+wieder|neu\s+definiert|definiert\s+\w+\s+neu|"
-        r"geht\s+über\s+\w+\s+hinaus|revolutionier\w*|"
-        r"vergessen\s+Sie|stellen\s+Sie\s+sich\s+vor")),
-    ("ja-not-just",
-     _c(r"単なる[^。！？\n]{0,20}(?:ではありません|ではない|じゃない)|"
-        r"ただの[^。！？\n]{0,20}(?:ではありません|ではない|じゃない)|"
-        r"だけでは(?:ありません|ない)|にとどまら(?:ない|ず)|"
-        r"はもう不要|とはおさらば|再定義|常識を覆す|革命的|"
-        r"想像してみてください|だけでなく|さようなら|を超えた")),
-    ("ko-not-just",
-     _c(r"단순한\s*[^.!?。\n]{0,20}(?:아닙니다|아니다|아니에요)|"
-        r"에\s*그치지\s*않|[와과]\s*작별하세요|작별을\s*고하세요|"
-        r"재정의|게임\s*체인저|상상해\s*보세요|"
-        r"뿐만\s*아니라|그\s*이상|더\s*이상|혁신적")),
 ]
 
 # ---------------------------------------------------------------------------
@@ -396,9 +361,7 @@ GROUPS = (
       "beyond-just", "far-from-just", "not-x-but-y", "not-x-its-y",
       "dash-not-contrast", "negated-copula-dash", "comma-not-appositive",
       "isnt-about", "its-about", "less-a-x-than", "do-verb-repeat",
-      "zh-not-just", "zh-not-x-but-y", "ru-not-just", "es-not-just",
-      "ar-not-just", "fr-not-just", "de-not-just", "ja-not-just",
-      "ko-not-just")),
+      "zh-not-just", "zh-not-x-but-y")),
     ("chat",
      "The sentence sets the fact against an alternative. State the fact "
      "alone. An alternative the reader asked about goes in its own sentence.",
@@ -437,16 +400,10 @@ _CHAT_RULES = frozenset(
 # above, the first word only looks like a clause start, so the wrap pass
 # judges these rules on the joined text.
 CLAUSE_RULES = frozenset(("not-x-its-y", "do-verb-repeat", "opener-stop"))
-# Japanese prose always holds kana. Two words of `ja-not-just` are kanji alone
-# and also occur in Chinese, where one means "of the revolution".
-_KANA = re.compile("[ぁ-ヿ]")
-
 
 def _runs(name, text, active):
     """Whether a rule applies to this text under the active rule set."""
-    if active is not None and name not in active:
-        return False
-    return name != "ja-not-just" or bool(_KANA.search(text))
+    return active is None or name in active
 
 # A sentence ender, then whitespace. The second alternative covers an ender
 # that sits inside a closing quote or bracket. A colon is no boundary: a split

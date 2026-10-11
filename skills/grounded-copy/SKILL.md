@@ -70,7 +70,7 @@ The banned move takes four more forms here:
 Use these checks during review:
 
 - **"The banned string doesn't appear."** Check the structure of the argument. A contrast can span two sentences, separate paragraphs, or a heading and its description. Rewrite the claim around the subject's own behavior.
-- **"It's a different language."** Apply the rules to the meaning in every language. Read the multilingual section of `references/patterns.md` before writing in Chinese, Russian, Spanish, Arabic, French, German, Japanese, or Korean. Keep retained claims accurate and write idiomatic sentences. When the task requires faithful translation of a supplied contrast, follow the user's instructions and use the profile off.
+- **"It's a different language."** Apply the rules to the meaning in every language. Read Chinese equivalents in `references/patterns.md` before writing in Chinese. Keep retained claims accurate and write idiomatic sentences. When the task requires faithful translation of a supplied contrast, follow the user's instructions and use the profile off.
 - **"A synonym isn't on the list."** Review what the word means in context. Replace vague praise with a supported fact, even when the checker accepts the word.
 - **"The linter passed, so it's fine."** A pass means the checker found no matching patterns. It does not verify facts or judge every sentence. Read the draft for unsupported claims, awkward wording, and contrasts spread across sentences. The human-language review remains part of the task.
 - **"I'll adjust the linter/config."** Fix the prose when a check fails. Keep the checker and its rules intact. The integrity rules below apply throughout the task.
@@ -92,7 +92,7 @@ Use these checks during review:
    ```
 
 4. Exit code 1 means the checker found matches. Each group of findings ends with a sentence that says what to cut. Rewrite your own flagged sentences using supported facts relevant to the task, then run it again. A flagged sentence the user supplied stays as written. Exit code 2 means a command or file error; fix that error and rerun.
-5. Present the files after a pass, or when the only findings left sit in sentences the user supplied. Report the check result for files you checked, and name each sentence you kept. A normal chat reply needs no check-result line.
+5. Present the files after a pass, or when the only findings left sit in sentences the user supplied. Name each sentence you kept. A check that passed needs no line in the reply.
 
 ## Integrity rules
 
@@ -102,6 +102,6 @@ Use these checks during review:
 
 ## References
 
-- `references/patterns.md` contains the phrases the rules describe, with sample rewrites and multilingual examples.
+- `references/patterns.md` contains the phrases the rules describe, with sample rewrites and Chinese examples.
 - `references/setup.md` explains installation, profiles, and checks for a project. Its Profile lifecycle section describes how saved settings reach a session.
 - `tests/bad-samples.md` and `tests/good-samples.md` are the checker's sample files. A checker change must leave the bad samples at exit code 1 and the good samples at exit code 0.

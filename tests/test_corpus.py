@@ -62,8 +62,8 @@ class OutputEncodingTests(unittest.TestCase):
     Measured on windows-latest, Python 3.12: the reader thread died with
     "UnicodeDecodeError: 'utf-8' codec can't decode byte 0x97", 0x97 being the
     cp1252 em dash out of the FAIL line, and the caller read stdout as None.
-    Eight of the nine covered languages are non-ASCII, so a locale file is the
-    normal case for this path.
+    Chinese text is non-ASCII, so a locale file is the normal case for this
+    path.
     """
 
     def test_findings_decode_as_utf8_under_a_legacy_code_page(self):
@@ -72,7 +72,7 @@ class OutputEncodingTests(unittest.TestCase):
         result = run_linter(CORPUS, env=env)
         self.assertEqual(result.returncode, 1, result.stderr)
         self.assertIn("copy_lint:", result.stdout)
-        for snippet in ("不仅仅是", "단순한 도구가 아닙니다", "ليس مجرد"):
+        for snippet in ("不仅仅是", "并非作者，只是"):
             with self.subTest(snippet=snippet):
                 self.assertIn(snippet, result.stdout)
 
@@ -85,7 +85,7 @@ class LocaleCoverageTests(unittest.TestCase):
 
     def test_every_rule_reports_a_corpus_line(self):
         copy_lint = linter()
-        self.assertEqual(len(locale_rules()), 9,
+        self.assertEqual(len(locale_rules()), 2,
                          "the locale rule set changed size")
         rules = [name for name, _ in copy_lint.PATTERNS + copy_lint.OPENERS
                  + copy_lint.BLOCK_PATTERNS]

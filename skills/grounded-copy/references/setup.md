@@ -69,7 +69,7 @@ What each profile adds to a session:
 | Profile | Bytes at session start | Turn reminder |
 |:---:|:---:|:---:|
 | `chat` (default) | 4,032 | 238 bytes |
-| `copy` | 6,292 | 238 bytes |
+| `copy` | 6,224 | 238 bytes |
 | `off` | 0 | none |
 
 Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line.
@@ -174,7 +174,6 @@ Read `.style/grounded-copy/SKILL.md` when writing or editing prose.
 Select facts relevant to the task, keep claims accurate, and follow the user's requested style.
 Run `python3 .style/grounded-copy/scripts/copy_lint.py <changed files>`.
 Rewrite flagged copy and rerun the check. Keep the checker intact.
-Report the result for files you checked.
 ```
 
 ### Check files in CI

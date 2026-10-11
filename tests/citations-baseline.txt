@@ -14,10 +14,6 @@ skills/grounded-copy/SKILL.md	not-just	not just
 skills/grounded-copy/SKILL.md	not-x-its-y	The file isn't missing, it's
 skills/grounded-copy/SKILL.md	rather-than	rather than
 skills/grounded-copy/SKILL.md	rather-than	rather than
-skills/grounded-copy/references/patterns.md	ar-not-just	أكثر من مجرد
-skills/grounded-copy/references/patterns.md	ar-not-just	ليس مجرد
-skills/grounded-copy/references/patterns.md	ar-not-just	وداعًا
-skills/grounded-copy/references/patterns.md	ar-not-just	يعيد تعريف
 skills/grounded-copy/references/patterns.md	as-opposed-to	as opposed to
 skills/grounded-copy/references/patterns.md	beyond-just	beyond just
 skills/grounded-copy/references/patterns.md	comma-not-appositive	, not
@@ -30,34 +26,14 @@ skills/grounded-copy/references/patterns.md	dash-pair-list	— a translation, a 
 skills/grounded-copy/references/patterns.md	dash-pair-list	— email, live chat, phone, and the help centre —
 skills/grounded-copy/references/patterns.md	dash-pair-list	—not X, but Y", "not your average X", "X, not Y", ", not by X", and a denial followed by a dash "isn't/wasn't X —
 skills/grounded-copy/references/patterns.md	days-are-over	the days of X are over
-skills/grounded-copy/references/patterns.md	de-not-just	Schluss mit
-skills/grounded-copy/references/patterns.md	de-not-just	Stellen Sie sich vor
-skills/grounded-copy/references/patterns.md	de-not-just	mehr als nur
-skills/grounded-copy/references/patterns.md	de-not-just	nicht nur ein
-skills/grounded-copy/references/patterns.md	de-not-just	nie wieder
-skills/grounded-copy/references/patterns.md	de-not-just	verabschieden Sie sich
 skills/grounded-copy/references/patterns.md	do-verb-repeat	You don't need a gym, you need
 skills/grounded-copy/references/patterns.md	doesnt-just	Don't just
 skills/grounded-copy/references/patterns.md	doesnt-just	doesn't just
 skills/grounded-copy/references/patterns.md	doesnt-just	don't just
 skills/grounded-copy/references/patterns.md	editorializing-ing	, highlighting
 skills/grounded-copy/references/patterns.md	editorializing-ing	, underscoring
-skills/grounded-copy/references/patterns.md	es-not-just	atrás quedaron
-skills/grounded-copy/references/patterns.md	es-not-just	dile adiós
-skills/grounded-copy/references/patterns.md	es-not-just	más que un
-skills/grounded-copy/references/patterns.md	es-not-just	no es solo
-skills/grounded-copy/references/patterns.md	es-not-just	no solo es
-skills/grounded-copy/references/patterns.md	es-not-just	olvídate de
-skills/grounded-copy/references/patterns.md	es-not-just	redefinimos
-skills/grounded-copy/references/patterns.md	es-not-just	va más allá
 skills/grounded-copy/references/patterns.md	far-from-just	Far from being
 skills/grounded-copy/references/patterns.md	far-from-just	far from just
-skills/grounded-copy/references/patterns.md	fr-not-just	dites adieu
-skills/grounded-copy/references/patterns.md	fr-not-just	imaginez
-skills/grounded-copy/references/patterns.md	fr-not-just	n'est pas qu'un
-skills/grounded-copy/references/patterns.md	fr-not-just	plus qu'un simple
-skills/grounded-copy/references/patterns.md	fr-not-just	redéfinit
-skills/grounded-copy/references/patterns.md	fr-not-just	va au-delà
 skills/grounded-copy/references/patterns.md	fragment-reversal	Not a patch. A rewrite.
 skills/grounded-copy/references/patterns.md	fragment-reversal	Not slow, just
 skills/grounded-copy/references/patterns.md	fragment-reversal	not X, just
@@ -107,21 +83,6 @@ skills/grounded-copy/references/patterns.md	instead-of	instead of
 skills/grounded-copy/references/patterns.md	instead-of	instead of
 skills/grounded-copy/references/patterns.md	isnt-about	isn't about
 skills/grounded-copy/references/patterns.md	its-about	it's about Y", "—not
-skills/grounded-copy/references/patterns.md	ja-not-just	だけでなく
-skills/grounded-copy/references/patterns.md	ja-not-just	とはおさらば
-skills/grounded-copy/references/patterns.md	ja-not-just	にとどまらない
-skills/grounded-copy/references/patterns.md	ja-not-just	再定義
-skills/grounded-copy/references/patterns.md	ja-not-just	単なる〜ではない / 〜だけではない
-skills/grounded-copy/references/patterns.md	ja-not-just	想像してみてください
-skills/grounded-copy/references/patterns.md	ja-not-just	革命的
-skills/grounded-copy/references/patterns.md	ko-not-just	게임 체인저
-skills/grounded-copy/references/patterns.md	ko-not-just	단순한 〜이 아니다
-skills/grounded-copy/references/patterns.md	ko-not-just	더 이상
-skills/grounded-copy/references/patterns.md	ko-not-just	뿐만 아니라
-skills/grounded-copy/references/patterns.md	ko-not-just	상상해 보세요
-skills/grounded-copy/references/patterns.md	ko-not-just	에 그치지 않
-skills/grounded-copy/references/patterns.md	ko-not-just	와 작별하세요
-skills/grounded-copy/references/patterns.md	ko-not-just	재정의
 skills/grounded-copy/references/patterns.md	less-a-x-than	less a catalog than
 skills/grounded-copy/references/patterns.md	less-a-x-than	less a gym than
 skills/grounded-copy/references/patterns.md	look-no-further	Look no further
@@ -159,17 +120,12 @@ skills/grounded-copy/references/patterns.md	rather-than	rather than
 skills/grounded-copy/references/patterns.md	rather-than	rather than
 skills/grounded-copy/references/patterns.md	rather-than	rather than
 skills/grounded-copy/references/patterns.md	redefine-family	redefines
-skills/grounded-copy/references/patterns.md	redefine-family	redefinimos
 skills/grounded-copy/references/patterns.md	redefine-family	redefining
 skills/grounded-copy/references/patterns.md	redefine-family	reimagines
 skills/grounded-copy/references/patterns.md	redefine-family	reinvents
 skills/grounded-copy/references/patterns.md	rhetorical-reveal	The best part?
 skills/grounded-copy/references/patterns.md	rhetorical-reveal	The best part?
 skills/grounded-copy/references/patterns.md	rhetorical-reveal	The result?
-skills/grounded-copy/references/patterns.md	ru-not-just	больше, чем просто
-skills/grounded-copy/references/patterns.md	ru-not-just	не просто
-skills/grounded-copy/references/patterns.md	ru-not-just	переосмысливает
-skills/grounded-copy/references/patterns.md	ru-not-just	попрощайтесь
 skills/grounded-copy/references/patterns.md	say-goodbye-hello	Say goodbye
 skills/grounded-copy/references/patterns.md	say-goodbye-hello	say goodbye
 skills/grounded-copy/references/patterns.md	studies-show	Studies show
