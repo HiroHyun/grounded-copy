@@ -428,14 +428,15 @@ class CodexAdapterTests(unittest.TestCase):
         )
         self.assertEqual(manifest["version"], version)
 
-    def test_no_front_page_pins_a_version_in_the_codex_cache_path(self):
+    def test_no_page_pins_a_version_in_the_codex_cache_path(self):
         """Prose that repeats the number makes every release a prose edit.
 
-        Both pages once quoted the cache path with the version spelled out,
-        and a test asserted the two agreed. `<version>` states the shape and
-        leaves the number in the manifests, where one bump covers all four.
+        The READMEs once quoted the cache path with the version spelled out.
+        `<version>` states the shape and leaves the number in the manifests,
+        where one bump covers all four. The setup guide carries the path now.
         """
-        for page in ("README.md", "README.zh.md"):
+        guide = "skills/grounded-copy/references/setup.md"
+        for page in ("README.md", "README.zh.md", guide):
             with self.subTest(page=page):
                 text = (REPO_ROOT / page).read_text(encoding="utf-8")
                 self.assertNotRegex(
@@ -443,10 +444,11 @@ class CodexAdapterTests(unittest.TestCase):
                     "%s pins a version in a path; write <version> instead"
                     % page,
                 )
-                self.assertIn(
-                    "/grounded-copy/<version>/skills/grounded-copy/", text,
-                    "%s no longer shows the Codex cache path" % page,
-                )
+        self.assertIn(
+            "/grounded-copy/<version>/skills/grounded-copy/",
+            (REPO_ROOT / guide).read_text(encoding="utf-8"),
+            "the setup guide no longer shows the Codex cache path",
+        )
 
     def test_the_codex_catalog_points_at_the_generated_tree(self):
         """A stale path here surfaces at install time on a user's machine."""

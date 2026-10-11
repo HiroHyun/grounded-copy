@@ -14,7 +14,7 @@ Each rule reports every match under the profiles its group names: `--profile cha
 
 ## Add a language
 
-Follow the same steps for each new rule. Explain whether it matches a list of phrases or a sentence pattern. Include examples of factual wording that it also matches. Update the language summary in both READMEs if the coverage changes.
+Follow the same steps for each new rule. Explain whether it matches a list of phrases or a sentence pattern. Include examples of factual wording that it also matches.
 
 ## Edit documentation
 

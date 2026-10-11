@@ -6,7 +6,7 @@ Start with the installation commands in the [English README](https://github.com/
 
 In Claude Code, run `/grounded-copy:grounded`. In Codex, run `$grounded-profile status`. The result shows the active profile and where the setting is saved.
 
-The default is `chat`. Try asking the agent to rewrite a short paragraph using grounded-copy. To check a saved file, use the `copy_lint.py` command in the README.
+The default is `chat`. Try asking the agent to rewrite a short paragraph using grounded-copy. To check a saved file, see [Check a file](#check-a-file).
 
 The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles and automatic session reminders come with the Claude Code and Codex plugins.
 
@@ -64,6 +64,16 @@ The setting stays saved across restarts. Each host uses its own file:
 | Claude Code | `$CLAUDE_CONFIG_DIR/grounded-copy/profile`, or `~/.claude/grounded-copy/profile` by default |
 | Codex | `$CODEX_HOME/grounded-copy/profile`, or `~/.codex/grounded-copy/profile` by default |
 
+What each profile adds to a session:
+
+| Profile | Bytes at session start | Turn reminder |
+|:---:|:---:|:---:|
+| `chat` (default) | 4,032 | 238 bytes |
+| `copy` | 6,292 | 238 bytes |
+| `off` | 0 | none |
+
+Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line.
+
 The plugin reads this file at session start and after context compaction. It adds the selected writing rules to the agent's context. Each prompt also gets a short reminder of the profile.
 
 A successful switch saves the setting and prints the instructions that apply from that point forward. Earlier instructions remain visible in the conversation. The new instructions tell the agent which profile to follow now.
@@ -118,6 +128,32 @@ When both the Skills CLI copy and the plugin are installed, Claude Code may show
 The checker matches text patterns. Some phrases also have ordinary factual uses. Read the sentence in context and preserve its meaning. Each group of findings ends with one sentence that names a form the checker passes. Use `off` for work that requires such wording. Running the checker manually still reports the same matches.
 
 Rules scan each line, then each paragraph for a phrase that wraps onto the next line. A finding carries the line where the phrase starts. The `dash-pair-list` rule scans paragraphs too and can find a list whose opening and closing dashes are on different lines.
+
+## Check a file
+
+From a clone of this repository, run:
+
+```bash
+python3 skills/grounded-copy/scripts/copy_lint.py draft.md
+```
+
+Use `python` if that is your Python 3 command. You can pass several file paths in one call. Add `--profile chat` to check everyday writing. With no option, or with `--profile copy`, the checker runs every rule.
+
+Each finding gives the file, the line, the matched text, and a rule name in brackets. Under each group of findings the checker prints one sentence that says what to cut.
+
+| Exit code | Meaning |
+|---|---|
+| `0` | The checker found no matches. |
+| `1` | The file contains wording to review. |
+| `2` | The command arguments or a file could not be read correctly. |
+
+For a Codex plugin installation, the checker is also in the plugin cache:
+
+```bash
+python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/grounded-copy/scripts/copy_lint.py draft.md
+```
+
+Use the version shown by `codex plugin list` in place of `<version>`.
 
 ## Add the skill to a project
 

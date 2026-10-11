@@ -96,14 +96,6 @@ class LocaleCoverageTests(unittest.TestCase):
                     "%s fires on no line in bad-samples.md" % rule,
                 )
 
-    def test_every_language_the_readme_tiers_has_a_rule(self):
-        """The published tier table and the rule set name the same languages."""
-        languages = {r.split("-")[0] for r in locale_rules()}
-        self.assertEqual(
-            languages, {"zh", "ru", "es", "ar", "fr", "de", "ja", "ko"},
-            "README publishes a tier per language; the rule set moved",
-        )
-
 
 class ProfileTests(unittest.TestCase):
     """Each rule sits in one group, and the group names its profile."""

@@ -3,10 +3,6 @@
 </p>
 
 <p align="center">
-  <strong>Output rules and a copy checker for AI agents.</strong>
-</p>
-
-<p align="center">
   <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-2ea44f.svg" alt="AGPL-3.0-only License"></a>
   <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
@@ -21,33 +17,21 @@
   <a href="#try-it">Try it</a> ·
   <a href="#install">Install</a> ·
   <a href="#choose-a-writing-mode">Choose a writing mode</a> ·
-  <a href="#check-a-file">Check a file</a> ·
   <a href="#before-and-after">Before and after</a> ·
-  <a href="#what-to-expect">What to expect</a> ·
   <a href="#more-help">More help</a>
 </p>
 
 # grounded-copy
 
-AI coding agents (Claude Code, Codex, Cursor) love filler phrases, endless em-dashes, and convoluted phrasing for simple ideas. `grounded-copy` forces your agent to state plain facts directly.
-
-When writing copy, AI defaults to absurd hype and sensational claims. `grounded-copy` anchors the output to concrete specs, exact steps, and verifiable facts. It also includes a Python linter script to scan saved drafts for banned fluff.
+`grounded-copy` makes an AI assistant state the fact and get to the point, in chat replies and in the documents it writes. A separate mode covers product pages and marketing copy.
 
 ## Try it
 
-After installation, ask your agent:
-
-> Write the release notes for version 2.1 of our scheduling app. It adds Google Calendar sync, cuts export time from 40 seconds to 4 seconds, and fixes the duplicate-invite bug. The readers are existing customers. Use grounded-copy, then run the copy checker on the result.
-
-For Claude Code or Codex plugin installs, start a new chat with:
-
-> Switch grounded-copy to chat mode.
-
-The agent will follow the rule set and drop decorative filler.
+After installing, start a new chat and ask your question. For product pages or marketing copy, switch to `copy` mode first.
 
 ## Install
 
-The installer needs Python 3 and Node.js with `npx`. It installs plugins for Claude Code and Codex when it finds their CLIs. It also runs the Skills CLI to install the skill for supported agents.
+The installer needs Python 3 and Node.js with `npx`. It adds the plugin to Claude Code and Codex when it finds them, and installs the skill for other agents through the Skills CLI.
 
 **macOS, Linux, WSL, or Git Bash:**
 
@@ -61,7 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install
 irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | iex
 ```
 
-To choose one installation method, use the commands below.
+To install for one agent:
 
 | Install for | Commands |
 |---|---|
@@ -69,42 +53,15 @@ To choose one installation method, use the commands below.
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Agents supported by the Skills CLI | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-The skill includes the rules, examples, and checker. The Claude Code and Codex plugins also load rules at session start and add a reminder with each prompt. These plugins let you save a writing mode.
+The plugins apply the rules in every chat and save your writing mode. A skill on its own loads when the agent judges it relevant.
 
-A skill on its own loads when the agent judges it relevant. To have every session apply it, run the installer with `--skills-only --always-on`. It writes a short marked block into `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`, skips a host that gets its plugin in the same run, and removes the block on `--uninstall`.
-
-See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal commands.
-
-<details>
-<summary><strong>More ways in</strong> · Click to expand</summary>
-
-<br>
-
-From a clone of this repository, the installer takes these flags:
-
-```bash
-sh install.sh --dry-run
-python3 install.py --skills-only
-python3 install.py --uninstall
-```
-
-| What you get | Skills CLI | Claude Code and Codex plugin |
-|---|:---:|:---:|
-| The rules, examples, and checker, in nine languages | yes | yes |
-| Rules loaded at session start, and again after the session is compacted (`SessionStart`) |  | yes |
-| A reminder added with each prompt (`UserPromptSubmit`) |  | yes |
-| A writing mode saved between sessions |  | yes |
-| A command to switch the mode |  | yes |
-
-If you install both ways on one machine, Claude Code can show `grounded-copy@skills-dir` as `Not loaded`. The plugin provides the skill and the hooks in that case.
-
-</details>
+See [setup](skills/grounded-copy/references/setup.md) for installation checks, Windows help, and removal.
 
 ## Choose a writing mode
 
-The plugins call these modes *profiles*. Your choice stays saved after a restart.
+Your choice stays saved after a restart.
 
-| Profile | Use it for |
+| Mode | Use it for |
 |---|---|
 | `chat` (default) | Everyday interaction and ordinary document processing. |
 | `copy` | Product pages, marketing copy, and similar text. |
@@ -118,7 +75,7 @@ The plugins call these modes *profiles*. Your choice stays saved after a restart
 /grounded-copy:grounded off
 ```
 
-Use `/grounded-copy:grounded` to see the current profile.
+Use `/grounded-copy:grounded` to see the current mode.
 
 **Codex:**
 
@@ -130,110 +87,24 @@ $grounded-profile status
 ```
 
 > [!IMPORTANT]
-> **For a faithful translation, set `off` first.** The rules can otherwise prompt the agent to remove a comparison that belongs to the original text. Your explicit instructions take priority over the skill.
-
-<details>
-<summary><strong>What each mode costs</strong> · Click to expand</summary>
-
-<br>
-
-| Profile | Bytes added at session start | Turn reminder |
-|:---:|:---:|:---:|
-| `chat` (default) | 4,032 | one line naming `chat` |
-| `copy` | 6,292 | one line naming `copy` |
-| `off` | 0 | none |
-
-Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line, and the turn reminder is 238 bytes.
-
-The choice is saved in `<config-dir>/grounded-copy/profile`.
-
-</details>
-
-> [!TIP]
-> **Some ordinary phrases also match the rules.** The `without-gerund` rule reports any `-ing` noun after `without`. Use `off` when the task requires wording that the style rules would reject.
-
-## Check a file
-
-From a clone of this repository, run:
-
-```bash
-python3 skills/grounded-copy/scripts/copy_lint.py draft.md
-```
-
-Use `python` if that is your Python 3 command. You can pass several file paths in one call. The checker uses the Python standard library.
-
-Add `--profile chat` to check everyday writing. With no option, or with `--profile copy`, the checker runs every rule.
-
-Each finding gives a line number, the matched text, and a rule name in brackets. Under each group of findings the checker prints one sentence that says what to cut. Revise the sentence using the facts in your source, then run the command again.
-
-To check each file as the agent saves it, see [Check files as the agent saves them](skills/grounded-copy/references/setup.md#check-files-as-the-agent-saves-them) in the setup guide.
-
-| Exit code | Meaning |
-|---|---|
-| `0` | The checker found no matches. |
-| `1` | The file contains wording to review. |
-| `2` | The command arguments or a file could not be read correctly. |
-
-For a Codex plugin installation, the checker is also in the plugin cache:
-
-```bash
-python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/grounded-copy/scripts/copy_lint.py draft.md
-```
-
-Use the version shown by `codex plugin list` in place of `<version>`.
+> **For a faithful translation, set `off` first.** The rules can otherwise prompt the agent to remove a comparison that belongs to the original text.
 
 ## Before and after
 
-The [pattern guide](skills/grounded-copy/references/patterns.md) has more examples.
-
-<details>
-<summary><strong>Seven drafts and the rule each one reports</strong></summary>
-
-<br>
-
-The rule column gives the rule name the checker prints for that draft.
-
-| Draft | Rewrite | Rule |
-|---|---|---|
-| "More than just a project tracker." | "The tracker links tasks to pull requests and posts a summary to Slack each morning." | `more-than-just` |
-| "Acme is a partner, not a vendor." | "Your account manager joins your planning meeting each quarter." | `comma-not-appositive` |
-| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." | `dash-pair-list` |
-| "It's not a task list. It's a workflow." | "Each task moves through review, and the tracker marks it done." | `opener-it-is-not` |
-| "The tracker sends a summary rather than a full report." | "The tracker sends a five-line summary each morning." | `rather-than` |
-| "We answer tickets instead of filing them." | "We reply to every ticket within four business hours." | `instead-of` |
-| "Experts agree the tracker saves time." | "Teams on the tracker closed 18% more issues last quarter, in our 2026 customer survey." | `vague-experts` |
-
-</details>
-
-## What to expect
-
-The plugin gives the agent instructions. It does not scan or block each chat reply. Run the checker on saved files when you need a repeatable check.
-
-A passing result means the text matched none of the checker's patterns. It does not verify facts or guarantee natural writing. Some ordinary phrases also match the rules. Review the meaning before you change them; use `off` when the task requires wording that the style rules would reject.
-
-The checker covers English, Chinese, Japanese, Korean, Russian, Spanish, Arabic, French, and German. English has the most detailed rules. Chinese, Japanese, and Korean checks include sentence patterns. The other languages use phrase lists. A phrase that wraps onto the next line of a paragraph still reports, at the line where it starts. The checker reads through Markdown emphasis, inline HTML tags, and look-alike quotes and dashes.
-
-The [paragraph review](skills/grounded-copy/references/patterns.md#paragraph-review) guides English and other languages toward useful detail and away from repeated enumeration. It includes English examples and a [Chinese supplement](skills/grounded-copy/references/patterns.md#chinese-paragraph-review). Both active plugin profiles and the portable skill carry this guidance. These judgments require context; the checker retains its existing pattern checks.
-
-<details>
-<summary><strong>i18n</strong> · Click to expand</summary>
-
-<br>
-
-| Languages | What the checker matches |
+| Draft | With grounded-copy |
 |---|---|
-| English | 62 rules |
-| Chinese, Japanese, Korean | sentence patterns, plus a list of phrases |
-| Russian, Spanish, Arabic, French, German | a list of 6 to 18 phrases each |
+| "The file isn't missing, it's empty." | "The file is empty." |
+| "Rinse the rice rather than skipping that step." | "Rinse the rice." |
+| "Use olive oil instead of butter." | "Use olive oil." |
+| "More than just a project tracker." | "The tracker links tasks to pull requests and posts a summary to Slack each morning." |
+| "Experts agree the tracker saves time." | "Teams on the tracker closed 18% more issues last quarter, in our 2026 customer survey." |
 
-Some ordinary Japanese and Korean phrases also match; `ja-not-just` and `ko-not-just` report those.
-
-</details>
+The [pattern guide](skills/grounded-copy/references/patterns.md) has more examples.
 
 ## More help
 
-- [Setup](skills/grounded-copy/references/setup.md): profiles, troubleshooting, and project checks.
+- [Setup](skills/grounded-copy/references/setup.md): installation checks, checking a file, and troubleshooting.
 - [Writing rules](skills/grounded-copy/SKILL.md): the instructions the agent reads.
 - [Pattern guide](skills/grounded-copy/references/patterns.md): phrases to review and sample rewrites.
 - [Contributing](CONTRIBUTING.md): how to propose changes.
-- [License](LICENSE): AGPL-3.0-only [NOTICE](NOTICE) carries the copyright.
+- [License](LICENSE): AGPL-3.0-only. [NOTICE](NOTICE) carries the copyright.

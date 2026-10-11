@@ -1,15 +1,13 @@
-README.md	comma-not-appositive	, not
-README.md	dash-pair-list	— email, live chat, phone, and the help centre —
 README.md	instead-of	instead of
 README.md	more-than-just	More than just
-README.md	not-x-its-y	's not a task list. It's a
-README.md	opener-it-is-not	It's not
+README.md	not-x-its-y	The file isn't missing, it's
 README.md	rather-than	rather than
 README.md	vague-experts	Experts agree
-README.zh.md	dash-pair-list	— 邮件、在线客服、电话、帮助中心 —
 README.zh.md	zh-not-just	不仅仅是
 README.zh.md	zh-not-just	告别
-README.zh.md	zh-not-x-but-y	不是供应商，而是
+README.zh.md	zh-not-x-but-y	不是丢了，而是
+README.zh.md	zh-not-x-but-y	不是死了，是
+README.zh.md	zh-not-x-but-y	而不是
 skills/grounded-copy/SKILL.md	instead-of	instead of
 skills/grounded-copy/SKILL.md	no-longer	no longer
 skills/grounded-copy/SKILL.md	not-just	not just

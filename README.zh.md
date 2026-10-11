@@ -3,10 +3,6 @@
 </p>
 
 <p align="center">
-  <strong>给 AI 智能体用的输出规则，附带文案检查脚本。</strong>
-</p>
-
-<p align="center">
   <a href="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml"><img src="https://github.com/HiroHyun/grounded-copy/actions/workflows/copy-lint.yml/badge.svg" alt="Self-test status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-2ea44f.svg" alt="AGPL-3.0-only License"></a>
   <a href="https://www.skills.sh/hirohyun/grounded-copy"><img src="https://www.skills.sh/b/hirohyun/grounded-copy" alt="Skills CLI installs"></a>
@@ -21,36 +17,23 @@
   <a href="#try-it">试着用一次</a> ·
   <a href="#install">安装</a> ·
   <a href="#choose-a-writing-mode">选择写作模式</a> ·
-  <a href="#check-a-file">检查文件</a> ·
   <a href="#before-and-after">改写示例</a> ·
-  <a href="#what-to-expect">使用时需要了解的事</a> ·
   <a href="#more-help">更多说明</a>
 </p>
 
 # grounded-copy
 
-你与智能体（Claude Code、Codex、Cursor 等）对话时，可能会发现它频繁使用生硬的转折和意义不明的破折号，让短短一段回复变得绕口晦涩。`grounded-copy`会在会话开始和每轮对话时提醒智能体使用清楚、直接的表达。
-
-你让智能体写文案的时候，TA用词总是夸张，动不动就来一句“核弹级发布”，宽泛又空洞。`grounded-copy`就会提醒智能体写清楚实际功能、操作步骤和具体事实。草稿保存成文件后，你也可以用 Python 脚本检查措辞。
-
+`grounded-copy` 让 AI 直接陈述事实、把话说到点上，聊天回复和它写的文档都适用。产品页面和营销文案另有一个更严格的模式。
 
 <a id="try-it"></a>
 ## 试着用一次
 
-安装技能后，可以这样对智能体说：
-
-> 帮我写一份日程应用 2.1 版的更新说明。这个版本新增了 Google 日历同步，把导出耗时从 40 秒缩短到 4 秒，并修复了重复发送邀请的问题。 请用 grounded-copy，完成后运行文案检查。
-
-选择安装使用 Claude/Codex 插件的话，开启新对话时只要说：
-
-> 将grounded-copy切换到chat模式与我对话。
-
-智能体会按规则与你对话，避免死板无谓的句式。
+安装后开启新对话，直接提问。写产品页面或营销文案时，先切换到 `copy` 模式。
 
 <a id="install"></a>
 ## 安装
 
-安装脚本需要 Python 3，以及带有 `npx` 的 Node.js。它会查找 Claude Code 和 Codex 的命令行程序，为找到的程序安装插件。它也会调用 Skills CLI，为支持的智能体安装技能。
+安装脚本需要 Python 3，以及带有 `npx` 的 Node.js。它会为找到的 Claude Code 和 Codex 安装插件，并通过 Skills CLI 为其他智能体安装技能。
 
 **macOS、Linux、WSL 或 Git Bash：**
 
@@ -64,7 +47,7 @@ curl -fsSL https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install
 irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | iex
 ```
 
-也可以按需要单独安装：
+只为一个智能体安装：
 
 | 安装到哪里 | 命令 |
 |---|---|
@@ -72,41 +55,14 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
 | Skills CLI 支持的智能体 | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
-技能包含写作规则、示例和检查脚本。Claude Code 和 Codex 插件还会在会话开始时加载规则，并在每次发送提示时加入一条提醒。插件支持保存写作模式。
+插件会在每次对话中应用规则，并保存你的写作模式。单独安装的技能只在智能体判断相关时加载。
 
-单独安装的技能只在智能体判断相关时加载。想让每个会话都应用它，可以用 `--skills-only --always-on` 运行安装脚本。脚本会在 `~/.claude/CLAUDE.md` 和 `~/.codex/AGENTS.md` 中写入一段带标记的简短说明；同一次运行中已安装插件的宿主会被跳过，`--uninstall` 会删除这段说明。
-
-[安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载命令。
-
-<details>
-<summary><strong>更多安装方式</strong> · 点击展开</summary>
-
-<br>
-
-在本仓库的克隆目录中，安装脚本支持这些参数：
-
-```bash
-sh install.sh --dry-run
-python3 install.py --skills-only
-python3 install.py --uninstall
-```
-
-| 能得到什么 | Skills CLI | Claude Code 与 Codex 插件 |
-|---|:---:|:---:|
-| 九种语言的写作规则、示例和检查脚本 | 有 | 有 |
-| 会话开始时加载规则，压缩上下文后再次加载（`SessionStart`） |  | 有 |
-| 每次发送提示时加入一条提醒（`UserPromptSubmit`） |  | 有 |
-| 写作模式在会话之间保存 |  | 有 |
-| 一条切换模式的命令 |  | 有 |
-
-在同一台机器上用两种方式都安装时，Claude Code 可能把 `grounded-copy@skills-dir` 显示为 `Not loaded`。这种情况下由插件提供技能和钩子。
-
-</details>
+[安装说明](skills/grounded-copy/references/setup.md)中有安装检查、Windows 使用说明和卸载方法。
 
 <a id="choose-a-writing-mode"></a>
 ## 选择写作模式
 
-插件把写作模式称为 *profile*。选择会保存下来，重启后仍然有效。
+选择会保存下来，重启后仍然有效。
 
 | 模式 | 适用场景 |
 |---|---|
@@ -134,111 +90,26 @@ $grounded-profile status
 ```
 
 > [!IMPORTANT]
-> **需要忠实翻译原文时，先切换到 `off`。** 否则，智能体可能为了遵守写作规则，删掉原文中有意义的对比。你的明确要求优先于技能规则。
-
-<details>
-<summary><strong>每种模式的开销</strong> · 点击展开</summary>
-
-<br>
-
-| 模式 | 会话开始时增加的字节 | 每轮提醒 |
-|:---:|:---:|:---:|
-| `chat`（默认） | 4,032 | 一行，写明 `chat` |
-| `copy` | 6,292 | 一行，写明 `copy` |
-| `off` | 0 | 无 |
-
-以上是规则正文的字节数。钩子输出还有 106 字节的头部和切换提示，每轮提醒为 238 字节。
-
-选择保存在 `<config-dir>/grounded-copy/profile`。
-
-</details>
-
-> [!TIP]
-> **有些日常表达也会命中规则。** `without-gerund` 规则会报出 `without` 后面的所有 `-ing` 名词。如果任务需要保留某种被规则拦截的表达，可以切换到 `off`。
-
-<a id="check-a-file"></a>
-## 检查文件
-
-在本仓库的克隆目录中运行：
-
-```bash
-python3 skills/grounded-copy/scripts/copy_lint.py draft.md
-```
-
-如果你的 Python 3 命令是 `python`，请替换命令开头。一次可以传入多个文件路径。脚本只用到 Python 标准库。
-
-加上 `--profile chat` 检查日常文字。省略选项或使用 `--profile copy` 时，脚本运行全部规则。
-
-检查结果会列出行号、命中的文字和方括号里的规则名称。每组结果下面有一句话，说明该删掉哪一部分。根据原始资料修改句子，再检查一次。
-
-想让智能体每次保存文件时自动检查，请看安装说明的 [Check files as the agent saves them](skills/grounded-copy/references/setup.md#check-files-as-the-agent-saves-them) 一节。
-
-| 退出码 | 含义 |
-|---|---|
-| `0` | 未发现命中规则的文字。 |
-| `1` | 有需要检查的措辞。 |
-| `2` | 命令参数有误，或文件读取失败。 |
-
-通过 Codex 插件安装后，也可以使用缓存目录里的脚本：
-
-```bash
-python3 ~/.codex/plugins/cache/hirohyun-plugins/grounded-copy/<version>/skills/grounded-copy/scripts/copy_lint.py draft.md
-```
-
-把 `<version>` 换成 `codex plugin list` 显示的版本号。
+> **需要忠实翻译原文时，先切换到 `off`。** 否则，智能体可能为了遵守写作规则，删掉原文中有意义的对比。
 
 <a id="before-and-after"></a>
 ## 改写示例
 
-[表达示例](skills/grounded-copy/references/patterns.md)中有更多改写方法。
-
-<details>
-<summary><strong>四条草稿及各自命中的规则</strong></summary>
-
-<br>
-
-规则栏写出检查脚本为该草稿打印的规则名称。
-
-| 草稿 | 改写 | 规则 |
-|---|---|---|
-| “它不仅仅是一个任务管理工具。” | “它能把任务关联到拉取请求，每天早上把摘要发到 Slack。” | `zh-not-just` |
-| “告别手工整理。” | “脚本每天早上自动生成摘要。” | `zh-not-just` |
-| “它不是供应商，而是合作伙伴。” | “你的客户经理每季度都会参加一次规划会。” | `zh-not-x-but-y` |
-| “Acme 覆盖每个渠道 —— 邮件、在线客服、电话、帮助中心 —— 只用一个队列。” | “Acme 将客户请求集中到一个队列中处理。” | `dash-pair-list` |
-
-</details>
-
-<a id="what-to-expect"></a>
-## 使用时需要了解的事
-
-插件会向智能体提供写作指令，不会逐条扫描或拦截聊天回复。需要可重复的检查时，请把文字保存为文件，再运行脚本。
-
-检查通过表示文字没有命中脚本中的规则。脚本不能核实事实，也不能保证文字自然。有些日常表达也会命中规则，修改前请确认句意。如果任务需要保留某种被规则拦截的表达，可以切换到 `off`。
-
-检查脚本覆盖英语、中文、日语、韩语、俄语、西班牙语、阿拉伯语、法语和德语。英语规则最详细。中文、日语和韩语会检查部分句式，其他语言按短语表匹配。段落内换行的短语同样会被检出，报告的行号是短语开始的那一行。检查脚本会略过 Markdown 强调标记和行内 HTML 标签，并把形似的引号和破折号按标准字符处理。
-
-[段落审读指南](skills/grounded-copy/references/patterns.md#paragraph-review)要求中英文等语言的写作均按读者需要取舍信息，减少反复列举，并提供英文示例和[中文补充指导](skills/grounded-copy/references/patterns.md#chinese-paragraph-review)。插件的 `chat` 与 `copy` 模式及独立技能均包含这份指导。段落质量需要结合语境判断，检查脚本保留原有的模式匹配规则。
-
-<details>
-<summary><strong>多语言现状</strong> · 点击展开</summary>
-
-<br>
-
-| 语言 | 检查脚本匹配的内容 |
+| 草稿 | 使用 grounded-copy 后 |
 |---|---|
-| 英语 | 62 条规则 |
-| 中文、日语、韩语 | 部分句式，以及一份短语表 |
-| 俄语、西班牙语、阿拉伯语、法语、德语 | 各有一份 6 至 18 条的短语表 |
+| “文件不是丢了，而是空的。” | “文件是空的。” |
+| “这盆花不是死了，是在休眠。” | “这盆花在休眠。” |
+| “先淘米，而不是直接下锅。” | “先淘米。” |
+| “它不仅仅是一个任务管理工具。” | “它能把任务关联到拉取请求，每天早上把摘要发到 Slack。” |
+| “告别手工整理。” | “脚本每天早上自动生成摘要。” |
 
-有些日语和韩语的日常表达也会命中，`ja-not-just` 和 `ko-not-just` 会报出这类用法。
-
-</details>
+[表达示例](skills/grounded-copy/references/patterns.md)中有更多改写方法。
 
 <a id="more-help"></a>
 ## 更多说明
 
-- [安装说明](skills/grounded-copy/references/setup.md)：模式切换、问题排查和项目检查。
+- [安装说明](skills/grounded-copy/references/setup.md)：安装检查、检查文件和问题排查。
 - [写作规则](skills/grounded-copy/SKILL.md)：智能体读取的指令。
 - [表达示例](skills/grounded-copy/references/patterns.md)：需要检查的措辞和改写方法。
 - [贡献指南](CONTRIBUTING.md)：如何提交修改。
-- [许可证](LICENSE)：AGPL-3.0-only 版权声明见 [NOTICE](NOTICE)。
+- [许可证](LICENSE)：AGPL-3.0-only，版权声明见 [NOTICE](NOTICE)。
