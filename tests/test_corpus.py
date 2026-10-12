@@ -85,7 +85,7 @@ class LocaleCoverageTests(unittest.TestCase):
 
     def test_every_rule_reports_a_corpus_line(self):
         copy_lint = linter()
-        self.assertEqual(len(locale_rules()), 2,
+        self.assertEqual(len(locale_rules()), 3,
                          "the locale rule set changed size")
         rules = [name for name, _ in copy_lint.PATTERNS + copy_lint.OPENERS
                  + copy_lint.BLOCK_PATTERNS]
@@ -233,7 +233,7 @@ class ReversalGapTests(unittest.TestCase):
         ("zh-not-just", "Acme 不仅仅是一个工具。"),  # shipped
         ("zh-not-just", "Acme 不僅僅是一個工具。"),
         ("zh-not-just", "Acme 不光是一个工具。"),
-        ("zh-not-just", "告別繁瑣的對賬流程。"),
+        ("zh-slogan", "告別繁瑣的對賬流程。"),
         ("zh-not-x-but-y", "它不是善意，是一套算出来的生意。"),  # shipped
         ("zh-not-x-but-y", "我并非作者，只是普通用户。"),
         ("zh-not-x-but-y", "与其说它是工具，不如说它是平台。"),

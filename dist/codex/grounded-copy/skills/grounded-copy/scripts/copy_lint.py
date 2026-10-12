@@ -291,9 +291,10 @@ PATTERNS = [
     # Simplified and Traditional forms. 不[仅僅]{1,2}(?:只)?是 covers 不仅是,
     # 不仅仅是, 不僅僅是, and 不仅仅只是.
     ("zh-not-just",
-     _c(r"不仅仅是|不只是|不仅是|不止是|不再是|不只提供|告别|"
-        r"重新定义|颠覆|"
-        r"不[仅僅]{1,2}(?:只)?是|不光是|不[单單]{1,2}是|告別|重新定義|顛覆")),
+     _c(r"不仅仅是|不只是|不仅是|不止是|不再是|不只提供|"
+        r"不[仅僅]{1,2}(?:只)?是|不光是|不[单單]{1,2}是")),
+    # The slogan words run under `copy`, where their English twins run.
+    ("zh-slogan", _c(r"告别|重新定义|颠覆|告別|重新定義|顛覆")),
     # The reversal reveal: negate, then assert. The first arm closes on 而是,
     # or on a 是 that opens the next clause after a comma. A concession joined
     # by 但是, 可是, or 还是 passes, and so does the either-or 不是A，就是B. Each
@@ -380,7 +381,7 @@ GROUPS = (
       "days-are-over", "in-todays-world", "in-an-era-of", "look-no-further",
       "where-x-meets-y", "turning-point", "redefine-family",
       "not-your-average", "goes-beyond", "is-more-than-a", "unlike-others",
-      "while-others", "fragment-reversal")),
+      "while-others", "fragment-reversal", "zh-slogan")),
     ("copy",
      "The sentence opens with a hook. Open with the fact.",
      ("opener-it-is-not", "opener-dont-just", "opener-we-are-not",

@@ -200,7 +200,9 @@ A trailing phrase can add praise too: ", highlighting our commitment to quality"
 
 The checker knows the phrases below. Review the rest of the text yourself.
 
-Triggers: 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 告别… / 重新定义 / 颠覆 / 不僅僅是 / 告別 / 重新定義 / 顛覆 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y / 不是 X，而是 Y
+Triggers: 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 不僅僅是 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y / 不是 X，而是 Y
+
+In `copy` mode the checker also reports 告别… / 重新定义 / 颠覆 / 告別 / 重新定義 / 顛覆.
 
 When translating a draft written under these rules, keep its facts and use natural sentences in the target language. For a faithful translation of supplied text, preserve its intended comparisons and use the profile off as needed.
 

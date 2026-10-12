@@ -4,10 +4,10 @@ README.md	not-x-its-y	The file isn't missing, it's
 README.md	rather-than	rather than
 README.md	vague-experts	Experts agree
 README.zh.md	zh-not-just	不仅仅是
-README.zh.md	zh-not-just	告别
 README.zh.md	zh-not-x-but-y	不是丢了，而是
 README.zh.md	zh-not-x-but-y	不是死了，是
 README.zh.md	zh-not-x-but-y	而不是
+README.zh.md	zh-slogan	告别
 skills/grounded-copy/SKILL.md	instead-of	instead of
 skills/grounded-copy/SKILL.md	no-longer	no longer
 skills/grounded-copy/SKILL.md	not-just	not just
@@ -152,12 +152,6 @@ skills/grounded-copy/references/patterns.md	zh-not-just	不再是
 skills/grounded-copy/references/patterns.md	zh-not-just	不单是
 skills/grounded-copy/references/patterns.md	zh-not-just	不只是
 skills/grounded-copy/references/patterns.md	zh-not-just	不止是
-skills/grounded-copy/references/patterns.md	zh-not-just	告別
-skills/grounded-copy/references/patterns.md	zh-not-just	告别
-skills/grounded-copy/references/patterns.md	zh-not-just	重新定义
-skills/grounded-copy/references/patterns.md	zh-not-just	重新定義
-skills/grounded-copy/references/patterns.md	zh-not-just	顛覆
-skills/grounded-copy/references/patterns.md	zh-not-just	颠覆
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是丢了，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是免费帮忙，是
@@ -166,3 +160,9 @@ skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是看中价格，
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是等待，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	与其说 X，不如说
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	并非 X，而是
+skills/grounded-copy/references/patterns.md	zh-slogan	告別
+skills/grounded-copy/references/patterns.md	zh-slogan	告别
+skills/grounded-copy/references/patterns.md	zh-slogan	重新定义
+skills/grounded-copy/references/patterns.md	zh-slogan	重新定義
+skills/grounded-copy/references/patterns.md	zh-slogan	顛覆
+skills/grounded-copy/references/patterns.md	zh-slogan	颠覆
