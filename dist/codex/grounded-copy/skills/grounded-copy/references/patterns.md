@@ -20,6 +20,7 @@ Each rewrite is its draft with the contrast half removed.
 | "He wasn't fired, he quit." | "He quit." |
 | "The printer isn't broken, it needs paper." | "The printer needs paper." |
 | "You don't need a gym, you need a routine." | "You need a routine." |
+| "文件不是丢了，而是空的。" | "文件是空的。" |
 
 Keep the second half when the reader raised it. If someone asked about butter, "Use olive oil; butter burns at this heat." answers them.
 

@@ -70,8 +70,8 @@ What each profile adds to a session:
 
 | Profile | Bytes at session start | Turn reminder |
 |:---:|:---:|:---:|
-| `chat` (default) | 4,032 | 238 bytes |
-| `copy` | 6,224 | 238 bytes |
+| `chat` (default) | 4,072 | 238 bytes |
+| `copy` | 6,264 | 238 bytes |
 | `off` | 0 | none |
 
 Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line.

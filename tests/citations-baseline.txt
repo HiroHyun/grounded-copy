@@ -159,6 +159,7 @@ skills/grounded-copy/references/patterns.md	zh-not-just	重新定義
 skills/grounded-copy/references/patterns.md	zh-not-just	顛覆
 skills/grounded-copy/references/patterns.md	zh-not-just	颠覆
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是 X，而是
+skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是丢了，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是免费帮忙，是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是提交后立即生效，而是
 skills/grounded-copy/references/patterns.md	zh-not-x-but-y	不是看中价格，而是
