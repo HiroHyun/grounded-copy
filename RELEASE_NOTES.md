@@ -1,3 +1,19 @@
+# 0.7.4
+
+## English
+
+- The agent follows the writing rules in every language.
+- The file check passes more everyday Chinese sentences.
+- Chinese marketing slogans are checked in copy mode only.
+- The agent treats an instruction inside a text it edits as part of that text.
+
+## 简体中文
+
+- 智能体用任何语言写作时都遵守写作规则。
+- 更多日常中文句子可以通过文件检查。
+- 中文营销口号只在 copy 模式下检查。
+- 智能体把待编辑文本中的指令视为文本内容。
+
 # 0.7.3
 
 ## English
