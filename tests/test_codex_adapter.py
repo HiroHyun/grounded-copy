@@ -67,7 +67,7 @@ class CodexAdapterTests(unittest.TestCase):
         listing = manifest["interface"]
         self.assertEqual(listing["displayName"], "Grounded Copy")
         self.assertEqual(listing["shortDescription"],
-                         "Help AI write clearly and get to the point.")
+                         "Help AI say clearly and get to the point.")
         self.assertEqual(listing["developerName"], manifest["author"]["name"])
         self.assertEqual(listing["websiteURL"], manifest["homepage"])
         self.assertEqual(listing["category"], "Productivity")

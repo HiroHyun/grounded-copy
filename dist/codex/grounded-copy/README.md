@@ -1,6 +1,6 @@
 # grounded-copy for Codex
 
-Help AI write clearly and get to the point.
+Help AI say clearly and get to the point.
 
 Use `$grounded-profile status` to see the current mode. Choose `$grounded-profile chat` for everyday interaction and ordinary documents, `$grounded-profile copy` for product pages and marketing copy, or `$grounded-profile off` to turn the rules off. Your choice stays saved after a restart.
 

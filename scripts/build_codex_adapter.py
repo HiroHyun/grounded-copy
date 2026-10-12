@@ -113,7 +113,7 @@ def _codex_entrypoint(name):
 
 MANIFEST = json.dumps({
     "name": "grounded-copy", "version": VERSION,
-    "description": "Help AI write clearly and get to the point.",
+    "description": "Help AI say clearly and get to the point.",
     "author": {"name": "HiroHyun", "url": "https://github.com/HiroHyun"},
     "homepage": "https://github.com/HiroHyun/grounded-copy",
     "repository": "https://github.com/HiroHyun/grounded-copy",
@@ -121,7 +121,7 @@ MANIFEST = json.dumps({
     "skills": "./skills/", "hooks": "./hooks/hooks.json",
     "interface": {
         "displayName": "Grounded Copy",
-        "shortDescription": "Help AI write clearly and get to the point.",
+        "shortDescription": "Help AI say clearly and get to the point.",
         "longDescription": (
             "Grounded Copy makes the agent get to the point in chat replies "
             "and documents, with a separate mode for product pages and "
@@ -233,7 +233,7 @@ if __name__ == "__main__":
 
 README = """# grounded-copy for Codex
 
-Help AI write clearly and get to the point.
+Help AI say clearly and get to the point.
 
 Use `$grounded-profile status` to see the current mode. Choose `$grounded-profile chat` for everyday interaction and ordinary documents, `$grounded-profile copy` for product pages and marketing copy, or `$grounded-profile off` to turn the rules off. Your choice stays saved after a restart.
 

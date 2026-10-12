@@ -2,7 +2,7 @@
   "name": "hirohyun-plugins",
   "interface": {
     "displayName": "HiroHyun plugins",
-    "shortDescription": "Help AI write clearly and get to the point."
+    "shortDescription": "Help AI say clearly and get to the point."
   },
   "plugins": [
     {
@@ -11,7 +11,7 @@
         "source": "local",
         "path": "./dist/codex/grounded-copy"
       },
-      "description": "Help AI write clearly and get to the point.",
+      "description": "Help AI say clearly and get to the point.",
       "version": "0.7.5",
       "license": "AGPL-3.0-only",
       "category": "productivity",
