@@ -1,0 +1,40 @@
+hooks/_policy.py
+  s_1c5f8dc7c37cbc::t_4bc5c9917bad01 95-96
+tests/test_codex_adapter.py
+  s_1c5f8dc7c37cbc::t_6380a16defe486 360-361,367-368
+skills/grounded-copy/SKILL.md
+  s_1c5f8dc7c37cbc::t_8b98a6e1bfd5a8 118
+  s_1c5f8dc7c37cbc::t_41e10565303ee7 28
+  s_1c5f8dc7c37cbc::t_0d47c3bc339cd2 61
+  s_1c5f8dc7c37cbc::t_072c6222247548 47-57
+  s_1c5f8dc7c37cbc::t_715a9f9bae0cdc 30
+  s_1c5f8dc7c37cbc::t_435325ab351253 63
+  s_1c5f8dc7c37cbc::t_9f6273f253f960 76
+  s_1c5f8dc7c37cbc::t_47f335559d0b54 90
+tests/test_hooks.py
+  s_1c5f8dc7c37cbc::t_6380a16defe486 227-228,234-235
+skills/grounded-copy/references/setup.md
+  s_1c5f8dc7c37cbc::t_4bc5c9917bad01 73-74
+dist/codex/grounded-copy/hooks/_policy.py
+  s_1c5f8dc7c37cbc::t_a8ae6a1fd391ff 95-96
+dist/codex/grounded-copy/skills/grounded-copy/SKILL.md
+  s_1c5f8dc7c37cbc::t_0916ac8cdb6a2c 28,30,47-57,61,63,76,90,118
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_1c5f8dc7c37cbc::t_8b35d0677a9a33 73-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9d4c3ed19b6ccf4fe7132c49f7c5c76b9d6af911",
+  "prompts": {},
+  "sessions": {
+    "s_1c5f8dc7c37cbc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7805edec-fca1-4559-ab01-ced013ca7162",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
