@@ -1,3 +1,15 @@
+# 0.7.5
+
+## English
+
+- The agent cuts a list down to the items you will act on.
+- The agent reviews English paragraphs for the same problems as Chinese ones.
+
+## 简体中文
+
+- 智能体列举时只保留读者用得上的项目。
+- 智能体审读英文段落时，检查的问题与中文段落相同。
+
 # 0.7.4
 
 ## English
