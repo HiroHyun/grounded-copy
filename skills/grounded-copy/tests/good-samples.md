@@ -40,3 +40,4 @@ The train sets down only (passengers are not supposed to board), it leaves early
 By slow I don't mean lazy, I mean careful.
 "Risk" doesn't mean "loss". It means variance.
 I don't drink coffee, I drink tea.
+The blade is no longer than 3 inches.

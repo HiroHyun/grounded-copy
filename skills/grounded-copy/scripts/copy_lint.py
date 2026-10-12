@@ -134,7 +134,8 @@ PATTERNS = [
         r"weren't|were\s+not|(?:is|was|are|were)\s+never)\s+"
         r"(?:(?:really|just|only|actually)\s+)?about\b")),
     ("its-about", _c(r"\bit'?s\s+about\s+\w+[^.!?\n]{0,40}\bnot\b")),
-    ("no-longer", _c(r"\bno\s+longer\b")),
+    # "no longer than 3 inches" is a length.
+    ("no-longer", _c(r"\bno\s+longer\b(?!\s+than\b)")),
     ("gone-are-the-days", _c(r"\bgone\s+are\s+the\s+days\b")),
     ("days-are-over",
      _c(r"\bthe\s+days\s+of\b[^.!?\n]{0,60}\bare\s+"
