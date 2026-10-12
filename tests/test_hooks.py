@@ -224,15 +224,15 @@ class SessionPolicyTests(HookCase):
                 with self.subTest(profile=profile, output=result.args):
                     self.assertEqual(result.returncode, 0, result.stderr)
                     self.assertIn("Chinese paragraph review", result.stdout)
-                    self.assertIn("In English and other languages", result.stdout)
-                    self.assertIn("Read Paragraph review", result.stdout)
+                    self.assertIn("in every language", result.stdout)
+                    self.assertIn("under Paragraph review", result.stdout)
                     self.assertIn("Splitting them across sentences or bullets", result.stdout)
                     self.assertIn("references/patterns.md", result.stdout)
                     self.assertIn("Select facts for the reader's purpose", result.stdout)
                     self.assertIn("Omit incidental details", result.stdout)
                     self.assertIn("Honor explicit requests for complete coverage", result.stdout)
-                    for concern in ("dense lists", "repeated frames", "translationese",
-                                    "redundant words", "register shifts"):
+                    for concern in ("a list that restates one point", "a sentence frame used again",
+                                    "a lead-in that delays", "repeated close by", "a shift in register"):
                         self.assertIn(concern, result.stdout)
 
     def test_both_profiles_carry_every_core_section(self):

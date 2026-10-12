@@ -92,8 +92,8 @@ DIRECTIVE_LEAD_EMPTY = (
 # and paragraph review across languages. These count the rules body alone; hook stdout
 # adds the header and switch line, 106 bytes. The setup guide publishes the same figures under
 # "Profile lifecycle", and `grounded_activate.py --self-test` reports the current ones.
-BASELINE_BYTES = 4072
-COPY_BASELINE_BYTES = 6264
+BASELINE_BYTES = 4146
+COPY_BASELINE_BYTES = 6163
 TURN_BASELINE_BYTES = 238
 
 # (floor, ceiling) per payload. The ceiling bounds growth against the figure the
