@@ -86,15 +86,38 @@ A list between paired dashes separates the subject from its verb. Remove the lis
 
 Apply this review to English and other languages. Decide what the reader needs from the paragraph, then select the facts that serve that purpose. A fact can be accurate and still be unnecessary here. Omit incidental details and keep the resulting claim within what the source supports.
 
-In English, watch for noun lists and chains of actions that keep restating one point. Adjacent sentences can form a catalog even when each sentence names only one item. Remove details that add no useful meaning, then explain the supported relationship between the remaining ideas. A shorter summary must keep any condition that changes the reader's conclusion or next step.
+The checker reports none of the five points below. Length and punctuation counts alone do not establish quality. Read first for what belongs, then for how the sentences read.
 
-Changing commas to semicolons or moving each item into a bullet leaves the information burden intact. Review the whole passage again after cutting: make its point clear and connect the remaining details. Length and punctuation counts alone do not establish quality.
+### Dense lists
+
+Watch for noun lists and chains of actions that keep restating one point. Remove details that add no useful meaning, then explain the supported relationship between the remaining ideas. A shorter summary must keep any condition that changes the reader's conclusion or next step.
+
+Changing commas to semicolons or moving each item into a bullet leaves the information burden intact. Review the whole passage again after cutting: make its point clear and connect the remaining details.
+
+### Repeated frames
+
+Adjacent sentences can form a catalog even when each sentence names only one item. Watch for neighboring sentences that open the same way. Cut what repeats, and give what is left its own subject and verb.
+
+### Lead-ins
+
+A lead-in announces a statement and delays it. Start with the statement. When a sentence stops at a colon, check that what follows explains what came before. A colon is ordinary punctuation, and one sentence shape alone proves nothing.
+
+### Close repetition
+
+When the same sentence or the next one repeats a time, a degree, or a judgment and adds nothing, say it once. Keep a repeated term where the reader needs it to follow the reference. A near-synonym with another meaning is no repair.
+
+### Register
+
+Match the reader and the task: plain speech for an everyday explanation, formal wording for an application or a report. Keep the meaning when you smooth a shift. Archaic words and business jargon slow a reader too.
 
 | Context | Draft | Rewrite |
 |---|---|---|
 | A user-facing update about a fix for interrupted uploads. | "The fix changes chunk IDs, checksum records, and retry queues so interrupted uploads can resume." | "Interrupted uploads can now resume." |
 | Introduce a task board's purpose to a new teammate. | "The board shows owners, dates, priorities, and next steps. Teammates can see who owns each task and what happens next." | "The board shows who owns each task and what happens next." |
 | Explain how a team reviews blocked tasks. | "We read the status. We read the owner. We read the due date. We read the blocker note. We then ask the owner what is needed to unblock the task." | "We review blocked tasks and ask each owner what is needed to continue." |
+| An editing note on two abstracts that both lack the experimental conditions. | "As for the second abstract, the situation is the same: it also lacks the experimental conditions." | "The second abstract also lacks the experimental conditions." |
+| A project plan for a system that collects and displays device status. | "While the system runs, it will continuously collect device status and continuously display device status." | "While the system runs, it collects and displays device status." |
+| A formal report on an alarm log search that helps staff trace faults. | "The system offers an alarm log search, so when stuff breaks you can dig around." | "The system offers an alarm log search so staff can trace faults." |
 
 Use the task to decide what belongs. Explicit requests for a complete inventory still require complete coverage.
 
