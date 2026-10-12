@@ -21,6 +21,10 @@ Call _unlock_mutex before the write, and pass *args to the planner.
 Usage: python copy_lint.py FILE
 Note: Stop the server before the upgrade.
 并非所有文件都是只读的。
+他不是本地人，但是在镇上住了十年。
+这里不是市中心，可是交通很方便。
+门票不是很贵，还是值得一去。
+他周末不是在看书，就是在写字。
 The pan is not oven-safe because it has a plastic handle.
 Use the freezer. The fridge stales bread faster.
 The queue takes email, live chat, and phone.

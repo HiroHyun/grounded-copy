@@ -3,7 +3,7 @@
 
 Scans text for contrastive-reversal rhetoric, negation-framing, banned
 openers, suspended lists, vague attribution, and hype vocabulary
-(EN + zh/ru/es/ar/fr/de/ja/ko equivalents).
+(English and Chinese).
 
 Every rule sits in a group, and the group names the profile that runs it.
 `--profile chat` runs the `chat` groups. `--profile copy`, or no option, runs
@@ -294,12 +294,14 @@ PATTERNS = [
      _c(r"不仅仅是|不只是|不仅是|不止是|不再是|不只提供|告别|"
         r"重新定义|颠覆|"
         r"不[仅僅]{1,2}(?:只)?是|不光是|不[单單]{1,2}是|告別|重新定義|顛覆")),
-    # The reversal reveal: negate, then assert. The connector slot (而 / 或 /
-    # 却 / one word / nothing) sits inside the gap class, so the pattern holds
-    # one bounded quantifier and cannot backtrack past it. The 并非 arm needs
-    # a comma before the claim, so 并非所有文件都是只读的 passes.
+    # The reversal reveal: negate, then assert. The first arm closes on 而是,
+    # or on a 是 that opens the next clause after a comma. A concession joined
+    # by 但是, 可是, or 还是 passes, and so does the either-or 不是A，就是B. Each
+    # arm holds one bounded quantifier. The 并非 arm needs a comma before the
+    # claim, so 并非所有文件都是只读的 passes.
     ("zh-not-x-but-y",
-     _c(r"不是[^。！？；\n]{0,32}是|而不是|不在于[^。！？；\n]{0,32}而在于|"
+     _c(r"不是[^。！？；\n]{0,32}(?:而是|[，,、]\s*(?:才|更|这|這|那)?是)|"
+        r"而不是|不在于[^。！？；\n]{0,32}而在于|"
         r"不在於[^。！？；\n]{0,32}而在於|"
         r"[并並]非[^。！？；，,\n]{1,20}[，,]\s*(?:而是|只是|是)|"
         r"[与與]其[说說][^。！？；\n]{0,32}不如[说說]")),
