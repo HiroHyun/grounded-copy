@@ -1,0 +1,35 @@
+scripts/build_dsh_adapter.py
+  s_7400d4a9abf0d5::t_4b690bd9ac4a49 7-9
+  s_7400d4a9abf0d5::t_345afbf435f7c5 169,172,177-194
+  s_7400d4a9abf0d5::t_4fdc4dcceba7c3 263-266
+  s_7400d4a9abf0d5::t_8ee2b3ac1e7cef 209,211,213
+skills/grounded-copy/references/setup.md
+  s_7400d4a9abf0d5::t_101fe72a14c706 54,57,60
+  s_7400d4a9abf0d5::t_3944f4033ed061 20
+dist/codex/grounded-copy/skills/grounded-copy/references/setup.md
+  s_7400d4a9abf0d5::t_fc4ecad0edc704 20,54,57,60
+dist/dsh/grounded-copy/README.md
+  s_7400d4a9abf0d5::t_556b6cb2e527db 9,11,13
+dist/dsh/grounded-copy/package.json
+  s_7400d4a9abf0d5::t_5f34af2fb7027f 6-17
+dist/dsh/grounded-copy/skills/grounded-copy/references/setup.md
+  s_7400d4a9abf0d5::t_4661776d987e71 20,54,57,60
+package.json
+  s_7400d4a9abf0d5::t_62ece1aa0cdabe 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c042fc52805d57f65612cac6492ad1c41d11e116",
+  "prompts": {},
+  "sessions": {
+    "s_7400d4a9abf0d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "219ec0a5-55ac-4ccb-ac6c-6bd904f7e963",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
