@@ -1,0 +1,23 @@
+README.zh.md
+  s_901b8684cae8d8::t_dee43aa68f57f1 2-5,27,36-49,127-140,144-149
+README.md
+  s_901b8684cae8d8::t_dee43aa68f57f1 2-5,27,36-49,124-136,139-144
+tests/citations-baseline.txt
+  s_901b8684cae8d8::t_178ce795d95c04 1-2,4,6-7,9-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a40fbf93df113ef65352ad45d726aae01981ae30",
+  "prompts": {},
+  "sessions": {
+    "s_901b8684cae8d8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a89169da-d0f8-40fb-9dda-da8cbc7629ac",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
