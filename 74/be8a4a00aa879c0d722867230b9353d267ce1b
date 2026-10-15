@@ -1,0 +1,32 @@
+dist/codex/grounded-copy/hooks/grounded_activate.py
+  s_7400d4a9abf0d5::t_0e6ebb1d41c7a8 4-6,17,68-74
+dist/codex/grounded-copy/hooks/_policy.py
+  s_7400d4a9abf0d5::t_0e6ebb1d41c7a8 92-93
+tests/test_launchers.py
+  s_7400d4a9abf0d5::t_e97cd117afa5fe 381-382
+hooks/_policy.py
+  s_7400d4a9abf0d5::t_5d83204f183b0f 92-93
+tests/test_hooks.py
+  s_7400d4a9abf0d5::t_8685d3972c1d04 205-207
+  s_7400d4a9abf0d5::t_5282c6bc885b57 131-142
+hooks/grounded_activate.py
+  s_7400d4a9abf0d5::t_70a8111d63febb 4-6
+  s_7400d4a9abf0d5::t_0f270a5dd90ffd 17
+  s_7400d4a9abf0d5::t_5350afaba40680 62-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "74be8a4a00aa879c0d722867230b9353d267ce1b",
+  "prompts": {},
+  "sessions": {
+    "s_7400d4a9abf0d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "219ec0a5-55ac-4ccb-ac6c-6bd904f7e963",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
