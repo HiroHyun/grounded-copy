@@ -1,0 +1,56 @@
+skills/grounded-copy/scripts/copy_lint.py
+  s_901b8684cae8d8::t_dec1dd6c414bb1 181
+  s_901b8684cae8d8::t_05a13cb01d99e8 217-219,221-222,224-226
+  s_901b8684cae8d8::t_460e719506a11f 524-526
+  s_901b8684cae8d8::t_3cce266961ab10 276-277,279-283
+  s_901b8684cae8d8::t_39d40e32c0eb51 450-452
+  s_901b8684cae8d8::t_012dab94237087 64
+  s_901b8684cae8d8::t_e47c22419203da 463-464
+  s_901b8684cae8d8::t_dd3f784097e7a9 154-158,162-163
+  s_901b8684cae8d8::t_62707fa37a66ea 223
+  s_901b8684cae8d8::t_5ee15ac489fe69 303-304,306-307
+  s_901b8684cae8d8::t_d9a8dbd7727176 236-239
+  s_901b8684cae8d8::t_2e0b9625b3bcaa 271
+  s_901b8684cae8d8::t_59a06ad89e6398 145-147
+  s_901b8684cae8d8::t_667b08e82e7d87 175-178,182-184,189
+  s_901b8684cae8d8::t_11ac886c08a25e 377-381,384-385
+  s_901b8684cae8d8::t_d88608bb9028b8 291
+  s_901b8684cae8d8::t_ccf49a237e3803 105-109
+tests/test_corpus.py
+  s_901b8684cae8d8::t_a04c68af6bf528 268-270
+dist/codex/grounded-copy/skills/grounded-copy/tests/good-samples.md
+  s_901b8684cae8d8::t_9d094d0854297c 44-53
+tests/citations-baseline.txt
+  s_901b8684cae8d8::t_9d094d0854297c 28-29,31,94-95,128,135-136,139,142-143
+dist/codex/grounded-copy/skills/grounded-copy/tests/bad-samples.md
+  s_901b8684cae8d8::t_9d094d0854297c 144-154
+skills/grounded-copy/tests/bad-samples.md
+  s_901b8684cae8d8::t_a04c68af6bf528 144-154
+dist/codex/grounded-copy/skills/grounded-copy/references/patterns.md
+  s_901b8684cae8d8::t_9d094d0854297c 140-142,155-156,169,225
+  s_901b8684cae8d8::t_84ac782f508fb6 226
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_901b8684cae8d8::t_9d094d0854297c 64,105-109,145-147,154-158,162-163,175-178,181-184,189,217-219,221-226,236-239,271,276-277,279-283,291,303-304,306-307,377-381,384-385,450-452,463-464,524-526
+skills/grounded-copy/tests/good-samples.md
+  s_901b8684cae8d8::t_a04c68af6bf528 44-51,53
+  s_901b8684cae8d8::t_b645b430654a97 52
+skills/grounded-copy/references/patterns.md
+  s_901b8684cae8d8::t_0d10c1755a93da 140-142,155-156,169,225
+  s_901b8684cae8d8::t_ef21cde2553298 226
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e1ed4865b69990fdbb8c8e759edad9ca91b492e7",
+  "prompts": {},
+  "sessions": {
+    "s_901b8684cae8d8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a89169da-d0f8-40fb-9dda-da8cbc7629ac",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
