@@ -1,3 +1,15 @@
+# 0.7.7
+
+## English
+
+- The plugin works in DeepSeek Harness (dsh). The setup guide gives the one install command.
+- On Windows, the writing rules reach the agent exactly as written.
+
+## 简体中文
+
+- 插件支持 DeepSeek Harness（dsh），安装命令见安装说明。
+- 在 Windows 上，写作规则原样送达智能体。
+
 # 0.7.6
 
 ## English
