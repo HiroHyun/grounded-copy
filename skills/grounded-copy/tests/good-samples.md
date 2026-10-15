@@ -41,3 +41,13 @@ By slow I don't mean lazy, I mean careful.
 "Risk" doesn't mean "loss". It means variance.
 I don't drink coffee, I drink tea.
 The blade is no longer than 3 inches.
+You can't just store files.
+Acme cannot simply store files.
+Grilling isn't essential — frying or baking works too.
+I'm not an expert, but I would try a lower heat.
+I'm not used to thick pancakes, they are usually thin here.
+The paint is not toxic, it is not flammable, and it dries fast.
+I think once the paint isn't wet, it is safe to touch.
+Prices run $10–$20 for basic, $30, or $45–$60 for premium.
+The journey takes seven hours.
+Unlock your phone before you board.

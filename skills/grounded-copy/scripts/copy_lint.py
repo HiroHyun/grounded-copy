@@ -61,7 +61,7 @@ _SUBORD = (r"(?:if|when|whenever|while|whilst|although|though|even|given|now|"
            r"provided|assuming|supposing|as|since|because|where|unless|once|"
            r"until|whether|for|after|before)\b")
 _INNER = (r"\b(?:if|when|whenever|while|whilst|although|though|because|unless|"
-          r"until|whether)\b")
+          r"until|whether|once|as\s+long\s+as|so\s+long\s+as)\b")
 _SECOND = (r"(?:it|this|that|they|we|he|she|you|i)"
            r"(?:'s|'re|'m|\s+(?:is|are|was|were|am))\b")
 # Pieces of the comma-spliced denial with a plain verb: "He wasn't fired, he
@@ -102,8 +102,11 @@ PATTERNS = [
      _c(r"\bnot\s+(?:(?:really|actually|even|quite|necessarily|always)\s+)?"
         + _JUST + "|" + _DENIAL + _GAP + _SEP + _PRON + _JUST
         + "|" + _DENIAL + _GAP + r"\.\s+just\b")),
-    # Any contracted auxiliary: "doesn't just", "can't just", "wouldn't only".
-    ("doesnt-just", _c(r"\b(?:\w+n't|cannot|never)\s+" + _JUST)),
+    # A do, be, or have denial: "doesn't just", "isn't only", "never simply".
+    # A modal states a limit ("you can't just withdraw it") and passes.
+    ("doesnt-just",
+     _c(r"\b(?:(?:do|does|did|is|are|was|were|has|have|had|ai)n't|never)\s+"
+        + _JUST)),
     # The slogan "No hidden fees, just simple pricing." One or two words after
     # "no", then "just", with no word in front of "no". A status line with a
     # verb in the denial ("No fix was needed, just a restart.") runs longer.
@@ -139,20 +142,25 @@ PATTERNS = [
     ("gone-are-the-days", _c(r"\bgone\s+are\s+the\s+days\b")),
     ("days-are-over",
      _c(r"\bthe\s+days\s+of\b[^.!?\n]{0,60}\bare\s+"
-        r"(?:over|behind|gone|numbered)\b")),
+        r"(?:over|behind|gone|numbered)\b"
+        r"|\bthe\s+era\s+of\b[^.!?\n]{0,60}\bis\s+over\b"
+        r"|\ba\s+thing\s+of\s+the\s+past\b|\blong\s+gone\b")),
     ("rather-than", _c(r"\brather\s+than\b")),
     ("instead-of", _c(r"\binstead\s+of\b")),
     ("as-opposed-to", _c(r"\bas\s+opposed\s+to\b")),
     ("say-goodbye-hello", _c(r"\bsay\s+(?:goodbye|hello|farewell)\b")),
     ("no-more-x", _c(r"\bno\s+more\s+(?!than\b)\w+")),
     ("never-again", _c(r"\bnever\s+again\b")),
-    # Arm 1: "not" or a contracted negation, a determiner, then "but". Arm 2:
-    # a preposition or "because" after the negation and the same word after
-    # "but" ("not in the config but in the loader"). The repeat keeps "try not
-    # to restart the server, but drain it first" out.
+    # Arm 1: "not" or a contracted negation, a determiner, then "but". A clause
+    # after "but" makes a concession and passes: "I'm not an expert, but I
+    # would try it." Arm 2: a preposition or "because" after the negation and
+    # the same word after "but" ("not in the config but in the loader"). The
+    # repeat keeps "try not to restart the server, but drain it first" out.
     ("not-x-but-y",
      _c(r"(?:\bnot|n't)\s+(?:a|an|the|your|my|our|his|her|its|their|this|"
         r"that|these|those)\b[^.!?\n]{0,60}?,?\s+but\b"
+        r"(?!\s+(?:i|you|we|he|she|it|they|there|if|when|what|please|maybe|"
+        r"perhaps|probably)\b)"
         r"|(?:\bnot|n't)\s+(because|to|for|by|in|on|with|from)\b"
         r"[^.!?\n]{0,60}?,?\s+but\s+\1\b")),
     # "Acme isn't a tool, it's a platform", with any subject. Arm 1: a clause
@@ -164,15 +172,21 @@ PATTERNS = [
     # quit." Arm 5: a noun subject and a plain verb, comma only, as in "The
     # printer isn't broken, it needs paper." Arms 4 and 5 also report a comma
     # splice of two facts ("The pan isn't oven-safe, it has a plastic
-    # handle."); "because" in place of the comma repairs it.
+    # handle."); "because" in place of the comma repairs it. Arm 1 passes a
+    # hedge ("I'm not sure"), a person who denies and then names a thing ("I'm
+    # not used to it, they are dense"), and a second denial ("it is not
+    # flammable, it is not explosive"); arm 3 passes the second denial too.
     ("not-x-its-y",
      _c(_CLAUSE + r"(?!" + _SUBORD + r")(?![^,.!?;:\n—–]{0,60}?" + _INNER
-        + r")[^,.!?;:\n—–]{0,40}?" + _NEG_COP + r"\s+" + _GAP + r"[,;]\s+"
-        + _SECOND
+        + r")(?!(?:i|you|we|he|she)\s*" + _NEG_COP + r"[^,;\n]{0,60}[,;]\s+"
+        + r"(?:it|this|that|they)\b)"
+        + r"[^,.!?;:\n—–]{0,40}?" + _NEG_COP + r"\s+" + _NOT_HEDGE + _GAP
+        + r"[,;]\s+" + _SECOND + r"(?!\s*not\b)"
         + "|" + _NEG_COP + r"\s+" + _GAP + r"\.\s+" + _SECOND
         + r"\s+(?:an?|the|your|our|my)\b"
         + r"|\b((?:the|our|your)\s+\w+|this|that|it)\s+(?:is|was)"
         + r"(?:n't|\s+not)\s+" + _GAP + r"[.,;]\s+\1\s+(?:is|was)\b"
+        + r"(?!\s+not\b)"
         + "|" + _CLAUSE + r"(?P<pron>" + _PRON_ANY + r")" + _NEG_AUX + r"\s+"
         + _NOT_HEDGE + _GAP + r"[,;:]\s+[\"'*_]?(?P=pron)(?:'(?:d|ll|ve))?\s+"
         + r"[\"'*_]?" + _NOT_NEGATIVE + _PLAIN
@@ -200,9 +214,16 @@ PATTERNS = [
     ("dash-not-contrast", _c(r"(?:[—–]|(?<=\S)\s+-{1,2}\s)\s*not\s+")),
     # Any object, including one opening with a backtick, a quote, or a bracket.
     ("comma-not-appositive", _c(r",\s*not\s+(?=\S)")),
+    # The claim after the dash restates the subject: "Acme isn't complicated —
+    # it books the job", "I'm not the author — I use it". A plain negative
+    # with its reason passes: "Smoke is not a bad thing - look at barbecue."
     ("negated-copula-dash",
-     _c(r"(?:\b(?:am|is|was|are|were)(?:n't|\s+not)|'(?:m|s|re)\s+not)\s+"
-        r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)")),
+     _c(r"(?:\b(?:is|was|are|were)(?:n't|\s+not)|'s\s+not)\s+" + _NOT_HEDGE
+        + r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)\s*"
+        + r"(?:it|they)(?:'(?:s|re|ll|d|ve))?\s+(?=\w)"
+        + r"|\b(?P<ncd>i|you|we|he|she)(?:'(?:m|re|s)\s+not|"
+        + r"\s+(?:am|is|are|was|were)(?:n't|\s+not))\s+"
+        + r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)\s*(?P=ncd)\b")),
     # "no ordinary X" needs a be-verb in front. "The run found no ordinary
     # sentence that reports" has none.
     ("not-your-average",
@@ -212,7 +233,10 @@ PATTERNS = [
     ("unlike-others",
      _c(r"\bunlike\s+(?:most|many|other|others|traditional|typical|"
         r"ordinary|conventional|"
-        r"(?:(?:its|our|the)\s+)?(?:competitors?|rivals?|competition))\b")),
+        r"(?:(?:its|our|the)\s+)?(?:competitors?|rivals?|competition))\b"
+        r"|\bcompared\s+(?:to|with)\s+(?:other|most|traditional|typical)\s+"
+        r"(?:tools|apps|products|solutions|services|platforms|brands|"
+        r"vendors)\b")),
     ("while-others",
      _c(r"\b(?:while|whilst|whereas)\s+(?:most|many|others?|traditional|"
         r"typical|conventional|competitors|rivals)\b|\bwhere\s+others\b")),
@@ -244,14 +268,19 @@ PATTERNS = [
         r"hidden|surprises)\b")),
     ("rhetorical-reveal",
      _c(r"\bthe\s+(?:result|best\s+part|catch|difference|secret|"
-        r"bottom\s+line|kicker)\s*\?")),
+        r"bottom\s+line|kicker)\s*\?|\bhere's\s+the\s+thing\b")),
     ("where-x-meets-y", _c(r"\bwhere\s+\w+\s+meets\s+\w+\b")),
     ("redefine-family", _c(r"\b(?:redefin|reimagin|reinvent)\w*\b")),
 
     # --- hype vocabulary (English) ---
+    # Words with a common literal sense stay out: "journey" and "landscape",
+    # "elevated" ground, and a phone, card, or door that unlocks.
     ("hype-word",
-     _c(r"\b(?:unleash\w*|unlock\w*|unrival{1,2}ed|unparalleled|unwavering|"
-        r"unmatched|unprecedented|unsung|elevate[sd]?|elevating|"
+     _c(r"\b(?:unleash\w*|unlock(?:s|ing)?\b(?!\s+(?:(?:the|your|my|a|an|its|"
+        r"their|his|her)\s+)?(?:phones?|cards?|doors?|screens?|accounts?|"
+        r"devices?|sim|cars?|bikes?|locks?|codes?|it|them)\b)"
+        r"|unrival{1,2}ed|unparalleled|unwavering|"
+        r"unmatched|unprecedented|unsung|elevates?|elevating|"
         r"seamless(?:ly)?|empower(?:s|ed|ing|ment)?|"
         r"revolutioni[sz]\w*|revolutionary|groundbreaking|"
         r"game[-\s]?chang\w*|delv(?:e|es|ed|ing)|"
@@ -259,7 +288,7 @@ PATTERNS = [
         r"state[-\s]of[-\s]the[-\s]art|best[-\s]in[-\s]class|"
         r"world[-\s]class|transformative|frictionless|hassle[-\s]free|"
         r"effortless(?:ly)?|one[-\s]stop[-\s]shop|synerg\w*|"
-        r"landscape|journey|innovative|holistic|passionate)\b")),
+        r"innovative|holistic|passionate)\b")),
 
     # --- era-framing, bait, vague attribution, inflated copulas ---
     ("in-todays-world",
@@ -271,10 +300,11 @@ PATTERNS = [
      _c(r"\bit(?:'s|\s+is)\s+(?:also\s+)?(?:worth\s+noting|"
         r"important\s+to\s+(?:note|remember|understand))\b")),
     ("vague-experts",
-     _c(r"\b(?:experts|analysts|industry\s+(?:leaders|insiders|reports?))\s+"
-        r"(?:say|agree|believe|suggest|argue|note)\b")),
+     _c(r"\b(?:experts|analysts|critics|industry\s+(?:leaders|insiders|"
+        r"reports?))\s+(?:say|agree|believe|suggest|argue|note)\b")),
     ("studies-show",
-     _c(r"\b(?:studies|research)\s+(?:show|shows|suggests?|proves?)\b")),
+     _c(r"\b(?:studies|research)\s+(?:show|shows|suggests?|proves?|"
+        r"(?:has|have)\s+shown)\b")),
     ("inflated-copula",
      _c(r"\bboast(?:s|ed|ing)?\b|\bstands?\s+as\s+an?\b|"
         r"\btestament\s+to\b")),
@@ -344,10 +374,15 @@ OPENERS = [
 BLOCK_GAP = r"[^—–.!?;|。！？]"
 # The list separator, in the scripts the rule set covers.
 BLOCK_COMMA = r"[,，、]"
+# A dash with a digit on each side is a range, as in "$10–$20" or "3–5 days".
+# A range neither opens nor closes the pair, and the gap may hold one.
+_RANGE = r"(?<=\d)[—–](?=[$€£¥]?\d)"
+_PAIR_END = r"(?:(?<!\d)[—–]|[—–](?![$€£¥]?\d))"
+_PAIR_GAP = r"(?:" + BLOCK_GAP + r"|" + _RANGE + r")"
 BLOCK_PATTERNS = [
     ("dash-pair-list",
-     _c(r"[—–]" + BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA +
-        BLOCK_GAP + r"{1,200}?" + BLOCK_COMMA + BLOCK_GAP + r"{1,200}?[—–]")),
+     _c(_PAIR_END + _PAIR_GAP + r"{1,200}?" + BLOCK_COMMA + _PAIR_GAP
+        + r"{1,200}?" + BLOCK_COMMA + _PAIR_GAP + r"{1,200}?" + _PAIR_END)),
 ]
 
 # ---------------------------------------------------------------------------
@@ -412,8 +447,9 @@ def _runs(name, text, active):
 # A sentence ender, then whitespace. The second alternative covers an ender
 # that sits inside a closing quote or bracket. A colon is no boundary: a split
 # there reported a plain instruction after a label, such as "Note: Stop the
-# server before the upgrade." An opener in a JSON or YAML value therefore sits
-# behind its key and passes.
+# server before the upgrade." A quoted key is the one colon that opens a
+# sentence: after `"tagline": ` the value meets the openers, so listing text
+# in JSON gets them. A YAML key has no quotes, and its value passes.
 SENTENCE_SPLIT = re.compile(
     r"(?<=[.!?！？。؟])\s+|(?<=[.!?][\"')\]])\s+")
 # Straight quotes only: normalize() folds the curly forms before scan_line
@@ -424,6 +460,8 @@ SENTENCE_SPLIT = re.compile(
 # of an empty checkbox. The underscore stays out: it opens a private name
 # such as `_imagine.py` far more often than emphasis that normalize() left.
 LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|+•·~]"
+# The rest of a quoted key once LEAD_STRIP has taken its opening quote.
+_QUOTED_KEY = re.compile(r'[\w$@.-]{1,40}"\s*:\s*')
 # The block pass strips the Markdown marker and keeps every dash, because a
 # dash is what the block rules match.
 BLOCK_LEAD_STRIP = " \t#*->"
@@ -483,6 +521,9 @@ def scan_line(line, lineno, findings, active=None, carried=False):
             findings.append((lineno, name, m.group(0).strip()))
     for sentence in SENTENCE_SPLIT.split(norm):
         s = sentence.lstrip(LEAD_STRIP)
+        key = _QUOTED_KEY.match(s)
+        if key:
+            s = s[key.end():].lstrip(LEAD_STRIP)
         if not s:
             continue
         for name, rx in OPENERS:

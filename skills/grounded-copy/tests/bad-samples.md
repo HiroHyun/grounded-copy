@@ -66,7 +66,6 @@ The problem is not speed. The problem is trust.
 Acme is a partner - not a vendor.
 That's not a bug -- it's a feature.
 Acme is more than just a tool.
-You can't just store files.
 Acme does more than simply store files.
 Acme was more than a tool.
 Design isn't about decoration.
@@ -142,3 +141,14 @@ Not a patch. A rewrite.
 # checked box.
 Stop guessing. Start knowing.
 - [x] Imagine a release with no checklist.
+
+# Era-ending, a reveal, attribution, and a comparison with other tools,
+# all in `copy`. Then an opener in a JSON value behind its quoted key.
+Paper forms are a thing of the past.
+The era of manual invoices is over.
+Those days are long gone.
+Here's the thing: the report writes itself.
+Studies have shown that people prefer short forms.
+Critics say the old tools are slow.
+Compared to other tools, Acme is faster.
+"tagline": "Imagine a report that writes itself.",

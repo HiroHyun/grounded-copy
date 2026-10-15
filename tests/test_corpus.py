@@ -178,9 +178,7 @@ class ReversalGapTests(unittest.TestCase):
         ("negated-copula-dash", "I'm not the author — I use the plugin."),
         ("negated-copula-dash", "That's not a bug -- it's a feature."),
         ("doesnt-just", "Acme doesn't just store files."),  # shipped
-        ("doesnt-just", "You can't just store files."),
         ("doesnt-just", "Acme never just stores files."),
-        ("doesnt-just", "Acme cannot simply store files."),
         ("more-than-just", "Acme is more than just a tool."),  # shipped
         ("more-than-just", "Acme does more than simply store files."),
         ("is-more-than-a", "Acme is more than a tool."),  # shipped
@@ -267,6 +265,9 @@ class ReversalGapTests(unittest.TestCase):
         "The cache wins 3:1 over the index.",
         # A label is no sentence boundary, so the instruction after it passes.
         "Note: Stop the server before the upgrade.",
+        # A modal states a limit, so "just" there makes no claim.
+        "You can't just store files.",
+        "Acme cannot simply store files.",
         "Step 1: Stop services.",
         "并非所有文件都是只读的。",
     )

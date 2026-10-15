@@ -137,8 +137,9 @@ a fragment that denies one word and claims another ("Not X, just Y.", "Not a X. 
 
 Give the current behavior or result.
 
-Triggers: "gone are the days", "the days of X are over", "say
-goodbye/hello", "no more X", "never again", "welcome to a new era".
+Triggers: "gone are the days", "the days of X are over", "the era of X is
+over", "a thing of the past", "long gone", "say goodbye/hello", "no more X",
+"never again", "welcome to a new era".
 
 | Draft | Rewrite |
 |---|---|
@@ -151,7 +152,8 @@ goodbye/hello", "no more X", "never again", "welcome to a new era".
 
 Explain what the product offers.
 
-Triggers: "unlike traditional/most/other X", "while others/most X, we Y".
+Triggers: "unlike traditional/most/other X", "while others/most X, we Y",
+"compared to other tools".
 
 | Draft | Rewrite |
 |---|---|
@@ -164,7 +166,7 @@ The same comparison can span sentences: "Most vendors bury their fees. Acme prin
 
 Put the useful information first.
 
-Triggers: "The result?", "The best part?", "Think again", "Ever wondered",
+Triggers: "The result?", "The best part?", "Here's the thing", "Think again", "Ever wondered",
 "Tired of", "What if", "Imagine", "Picture this", "In a world where",
 "Stop Xing. Start Ying.", "Forget X", "Don't just X".
 
@@ -219,6 +221,8 @@ and "harness", "next-gen", "revolutionary".
 ### Vague attribution
 
 Name a source that the reader can check.
+
+Triggers: "experts say", "critics say", "studies show", "studies have shown".
 
 | Draft | Rewrite |
 |---|---|
