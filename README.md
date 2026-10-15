@@ -53,6 +53,8 @@ The Claude Code and Codex plugins load the `chat` rules at the start of every se
 
 With the skill alone, name it in your request, such as "Use grounded-copy to answer."
 
+In a chat app with no plugin support, paste the rules into its custom instructions. [Setup](skills/grounded-copy/references/setup.md#chat-apps) says which part to copy.
+
 For product pages or marketing copy, switch to `copy` mode first.
 
 ## Install

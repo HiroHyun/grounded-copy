@@ -54,6 +54,8 @@ Claude Code 和 Codex 插件会在每个会话开始时加载 `chat` 规则，�
 
 只安装技能时，请在请求中点名，例如“用 grounded-copy 回答”。
 
+在不支持插件的聊天应用里，把规则粘贴到它的自定义指令中即可，[安装说明](skills/grounded-copy/references/setup.md#chat-apps)写明了要复制哪一部分。
+
 写产品页面或营销文案时，先切换到 `copy` 模式。
 
 <a id="install"></a>

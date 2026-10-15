@@ -48,6 +48,10 @@ The installer writes a short marked block into `~/.claude/CLAUDE.md` and `~/.cod
 
 Run `python3 install.py --help` to see all options. The installer prints each host command before running it.
 
+## Chat apps
+
+A chat app with no plugin support, such as the Claude or ChatGPT website, can follow the rules too. Copy the section "The one banned move" from [the writing rules](../SKILL.md) into the app's custom instructions or a project's instructions. The check on saved files needs a plugin.
+
 ## Profile lifecycle
 
 A profile is a saved writing mode. Use `chat` for everyday interaction and ordinary documents, `copy` for product pages, marketing copy, and similar text, and `off` for work that needs another style. Switch to `off` before translating source text whose wording and comparisons must be preserved.
@@ -70,8 +74,8 @@ What each profile adds to a session:
 
 | Profile | Bytes at session start | Turn reminder |
 |:---:|:---:|:---:|
-| `chat` (default) | 4,146 | 238 bytes |
-| `copy` | 6,163 | 238 bytes |
+| `chat` (default) | 4,112 | 238 bytes |
+| `copy` | 6,105 | 238 bytes |
 | `off` | 0 | none |
 
 Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line.

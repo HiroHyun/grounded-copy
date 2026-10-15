@@ -29,24 +29,17 @@ Keep the second half when the reader raised it. If someone asked about butter, "
 Describe the subject directly.
 
 Triggers: phrases that downplay the subject ("not just/only/merely/simply", "doesn't just",
-"more than just", "far from just/being"); comparisons ("rather than X",
-"instead of X", "as opposed to X", "no longer", "less a catalog than a trade desk");
-claims about exceeding a category ("goes beyond", "beyond just", "redefines", "reimagines",
-"reinvents"); claims about removing a problem ("without the hassle/hidden fees/middlemen",
-"zero guesswork/compromises", "hassle-free", "frictionless").
+"more than just", "far from just/being", "beyond just"); comparisons ("rather than X",
+"instead of X", "as opposed to X", "no longer", "less a vacation than a reunion").
 
 | Draft | Rewrite |
 |---|---|
-| "We don't just store your files, we protect them." | "Every file is encrypted at rest with AES-256 and replicated across three regions." |
-| "More than just a project tracker." | "Acme tracks tasks, links each one to its pull request, and posts a daily status digest to Slack." |
-| "Far from being a reseller, Acme roasts its own beans." | "Acme roasts in-house; every bag ships within 48 hours of roasting." |
-| "Acme is less a gym than a coaching program." | "Acme pairs every member with a coach who reviews training logs weekly." |
-| "We ship every Friday rather than hoarding features." | "We ship every Friday." |
-| "Acme answers tickets instead of queuing them." | "Acme replies to every ticket within four business hours." |
-| "Acme goes beyond file storage." | "Acme saves document versions, searches their contents, and syncs them across five device types." |
-| "We're redefining online booking." | "Acme books 40,000 appointments a month across 12 countries." |
-| "Order direct without the hassle of middlemen." | "You order directly from the maker's workshop." |
-| "Zero guesswork. Zero hidden fees." | "Each listing carries the serial number, condition report, and full price." |
+| "This soup doesn't just warm you up, it fills you up." | "This soup fills you up." |
+| "More than just a snack, these oats keep you full until lunch." | "These oats keep you full until lunch." |
+| "Far from being a chore, cooking at home saves money." | "Cooking at home saves money." |
+| "The trip was less a vacation than a family reunion." | "The trip was a family reunion." |
+| "Text your landlord rather than waiting for a call." | "Text your landlord." |
+| "Walk to the station instead of taking the bus." | "Walk to the station." |
 
 An ordinary substitution, exclusion, or status line reports too. Say what to do or what is true now.
 
@@ -55,22 +48,18 @@ An ordinary substitution, exclusion, or status line reports too. Say what to do 
 Start with the fact.
 
 Triggers: "It's not X, it's Y", "isn't about X, it's about Y", "—not X, but Y",
-"not your average X", "X, not Y",
-", not by X", and a denial followed by a dash "isn't/wasn't X — it Y".
+"X, not Y", ", not by X", and a denial followed by a dash "isn't/wasn't X — it Y".
 The denial can also set up "just", "only", "merely", or "simply": "not X, just Y".
 A slogan opens the same way: "No X, just Y".
 
 | Draft | Rewrite |
 |---|---|
-| "It's not a website. It's your storefront." | "The site takes orders, processes payments in 135 currencies, and prints shipping labels." |
-| "Not your average newsletter." | "The newsletter delivers three vetted job listings every Tuesday, each with salary range and visa status." |
-| "Acme is a partner, not a vendor." | "Acme assigns each client a strategist who joins quarterly planning." |
-| "Acme isn't complicated — it books the job in one tap." | "Acme books the job in one tap." |
+| "It's not a cold. It's an allergy." | "It's an allergy." |
+| "Rest is part of training, not a break from it." | "Rest is part of training." |
+| "The recipe isn't hard — it takes three ingredients." | "The recipe takes three ingredients." |
 | "I'm not the plugin's author, just a user." | "I use this plugin; a friend wrote it." |
-| "No hidden fees, just simple pricing." | "Each plan shows one monthly price, tax included." |
-| "Acme isn't a tool, it's a platform." | "Acme runs the build, the tests, and the release in one pipeline." |
-| "Not slow, just cold." | "The pool is 18 °C." |
-| "Not a patch. A rewrite." | "Version 2 replaces the parser." |
+| "No fancy tools, just a sharp knife." | "You need a sharp knife." |
+| "Your cat isn't angry, it's scared." | "Your cat is scared." |
 
 ## Suspended lists
 
@@ -124,6 +113,25 @@ Use the task to decide what belongs. Explicit requests for a complete inventory 
 ## Marketing copy
 
 These sections cover product pages and promotional text. The checker reports their phrases in `copy` mode.
+
+### Slogans
+
+Say what the product does.
+
+Triggers: claims about exceeding a category ("goes beyond", "redefines", "reimagines",
+"reinvents", "not your average X"); claims about removing a problem ("without the
+hassle/hidden fees/middlemen", "zero guesswork/compromises", "hassle-free", "frictionless");
+a fragment that denies one word and claims another ("Not X, just Y.", "Not a X. A Y.").
+
+| Draft | Rewrite |
+|---|---|
+| "Acme goes beyond file storage." | "Acme saves document versions, searches their contents, and syncs them across five device types." |
+| "We're redefining online booking." | "Acme books 40,000 appointments a month across 12 countries." |
+| "Order direct without the hassle of middlemen." | "You order directly from the maker's workshop." |
+| "Zero guesswork. Zero hidden fees." | "Each listing carries the serial number, condition report, and full price." |
+| "Not your average newsletter." | "The newsletter delivers three vetted job listings every Tuesday, each with salary range and visa status." |
+| "Not slow, just cold." | "The pool is 18 °C." |
+| "Not a patch. A rewrite." | "Version 2 replaces the parser." |
 
 ### Era-ending
 
