@@ -27,6 +27,8 @@ jobs:
         run: python3 hooks/grounded_activate.py --self-test
       - name: codex adapter matches the canonical files
         run: python3 scripts/build_codex_adapter.py --check
+      - name: dsh package matches the canonical files
+        run: python3 scripts/build_dsh_adapter.py --check
       - name: hook interface suite
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
 
@@ -38,6 +40,8 @@ jobs:
         run: python3 hooks/grounded_activate.py --self-test
       - name: codex adapter matches the canonical files
         run: python3 scripts/build_codex_adapter.py --check
+      - name: dsh package matches the canonical files
+        run: python3 scripts/build_dsh_adapter.py --check
       - name: hook interface suite
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
 
@@ -49,5 +53,7 @@ jobs:
         run: python hooks/grounded_activate.py --self-test
       - name: codex adapter matches the canonical files
         run: python scripts/build_codex_adapter.py --check
+      - name: dsh package matches the canonical files
+        run: python scripts/build_dsh_adapter.py --check
       - name: hook interface suite
         run: python -m unittest discover -s tests -p 'test_*.py' -v

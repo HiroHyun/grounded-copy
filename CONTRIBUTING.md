@@ -28,11 +28,13 @@ python3 scripts/check_citations.py
 
 If you changed a quoted example, record the new findings with `python3 scripts/check_citations.py --write`. Review the diff in `tests/citations-baseline.txt`. Findings in ordinary prose need a rewrite. Keep the checker and its rules intact.
 
-After a skill or reference edit, rebuild the Codex package:
+After a skill or reference edit, rebuild the Codex and dsh packages:
 
 ```bash
 python3 scripts/build_codex_adapter.py
 python3 scripts/build_codex_adapter.py --check
+python3 scripts/build_dsh_adapter.py
+python3 scripts/build_dsh_adapter.py --check
 ```
 
 Commit the generated files too. For a `SKILL.md` edit, also run `python3 hooks/grounded_activate.py --self-test`; the hooks read some headings and bullet labels directly.
@@ -43,6 +45,6 @@ The checker uses the Python 3 standard library. Keep regular expressions bounded
 
 Submit checker changes with the relevant sample-file changes. The bad samples must return `1`; the good samples must return `0`. Run the existing tests that cover the change. Add tests when they verify new behavior or a bug fix.
 
-The sample files are in `skills/grounded-copy/tests/`. The Python test suites are in the root `tests/` directory. `skills/grounded-copy/` is the source for every package, and the builder copies it into `dist/codex/grounded-copy`, which the Codex marketplace installs from.
+The sample files are in `skills/grounded-copy/tests/`. The Python test suites are in the root `tests/` directory. `skills/grounded-copy/` is the source for every package. The builders copy it into `dist/codex/grounded-copy`, which the Codex marketplace installs from, and into `dist/dsh/grounded-copy`, which dsh installs from.
 
 `.gitattributes` sets LF for most files and CRLF for `.cmd` and `.ps1` files. The builder compares bytes, so an older clone can report line-ending differences. Inspect `git diff`, run `git add --renormalize .`, and review the staged changes.

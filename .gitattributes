@@ -6,9 +6,11 @@
 # dist/codex/grounded-copy byte-for-byte and generates six files of its own
 # with LF, and `--check` compares the result byte-for-byte on Linux and
 # Windows. A platform-dependent checkout would report drift on Windows for the
-# generated files alone.
+# generated files alone. scripts/build_dsh_adapter.py does the same for
+# dist/dsh/grounded-copy, whose plugin module is a .js file.
 *.sh text eol=lf
 *.py text eol=lf
+*.js text eol=lf
 *.cmd text eol=crlf
 *.ps1 text eol=crlf
 *.md text eol=lf

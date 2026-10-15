@@ -4,7 +4,7 @@ Start with the installation commands in the [English README](https://github.com/
 
 ## Check your installation
 
-In Claude Code, run `/grounded-copy:grounded`. In Codex, run `$grounded-profile status`. The result shows the active profile and where the setting is saved.
+In Claude Code, run `/grounded-copy:grounded`. In Codex, run `$grounded-profile status`. In dsh, run `/grounded`. The result shows the active profile and where the setting is saved.
 
 The default is `chat`. Try asking the agent to rewrite a short paragraph using grounded-copy. To check a saved file, see [Check a file](#check-a-file).
 
@@ -17,6 +17,7 @@ The Skills CLI installation includes the writing rules, examples, checker, and s
 | Claude Code plugin | `claude plugin marketplace update hirohyun-plugins`, then `claude plugin update grounded-copy@hirohyun-plugins` |
 | Codex plugin | `codex plugin marketplace upgrade hirohyun-plugins` |
 | Skills CLI | `npx skills update` |
+| dsh package | `git pull` in your clone, then restart dsh |
 
 Codex stops a download after 30 seconds. If the upgrade times out, run it again. If it keeps failing, run `codex plugin marketplace remove hirohyun-plugins` and install again. Your saved mode stays.
 
@@ -48,6 +49,18 @@ The installer writes a short marked block into `~/.claude/CLAUDE.md` and `~/.cod
 
 Run `python3 install.py --help` to see all options. The installer prints each host command before running it.
 
+## dsh
+
+DeepSeek Harness (dsh) installs the plugin from a clone of this repository. From the clone, run:
+
+```bash
+dsh plugin --profile <profile> add ./dist/dsh/grounded-copy
+```
+
+Use the profile you start dsh with, such as `web` or `tui`, then restart dsh. Without a `dsh` command on your PATH, run `npx @deepseek-ai/dsh` in its place.
+
+The package puts the writing rules into the agent's instructions for every reply, adds the grounded-copy skill, and adds the `/grounded` command. dsh has no check on saved files yet.
+
 ## Chat apps
 
 A chat app with no plugin support, such as the Claude or ChatGPT website, can follow the rules too. Copy the section "The one banned move" from [the writing rules](../SKILL.md) into the app's custom instructions or a project's instructions. The check on saved files needs a plugin.
@@ -56,12 +69,12 @@ A chat app with no plugin support, such as the Claude or ChatGPT website, can fo
 
 A profile is a saved writing mode. Use `chat` for everyday interaction and ordinary documents, `copy` for product pages, marketing copy, and similar text, and `off` for work that needs another style. Switch to `off` before translating source text whose wording and comparisons must be preserved.
 
-| Action | Claude Code | Codex |
-|---|---|---|
-| Everyday interaction and documents | `/grounded-copy:grounded chat` | `$grounded-profile chat` |
-| Product pages and marketing copy | `/grounded-copy:grounded copy` | `$grounded-profile copy` |
-| Turn the rules off | `/grounded-copy:grounded off` | `$grounded-profile off` |
-| Show the saved setting | `/grounded-copy:grounded` | `$grounded-profile status` |
+| Action | Claude Code | Codex | dsh |
+|---|---|---|---|
+| Everyday interaction and documents | `/grounded-copy:grounded chat` | `$grounded-profile chat` | `/grounded chat` |
+| Product pages and marketing copy | `/grounded-copy:grounded copy` | `$grounded-profile copy` | `/grounded copy` |
+| Turn the rules off | `/grounded-copy:grounded off` | `$grounded-profile off` | `/grounded off` |
+| Show the saved setting | `/grounded-copy:grounded` | `$grounded-profile status` | `/grounded` |
 
 The setting stays saved across restarts. Each host uses its own file:
 
@@ -69,6 +82,7 @@ The setting stays saved across restarts. Each host uses its own file:
 |---|---|
 | Claude Code | `$CLAUDE_CONFIG_DIR/grounded-copy/profile`, or `~/.claude/grounded-copy/profile` by default |
 | Codex | `$CODEX_HOME/grounded-copy/profile`, or `~/.codex/grounded-copy/profile` by default |
+| dsh | `$DSH_HOME/grounded-copy/profile`, or `~/.dsh/grounded-copy/profile` by default |
 
 What each profile adds to a session:
 
@@ -80,7 +94,7 @@ What each profile adds to a session:
 
 Those counts are the rules themselves. The hook adds 106 more bytes for its header and switch line.
 
-The plugin reads this file at session start and after context compaction. It adds the selected writing rules to the agent's context. Each prompt also gets a short reminder of the profile.
+The plugin reads this file at session start and after context compaction. It adds the selected writing rules to the agent's context. Each prompt also gets a short reminder of the profile. In dsh, the rules sit in the agent's instructions, and a new setting applies from the next reply.
 
 A successful switch saves the setting and prints the instructions that apply from that point forward. Earlier instructions remain visible in the conversation. The new instructions tell the agent which profile to follow now.
 

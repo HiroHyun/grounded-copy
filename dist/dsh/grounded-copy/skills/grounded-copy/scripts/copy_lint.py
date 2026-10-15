@@ -1,0 +1,761 @@
+#!/usr/bin/env python3
+"""copy_lint.py — deterministic style gate for prose and web copy.
+
+Scans text for contrastive-reversal rhetoric, negation-framing, banned
+openers, suspended lists, vague attribution, and hype vocabulary
+(English and Chinese).
+
+Every rule sits in a group, and the group names the profile that runs it.
+`--profile chat` runs the `chat` groups. `--profile copy`, or no option, runs
+every rule. Copy that needs a banned form, such as a legal disclaimer or a
+translation of supplied source, is written with the grounded-copy profile off.
+
+Usage:
+    python copy_lint.py [--profile chat|copy] FILE [FILE ...]
+    cat draft.md | python copy_lint.py [--profile chat|copy] --stdin
+
+Exit codes:
+    0 = no findings
+    1 = one or more findings -> rewrite the copy and re-run
+    2 = usage / IO error
+
+INTEGRITY RULE (for AI agents): this file is an enforcement gate.
+Do not edit, wrap, monkey-patch, or bypass it, and do not add
+allowlists to make failing copy pass. When it flags a line,
+REWRITE THE COPY, not the linter.
+"""
+
+import re
+import sys
+
+
+def _c(pattern):
+    return re.compile(pattern, re.IGNORECASE)
+
+
+# ---------------------------------------------------------------------------
+# Shared pieces of the two-part reversal rules
+# ---------------------------------------------------------------------------
+# A reversal has two halves, a denial and the claim it sets up, and a writer
+# puts words between them: "I'm not the author, just a user." Every quantifier
+# here is bounded. The gap class excludes the sentence enders and both dashes,
+# so a match stays inside one clause.
+_NEG_COP = (r"(?:\b(?:am|is|are|was|were)\s+not|'(?:m|re|s)\s+not|"
+            r"\b(?:is|are|was|were|ai)n't)")
+_DET = r"(?:an?|the|my|your|our|his|her|its|their|this|that|\w+'s)"
+_GAP = r"[^,.!?;:\n—–]{1,40}"
+_SEP = r"(?:[,;]|\s*[—–]|\s+-{1,2})\s*"
+_JUST = r"(?:just|only|merely|simply)\b"
+# The denial opens with a negated be-verb, or with "not" and a determiner. An
+# instruction ("do not edit the file, just run the script") has neither.
+_DENIAL = r"(?:" + _NEG_COP + r"|\bnot\s+" + _DET + r")\s+"
+_PRON = r"(?:(?:I|we|you|it|they|he|she)\s+)?"
+# A clause start: a word with no word in front of it. Two fixed-width
+# lookbehinds do the work, so a list, quote, or table marker stays out of the
+# reported snippet.
+_CLAUSE = r"(?<![\w'\"]\s)(?<![\w'])(?=\w)"
+# A clause that opens with one of these words, or holds one of the inner set
+# before its comma, states a condition: "If the file is not there, it is
+# created." The reversal rule leaves it alone.
+_SUBORD = (r"(?:if|when|whenever|while|whilst|although|though|even|given|now|"
+           r"provided|assuming|supposing|as|since|because|where|unless|once|"
+           r"until|whether|for|after|before)\b")
+_INNER = (r"\b(?:if|when|whenever|while|whilst|although|though|because|unless|"
+          r"until|whether|once|as\s+long\s+as|so\s+long\s+as)\b")
+_SECOND = (r"(?:it|this|that|they|we|he|she|you|i)"
+           r"(?:'s|'re|'m|\s+(?:is|are|was|were|am))\b")
+# Pieces of the comma-spliced denial with a plain verb: "He wasn't fired, he
+# quit." The second half opens with a plain verb. A be-verb there is the first
+# arm of not-x-its-y, and "just" there is the gap form of not-just.
+_PRON_ANY = r"(?:it|they|he|she|we|you|i)"
+_STOP = r"[^,.!?;:\n—–]"
+# The noun-subject arm also stops at a parenthesis.
+_STOP_PAREN = r"[^,.!?;:\n—–()]"
+_PLAIN = (r"(?!(?:is|are|was|were|am|just|only|merely|simply|said|says)\b)"
+          r"[a-z]+")
+# A be-verb or have-verb denial after a pronoun: "wasn't", "'m not", "hasn't".
+_NEG_AUX = (r"(?:\s+(?:is|are|was|were|am|has|have|had)(?:n't|\s+not)"
+            r"|'(?:s|re|m|ve)\s+not)")
+_ADV = r"(?:(?:really|actually|just|only|simply)\s+)?"
+_DASHSEP = r"(?:[,;:]\s+|\s*[—–]\s*|\s+-{1,2}\s+)"
+# Three guards, each from lines people wrote in everyday answers. A hedge:
+# "I'm not sure about that, I would try it." A second half that is itself
+# negative, which makes a list of denials. A relative clause in front of the
+# denial: "the money that a renter isn't spending, they could invest".
+_NOT_HEDGE = r"(?!(?:sure|certain)\b)"
+_NOT_NEGATIVE = (r"(?![a-z]+n't\b)(?!(?:cannot|never)\b)"
+                 r"(?![a-z]+\s+(?:not|never)\b)")
+_NO_RELATIVE = r"(?!" + _STOP_PAREN + r"{0,60}?\b(?:that|which|who)\b)"
+# "mean" takes a singular subject ("does", "did") and a denied thing that
+# opens with no quote mark. "I don't mean" and a quoted term define a word.
+_DOES_NOT_MEAN = (r"\b(?:does|did)(?:n't|\s+not)\s+" + _ADV
+                  + r"mean\b(?!\s+[\"'])")
+
+# ---------------------------------------------------------------------------
+# Anywhere-in-sentence patterns
+# ---------------------------------------------------------------------------
+PATTERNS = [
+    # --- contrastive reversal / negation framing (English) ---
+    # Three forms: the two words adjacent or one adverb apart, the denial and
+    # "just" either side of a comma or dash, and the same pair as two sentences.
+    ("not-just",
+     _c(r"\bnot\s+(?:(?:really|actually|even|quite|necessarily|always)\s+)?"
+        + _JUST + "|" + _DENIAL + _GAP + _SEP + _PRON + _JUST
+        + "|" + _DENIAL + _GAP + r"\.\s+just\b")),
+    # A do, be, or have denial: "doesn't just", "isn't only", "never simply".
+    # A modal states a limit ("you can't just withdraw it") and passes.
+    ("doesnt-just",
+     _c(r"\b(?:(?:do|does|did|is|are|was|were|has|have|had|ai)n't|never)\s+"
+        + _JUST)),
+    # The slogan "No hidden fees, just simple pricing." One or two words after
+    # "no", then "just", with no word in front of "no". A status line with a
+    # verb in the denial ("No fix was needed, just a restart.") runs longer.
+    ("no-x-just-y",
+     _c(r"(?<!\w\s)\b(?:no|zero|nothing)\s+(?:[\w'-]+\s+)?[\w'-]+[,.;]\s+"
+        r"just\b")),
+    # The same reversal as a fragment: "Not slow, just cold." and "Not a
+    # patch. A rewrite." In a chat these are short answers and corrections
+    # ("Not a teaspoon, a tablespoon."), so the rule runs under `copy` only.
+    ("fragment-reversal",
+     _c(r"(?<!\w\s)\bnot\s+(?!" + _DET + r"\b)"
+        r"(?!yet\b|really\b|sure\b|quite\b|exactly\b|necessarily\b|always\b)"
+        r"(?:[\w'-]+\s+)?[\w'-]+(?:[,.;:]|\s*[—–]|\s+-{1,2})\s+"
+        r"(?:just|merely|simply)\b"
+        r"|(?<!\w\s)\bnot\s+an?\s+[\w'-]+(?:\s+[\w'-]+)?"
+        r"(?:[,.;:]|\s*[—–]|\s+-{1,2})\s+an?\s+[\w'-]+(?:\s+[\w'-]+)?"
+        r"(?:[.!?]|\s*$)")),
+    ("more-than-just", _c(r"\bmore\s+than\s+(?:just|simply|merely)\b")),
+    # Present or past, contracted or not, with up to two intensifiers: "is
+    # more than a", "was so much more than a", "it's more than a".
+    ("is-more-than-a",
+     _c(r"(?:\b(?:is|are|was|were)|'s|'re)\s+(?:(?:so|much|far|way)\s+){0,2}"
+        r"more\s+than\s+an?\b")),
+    ("goes-beyond", _c(r"\bgo(?:es|ing)?\s+(?:far\s+|well\s+)?beyond\b")),
+    ("beyond-just", _c(r"\bbeyond\s+(?:just|mere|merely|simple)\b")),
+    ("isnt-about",
+     _c(r"\b(?:isn't|is\s+not|aren't|are\s+not|it's\s+not|wasn't|was\s+not|"
+        r"weren't|were\s+not|(?:is|was|are|were)\s+never)\s+"
+        r"(?:(?:really|just|only|actually)\s+)?about\b")),
+    ("its-about", _c(r"\bit'?s\s+about\s+\w+[^.!?\n]{0,40}\bnot\b")),
+    # "no longer than 3 inches" is a length.
+    ("no-longer", _c(r"\bno\s+longer\b(?!\s+than\b)")),
+    ("gone-are-the-days", _c(r"\bgone\s+are\s+the\s+days\b")),
+    ("days-are-over",
+     _c(r"\bthe\s+days\s+of\b[^.!?\n]{0,60}\bare\s+"
+        r"(?:over|behind|gone|numbered)\b"
+        r"|\bthe\s+era\s+of\b[^.!?\n]{0,60}\bis\s+over\b"
+        r"|\ba\s+thing\s+of\s+the\s+past\b|\blong\s+gone\b")),
+    ("rather-than", _c(r"\brather\s+than\b")),
+    ("instead-of", _c(r"\binstead\s+of\b")),
+    ("as-opposed-to", _c(r"\bas\s+opposed\s+to\b")),
+    ("say-goodbye-hello", _c(r"\bsay\s+(?:goodbye|hello|farewell)\b")),
+    ("no-more-x", _c(r"\bno\s+more\s+(?!than\b)\w+")),
+    ("never-again", _c(r"\bnever\s+again\b")),
+    # Arm 1: "not" or a contracted negation, a determiner, then "but". A clause
+    # after "but" makes a concession and passes: "I'm not an expert, but I
+    # would try it." Arm 2: a preposition or "because" after the negation and
+    # the same word after "but" ("not in the config but in the loader"). The
+    # repeat keeps "try not to restart the server, but drain it first" out.
+    ("not-x-but-y",
+     _c(r"(?:\bnot|n't)\s+(?:a|an|the|your|my|our|his|her|its|their|this|"
+        r"that|these|those)\b[^.!?\n]{0,60}?,?\s+but\b"
+        r"(?!\s+(?:i|you|we|he|she|it|they|there|if|when|what|please|maybe|"
+        r"perhaps|probably)\b)"
+        r"|(?:\bnot|n't)\s+(because|to|for|by|in|on|with|from)\b"
+        r"[^.!?\n]{0,60}?,?\s+but\s+\1\b")),
+    # "Acme isn't a tool, it's a platform", with any subject. Arm 1: a clause
+    # start, a negated be-verb, a comma or semicolon, then a pronoun and a
+    # be-verb. Arm 2: the same pair as two sentences, where a determiner
+    # follows the second be-verb. Arm 3: the subject repeated, as in "The
+    # problem is not speed. The problem is trust." Arm 4: the same pronoun
+    # twice with a plain verb in the second half, as in "He wasn't fired, he
+    # quit." Arm 5: a noun subject and a plain verb, comma only, as in "The
+    # printer isn't broken, it needs paper." Arms 4 and 5 also report a comma
+    # splice of two facts ("The pan isn't oven-safe, it has a plastic
+    # handle."); "because" in place of the comma repairs it. Arm 1 passes a
+    # hedge ("I'm not sure"), a person who denies and then names a thing ("I'm
+    # not used to it, they are dense"), and a second denial ("it is not
+    # flammable, it is not explosive"); arm 3 passes the second denial too.
+    ("not-x-its-y",
+     _c(_CLAUSE + r"(?!" + _SUBORD + r")(?![^,.!?;:\n—–]{0,60}?" + _INNER
+        + r")(?!(?:i|you|we|he|she)\s*" + _NEG_COP + r"[^,;\n]{0,60}[,;]\s+"
+        + r"(?:it|this|that|they)\b)"
+        + r"[^,.!?;:\n—–]{0,40}?" + _NEG_COP + r"\s+" + _NOT_HEDGE + _GAP
+        + r"[,;]\s+" + _SECOND + r"(?!\s*not\b)"
+        + "|" + _NEG_COP + r"\s+" + _GAP + r"\.\s+" + _SECOND
+        + r"\s+(?:an?|the|your|our|my)\b"
+        + r"|\b((?:the|our|your)\s+\w+|this|that|it)\s+(?:is|was)"
+        + r"(?:n't|\s+not)\s+" + _GAP + r"[.,;]\s+\1\s+(?:is|was)\b"
+        + r"(?!\s+not\b)"
+        + "|" + _CLAUSE + r"(?P<pron>" + _PRON_ANY + r")" + _NEG_AUX + r"\s+"
+        + _NOT_HEDGE + _GAP + r"[,;:]\s+[\"'*_]?(?P=pron)(?:'(?:d|ll|ve))?\s+"
+        + r"[\"'*_]?" + _NOT_NEGATIVE + _PLAIN
+        + "|" + _CLAUSE + r"(?!" + _SUBORD + r")"
+        + r"(?!(?:why|how|what|who|which)\b)(?!" + _STOP + r"{0,60}?" + _INNER
+        + r")" + _NO_RELATIVE + r"(?!" + _PRON_ANY + r"\b)" + _STOP_PAREN
+        + r"{0,40}?" + _NEG_COP + r"\s+" + _STOP_PAREN + r"{1,40},\s+"
+        + r"(?:it|they|he|she)(?:'(?:d|ll|ve))?\s+" + _PLAIN)),
+    # A do-verb denial of need or want, then the same verb: "You don't need a
+    # gym, you need a routine." With "mean", also as two sentences: "This
+    # doesn't mean failure. It means the plan needs work." Any other repeated
+    # verb gives two facts ("I don't drink coffee, I drink tea.") and passes.
+    ("do-verb-repeat",
+     _c(_CLAUSE + r"(?!" + _SUBORD + r")(?!" + _STOP + r"{0,60}?" + _INNER
+        + r")" + _STOP + r"{0,40}?(?:"
+        + r"\b(?:do|does|did)(?:n't|\s+not)\s+" + _ADV + r"(need|want)\b"
+        + _STOP + r"{0,50}?" + _DASHSEP + _PRON_ANY + r"\s+" + _ADV
+        + r"\1(?:s|ed)?\b"
+        + "|" + _DOES_NOT_MEAN + _STOP + r"{0,50}?" + _DASHSEP + _PRON_ANY
+        + r"\s+" + _ADV + r"(?:means?|meant)\b)"
+        + "|" + _DOES_NOT_MEAN + _STOP + r"{0,50}?\.\s+" + _PRON_ANY + r"\s+"
+        + _ADV + r"(?:means?|meant)\b")),
+    # An em or en dash, or a spaced ASCII hyphen or double hyphen with a word
+    # in front of it. A nested bullet ("  - not supported") has no such word.
+    ("dash-not-contrast", _c(r"(?:[—–]|(?<=\S)\s+-{1,2}\s)\s*not\s+")),
+    # Any object, including one opening with a backtick, a quote, or a bracket.
+    ("comma-not-appositive", _c(r",\s*not\s+(?=\S)")),
+    # The claim after the dash restates the subject: "Acme isn't complicated —
+    # it books the job", "I'm not the author — I use it". A plain negative
+    # with its reason passes: "Smoke is not a bad thing - look at barbecue."
+    ("negated-copula-dash",
+     _c(r"(?:\b(?:is|was|are|were)(?:n't|\s+not)|'s\s+not)\s+" + _NOT_HEDGE
+        + r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)\s*"
+        + r"(?:it|they)(?:'(?:s|re|ll|d|ve))?\s+(?=\w)"
+        + r"|\b(?P<ncd>i|you|we|he|she)(?:'(?:m|re|s)\s+not|"
+        + r"\s+(?:am|is|are|was|were)(?:n't|\s+not))\s+"
+        + r"[^—–.!?\n;:]{1,30}(?:[—–]|\s-{1,2}\s)\s*(?P=ncd)\b")),
+    # "no ordinary X" needs a be-verb in front. "The run found no ordinary
+    # sentence that reports" has none.
+    ("not-your-average",
+     _c(r"\bnot\s+your\s+(?:average|typical|ordinary|everyday|usual)\b"
+        r"|(?:\b(?:is|was|are|were)|'s)\s+no\s+(?:ordinary|mere)\b"
+        r"|\bnot\s+(?:just\s+)?another\b")),
+    ("unlike-others",
+     _c(r"\bunlike\s+(?:most|many|other|others|traditional|typical|"
+        r"ordinary|conventional|"
+        r"(?:(?:its|our|the)\s+)?(?:competitors?|rivals?|competition))\b"
+        r"|\bcompared\s+(?:to|with)\s+(?:other|most|traditional|typical)\s+"
+        r"(?:tools|apps|products|solutions|services|platforms|brands|"
+        r"vendors)\b")),
+    ("while-others",
+     _c(r"\b(?:while|whilst|whereas)\s+(?:most|many|others?|traditional|"
+        r"typical|conventional|competitors|rivals)\b|\bwhere\s+others\b")),
+    ("far-from-just", _c(r"\bfar\s+from\s+(?:just|merely|being)\b")),
+    # "less a gym than a coaching program", "less about speed and more about
+    # trust", "not so much a gym as a coaching program". The lookahead keeps
+    # the idiom "not so much as looked at it" out.
+    ("less-a-x-than",
+     _c(r"\bless\s+an?\s+\w+\s+(?:than|and\s+more)\b"
+        r"|\bless\s+about\b[^.!?\n]{0,40}\b(?:than|more\s+about)\b"
+        r"|\bnot\s+so\s+much\s+(?!as\b)[^.!?\n]{1,50}?\bas\b")),
+    ("think-again", _c(r"\bthink\s+again\b")),
+    # The paired slogan "Stop guessing. Start knowing.", in one sentence or
+    # two. A plain instruction ("Stop the server before the upgrade.") has no
+    # second half and passes. The rule keeps the name of the opener it
+    # narrows; it sits here because an opener sees one sentence.
+    ("opener-stop",
+     _c(_CLAUSE + r"stop\s+\w+ing\b(?:\s+[\w'-]+){0,6}[.,;!]?\s+"
+        r"(?:and\s+|then\s+)?start\s+\w+ing\b")),
+    ("without-the-hassle",
+     _c(r"\bwithout\s+(?:the|all\s+the|any\s+of\s+the)\s+(?:hassle|hassles|"
+        r"headache|headaches|hidden|stress|guesswork|usual|middlemen|"
+        r"red\s+tape|runaround)\b")),
+    # "do A without doing B". A regex reads an -ing noun the same way, so
+    # "without warning" and "without training" match too.
+    ("without-gerund", _c(r"\bwithout\s+\w+ing\b")),
+    ("zero-hassle",
+     _c(r"\bzero\s+(?:hassle|hassles|guesswork|compromise|compromises|"
+        r"hidden|surprises)\b")),
+    ("rhetorical-reveal",
+     _c(r"\bthe\s+(?:result|best\s+part|catch|difference|secret|"
+        r"bottom\s+line|kicker)\s*\?|\bhere's\s+the\s+thing\b")),
+    ("where-x-meets-y", _c(r"\bwhere\s+\w+\s+meets\s+\w+\b")),
+    ("redefine-family", _c(r"\b(?:redefin|reimagin|reinvent)\w*\b")),
+
+    # --- hype vocabulary (English) ---
+    # Words with a common literal sense stay out: "journey" and "landscape",
+    # "elevated" ground, and a phone, card, or door that unlocks.
+    ("hype-word",
+     _c(r"\b(?:unleash\w*|unlock(?:s|ing)?\b(?!\s+(?:(?:the|your|my|a|an|its|"
+        r"their|his|her)\s+)?(?:phones?|cards?|doors?|screens?|accounts?|"
+        r"devices?|sim|cars?|bikes?|locks?|codes?|it|them)\b)"
+        r"|unrival{1,2}ed|unparalleled|unwavering|"
+        r"unmatched|unprecedented|unsung|elevates?|elevating|"
+        r"seamless(?:ly)?|empower(?:s|ed|ing|ment)?|"
+        r"revolutioni[sz]\w*|revolutionary|groundbreaking|"
+        r"game[-\s]?chang\w*|delv(?:e|es|ed|ing)|"
+        r"supercharg\w*|turbocharg\w*|next[-\s]level|cutting[-\s]edge|"
+        r"state[-\s]of[-\s]the[-\s]art|best[-\s]in[-\s]class|"
+        r"world[-\s]class|transformative|frictionless|hassle[-\s]free|"
+        r"effortless(?:ly)?|one[-\s]stop[-\s]shop|synerg\w*|"
+        r"innovative|holistic|passionate)\b")),
+
+    # --- era-framing, bait, vague attribution, inflated copulas ---
+    ("in-todays-world",
+     _c(r"\bin\s+today'?s\s+(?:[\w-]+\s+){0,2}"
+        r"(?:world|age|market|era|economy|environment)\b")),
+    ("in-an-era-of", _c(r"\bin\s+an?\s+era\s+(?:of|where|when)\b")),
+    ("look-no-further", _c(r"\blook\s+no\s+further\b")),
+    ("worth-noting",
+     _c(r"\bit(?:'s|\s+is)\s+(?:also\s+)?(?:worth\s+noting|"
+        r"important\s+to\s+(?:note|remember|understand))\b")),
+    ("vague-experts",
+     _c(r"\b(?:experts|analysts|critics|industry\s+(?:leaders|insiders|"
+        r"reports?))\s+(?:say|agree|believe|suggest|argue|note)\b")),
+    ("studies-show",
+     _c(r"\b(?:studies|research)\s+(?:show|shows|suggests?|proves?|"
+        r"(?:has|have)\s+shown)\b")),
+    ("inflated-copula",
+     _c(r"\bboast(?:s|ed|ing)?\b|\bstands?\s+as\s+an?\b|"
+        r"\btestament\s+to\b")),
+    ("serves-as", _c(r"\bserves?\s+as\s+an?\b")),
+    ("turning-point",
+     _c(r"\bmarks?\s+a\s+turning\s+point\b|\bindelible\s+mark\b")),
+    ("editorializing-ing",
+     _c(r",\s+(?:highlighting|underscoring|showcasing|demonstrating|"
+        r"emphasizing|reflecting|signaling|cementing)\b")),
+
+    # --- Chinese equivalents ---
+    # Each rule keeps its shipped alternatives first and appends the new
+    # ones, so a shipped match keeps its snippet.
+    #
+    # Simplified and Traditional forms. 不[仅僅]{1,2}(?:只)?是 covers 不仅是,
+    # 不仅仅是, 不僅僅是, and 不仅仅只是.
+    ("zh-not-just",
+     _c(r"不仅仅是|不只是|不仅是|不止是|不再是|不只提供|"
+        r"不[仅僅]{1,2}(?:只)?是|不光是|不[单單]{1,2}是")),
+    # The slogan words run under `copy`, where their English twins run.
+    ("zh-slogan", _c(r"告别|重新定义|颠覆|告別|重新定義|顛覆")),
+    # The reversal reveal: negate, then assert. The first arm closes on 而是,
+    # or on a 是 that opens the next clause after a comma. A concession joined
+    # by 但是, 可是, or 还是 passes, and so does the either-or 不是A，就是B. Each
+    # arm holds one bounded quantifier. The 并非 arm needs a comma before the
+    # claim, so 并非所有文件都是只读的 passes.
+    ("zh-not-x-but-y",
+     _c(r"不是[^。！？；\n]{0,32}(?:而是|[，,、]\s*(?:才|更|这|這|那)?是)|"
+        r"而不是|不在于[^。！？；\n]{0,32}而在于|"
+        r"不在於[^。！？；\n]{0,32}而在於|"
+        r"[并並]非[^。！？；，,\n]{1,20}[，,]\s*(?:而是|只是|是)|"
+        r"[与與]其[说說][^。！？；\n]{0,32}不如[说說]")),
+]
+
+# ---------------------------------------------------------------------------
+# Sentence-opener patterns (checked at sentence start only)
+# ---------------------------------------------------------------------------
+OPENERS = [
+    ("opener-it-is-not", _c(r"it\s+is\s+not\b|it\s+isn't\b|it's\s+not\b")),
+    ("opener-dont-just", _c(r"don't\s+just\b")),
+    ("opener-we-are-not", _c(r"we\s+are\s+not\b|we're\s+not\b|we\s+aren't\b")),
+    ("opener-forget", _c(r"forget\b")),
+    ("opener-imagine", _c(r"imagine\b")),
+    ("opener-picture-this", _c(r"picture\s+this\b")),
+    ("opener-in-a-world", _c(r"in\s+a\s+world\s+where\b")),
+    ("opener-welcome-new-era",
+     _c(r"welcome\s+to\s+(?:a\s+new|the\s+new|a\s+world)\b")),
+    ("opener-tired-sick-of", _c(r"(?:tired|sick)\s+of\b")),
+    ("opener-ever-wondered", _c(r"ever\s+wonder(?:ed)?\b")),
+    ("opener-what-if", _c(r"what\s+if\b")),
+    # "At [Company], we ..." — case-sensitive: requires a capitalized name
+    ("opener-at-company-we",
+     re.compile(r"At\s+[A-Z][\w&.]*(?:\s+[A-Z][\w&.]*){0,3},?\s+we\b")),
+]
+
+# ---------------------------------------------------------------------------
+# Paragraph patterns (checked over one block of lines, joined)
+# ---------------------------------------------------------------------------
+# A rule here needs a unit larger than one line. Prose in this repository and
+# in most Markdown wraps near column 76, so a dash pair opens on one line and
+# closes on the next. Measured over this repository: the line unit found 1 of
+# the 9 suspended lists it carries.
+#
+# The gap class excludes the sentence enders, the semicolon, the pipe, and both
+# dashes, so a match stays inside one sentence and inside one table cell. Every
+# quantifier is bounded.
+BLOCK_GAP = r"[^—–.!?;|。！？]"
+# The list separator, in the scripts the rule set covers.
+BLOCK_COMMA = r"[,，、]"
+# A dash with a digit on each side is a range, as in "$10–$20" or "3–5 days".
+# A range neither opens nor closes the pair, and the gap may hold one.
+_RANGE = r"(?<=\d)[—–](?=[$€£¥]?\d)"
+_PAIR_END = r"(?:(?<!\d)[—–]|[—–](?![$€£¥]?\d))"
+_PAIR_GAP = r"(?:" + BLOCK_GAP + r"|" + _RANGE + r")"
+BLOCK_PATTERNS = [
+    ("dash-pair-list",
+     _c(_PAIR_END + _PAIR_GAP + r"{1,200}?" + BLOCK_COMMA + _PAIR_GAP
+        + r"{1,200}?" + BLOCK_COMMA + _PAIR_GAP + r"{1,200}?" + _PAIR_END)),
+]
+
+# ---------------------------------------------------------------------------
+# Groups: which profile runs a rule, and what its finding says
+# ---------------------------------------------------------------------------
+# Each rule sits in one group. A `chat` group also runs under `copy`. The
+# sentence prints once under a file's findings of that group. It ends on a
+# form the checker passes, so a writer who follows it can save.
+GROUPS = (
+    ("chat",
+     'A denial or a "just" sets up the claim. Cut that half and state the '
+     'fact. A correction or limit the reader needs goes in its own sentence, '
+     'joined to its reason with "because".',
+     ("not-just", "doesnt-just", "no-x-just-y", "more-than-just",
+      "beyond-just", "far-from-just", "not-x-but-y", "not-x-its-y",
+      "dash-not-contrast", "negated-copula-dash", "comma-not-appositive",
+      "isnt-about", "its-about", "less-a-x-than", "do-verb-repeat",
+      "zh-not-just", "zh-not-x-but-y")),
+    ("chat",
+     "The sentence sets the fact against an alternative. State the fact "
+     "alone. An alternative the reader asked about goes in its own sentence.",
+     ("instead-of", "rather-than", "no-longer", "without-gerund",
+      "as-opposed-to")),
+    ("chat",
+     "A list between two dashes splits the sentence. Name one example, or "
+     "put the list below.",
+     ("dash-pair-list",)),
+    ("copy",
+     "A slogan stands where a fact belongs. Say what the product does.",
+     ("no-more-x", "never-again", "without-the-hassle", "zero-hassle",
+      "think-again", "say-goodbye-hello", "gone-are-the-days",
+      "days-are-over", "in-todays-world", "in-an-era-of", "look-no-further",
+      "where-x-meets-y", "turning-point", "redefine-family",
+      "not-your-average", "goes-beyond", "is-more-than-a", "unlike-others",
+      "while-others", "fragment-reversal", "zh-slogan")),
+    ("copy",
+     "The sentence opens with a hook. Open with the fact.",
+     ("opener-it-is-not", "opener-dont-just", "opener-we-are-not",
+      "opener-stop", "opener-forget", "opener-imagine", "opener-picture-this",
+      "opener-in-a-world", "opener-welcome-new-era", "opener-tired-sick-of",
+      "opener-ever-wondered", "opener-what-if", "opener-at-company-we",
+      "rhetorical-reveal", "worth-noting")),
+    ("copy",
+     "The word praises and tells nothing. Name the feature or the fact.",
+     ("hype-word", "inflated-copula", "serves-as", "editorializing-ing")),
+    ("copy",
+     "The claim leans on an unnamed source. Name the source or cut the claim.",
+     ("vague-experts", "studies-show")),
+)
+PROFILES = ("chat", "copy")
+_CHAT_RULES = frozenset(
+    name for profile, _, names in GROUPS if profile == "chat" for name in names)
+# Rules anchored on a clause start. On a line that carries on the sentence
+# above, the first word only looks like a clause start, so the wrap pass
+# judges these rules on the joined text.
+CLAUSE_RULES = frozenset(("not-x-its-y", "do-verb-repeat", "opener-stop"))
+
+def _runs(name, text, active):
+    """Whether a rule applies to this text under the active rule set."""
+    return active is None or name in active
+
+# A sentence ender, then whitespace. The second alternative covers an ender
+# that sits inside a closing quote or bracket. A colon is no boundary: a split
+# there reported a plain instruction after a label, such as "Note: Stop the
+# server before the upgrade." A quoted key is the one colon that opens a
+# sentence: after `"tagline": ` the value meets the openers, so listing text
+# in JSON gets them. A YAML key has no quotes, and its value passes.
+SENTENCE_SPLIT = re.compile(
+    r"(?<=[.!?！？。؟])\s+|(?<=[.!?][\"')\]])\s+")
+# Straight quotes only: normalize() folds the curly forms before scan_line
+# strips a sentence, so a curly quote never reaches this set. `|` is here so a
+# sentence in the first cell of a Markdown table row reaches the OPENERS loop;
+# without it every anchored rule missed a specimen quoted inside a table. The
+# last five cover a `+` bullet, a bullet dot, a strikethrough, and the close
+# of an empty checkbox. The underscore stays out: it opens a private name
+# such as `_imagine.py` far more often than emphasis that normalize() left.
+LEAD_STRIP = " \t#*->—–-\"'([`0123456789.|+•·~]"
+# The rest of a quoted key once LEAD_STRIP has taken its opening quote.
+_QUOTED_KEY = re.compile(r'[\w$@.-]{1,40}"\s*:\s*')
+# The block pass strips the Markdown marker and keeps every dash, because a
+# dash is what the block rules match.
+BLOCK_LEAD_STRIP = " \t#*->"
+
+
+# Characters that change how a phrase looks to a pattern and leave how it reads
+# to a person: curly quotes, dash and hyphen look-alikes, and characters with
+# no width. U+200B separates words, so it becomes a space.
+_FOLD = str.maketrans({
+    "’": "'", "‘": "'", "“": '"', "”": '"',
+    "\u2015": "—", "\u2212": "—", "\u2e3a": "—", "\ufe58": "—", "\uff0d": "—",
+    "\u2010": "-", "\u2011": "-", "\u2012": "-",
+    "\u200b": " ", "\u200c": None, "\u200d": None, "\u2060": None,
+    "\ufeff": None, "\u00ad": None,
+})
+# An apostrophe look-alike between two letters: U+00B4, U+02BC, U+FF07,
+# U+2032, or a backtick.
+_APOSTROPHE = re.compile(r"(?<=\w)[`\u00b4\u02bc\uff07\u2032](?=\w)")
+# The angle brackets and name of an inline HTML tag. Group 1 keeps the
+# attributes, because alt and title text is copy a person reads. The name list
+# keeps other bracketed text, such as "<not just a tag>", as written.
+_TAG = re.compile(
+    r"</?(?:a|abbr|b|blockquote|br|cite|code|dd|del|details|div|dl|dt|em|"
+    r"h[1-6]|i|img|ins|kbd|li|mark|ol|p|pre|q|s|small|span|strong|sub|"
+    r"summary|sup|table|tbody|td|th|thead|tr|u|ul)\b([^<>\n]{0,200}?)/?>",
+    re.IGNORECASE)
+# A Markdown emphasis pair. The closing marker repeats the opening one, so
+# `_private_name`, `*args`, and `2 * 3 * 4` stay as written.
+_EMPHASIS = re.compile(
+    r"(?<![\w*_])(\*{1,3}|_{1,3})(?=\S)([^*_\n]{1,80}?)(?<=\S)\1(?![\w*_])")
+# A task-list box after a list marker: "- [x] " and "- [ ] ". With the box in
+# place, an opener behind a checked box started at "x]" and passed.
+_CHECKBOX = re.compile(r"^([ \t>]*[-+*]\s+)\[[ xX]\]\s+", re.M)
+
+
+def normalize(text):
+    """Fold look-alike characters and drop inline markup.
+
+    A finding quotes the folded text. The result can be shorter than the
+    input, so a caller that maps offsets to lines folds each line first.
+    """
+    text = _APOSTROPHE.sub("'", text.translate(_FOLD))
+    text = _CHECKBOX.sub(r"\1", text)
+    return _EMPHASIS.sub(r"\2", _TAG.sub(r"\1", text))
+
+
+def scan_line(line, lineno, findings, active=None, carried=False):
+    norm = normalize(line)
+    lead = len(norm) - len(norm.lstrip(BLOCK_LEAD_STRIP))
+    for name, rx in PATTERNS:
+        if not _runs(name, norm, active):
+            continue
+        for m in rx.finditer(norm):
+            # The wrap pass judges this match with the line above in view.
+            if carried and name in CLAUSE_RULES and m.start() == lead:
+                continue
+            findings.append((lineno, name, m.group(0).strip()))
+    for sentence in SENTENCE_SPLIT.split(norm):
+        s = sentence.lstrip(LEAD_STRIP)
+        key = _QUOTED_KEY.match(s)
+        if key:
+            s = s[key.end():].lstrip(LEAD_STRIP)
+        if not s:
+            continue
+        for name, rx in OPENERS:
+            if active is not None and name not in active:
+                continue
+            m = rx.match(s)
+            if m:
+                findings.append((lineno, name, m.group(0).strip()))
+
+
+def iter_blocks(lines):
+    """Group lines into paragraphs, blank lines separating them.
+
+    Yields (joined_text, offsets, wraps, carries). `offsets` holds one (start,
+    lineno) pair per source line, so a match offset maps back to the line that
+    opens it. `wraps` holds the start offset of each line that continues the
+    line above it. `carries` holds the wraps whose line above ended
+    mid-sentence. Each line loses its leading Markdown marker before the join,
+    which keeps a quoted or bulleted paragraph on the same footing as a plain
+    one.
+    """
+    block = []
+    for lineno, line in enumerate(lines, 1):
+        if line.strip():
+            block.append((lineno, line))
+            continue
+        if block:
+            yield _join(block)
+        block = []
+    if block:
+        yield _join(block)
+
+
+# A line that opens a list item, a heading, or a table row starts a new unit.
+# The wrap pass joins a line to the one above only when it carries no such
+# marker, so "- cheap," and "- not slow" stay two items.
+_MARKER = re.compile(r"[ \t>]*(?:[-+*]\s|#{1,6}\s|\||\d+[.)]\s)")
+# A heading, a code fence, a setext underline, or a rule drawn with
+# underscores. The line itself joins nothing, and the line under it starts a
+# new unit.
+_BREAK = re.compile(r"[ \t>]*(?:#{1,6}\s|`{3}|~{3}|={3}|_{3})")
+# A sentence ender at the end of a line, with any closing quote or bracket.
+_SENTENCE_END = re.compile(r"[.!?！？。؟][\"')\]]*\s*$")
+
+
+def _join(block):
+    parts = []
+    offsets = []
+    wraps = []
+    carries = set()
+    position = 0
+    fresh = False
+    for lineno, line in block:
+        # Fold before measuring: normalize() can shorten a line, and the
+        # offsets below must index the text the patterns run on.
+        piece = normalize(line).lstrip(BLOCK_LEAD_STRIP)
+        offsets.append((position, lineno))
+        parted = bool(_BREAK.match(line)) or not piece
+        if position and not fresh and not parted and not _MARKER.match(line):
+            wraps.append(position)
+            if not _SENTENCE_END.search(parts[-1]):
+                carries.add(position)
+        # A line of markers alone, such as "---", leaves no text. It parts
+        # the lines on either side, as a _BREAK line does.
+        fresh = parted
+        position += len(piece) + 1
+        parts.append(piece)
+    return " ".join(parts), offsets, wraps, carries
+
+
+def _lineno_at(offsets, position):
+    found = offsets[0][1]
+    for start, lineno in offsets:
+        if start > position:
+            break
+        found = lineno
+    return found
+
+
+def scan_blocks(blocks, findings, active=None):
+    for joined, offsets, wraps, carries in blocks:
+        for name, rx in BLOCK_PATTERNS:
+            if not _runs(name, joined, active):
+                continue
+            for m in rx.finditer(joined):
+                findings.append(
+                    (_lineno_at(offsets, m.start()), name, m.group(0).strip())
+                )
+        if wraps:
+            _scan_wraps(joined, offsets, wraps, carries, findings, active)
+
+
+def _scan_wraps(joined, offsets, wraps, carries, findings, active=None):
+    """Report a phrase whose halves sit on either side of a line wrap.
+
+    scan_line has reported every match that fits on one line. A match counts
+    here when it spans a line join and the same rule matches nothing from the
+    same start once the text stops at that join. The finding carries the line
+    that opens the match.
+
+    scan_line leaves one more case to this pass: a clause rule's match at the
+    first word of a line that carries on the sentence above. The joined text
+    decides whether that word opens a clause. After a comma it does. After a
+    plain word, as in a condition that wraps before "is not there", it does
+    not, and the rule finds nothing there.
+    """
+    def split_by_wrap(rx, m):
+        for wrap in wraps:
+            if m.start() < wrap <= m.end():
+                return not rx.match(joined, m.start(), wrap - 1)
+        return False
+
+    for name, rx in PATTERNS:
+        if not _runs(name, joined, active):
+            continue
+        for m in rx.finditer(joined):
+            opens_carry = name in CLAUSE_RULES and m.start() in carries
+            if opens_carry or split_by_wrap(rx, m):
+                findings.append(
+                    (_lineno_at(offsets, m.start()), name, m.group(0).strip())
+                )
+    start = 0
+    for sep in list(SENTENCE_SPLIT.finditer(joined)) + [None]:
+        end = sep.start() if sep else len(joined)
+        lead = end - len(joined[start:end].lstrip(LEAD_STRIP))
+        for name, rx in OPENERS:
+            if active is not None and name not in active:
+                continue
+            m = rx.match(joined, lead, end)
+            if m and split_by_wrap(rx, m):
+                findings.append(
+                    (_lineno_at(offsets, lead), name, m.group(0).strip())
+                )
+        start = sep.end() if sep else end
+
+
+def scan_text(text, profile=None):
+    """Findings as (line, rule, snippet), in line order.
+
+    `profile` picks the rule set: "chat" runs the chat groups, and "copy" or
+    None runs every rule.
+    """
+    active = _CHAT_RULES if profile == "chat" else None
+    lines = text.splitlines()
+    blocks = list(iter_blocks(lines))
+    carried = {_lineno_at(offsets, at)
+               for _, offsets, _, carries in blocks for at in carries}
+    findings = []
+    for i, line in enumerate(lines, 1):
+        scan_line(line, i, findings, active, i in carried)
+    scan_blocks(blocks, findings, active)
+    findings.sort(key=lambda finding: finding[0])
+    return findings
+
+
+def report(path, found):
+    """The lines a file's findings print.
+
+    One group at a time, with the group's sentence once under its findings.
+    """
+    lines = []
+    for _, sentence, names in GROUPS:
+        rows = [finding for finding in found if finding[1] in names]
+        lines.extend(f"{path}:{lineno}: \"{snippet}\" [{name}]"
+                     for lineno, name, snippet in rows)
+        if rows:
+            lines.append("  " + sentence)
+    return lines
+
+
+def _utf8_streams():
+    """Read and report in UTF-8 on every platform.
+
+    A finding quotes the text it matched, and Chinese text is non-ASCII.
+    Python picks the encoding for a pipe or a console
+    from the platform, so on Windows at a legacy code page the quote arrives
+    mojibaked, a character the code page has no room for raises
+    UnicodeEncodeError, and `--stdin` decodes the draft wrong before a pattern
+    ever runs. `errors="replace"` keeps the exit code, the rule name, and the
+    line number readable when one character will not render.
+
+    Streams only. The patterns and the 0/1/2 exit contract are untouched.
+    """
+    for stream in (sys.stdin, sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
+
+
+def main(argv):
+    _utf8_streams()
+    args = argv[1:]
+    profile = None
+    if "--profile" in args:
+        at = args.index("--profile")
+        profile = args[at + 1] if at + 1 < len(args) else ""
+        if profile not in PROFILES:
+            print("copy_lint: --profile takes chat or copy", file=sys.stderr)
+            return 2
+        del args[at:at + 2]
+    if not args:
+        print(__doc__)
+        return 2
+    sources = []
+    if args == ["--stdin"]:
+        sources.append(("<stdin>", sys.stdin.read()))
+    else:
+        for path in args:
+            try:
+                with open(path, encoding="utf-8", errors="replace") as f:
+                    sources.append((path, f.read()))
+            except OSError as e:
+                print(f"copy_lint: cannot read {path}: {e}", file=sys.stderr)
+                return 2
+
+    findings = 0
+    for path, text in sources:
+        found = scan_text(text, profile)
+        findings += len(found)
+        for line in report(path, found):
+            print(line)
+
+    print(f"\ncopy_lint: {findings} finding(s)")
+    if findings:
+        print("FAIL — in each flagged sentence, state the fact and cut the "
+              "half set against it, then re-run. Do not edit this linter to "
+              "make copy pass.")
+        return 1
+    print("PASS")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

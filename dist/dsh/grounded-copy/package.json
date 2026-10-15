@@ -1,0 +1,37 @@
+{
+  "name": "dsh-grounded-copy",
+  "version": "0.7.6",
+  "description": "Help AI say clearly and get to the point.",
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "grounded.json",
+    "cordis.patch.yml",
+    "skills",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "author": {
+    "name": "HiroHyun",
+    "url": "https://github.com/HiroHyun"
+  },
+  "homepage": "https://github.com/HiroHyun/grounded-copy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HiroHyun/grounded-copy.git",
+    "directory": "dist/dsh/grounded-copy"
+  },
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "writing",
+    "plain-language",
+    "style",
+    "copywriting"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

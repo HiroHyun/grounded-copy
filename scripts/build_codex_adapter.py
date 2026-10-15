@@ -10,6 +10,8 @@ and here.
 What stays generated: the Codex manifest, its hooks registration, the
 $grounded-profile controller skill, and the package README. What gets rewritten
 on the way in: the two hook entrypoints, through the seams below.
+
+scripts/build_dsh_adapter.py runs build() and check() on its own tree.
 """
 
 import json
@@ -311,20 +313,20 @@ def _inventory(root):
     return set(result)
 
 
-def build():
-    expected = {dest for dest, _ in payloads()}
-    actual = _inventory(os.path.join(REPO_ROOT, ADAPTER))
-    for orphan in sorted(actual - expected):
+def build(adapter=ADAPTER, items=None):
+    items = payloads() if items is None else items
+    expected = {dest for dest, _ in items}
+    adapter_root = os.path.join(REPO_ROOT, adapter)
+    for orphan in sorted(_inventory(adapter_root) - expected):
         os.remove(os.path.join(REPO_ROOT, orphan))
         print("deleted " + orphan.replace(os.sep, "/"))
-    adapter_root = os.path.join(REPO_ROOT, ADAPTER)
     for base, dirs, _files in os.walk(adapter_root, topdown=False):
         for name in dirs:
             directory = os.path.join(base, name)
             if not os.listdir(directory):
                 os.rmdir(directory)
                 print("deleted " + os.path.relpath(directory, REPO_ROOT).replace(os.sep, "/"))
-    for destination, data in payloads():
+    for destination, data in items:
         path = os.path.join(REPO_ROOT, destination)
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "wb") as handle:
@@ -333,8 +335,10 @@ def build():
     return EXIT_OK
 
 
-def check():
-    expected = {dest: data for dest, data in payloads()}
+def check(adapter=ADAPTER, items=None, label="codex"):
+    """`label` names the package in the report and in its builder's file name."""
+    items = payloads() if items is None else items
+    expected = dict(items)
     drift = []
     for destination, data in expected.items():
         current = _read(os.path.join(REPO_ROOT, destination))
@@ -342,14 +346,14 @@ def check():
             drift.append("missing: " + destination.replace(os.sep, "/"))
         elif current != data:
             drift.append("differs: " + destination.replace(os.sep, "/"))
-    for orphan in sorted(_inventory(os.path.join(REPO_ROOT, ADAPTER)) - set(expected)):
+    for orphan in sorted(_inventory(os.path.join(REPO_ROOT, adapter)) - set(expected)):
         drift.append("unexpected: " + orphan.replace(os.sep, "/"))
     for line in drift:
-        print("codex adapter " + line)
+        print("%s adapter %s" % (label, line))
     if drift:
-        print("run scripts/build_codex_adapter.py to rebuild")
+        print("run scripts/build_%s_adapter.py to rebuild" % label)
         return EXIT_DRIFT
-    print("codex adapter matches the canonical files")
+    print("%s adapter matches the canonical files" % label)
     return EXIT_OK
 
 
