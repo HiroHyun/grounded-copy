@@ -4,8 +4,9 @@
 dsh installs a plugin as an npm package whose `dsh.bundle.patch` mounts it.
 This builder writes that package: the plugin module below as index.js, the
 session policy texts _policy.py assembles from SKILL.md, and the canonical
-skill at the same relative path. Build and check run through the Codex
-builder's functions on this tree.
+skill at the same relative path. It also writes package.json at the
+repository root, which a `github:` install reads. Build and check run through
+the Codex builder's functions on this tree.
 
 The plugin registers three things with dsh's core services: a system-prompt
 section that reads the saved mode before every model step, a provider for the
@@ -165,22 +166,32 @@ export function apply(ctx) {
 }
 '''
 
-PACKAGE = json.dumps({
+MANIFEST = {
     "name": PACKAGE_NAME, "version": codex.VERSION,
     "description": "Help AI say clearly and get to the point.",
-    "type": "module", "main": "index.js",
-    "files": ["index.js", "grounded.json", "cordis.patch.yml", "skills", "LICENSE", "NOTICE"],
+    "type": "module",
     "author": {"name": "HiroHyun", "url": "https://github.com/HiroHyun"},
     "homepage": "https://github.com/HiroHyun/grounded-copy",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/HiroHyun/grounded-copy.git",
-        "directory": "dist/dsh/grounded-copy",
-    },
     "license": "AGPL-3.0-only",
     "keywords": ["writing", "plain-language", "style", "copywriting"],
-    "dsh": {"bundle": {"patch": "./cordis.patch.yml"}},
-}, indent=2) + "\n"
+}
+REPOSITORY = {"type": "git", "url": "git+https://github.com/HiroHyun/grounded-copy.git"}
+
+PACKAGE = json.dumps(dict(
+    MANIFEST, main="index.js",
+    files=["index.js", "grounded.json", "cordis.patch.yml", "skills", "LICENSE", "NOTICE"],
+    repository=dict(REPOSITORY, directory="dist/dsh/grounded-copy"),
+    dsh={"bundle": {"patch": "./cordis.patch.yml"}},
+), indent=2) + "\n"
+
+# `dsh plugin add github:HiroHyun/grounded-copy` installs the repository root as
+# the package, so the root manifest points into this tree. `private` stops an
+# npm publish from the root; the npm package is dist/dsh/grounded-copy.
+ROOT_PACKAGE = json.dumps(dict(
+    MANIFEST, private=True, main="dist/dsh/grounded-copy/index.js",
+    files=["dist/dsh/grounded-copy"], repository=REPOSITORY,
+    dsh={"bundle": {"patch": "./dist/dsh/grounded-copy/cordis.patch.yml"}},
+), indent=2) + "\n"
 
 PATCH = """- insert:
     - id: grounded-copy
@@ -195,11 +206,11 @@ This package gives DeepSeek Harness (dsh) the grounded-copy writing rules for ev
 
 ## Install
 
-From a clone of the repository, run:
+Run:
 
-    dsh plugin --profile <profile> add ./dist/dsh/grounded-copy
+    dsh plugin --profile <profile> add github:HiroHyun/grounded-copy
 
-Use the profile you start dsh with, then restart dsh.
+Use the profile you start dsh with, then restart dsh. From a clone of the repository, add `./dist/dsh/grounded-copy` in place of the GitHub name.
 
 ## Writing mode
 
@@ -249,8 +260,10 @@ def payloads():
         ("cordis.patch.yml", PATCH.encode()),
         ("README.md", README.encode()),
     ])
-    return [(os.path.normpath(os.path.join(ADAPTER, dest)), payload)
-            for dest, payload in items]
+    result = [(os.path.normpath(os.path.join(ADAPTER, dest)), payload)
+              for dest, payload in items]
+    result.append(("package.json", ROOT_PACKAGE.encode()))
+    return result
 
 
 if __name__ == "__main__":

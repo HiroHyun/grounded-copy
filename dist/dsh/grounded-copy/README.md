@@ -6,11 +6,11 @@ This package gives DeepSeek Harness (dsh) the grounded-copy writing rules for ev
 
 ## Install
 
-From a clone of the repository, run:
+Run:
 
-    dsh plugin --profile <profile> add ./dist/dsh/grounded-copy
+    dsh plugin --profile <profile> add github:HiroHyun/grounded-copy
 
-Use the profile you start dsh with, then restart dsh.
+Use the profile you start dsh with, then restart dsh. From a clone of the repository, add `./dist/dsh/grounded-copy` in place of the GitHub name.
 
 ## Writing mode
 

@@ -17,7 +17,7 @@ The Skills CLI installation includes the writing rules, examples, checker, and s
 | Claude Code plugin | `claude plugin marketplace update hirohyun-plugins`, then `claude plugin update grounded-copy@hirohyun-plugins` |
 | Codex plugin | `codex plugin marketplace upgrade hirohyun-plugins` |
 | Skills CLI | `npx skills update` |
-| dsh package | `git pull` in your clone, then restart dsh |
+| dsh package | the install command again, or `git pull` in a clone, then restart dsh |
 
 Codex stops a download after 30 seconds. If the upgrade times out, run it again. If it keeps failing, run `codex plugin marketplace remove hirohyun-plugins` and install again. Your saved mode stays.
 
@@ -51,13 +51,13 @@ Run `python3 install.py --help` to see all options. The installer prints each ho
 
 ## dsh
 
-DeepSeek Harness (dsh) installs the plugin from a clone of this repository. From the clone, run:
+DeepSeek Harness (dsh) installs the plugin from GitHub with one command:
 
 ```bash
-dsh plugin --profile <profile> add ./dist/dsh/grounded-copy
+dsh plugin --profile <profile> add github:HiroHyun/grounded-copy
 ```
 
-Use the profile you start dsh with, such as `web` or `tui`, then restart dsh. Without a `dsh` command on your PATH, run `npx @deepseek-ai/dsh` in its place.
+Use the profile you start dsh with, such as `web` or `tui`, then restart dsh. Without a `dsh` command on your PATH, run `npx @deepseek-ai/dsh` in its place. To install from a clone, add `./dist/dsh/grounded-copy` from the clone's root in place of the GitHub name.
 
 The package puts the writing rules into the agent's instructions for every reply, adds the grounded-copy skill, and adds the `/grounded` command. dsh has no check on saved files yet.
 
