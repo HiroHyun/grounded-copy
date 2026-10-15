@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """SessionStart hook: put the session policy in context.
 
-Stdout becomes session context, so the rules arrive with no skill-trigger
-judgment involved. Registered with no matcher, so it also fires after every
-compaction.
+The policy goes out as JSON `additionalContext`, which the host adds to
+session context, so the rules arrive with no skill-trigger judgment involved.
+Registered with no matcher, so it also fires after every compaction.
 
 _policy.py assembles the text from SKILL.md at runtime, which lets a rule edit
 land with no code change. This hook is read-only: it resolves the preference
@@ -14,6 +14,7 @@ Usage:
     grounded_activate.py --self-test [--plugin-root DIR]
 """
 
+import json
 import os
 import sys
 
@@ -58,7 +59,13 @@ def main(argv):
     if not skill:
         return 0
 
-    sys.stdout.write(_policy.session_policy(skill, profile, SWITCH_HINT))
+    policy = _policy.session_policy(skill, profile, SWITCH_HINT)
+    sys.stdout.write(json.dumps({
+        "hookSpecificOutput": {
+            "hookEventName": "SessionStart",
+            "additionalContext": policy,
+        }
+    }))
     return 0
 
 

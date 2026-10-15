@@ -128,7 +128,18 @@ class HookCase(unittest.TestCase):
         )
 
     def activate(self, stdin='{"hook_event_name":"SessionStart","source":"startup"}'):
-        return self.run_hook(ACTIVATE, ["--plugin-root", str(REPO_ROOT)], stdin)
+        """Run the session hook; `stdout` comes back as the context it carries."""
+        result = self.run_hook(ACTIVATE, ["--plugin-root", str(REPO_ROOT)], stdin)
+        result.stdout = self.policy_text(result)
+        return result
+
+    def policy_text(self, result):
+        """The session policy in the hook's additionalContext, or ''."""
+        if not result.stdout:
+            return ""
+        block = json.loads(result.stdout)["hookSpecificOutput"]
+        self.assertEqual(block["hookEventName"], "SessionStart")
+        return block["additionalContext"]
 
     def track(self, prompt):
         payload = json.dumps({"hook_event_name": "UserPromptSubmit", "prompt": prompt})
@@ -191,8 +202,9 @@ class OutputEncodingTests(HookCase):
             ACTIVATE, ["--plugin-root", str(REPO_ROOT)]
         )
         self.assertEqual(result.returncode, EXIT_OK)
-        self.assertIn("GROUNDED PROSE ACTIVE", result.stdout)
-        self.assertIn("—", result.stdout)
+        text = self.policy_text(result)
+        self.assertIn("GROUNDED PROSE ACTIVE", text)
+        self.assertIn("—", text)
 
     def test_the_turn_reminder_decodes_as_utf8(self):
         self.write_preference("chat\n")

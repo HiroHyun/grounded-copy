@@ -378,8 +378,8 @@ class HookCommandCase(LauncherCase):
                         )
                     else:
                         self.assertMarkers(result, "GROUNDED PROSE (chat)")
-                        output = json.loads(result.stdout)["hookSpecificOutput"]
-                        self.assertEqual(output["hookEventName"], "UserPromptSubmit")
+                    output = json.loads(result.stdout)["hookSpecificOutput"]
+                    self.assertEqual(output["hookEventName"], event)
 
 
 @unittest.skipUnless(os.name == "nt", "Windows hook commands run on Windows only")
