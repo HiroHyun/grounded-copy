@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Grounded Copy：帮助 AI 清楚直接地表达。" width="960">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/53e20949-13a7-4092-8008-5f68c1390b2a">
+    <img src="https://github.com/user-attachments/assets/3350709a-b668-4416-911f-4a35cac9c23b" alt="Grounded Copy。“文件不是丢了，而是空的。”删去“不是丢了，而”。帮助 AI 清楚直接地表达。" width="960">
+  </picture>
 </p>
 
 <p align="center">
@@ -21,6 +24,7 @@
   <a href="#try-it">试着用一次</a> ·
   <a href="#install">安装</a> ·
   <a href="#choose-a-writing-mode">选择写作模式</a> ·
+  <a href="#how-it-works">工作原理</a> ·
   <a href="#before-and-after">改写示例</a> ·
   <a href="#more-help">更多说明</a>
 </p>
@@ -28,6 +32,20 @@
 # grounded-copy
 
 `grounded-copy` 让智能体直接陈述事实、把话说到点上，聊天回复和它写的文档都适用。产品页面和营销文案另有一个更严格的模式。
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/b05fee0b-75df-4fa4-bad0-1ea2c710267c">
+    <img src="https://github.com/user-attachments/assets/a60ea723-4143-4ec4-a8e3-1fcf6261d8ae" alt="Grounded Copy 帮助 AI 清楚直接地表达：有插件时 14% 的回答含有 Grounded Copy 针对的句式（例如 “rather than”），没有插件时为 64%，人写的回答在同一批问题上为 20%，画成横穿两条柱的一条线；每个回答的英文单词和 token 基本相同，有插件时 276.3 个单词、23,084 个 token，没有插件时 273.8 个单词、22,871 个 token；问题是 300 个来自 Stack Exchange 的日常问题，由 gpt-6.1-sol 在 Codex 中回答，人写的回答取自原帖下的回复。" width="880">
+  </picture>
+</p>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/4025f222-e6cc-47ab-985a-b0eaa5a1ee68">
+    <img src="https://github.com/user-attachments/assets/65869bfd-c709-40cd-b08b-d24d7a5a8411" alt="一遍还是两遍，基于其中 100 个问题：使用 Grounded Copy，一个回答比先写再用 humanizer 改写少用 36% 的 token、少用 40% 的时间；每一行的最低值有标记，token、秒数和单词这三行里，其余数值标出比最低多多少；没有插件时，智能体用一次请求写出回答，每个回答 22,441 个 token（最低）、47.3 秒（比最低多 10%）、280.1 个英文单词（最低），68% 的回答含有 Grounded Copy 针对的句式，71% 含有长破折号（humanizer 针对的习惯）；使用 Grounded Copy 时，规则在智能体动笔前载入，一次请求，23,501 个 token（比最低多 5%）、42.9 秒（最低）、283.8 个单词（比最低多 1%），比例为 18%（最低） 和 37%；先写再用开源技能 humanizer 改写需要两次请求，36,957 个 token（比最低多 65%）、71.7 秒（比最低多 67%）、287.0 个单词（比最低多 2%），比例为 45% 和 1%（最低），这一列计入两遍。" width="880">
+  </picture>
+</p>
 
 <a id="try-it"></a>
 ## 试着用一次
@@ -106,16 +124,29 @@ $grounded-profile status
 > [!IMPORTANT]
 > **需要忠实翻译原文时，先切换到 `off`。** 否则，智能体可能为了遵守写作规则，删掉原文中有意义的对比。
 
+<a id="how-it-works"></a>
+## 工作原理
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/8158ddb1-c8f4-4479-9e8f-29104f8f4111">
+    <img src="https://github.com/user-attachments/assets/5211fe96-d3a7-4541-88ec-d08db3302152" alt="一条规则：陈述事实；遇到否定说法，智能体逐一判断是删掉、说出背后的事实还是保留，以三份草稿和智能体写出的句子为例：事实本身已经回答了，就删掉前半句，“文件不是丢了，而是空的。” 变成 “文件是空的。”（标签：删掉）；背后有一个事实，就说出那个事实，“这项服务不是免费帮忙，是每单收取2元的生意。” 变成 “这项服务每单收取2元服务费。”（标签：说出事实）；警告本身就是事实，就保留，“不要把漂白剂和氨水混在一起。” 原样不变（标签：保留）。" width="880">
+  </picture>
+</p>
+
+- 会话开始时，插件就加载规则，智能体的初稿已经遵守这些规则。
+- 智能体保存文件时，插件检查这次新写的内容，智能体改写被标出的句子。
+- 你自己输入的句子保持原样。
+
 <a id="before-and-after"></a>
 ## 改写示例
 
-| 草稿 | 使用 grounded-copy 后 |
-|---|---|
-| “文件不是丢了，而是空的。” | “文件是空的。” |
-| “这盆花不是死了，是在休眠。” | “这盆花在休眠。” |
-| “先淘米，而不是直接下锅。” | “先淘米。” |
-| “它不仅仅是一个任务管理工具。” | “它能把任务关联到拉取请求，每天早上把摘要发到 Slack。” |
-| “告别手工整理。” | “脚本每天早上自动生成摘要。” |
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/ba15160f-8e9e-40d6-8244-186d430d89d1">
+    <img src="https://github.com/user-attachments/assets/98f30873-d0d0-4cbb-9a16-d0072ed4456f" alt="测试中的一个问题 “When do children become aware of time?”（Parenting Stack Exchange 用户 2221 提问，https://parenting.stackexchange.com/q/20350，CC BY-SA 3.0）：没有插件时，227 个单词的回答中有一句 “These are broad ranges, not deadlines.”，检查脚本标出 “not deadlines”；使用 Grounded Copy 时，209 个单词的回答写道 “These are broad ranges. Research finds that performance depends on the language a child speaks and how the question is asked.”；节选前后的原文以浅色显示；300 个问题中有 151 个是这种情况：只有不用插件的回答含有这类句式，反过来的情况有 2 个。" width="880">
+  </picture>
+</p>
 
 [表达示例](skills/grounded-copy/references/patterns.md)中有更多改写方法。
 
