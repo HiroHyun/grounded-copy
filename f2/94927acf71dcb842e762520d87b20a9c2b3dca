@@ -1,0 +1,25 @@
+tests/citations-baseline.txt
+  s_901b8684cae8d8::t_46311ccabdfac9 4
+scripts/build_codex_adapter.py
+  s_901b8684cae8d8::t_2ffa428d9bd6c5 139-140
+dist/codex/grounded-copy/.codex-plugin/plugin.json
+  s_901b8684cae8d8::t_c7ffe24917aafc 36-37
+README.md
+  s_901b8684cae8d8::t_81730c0f08fb24 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f294927acf71dcb842e762520d87b20a9c2b3dca",
+  "prompts": {},
+  "sessions": {
+    "s_901b8684cae8d8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a89169da-d0f8-40fb-9dda-da8cbc7629ac",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
