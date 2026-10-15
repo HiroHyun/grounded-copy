@@ -1,6 +1,7 @@
 README.md	instead-of	instead of
 README.md	more-than-just	More than just
 README.md	not-x-its-y	The file isn't missing, it's
+README.md	not-x-its-y	The printer isn't broken, it needs
 README.md	rather-than	rather than
 README.md	vague-experts	Experts agree
 README.zh.md	zh-not-just	不仅仅是

@@ -33,8 +33,8 @@
       "Summarize this document.",
       "Write a product description from these facts."
     ],
-    "brandColor": "#2457D6",
-    "brandColorDark": "#91B4FF",
+    "brandColor": "#B5690A",
+    "brandColorDark": "#F2B33D",
     "logo": "./assets/logo.png",
     "logoDark": "./assets/logo-dark.png",
     "composerIcon": "./assets/logo.png",

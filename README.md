@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Grounded Copy: Help AI write clearly and get to the point." width="960">
+  <img src="assets/banner.png" alt="Grounded Copy. The printer isn’t broken, it needs paper, with “isn’t broken, it” struck out. Help AI say clearly and get to the point." width="960">
 </p>
 
 <p align="center">
