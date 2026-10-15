@@ -10,7 +10,7 @@
       "name": "grounded-copy",
       "source": "./",
       "description": "Help AI say clearly and get to the point.",
-      "version": "0.7.5",
+      "version": "0.7.6",
       "author": {
         "name": "HiroHyun",
         "url": "https://github.com/HiroHyun"

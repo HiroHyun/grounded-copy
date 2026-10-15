@@ -1,3 +1,19 @@
+# 0.7.6
+
+## English
+
+- The README opens with results from 300 everyday questions.
+- The plugin carries a ground-symbol logo and banner.
+- The file check passes more everyday sentences, such as a concession or a price range. Copy mode checks a few more slogan phrases.
+- The setup guide shows which part of the rules to paste into a chat app.
+
+## 简体中文
+
+- README 开头展示 300 个日常问题的测试结果。
+- 插件使用接地符号的标志和横幅。
+- 文件检查放过更多日常句子，例如让步句和价格区间。copy 模式多检查几个口号短语。
+- 安装说明写明了要把规则的哪一部分粘贴到聊天应用里。
+
 # 0.7.5
 
 ## English
