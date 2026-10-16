@@ -835,6 +835,33 @@ class GateHookTests(HookCase):
         self.assertIn("notes.md:2: ", result.stderr)
         self.assertNotIn("notes.md:1: ", result.stderr)
 
+    def test_a_recorded_bash_command_is_checked_on_the_lines_it_added(self):
+        """Claude Code passes the diff it recorded for a Bash command.
+
+        The event follows the shape of one captured from Claude Code 2.1.301.
+        A hunk's context line holds text the file already had, so it stays
+        out of the report.
+        """
+        work = self.config_dir / "work"
+        work.mkdir(exist_ok=True)
+        target = work / "notes.md"
+        target.write_text(self.OLD + "\n" + self.AGENT + "\n", encoding="utf-8")
+        self.write_preference("chat\n")
+        event = json.dumps({
+            "hook_event_name": "PostToolUse", "tool_name": "Bash",
+            "tool_input": {"command": "cat >> notes.md"},
+            "tool_response": {"stdout": "", "stderr": "", "bashEditDiff": {
+                "files": [{"filePath": str(target), "hunks": [{
+                    "oldStart": 1, "oldLines": 1, "newStart": 1, "newLines": 2,
+                    "lines": [" " + self.OLD, "+" + self.AGENT]}]}],
+                "moreFiles": 0, "changedFiles": [str(target)]}},
+            "cwd": str(work),
+        })
+        result = self.run_hook(GATE, ["--plugin-root", str(REPO_ROOT)], event)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("notes.md:2: ", result.stderr)
+        self.assertNotIn("notes.md:1: ", result.stderr)
+
 
 # ---------------------------------------------------------------------------
 # What SKILL.md points a reader at

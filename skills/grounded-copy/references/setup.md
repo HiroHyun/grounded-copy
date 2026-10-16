@@ -210,6 +210,8 @@ A finding prints as the file, the line, the matched text, and the rule name in b
 
 The Claude Code and Codex plugins check each prose file the agent saves. After the agent writes or edits a file, a hook runs the checker on the text that save added, under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. Text that was already in the file is left alone. The `off` profile skips the check.
 
+In Claude Code, the hook also checks the lines a Bash command adds to a prose file, when Claude Code records that command's changes. It records them by default in auto and bypassPermissions mode when it has the agent edit files through Bash. To record them in every mode, add `"bashEditDiffEnabled": true` to your user settings file, `~/.claude/settings.json`. This needs Claude Code 2.1.269 or later, and a repository's settings cannot turn it on.
+
 The hook checks `.md` and `.txt` files and any file under a `locale` or `locales` folder.
 
 A sentence you typed in the session passes. The hook reads your messages from the session transcript and keeps a flagged sentence when it equals one of your sentences, a span you put in quotation marks, the text after a colon, or one of your list items. When a save holds only kept sentences, the host shows you a short message and the agent hears nothing.
@@ -225,7 +227,7 @@ A skill installed with no plugin has no hooks. To add the check there, put the h
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "Write|Edit|MultiEdit|Bash",
         "hooks": [
           {
             "type": "command",
@@ -259,7 +261,9 @@ On Windows, `exit $LASTEXITCODE` preserves the gate's exit code `2` through Powe
 Limits:
 
 - A draft you pasted counts as your text.
-- A file the agent writes through a shell command goes unchecked on both hosts.
+- In Claude Code, a Bash command is checked only when Claude Code records its changes, on up to five files per command. Files outside a Git repository, files Git ignores, files in submodules, background commands, and PowerShell commands go unchecked.
+- When another program or Bash command changes a file while a Bash command runs, the hook checks that change as the command's own.
+- In Codex, a file the agent writes through a shell command goes unchecked.
 - In Claude Code, text you type into a permission prompt or a plan-rejection box reaches the transcript as a tool result, and the hook leaves tool results out. Send such a sentence as a normal message.
 - In the Codex app, a plan you approved reaches the agent as a message from the app. The hook leaves that message out, so a sentence of the plan earns no pass.
 - The pass relies on the mark each host puts on a typed prompt in its transcript, and neither host documents that format. A version with no such mark gives no pass, and every finding reports.

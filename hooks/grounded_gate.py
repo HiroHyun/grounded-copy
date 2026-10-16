@@ -6,8 +6,8 @@ saved profile and hands the findings back to the agent on stderr with exit
 code 2, which is the one place a grounded-copy hook blocks on purpose.
 
 Text that was already in the file is left alone. An edit is checked on the
-lines its replacement text landed on, a Codex patch on the lines it added, and
-a whole-file write on every line.
+lines its replacement text landed on, a Codex patch or a recorded Bash command
+on the lines it added, and a whole-file write on every line.
 
 One script serves Claude Code and Codex and tells them apart by the shape of
 the event and of the transcript rows. Claude Code names the saved file; Codex
@@ -89,9 +89,12 @@ def saved_files(event):
 
     Claude Code names one file in tool_input.file_path. An edit carries its
     replacement text, and a whole-file write carries none, which reads as None
-    here: every line is the agent's. Codex passes the text of the patch in
-    tool_input.command, with one header per file, paths relative to cwd, and a
-    `+` before each line it adds.
+    here: every line is the agent's. A Bash command Claude Code recorded
+    carries tool_response.bashEditDiff, which diffs up to five files in hunks
+    that mark each added line with a `+`; a file it lists with no diff stays
+    unchecked. Codex passes the text of the patch in tool_input.command, with
+    one header per file, paths relative to cwd, and a `+` before each line it
+    adds.
     """
     tool_input = event.get("tool_input") or {}
     path = tool_input.get("file_path")
@@ -102,6 +105,15 @@ def saved_files(event):
         chunks = [edit["new_string"] for edit in edits
                   if isinstance(edit.get("new_string"), str)]
         return [(path, chunks or None)]
+    response = event.get("tool_response")
+    diff = response.get("bashEditDiff") if isinstance(response, dict) else None
+    if isinstance(diff, dict):
+        return [(entry["filePath"], {
+            line[1:].rstrip("\r")
+            for hunk in entry.get("hunks") or []
+            for line in hunk.get("lines") or [] if line.startswith("+")})
+            for entry in diff.get("files") or []
+            if isinstance(entry, dict) and isinstance(entry.get("filePath"), str)]
     patch = tool_input.get("command")
     if event.get("tool_name") != "apply_patch" or not isinstance(patch, str):
         return []
