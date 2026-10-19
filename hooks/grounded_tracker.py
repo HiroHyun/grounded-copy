@@ -46,19 +46,11 @@ EXIT_REJECTED = 2
 CONTROL_FLAGS = ("--set", "--status")
 
 
-def _preference_path(argv):
-    if "--preference-path" in argv:
-        index = argv.index("--preference-path")
-        if index + 1 < len(argv):
-            return argv[index + 1]
-    return PREFERENCE_PATH
-
-
 def set_mode(argv, hook_dir):
     """`--set PROFILE`: record the preference, print the governing directive."""
     index = argv.index("--set")
     raw = argv[index + 1] if index + 1 < len(argv) else ""
-    path = _preference_path(argv)
+    path = _hook_io.preference_arg(argv, PREFERENCE_PATH)
     if not raw.strip():
         print(_preference.status_line(path, RESTORE_HINT))
         return EXIT_OK
@@ -93,12 +85,14 @@ def main(argv):
     if "--set" in argv:
         return set_mode(argv, hook_dir)
     if "--status" in argv:
-        print(_preference.status_line(_preference_path(argv), RESTORE_HINT))
+        path = _hook_io.preference_arg(argv, PREFERENCE_PATH)
+        print(_preference.status_line(path, RESTORE_HINT))
         return EXIT_OK
 
     _hook_io.drain_stdin()
 
-    profile, _source = _preference.resolve_preference(_preference_path(argv))
+    profile, _source = _preference.resolve_preference(
+        _hook_io.preference_arg(argv, PREFERENCE_PATH))
     if profile not in _preference.ACTIVE:
         return EXIT_OK
 

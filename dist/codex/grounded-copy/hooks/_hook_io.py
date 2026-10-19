@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Hook transport: stdin and argv.
 
-Kept apart from the preference and policy vocabulary. Both entrypoints call
-both functions here, which is what earns the module its own file: plugin_root()
-carries three resolution rules, and duplicating them across two entrypoints is
-how they drift apart.
+Kept apart from the preference and policy vocabulary. The three entrypoints
+share the argv rules here, which is what earns the module its own file:
+plugin_root() carries three resolution rules, and duplicating them across the
+entrypoints is how they drift apart.
 
 The two lifecycle entrypoints read no field of the event, so they drain stdin.
 The gate reads the event, since it needs the saved file and the transcript.
@@ -65,6 +65,15 @@ def read_event():
     except Exception:
         return None
     return event if isinstance(event, dict) else None
+
+
+def preference_arg(argv, default):
+    """`--preference-path FILE` from argv, or the entrypoint's own default."""
+    if "--preference-path" in argv:
+        index = argv.index("--preference-path")
+        if index + 1 < len(argv):
+            return argv[index + 1]
+    return default
 
 
 def plugin_root(argv, hook_dir):

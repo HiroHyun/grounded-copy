@@ -32,14 +32,6 @@ PREFERENCE_PATH = None
 SWITCH_HINT = None
 
 
-def _preference_path(argv):
-    if "--preference-path" in argv:
-        index = argv.index("--preference-path")
-        if index + 1 < len(argv):
-            return argv[index + 1]
-    return PREFERENCE_PATH
-
-
 def main(argv):
     _hook_io.utf8_streams()
     hook_dir = os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +42,7 @@ def main(argv):
 
     _hook_io.drain_stdin()
 
-    path = _preference_path(argv)
+    path = _hook_io.preference_arg(argv, PREFERENCE_PATH)
     profile, _source = _preference.resolve_preference(path)
     if profile not in _preference.ACTIVE:
         return 0

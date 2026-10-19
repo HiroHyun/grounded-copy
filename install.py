@@ -159,7 +159,7 @@ def detect(which=have_command):
     """Return the plugin and Skills CLIs available on PATH."""
     return {
         "commands": sorted(n for n in PLUGIN_HOSTS if which(n)),
-        "npx": which("npx") or which("node"),
+        "npx": which("npx"),
     }
 
 
@@ -365,10 +365,20 @@ def edit_block(host, add, env=None):
     else:
         return True
 
+    # A same-folder temporary file replaces the original in one step, so a
+    # failed write leaves the user's file as it was. The real path keeps a
+    # symlinked dotfile a link.
+    target = os.path.realpath(path)
+    temporary = target + ".grounded-copy.tmp"
     try:
-        with open(path, "w", encoding="utf-8", newline="") as handle:
+        with open(temporary, "w", encoding="utf-8", newline="") as handle:
             handle.write(updated)
+        os.replace(temporary, target)
     except OSError as exc:
+        try:
+            os.remove(temporary)
+        except OSError:
+            pass
         print("    cannot write %s: %s" % (path, exc))
         return False
     print("    %s the block in %s" % ("wrote" if add else "removed", path))

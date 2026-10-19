@@ -440,10 +440,6 @@ _CHAT_RULES = frozenset(
 # judges these rules on the joined text.
 CLAUSE_RULES = frozenset(("not-x-its-y", "do-verb-repeat", "opener-stop"))
 
-def _runs(name, text, active):
-    """Whether a rule applies to this text under the active rule set."""
-    return active is None or name in active
-
 # A sentence ender, then whitespace. The second alternative covers an ender
 # that sits inside a closing quote or bracket. A colon is no boundary: a split
 # there reported a plain instruction after a label, such as "Note: Stop the
@@ -512,7 +508,7 @@ def scan_line(line, lineno, findings, active=None, carried=False):
     norm = normalize(line)
     lead = len(norm) - len(norm.lstrip(BLOCK_LEAD_STRIP))
     for name, rx in PATTERNS:
-        if not _runs(name, norm, active):
+        if active is not None and name not in active:
             continue
         for m in rx.finditer(norm):
             # The wrap pass judges this match with the line above in view.
@@ -606,7 +602,7 @@ def _lineno_at(offsets, position):
 def scan_blocks(blocks, findings, active=None):
     for joined, offsets, wraps, carries in blocks:
         for name, rx in BLOCK_PATTERNS:
-            if not _runs(name, joined, active):
+            if active is not None and name not in active:
                 continue
             for m in rx.finditer(joined):
                 findings.append(
@@ -637,7 +633,7 @@ def _scan_wraps(joined, offsets, wraps, carries, findings, active=None):
         return False
 
     for name, rx in PATTERNS:
-        if not _runs(name, joined, active):
+        if active is not None and name not in active:
             continue
         for m in rx.finditer(joined):
             opens_carry = name in CLAUSE_RULES and m.start() in carries
