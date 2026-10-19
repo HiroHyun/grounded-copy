@@ -21,6 +21,11 @@
 </p>
 
 <p align="center">
+  <a href="https://hirohyun.github.io/groundedcopy/zh/">产品网站</a> ·
+  <a href="https://github.com/HiroHyun/groundedcopy">网站源码</a>
+</p>
+
+<p align="center">
   <a href="#try-it">试着用一次</a> ·
   <a href="#install">安装</a> ·
   <a href="#choose-a-writing-mode">选择写作模式</a> ·
