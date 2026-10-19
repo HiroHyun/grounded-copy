@@ -1,0 +1,33 @@
+dist/codex/grounded-copy/hooks/grounded_gate.py
+  s_400e095d127c15::t_d0d0de64c30ed8 8-10,88-96,99-100,103-106,113,115-118,128,132-171,175,179-200,379-380
+hooks/grounded_gate.py
+  s_400e095d127c15::t_b07e0413338437 111-112
+  s_400e095d127c15::t_356b2d92b59557 8-10,82-90,93-94,97-100,107,109-110,122,126-165,169,173-194
+  s_400e095d127c15::t_19549a8724e6a3 373-374
+tests/test_hooks.py
+  s_cb94af5ce39751::t_366de9cd7a0fb9 824,829,838-854,865,873,882-903
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9f59f3b9034de16b1add6960fe62abc4bc99399b",
+  "prompts": {},
+  "sessions": {
+    "s_400e095d127c15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84d1850c-feb1-4b01-929d-0585dc4c07d0",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    },
+    "s_cb94af5ce39751": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1524c-4aef-7540-9b52-9107d756037e",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}

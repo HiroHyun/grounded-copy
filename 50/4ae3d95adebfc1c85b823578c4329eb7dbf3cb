@@ -1,0 +1,47 @@
+hooks/run.cmd
+  s_400e095d127c15::t_10f71ecd808575 25
+  s_400e095d127c15::t_8b5e37c8ecbee2 2-3,7-10,43-46
+hooks/grounded_tracker.py
+  s_400e095d127c15::t_d58610c119d24c 53
+  s_400e095d127c15::t_19549a8724e6a3 88-89,94-95
+dist/codex/grounded-copy/hooks/_hook_io.py
+  s_400e095d127c15::t_d0d0de64c30ed8 4-7,70-76
+  s_400e095d127c15::t_299673a84f44c3 77-78
+hooks/_hook_io.py
+  s_400e095d127c15::t_d58610c119d24c 70-78
+  s_400e095d127c15::t_19549a8724e6a3 4-7
+hooks/grounded_activate.py
+  s_400e095d127c15::t_d58610c119d24c 45
+skills/grounded-copy/scripts/copy_lint.py
+  s_400e095d127c15::t_65654817421c32 511,605,636
+dist/codex/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_400e095d127c15::t_d0d0de64c30ed8 511,605,636
+dist/dsh/grounded-copy/skills/grounded-copy/scripts/copy_lint.py
+  s_400e095d127c15::t_d0d0de64c30ed8 511,605,636
+dist/codex/grounded-copy/hooks/run.cmd
+  s_400e095d127c15::t_d0d0de64c30ed8 2-3,7-10,25,43-46
+install.py
+  s_400e095d127c15::t_8cf5c3021377a9 162,368,374,378-381
+  s_400e095d127c15::t_d56a7d74347119 371-372,376
+  s_400e095d127c15::t_98f37727e7e17b 369-370
+dist/codex/grounded-copy/hooks/grounded_activate.py
+  s_400e095d127c15::t_d0d0de64c30ed8 51
+dist/codex/grounded-copy/hooks/grounded_tracker.py
+  s_400e095d127c15::t_d0d0de64c30ed8 59,94-95,100-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "504ae3d95adebfc1c85b823578c4329eb7dbf3cb",
+  "prompts": {},
+  "sessions": {
+    "s_400e095d127c15": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84d1850c-feb1-4b01-929d-0585dc4c07d0",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
