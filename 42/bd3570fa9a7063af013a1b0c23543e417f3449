@@ -1,0 +1,16 @@
+README.md
+  h_e10213298d5dca 23-27
+README.zh.md
+  h_e10213298d5dca 23-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "42bd3570fa9a7063af013a1b0c23543e417f3449",
+  "prompts": {},
+  "humans": {
+    "h_e10213298d5dca": {
+      "author": "HiroHyun <92624592+HiroHyun@users.noreply.github.com>"
+    }
+  }
+}
