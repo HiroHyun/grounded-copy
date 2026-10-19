@@ -1,3 +1,19 @@
+# 0.7.8
+
+## English
+
+- In Claude Code, the file check also reads the lines a shell command adds to a file, when Claude Code records that command's changes. The setup guide says when it records them.
+- After an edit, the file check reports only the lines that edit added.
+- The installer replaces your instruction file in one step, so an interrupted run leaves the file as it was.
+- On Windows, the plugin adds less wait to each step the agent takes.
+
+## 简体中文
+
+- 在 Claude Code 中，如果 Claude Code 记录了 shell 命令的改动，文件检查也会读取该命令写入文件的行。安装说明写明了何时会记录。
+- 编辑文件后，文件检查只报告这次编辑写入的行。
+- 安装程序一步替换你的指令文件，运行中断时文件保持原样。
+- 在 Windows 上，插件给智能体每一步增加的等待更短。
+
 # 0.7.7
 
 ## English
