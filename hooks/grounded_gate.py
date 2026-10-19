@@ -5,9 +5,9 @@ Both plugins register it. It runs copy_lint.py on the saved file under the
 saved profile and hands the findings back to the agent on stderr with exit
 code 2, which is the one place a grounded-copy hook blocks on purpose.
 
-Text that was already in the file is left alone. An edit is checked on the
-lines its replacement text landed on, a Codex patch or a recorded Bash command
-on the lines it added, and a whole-file write on every line.
+Text that was already in the file is left alone. A save is checked on the
+lines Claude Code's diff of it marks as added, a Codex patch on the lines it
+added, and a write with no diff on every line.
 
 One script serves Claude Code and Codex and tells them apart by the shape of
 the event and of the transcript rows. Claude Code names the saved file; Codex
@@ -59,14 +59,6 @@ CODEX_TYPED_KINDS = {"user.text", "user.image"}
 CODEX_PLAN = "PLEASE IMPLEMENT THIS PLAN:"
 
 
-def _preference_path(argv):
-    if "--preference-path" in argv:
-        index = argv.index("--preference-path")
-        if index + 1 < len(argv):
-            return argv[index + 1]
-    return PREFERENCE_PATH
-
-
 def _checker(root):
     """Import copy_lint from the skill under the plugin root."""
     # A .pyc beside the checker would ship with the skill.
@@ -87,33 +79,37 @@ def in_scope(path):
 def saved_files(event):
     """(path, what the call wrote there) for each file a tool call wrote.
 
-    Claude Code names one file in tool_input.file_path. An edit carries its
-    replacement text, and a whole-file write carries none, which reads as None
-    here: every line is the agent's. A Bash command Claude Code recorded
-    carries tool_response.bashEditDiff, which diffs up to five files in hunks
-    that mark each added line with a `+`; a file it lists with no diff stays
-    unchecked. Codex passes the text of the patch in tool_input.command, with
-    one header per file, paths relative to cwd, and a `+` before each line it
-    adds.
+    Claude Code names one file in tool_input.file_path and diffs the save in
+    tool_response.structuredPatch, in hunks that mark each added line with a
+    `+`. With no usable diff, an edit falls back to its replacement text, and
+    a whole-file write carries none, which reads as None here: every line is
+    the agent's. A Bash command Claude Code recorded carries
+    tool_response.bashEditDiff, which diffs up to five files in the same
+    hunks; a file it lists with no usable diff stays unchecked. Codex passes
+    the text of the patch in tool_input.command, with one header per file,
+    paths relative to cwd, and a `+` before each line it adds.
     """
     tool_input = event.get("tool_input") or {}
+    response = event.get("tool_response")
+    response = response if isinstance(response, dict) else {}
     path = tool_input.get("file_path")
     if isinstance(path, str):
+        hunks = response.get("structuredPatch")
+        added = diff_lines(hunks) if hunks else None
+        if added is not None:
+            return [(path, added)]
         edits = [tool_input] + [
             edit for edit in tool_input.get("edits") or []
             if isinstance(edit, dict)]
         chunks = [edit["new_string"] for edit in edits
                   if isinstance(edit.get("new_string"), str)]
         return [(path, chunks or None)]
-    response = event.get("tool_response")
-    diff = response.get("bashEditDiff") if isinstance(response, dict) else None
+    diff = response.get("bashEditDiff")
     if isinstance(diff, dict):
-        return [(entry["filePath"], {
-            line[1:].rstrip("\r")
-            for hunk in entry.get("hunks") or []
-            for line in hunk.get("lines") or [] if line.startswith("+")})
-            for entry in diff.get("files") or []
-            if isinstance(entry, dict) and isinstance(entry.get("filePath"), str)]
+        files = [(entry.get("filePath"), diff_lines(entry.get("hunks")))
+                 for entry in diff.get("files") or [] if isinstance(entry, dict)]
+        return [(name, added) for name, added in files
+                if isinstance(name, str) and added is not None]
     patch = tool_input.get("command")
     if event.get("tool_name") != "apply_patch" or not isinstance(patch, str):
         return []
@@ -123,29 +119,79 @@ def saved_files(event):
             and not response.startswith("Exit code: 0")):
         return []
     cwd = event.get("cwd") or ""
-    added, name = {}, None
+    added, name, hunk = {}, None, None
     for line in patch.splitlines():
         header = _PATCH_FILE.match(line)
         if header:
-            name = header.group(1).strip()
-            added.setdefault(name, set())
-        elif name and line.startswith("+"):
-            added[name].add(line[1:])
-    return [(os.path.join(cwd, name), lines) for name, lines in added.items()]
+            target = header.group(1).strip()
+            if line.startswith("*** Move to:") and name:
+                added[target] = added.pop(name)
+            else:
+                added[target] = []
+            name, hunk = target, None
+        elif line.startswith("@@"):
+            hunk = None
+        elif line == "*** End of File" and hunk is not None:
+            hunk.append(line)
+        elif line.startswith("*** "):
+            name, hunk = None, None
+        elif name and (not line or line.startswith(("+", "-", " "))):
+            if hunk is None:
+                hunk = []
+                added[name].append(hunk)
+            hunk.append(line or " ")
+    return [(os.path.join(cwd, name), tuple(hunks))
+            for name, hunks in added.items()]
+
+
+def diff_lines(hunks):
+    """New-file line numbers a Claude Code diff marks as added, or None when
+    the hunks do not read as a diff."""
+    added = set()
+    try:
+        for hunk in hunks:
+            number = hunk["newStart"]
+            if type(number) is not int or number < 1:
+                return None
+            for line in hunk["lines"]:
+                if not isinstance(line, str) or not line.startswith(("+", "-", " ", "\\")):
+                    return None
+                if line.startswith("+"):
+                    added.add(number)
+                if line.startswith(("+", " ")):
+                    number += 1
+    except (KeyError, TypeError):
+        return None
+    return added
 
 
 def written_lines(text, wrote):
-    """The numbers of the lines a save wrote in `text`, or None for all.
-
-    `wrote` is None, the replacement strings of an edit, or the set of lines
-    a patch added. A replacement can start and end inside a line, so it is
-    found as a span; a patch adds whole lines.
-    """
+    """Line numbers from a recorded diff, patch hunks, or replacement strings."""
     if wrote is None:
         return None
     if isinstance(wrote, set):
-        return {number for number, line in enumerate(text.splitlines(), 1)
-                if line in wrote}
+        return wrote
+    if isinstance(wrote, tuple):
+        lines, numbers, cursor = text.splitlines(), set(), 0
+        for hunk in wrote:
+            postimage, offsets = [], []
+            for line in hunk:
+                if line.startswith("+"):
+                    offsets.append(len(postimage))
+                if line.startswith(("+", " ")):
+                    postimage.append(line[1:])
+            if not postimage:
+                continue
+            places = [at for at in range(cursor, len(lines) - len(postimage) + 1)
+                      if lines[at:at + len(postimage)] == postimage
+                      and (hunk[-1] != "*** End of File"
+                           or at + len(postimage) == len(lines))]
+            # Identical postimages cannot identify which occurrence changed.
+            if len(places) == 1:
+                at = places[0]
+                numbers.update(at + offset + 1 for offset in offsets)
+                cursor = at + len(postimage)
+        return numbers
     numbers = set()
     for chunk in wrote:
         chunk = chunk.strip("\n")
@@ -324,7 +370,8 @@ def main(argv):
     if not files:
         return EXIT_OK
 
-    profile, _source = _preference.resolve_preference(_preference_path(argv))
+    profile, _source = _preference.resolve_preference(
+        _hook_io.preference_arg(argv, PREFERENCE_PATH))
     if profile not in _preference.ACTIVE:
         return EXIT_OK
 

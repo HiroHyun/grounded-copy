@@ -821,12 +821,12 @@ class GateHookTests(HookCase):
 
         # A patch is checked on the lines it added.
         (work / "notes.md").write_text(
-            self.OLD + "\n" + self.AGENT + "\n", encoding="utf-8")
+            self.AGENT + "\n" + self.AGENT + "\n", encoding="utf-8")
         event = json.dumps({
             "hook_event_name": "PostToolUse", "tool_name": "apply_patch",
             "tool_input": {"command": (
                 "*** Begin Patch\n*** Update File: notes.md\n@@\n "
-                + self.OLD + "\n+" + self.AGENT + "\n*** End Patch")},
+                + self.AGENT + "\n+" + self.AGENT + "\n*** End Patch")},
             "tool_response": "Exit code: 0\nSuccess.",
             "cwd": str(work), "transcript_path": str(rollout),
         })
@@ -834,6 +834,23 @@ class GateHookTests(HookCase):
         self.assertEqual(result.returncode, 2, result.stderr)
         self.assertIn("notes.md:2: ", result.stderr)
         self.assertNotIn("notes.md:1: ", result.stderr)
+
+        # Hunk offsets survive removals, separate hunks, a move, and EOF.
+        (work / "moved.md").write_text(
+            self.AGENT + "\nAnchor.\n" + self.AGENT + "\nMiddle.\n"
+            + self.AGENT + "\n", encoding="utf-8")
+        payload = json.loads(event)
+        payload["tool_input"]["command"] = (
+            "*** Begin Patch\n*** Update File: notes.md\n"
+            "*** Move to: moved.md\n@@\n Anchor.\n-Removed.\n+"
+            + self.AGENT + "\n@@\n Middle.\n+" + self.AGENT
+            + "\n*** End of File\n*** End Patch")
+        result = self.run_hook(GATE, ["--plugin-root", str(REPO_ROOT)],
+                               json.dumps(payload))
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("moved.md:3: ", result.stderr)
+        self.assertIn("moved.md:5: ", result.stderr)
+        self.assertNotIn("moved.md:1: ", result.stderr)
 
     def test_a_recorded_bash_command_is_checked_on_the_lines_it_added(self):
         """Claude Code passes the diff it recorded for a Bash command.
@@ -845,7 +862,7 @@ class GateHookTests(HookCase):
         work = self.config_dir / "work"
         work.mkdir(exist_ok=True)
         target = work / "notes.md"
-        target.write_text(self.OLD + "\n" + self.AGENT + "\n", encoding="utf-8")
+        target.write_text(self.AGENT + "\n" + self.AGENT + "\n", encoding="utf-8")
         self.write_preference("chat\n")
         event = json.dumps({
             "hook_event_name": "PostToolUse", "tool_name": "Bash",
@@ -853,7 +870,7 @@ class GateHookTests(HookCase):
             "tool_response": {"stdout": "", "stderr": "", "bashEditDiff": {
                 "files": [{"filePath": str(target), "hunks": [{
                     "oldStart": 1, "oldLines": 1, "newStart": 1, "newLines": 2,
-                    "lines": [" " + self.OLD, "+" + self.AGENT]}]}],
+                    "lines": [" " + self.AGENT, "+" + self.AGENT]}]}],
                 "moreFiles": 0, "changedFiles": [str(target)]}},
             "cwd": str(work),
         })
@@ -861,6 +878,28 @@ class GateHookTests(HookCase):
         self.assertEqual(result.returncode, 2, result.stderr)
         self.assertIn("notes.md:2: ", result.stderr)
         self.assertNotIn("notes.md:1: ", result.stderr)
+
+        # Recorded positions distinguish repeated lines across separate hunks.
+        target.write_text(self.AGENT + "\n" + self.AGENT + "\nPlain.\n"
+                          + self.AGENT + "\n", encoding="utf-8")
+        payload = json.loads(event)
+        entry = payload["tool_response"]["bashEditDiff"]["files"][0]
+        entry["hunks"] = [
+            {"newStart": 2, "lines": ["-Removed.", "+" + self.AGENT]},
+            {"newStart": 3, "lines": [" Plain.", "+" + self.AGENT]},
+        ]
+        result = self.run_hook(GATE, ["--plugin-root", str(REPO_ROOT)],
+                               json.dumps(payload))
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("notes.md:2: ", result.stderr)
+        self.assertIn("notes.md:4: ", result.stderr)
+        self.assertNotIn("notes.md:1: ", result.stderr)
+
+        entry["hunks"][0]["newStart"] = "invalid"
+        result = self.run_hook(GATE, ["--plugin-root", str(REPO_ROOT)],
+                               json.dumps(payload))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout + result.stderr, "")
 
 
 # ---------------------------------------------------------------------------
