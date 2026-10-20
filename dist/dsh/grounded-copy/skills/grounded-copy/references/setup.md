@@ -135,7 +135,11 @@ Both launchers look for `python` and then `python3`, using the first command tha
 
 Claude Code runs plugin hooks in Git Bash when it finds one and in PowerShell otherwise. Each hook command dot-sources a launcher in `hooks/`, such as `claude_activate.cmd`, that both shells start. Git Bash reads the file as a shell script and runs `run.sh`. PowerShell runs it as a batch file, which hands over to `run.cmd`. The hooks work in either shell without edits to the manifest.
 
-If an error shows a literal `${CLAUDE_PLUGIN_ROOT}` or `${PLUGIN_ROOT}`, the host did not substitute the plugin path. Check the plugin configuration before running the command again.
+If a Claude Code error shows a literal `${CLAUDE_PLUGIN_ROOT}`, the host did not substitute the plugin path. Check the plugin configuration before running the command again.
+
+### Codex cannot find the hook script
+
+An error naming `/hooks/run.sh` or `\hooks\run.cmd` can mean that `PLUGIN_ROOT` is empty or missing from the hook environment. Check that Codex has loaded and enabled the plugin.
 
 ### Claude Code shows a duplicate skill
 
