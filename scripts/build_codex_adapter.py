@@ -147,19 +147,15 @@ MANIFEST = json.dumps({
     },
 }, indent=2) + "\n"
 
-# Codex Desktop 0.159.2 runs commandWindows through `pwsh -NoProfile -Command`,
-# which parses a leading quoted path as a string and rejects the script name
-# after it. Each string starts with the bare word `cmd`, which PowerShell and
-# cmd.exe both run as a command, so the line works under either shell. `/d`
-# skips the cmd AutoRun registry entry, which could print into hook output.
-# The gate ends with `exit $LASTEXITCODE`: PowerShell turns a native exit
-# code of 2 into 1 otherwise, and Codex reads 2 as findings for the agent.
-# A root holding `&` splits under `cmd /c`; tests/test_launchers.py measures
-# the characters that pass.
+# Codex runs Windows hooks through PowerShell. Expand its environment variable
+# at execution time so shell characters in the root stay part of the path.
+# The leading space keeps cmd's /c quote stripping away from the path; /d
+# suppresses registry AutoRun commands that could print into hook output.
+# `exit $LASTEXITCODE` preserves the gate's findings status of 2.
 HOOKS = json.dumps({"hooks": {
-    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_activate.py'}]}],
-    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_tracker.py'}]}],
-    "PostToolUse": [{"matcher": "apply_patch", "hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_gate.py', "commandWindows": 'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" grounded_gate.py; exit $LASTEXITCODE'}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_activate.py"; exit $LASTEXITCODE'}]}],
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_tracker.py"; exit $LASTEXITCODE'}]}],
+    "PostToolUse": [{"matcher": "apply_patch", "hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_gate.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_gate.py"; exit $LASTEXITCODE'}]}],
 }}, indent=2) + "\n"
 
 PROFILE_SKILL = """---

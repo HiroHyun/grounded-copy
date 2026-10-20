@@ -396,14 +396,14 @@ class CodexAdapterTests(unittest.TestCase):
         rendered = json.dumps(hooks)
         self.assertIn("PLUGIN_ROOT", rendered)
         self.assertIn("commandWindows", rendered)
-        # A bare `cmd` leads each string, so PowerShell and cmd.exe both run
-        # it. test_launchers runs these through both shells on Windows.
+        # test_launchers runs these through both PowerShell versions on Windows.
         for event, script in (("SessionStart", "grounded_activate.py"),
-                              ("UserPromptSubmit", "grounded_tracker.py")):
+                              ("UserPromptSubmit", "grounded_tracker.py"),
+                              ("PostToolUse", "grounded_gate.py")):
             with self.subTest(event=event):
                 self.assertEqual(
                     hooks["hooks"][event][0]["hooks"][0]["commandWindows"],
-                    'cmd /d /c "${PLUGIN_ROOT}\\hooks\\run.cmd" ' + script,
+                    'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" ' + script + '"; exit $LASTEXITCODE',
                 )
         for corpus in ("bad-samples.md", "good-samples.md"):
             with self.subTest(corpus=corpus):

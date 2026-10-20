@@ -64,12 +64,8 @@ POWERSHELLS = [name for name in ("pwsh", "powershell") if shutil.which(name)]
 GIT_BASH = r"C:\Program Files\Git\bin\bash.exe"
 POSIX_SHELLS = [name for name in ("sh", "bash", "dash", "zsh") if shutil.which(name)]
 
-# A plugin root holding a space, an apostrophe, `;`, parentheses, and `%`,
-# which pass through both PowerShell double quotes and `cmd /d /c`. Codex
-# substitutes ${PLUGIN_ROOT} as text, so two limits remain: PowerShell expands
-# a `$` or backtick in the root, and `cmd /c` splits a root holding `&`.
-# HOSTILE_NAME carries all three.
-PLUGIN_ROOT_NAME = "gc o'k;x (v) 5%"
+# The Codex root reaches PowerShell through the hook environment.
+PLUGIN_ROOT_NAME = "gc o'k $t`e;s&t (v) 5% ! ^"
 
 
 def claude_hook_commands():
@@ -384,9 +380,7 @@ class HookCommandCase(LauncherCase):
 
 @unittest.skipUnless(os.name == "nt", "Windows hook commands run on Windows only")
 class WindowsHookCommandTests(HookCommandCase):
-    """Codex Desktop 0.159.2 runs `commandWindows` through
-    `pwsh -NoProfile -Command` after replacing ${PLUGIN_ROOT} as text; another
-    build could use cmd.exe, so the Codex strings run under both.
+    """Codex runs `commandWindows` through PowerShell and sets PLUGIN_ROOT.
 
     Claude Code runs its hook commands in Git Bash when it finds one and in
     PowerShell otherwise, rewriting ${CLAUDE_PLUGIN_ROOT} to
@@ -400,14 +394,13 @@ class WindowsHookCommandTests(HookCommandCase):
         root = self.plugin_root((ADAPTER, ""))
         setup = (REPO_ROOT / "skills/grounded-copy/references/setup.md").read_text(
             encoding="utf-8")
-        command = next(line.split("'", 2)[1] for line in setup.splitlines()
+        command = next(line.partition(" = ")[2].strip("'") for line in setup.splitlines()
                        if line.startswith("commandWindows = "))
         command = command.replace(
-            r"C:\path\to\grounded-copy\dist\codex\grounded-copy", str(root))
+            r"C:\path\to\grounded-copy\dist\codex\grounded-copy", str(root).replace("'", "''"))
         # The command the plugin registers, beside the one the guide prints.
         hooks = json.loads((root / "hooks" / "hooks.json").read_text(encoding="utf-8"))
-        shipped = (hooks["hooks"]["PostToolUse"][0]["hooks"][0]["commandWindows"]
-                   .replace("${PLUGIN_ROOT}", str(root)))
+        shipped = hooks["hooks"]["PostToolUse"][0]["hooks"][0]["commandWindows"]
         target = self.config_dir / "notes.md"
         for shell, command in [(s, c) for s in POWERSHELLS for c in (command, shipped)]:
             for body, code in (("The file is empty.\n", 0),
@@ -420,24 +413,24 @@ class WindowsHookCommandTests(HookCommandCase):
                             "*** Update File: notes.md\n+" + body)}})
                     result = self.launch(
                         [shell, "-NoProfile", "-NonInteractive", "-Command", command],
-                        env={"CODEX_HOME": str(self.config_dir / "codex-home")},
+                        env={"CODEX_HOME": str(self.config_dir / "codex-home"),
+                             "PLUGIN_ROOT": str(root)},
                         stdin=event)
                     self.assertEqual(result.returncode, code, result.stderr)
                     if code:
                         self.assertIn("[not-x-its-y]", result.stderr)
 
-    def test_codex_command_windows_runs_under_powershell_and_cmd(self):
+    def test_codex_command_windows_runs_under_powershell(self):
         root = self.plugin_root((ADAPTER, ""))
         hooks = json.loads((root / "hooks" / "hooks.json").read_text(encoding="utf-8"))
         commands = [
-            (event, hooks["hooks"][event][0]["hooks"][0]["commandWindows"]
-             .replace("${PLUGIN_ROOT}", str(root)))
+            (event, hooks["hooks"][event][0]["hooks"][0]["commandWindows"])
             for event in HOOK_EVENTS
         ]
         # An empty CODEX_HOME holds no profile file, which resolves to chat.
         self.assertHooksRun(
-            commands, {"CODEX_HOME": str(self.config_dir / "codex-home")},
-            POWERSHELLS + ["cmd"],
+            commands, {"CODEX_HOME": str(self.config_dir / "codex-home"),
+                       "PLUGIN_ROOT": str(root)}, POWERSHELLS,
         )
 
     def test_claude_manifest_runs_under_powershell(self):

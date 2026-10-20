@@ -251,10 +251,12 @@ matcher = "apply_patch"
 [[hooks.PostToolUse.hooks]]
 type = "command"
 command = 'sh "/path/to/grounded-copy/dist/codex/grounded-copy/hooks/run.sh" grounded_gate.py'
-commandWindows = 'cmd /d /c "C:\path\to\grounded-copy\dist\codex\grounded-copy\hooks\run.cmd" grounded_gate.py; exit $LASTEXITCODE'
+commandWindows = '''cmd /d /c ' "C:\path\to\grounded-copy\dist\codex\grounded-copy\hooks\run.cmd" grounded_gate.py'; exit $LASTEXITCODE'''
 ```
 
 Codex passes the hook the patch it applied, and the hook checks each file that patch added, updated, or moved.
+
+Codex runs Windows hooks through PowerShell. The installed plugin reads its root from `$env:PLUGIN_ROOT`. In the manual entry above, single quotes keep path characters literal; write an apostrophe in the path as two apostrophes. Keep the space before the quoted path so `cmd /c` preserves its quotes. `/d` suppresses cmd.exe AutoRun commands.
 
 On Windows, `exit $LASTEXITCODE` preserves the gate's exit code `2` through PowerShell. Codex uses that code to return findings to the agent. A command that omits it exits `1` when the gate reports findings, and Codex records a hook failure.
 
