@@ -462,7 +462,7 @@ class WindowsHookCommandTests(HookCommandCase):
 
 @unittest.skipIf(os.name == "nt", "POSIX hook shells run off Windows")
 class PosixHookCommandTests(HookCommandCase):
-    """Claude Code runs its hook commands in a POSIX shell on macOS and Linux.
+    """Codex and Claude Code run POSIX hook commands on macOS and Linux.
 
     The launchers keep CRLF endings for cmd.exe, so this run also proves each
     POSIX shell reads past the carriage returns.
@@ -473,6 +473,32 @@ class PosixHookCommandTests(HookCommandCase):
         self.assertHooksRun(
             claude_hook_commands(), {"CLAUDE_PLUGIN_ROOT": str(root)}, POSIX_SHELLS
         )
+
+    def test_codex_commands_run_from_a_hostile_root(self):
+        root = self.plugin_root((ADAPTER, ""), name=POSIX_HOSTILE_NAME)
+        hooks = json.loads((root / "hooks/hooks.json").read_text(encoding="utf-8"))["hooks"]
+        commands = {
+            event: hooks[event][0]["hooks"][0]["command"].replace("${PLUGIN_ROOT}", root.as_posix())
+            for event in HOOK_EVENTS + ("PostToolUse",)
+        }
+        env = {"PLUGIN_ROOT": root.as_posix(),
+               "CODEX_HOME": str(self.config_dir / "codex-home")}
+        self.assertHooksRun([(event, commands[event]) for event in HOOK_EVENTS],
+                            env, POSIX_SHELLS)
+        target = self.config_dir / "notes.md"
+        for shell in POSIX_SHELLS:
+            for body, code in (("The file is empty.\n", 0),
+                               ("The file isn't missing, it's empty.\n", 2)):
+                with self.subTest(shell=shell, code=code):
+                    target.write_text(body, encoding="utf-8")
+                    event = json.dumps({
+                        "tool_name": "apply_patch", "cwd": str(self.config_dir),
+                        "tool_input": {"command": "*** Update File: notes.md\n+" + body}})
+                    result = self.launch([shell, "-c", commands["PostToolUse"]],
+                                         env=env, stdin=event)
+                    self.assertEqual(result.returncode, code, result.stderr)
+                    if code:
+                        self.assertIn("[not-x-its-y]", result.stderr)
 
 if __name__ == "__main__":
     unittest.main()

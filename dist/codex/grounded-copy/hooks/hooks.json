@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${PLUGIN_ROOT}/hooks/run.sh\" grounded_activate.py",
+            "command": "sh \"$PLUGIN_ROOT/hooks/run.sh\" grounded_activate.py",
             "commandWindows": "cmd /d /c \" `\"$env:PLUGIN_ROOT\\hooks\\run.cmd`\" grounded_activate.py\"; exit $LASTEXITCODE"
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${PLUGIN_ROOT}/hooks/run.sh\" grounded_tracker.py",
+            "command": "sh \"$PLUGIN_ROOT/hooks/run.sh\" grounded_tracker.py",
             "commandWindows": "cmd /d /c \" `\"$env:PLUGIN_ROOT\\hooks\\run.cmd`\" grounded_tracker.py\"; exit $LASTEXITCODE"
           }
         ]
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh \"${PLUGIN_ROOT}/hooks/run.sh\" grounded_gate.py",
+            "command": "sh \"$PLUGIN_ROOT/hooks/run.sh\" grounded_gate.py",
             "commandWindows": "cmd /d /c \" `\"$env:PLUGIN_ROOT\\hooks\\run.cmd`\" grounded_gate.py\"; exit $LASTEXITCODE"
           }
         ]

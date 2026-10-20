@@ -147,15 +147,16 @@ MANIFEST = json.dumps({
     },
 }, indent=2) + "\n"
 
+# Codex substitutes ${PLUGIN_ROOT} as text; $PLUGIN_ROOT reaches the POSIX shell.
 # Codex runs Windows hooks through PowerShell. Expand its environment variable
 # at execution time so shell characters in the root stay part of the path.
 # The leading space keeps cmd's /c quote stripping away from the path; /d
 # suppresses registry AutoRun commands that could print into hook output.
 # `exit $LASTEXITCODE` preserves the gate's findings status of 2.
 HOOKS = json.dumps({"hooks": {
-    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_activate.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_activate.py"; exit $LASTEXITCODE'}]}],
-    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_tracker.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_tracker.py"; exit $LASTEXITCODE'}]}],
-    "PostToolUse": [{"matcher": "apply_patch", "hooks": [{"type": "command", "command": 'sh "${PLUGIN_ROOT}/hooks/run.sh" grounded_gate.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_gate.py"; exit $LASTEXITCODE'}]}],
+    "SessionStart": [{"hooks": [{"type": "command", "command": 'sh "$PLUGIN_ROOT/hooks/run.sh" grounded_activate.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_activate.py"; exit $LASTEXITCODE'}]}],
+    "UserPromptSubmit": [{"hooks": [{"type": "command", "command": 'sh "$PLUGIN_ROOT/hooks/run.sh" grounded_tracker.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_tracker.py"; exit $LASTEXITCODE'}]}],
+    "PostToolUse": [{"matcher": "apply_patch", "hooks": [{"type": "command", "command": 'sh "$PLUGIN_ROOT/hooks/run.sh" grounded_gate.py', "commandWindows": 'cmd /d /c " `"$env:PLUGIN_ROOT\\hooks\\run.cmd`" grounded_gate.py"; exit $LASTEXITCODE'}]}],
 }}, indent=2) + "\n"
 
 PROFILE_SKILL = """---
