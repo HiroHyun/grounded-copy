@@ -1,0 +1,18 @@
+{
+  "name": "grounded-copy",
+  "displayName": "Grounded Copy",
+  "version": "0.7.8",
+  "description": "Help AI say clearly and get to the point.",
+  "author": {
+    "name": "HiroHyun",
+    "url": "https://github.com/HiroHyun"
+  },
+  "homepage": "https://github.com/HiroHyun/grounded-copy",
+  "repository": "https://github.com/HiroHyun/grounded-copy",
+  "logo": "assets/logo.png",
+  "suggestedPrompts": [
+    "Explain how compound interest works.",
+    "Summarize this document.",
+    "Write a product description from these facts."
+  ]
+}

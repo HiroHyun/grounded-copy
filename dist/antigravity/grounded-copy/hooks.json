@@ -1,0 +1,30 @@
+{
+  "grounded-copy": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "cmd /d /c hooks\\run.cmd grounded_activate.py || sh ./hooks/run.sh grounded_activate.py",
+        "timeout": 10
+      }
+    ],
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "cmd /d /c hooks\\run.cmd grounded_tracker.py || sh ./hooks/run.sh grounded_tracker.py",
+        "timeout": 10
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "write_file|edit_file|write_to_file|replace_file_content|multi_replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmd /d /c hooks\\run.cmd grounded_gate.py || sh ./hooks/run.sh grounded_gate.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

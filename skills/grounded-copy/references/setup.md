@@ -4,11 +4,11 @@ Start with the installation commands in the [English README](https://github.com/
 
 ## Check your installation
 
-In Claude Code, run `/grounded-copy:grounded`. In Codex, run `$grounded-profile status`. In dsh, run `/grounded`. The result shows the active profile and where the setting is saved.
+In Claude Code, run `/grounded-copy:grounded`. In Codex, run `$grounded-profile status`. In dsh or Gemini CLI, run `/grounded`. In Antigravity, ask the agent to run `grounded-profile` with `status`. The result shows the active profile and where the setting is saved.
 
 The default is `chat`. Try asking the agent to rewrite a short paragraph using grounded-copy. To check a saved file, see [Check a file](#check-a-file).
 
-The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles, session reminders, and the check on saved files come with the Claude Code and Codex plugins.
+The Skills CLI installation includes the writing rules, examples, checker, and sample files. Saved profiles, session reminders, and the check on saved files come with the Claude Code, Codex, Antigravity, and Gemini CLI packages.
 
 ### Update
 
@@ -16,6 +16,8 @@ The Skills CLI installation includes the writing rules, examples, checker, and s
 |---|---|
 | Claude Code plugin | `claude plugin marketplace update hirohyun-plugins`, then `claude plugin update grounded-copy@hirohyun-plugins` |
 | Codex plugin | `codex plugin marketplace upgrade hirohyun-plugins` |
+| Antigravity plugin | `git pull` in a clone, then re-run `agy plugin install ./dist/antigravity/grounded-copy` (or copy the folder again) |
+| Gemini CLI extension | `git pull` in a clone (linked installs pick up the change; copied installs re-run `gemini extensions install --path ./dist/gemini/grounded-copy`) |
 | Skills CLI | `npx skills update` |
 | dsh package | the install command again, or `git pull` in a clone, then restart dsh |
 
@@ -61,6 +63,34 @@ Use the profile you start dsh with, such as `web` or `tui`, then restart dsh. Wi
 
 The package puts the writing rules into the agent's instructions for every reply, adds the grounded-copy skill, and adds the `/grounded` command. dsh has no check on saved files yet.
 
+## Antigravity
+
+From a clone of this repository, install the generated Antigravity plugin:
+
+```bash
+agy plugin install ./dist/antigravity/grounded-copy
+```
+
+Or copy `dist/antigravity/grounded-copy` into `~/.gemini/config/plugins/grounded-copy` (or `.agents/plugins/grounded-copy` inside a workspace).
+
+The plugin registers three hooks in `hooks.json`: `SessionStart` loads the session rules, `PreInvocation` adds the turn reminder on the first model call of a turn, and `PreToolUse` checks proposed file writes and edits before they reach disk. It also bundles the `grounded-profile` skill to switch writing modes.
+
+## Gemini CLI
+
+From a clone of this repository, install or link the generated Gemini CLI extension:
+
+```bash
+gemini extensions install --path ./dist/gemini/grounded-copy
+```
+
+Or link the directory in place:
+
+```bash
+gemini extensions link ./dist/gemini/grounded-copy
+```
+
+The extension registers three hooks in `hooks/hooks.json`: `SessionStart` loads the session rules, `BeforeAgent` adds the turn reminder before each prompt, and `AfterTool` checks files saved through `write_file` and `replace`. It also adds the `/grounded` custom command.
+
 ## Chat apps
 
 A chat app with no plugin support, such as the Claude or ChatGPT website, can follow the rules too. Copy the section "The one banned move" from [the writing rules](../SKILL.md) into the app's custom instructions or a project's instructions. The check on saved files needs a plugin.
@@ -69,12 +99,12 @@ A chat app with no plugin support, such as the Claude or ChatGPT website, can fo
 
 A profile is a saved writing mode. Use `chat` for everyday interaction and ordinary documents, `copy` for product pages, marketing copy, and similar text, and `off` for work that needs another style. Switch to `off` before translating source text whose wording and comparisons must be preserved.
 
-| Action | Claude Code | Codex | dsh |
-|---|---|---|---|
-| Everyday interaction and documents | `/grounded-copy:grounded chat` | `$grounded-profile chat` | `/grounded chat` |
-| Product pages and marketing copy | `/grounded-copy:grounded copy` | `$grounded-profile copy` | `/grounded copy` |
-| Turn the rules off | `/grounded-copy:grounded off` | `$grounded-profile off` | `/grounded off` |
-| Show the saved setting | `/grounded-copy:grounded` | `$grounded-profile status` | `/grounded` |
+| Action | Claude Code | Codex | Antigravity | Gemini CLI | dsh |
+|---|---|---|---|---|---|
+| Everyday interaction and documents | `/grounded-copy:grounded chat` | `$grounded-profile chat` | `grounded-profile` (`chat`) | `/grounded chat` | `/grounded chat` |
+| Product pages and marketing copy | `/grounded-copy:grounded copy` | `$grounded-profile copy` | `grounded-profile` (`copy`) | `/grounded copy` | `/grounded copy` |
+| Turn the rules off | `/grounded-copy:grounded off` | `$grounded-profile off` | `grounded-profile` (`off`) | `/grounded off` | `/grounded off` |
+| Show the saved setting | `/grounded-copy:grounded` | `$grounded-profile status` | `grounded-profile` (`status`) | `/grounded` | `/grounded` |
 
 The setting stays saved across restarts. Each host uses its own file:
 
@@ -82,6 +112,8 @@ The setting stays saved across restarts. Each host uses its own file:
 |---|---|
 | Claude Code | `$CLAUDE_CONFIG_DIR/grounded-copy/profile`, or `~/.claude/grounded-copy/profile` by default |
 | Codex | `$CODEX_HOME/grounded-copy/profile`, or `~/.codex/grounded-copy/profile` by default |
+| Antigravity | `$ANTIGRAVITY_CONFIG_DIR/grounded-copy/profile`, or `~/.gemini/config/grounded-copy/profile` by default |
+| Gemini CLI | `$GEMINI_CLI_HOME/.gemini/grounded-copy/profile`, or `~/.gemini/grounded-copy/profile` by default |
 | dsh | `$DSH_HOME/grounded-copy/profile`, or `~/.dsh/grounded-copy/profile` by default |
 
 What each profile adds to a session:
@@ -212,7 +244,7 @@ A finding prints as the file, the line, the matched text, and the rule name in b
 
 ## Check files as the agent saves them
 
-The Claude Code and Codex plugins check each prose file the agent saves. After the agent writes or edits a file, a hook runs the checker on the text that save added, under your saved profile. It hands any findings back to the agent, which rewrites the sentences and saves again. Text that was already in the file is left alone. The `off` profile skips the check.
+The Claude Code, Codex, Antigravity, and Gemini CLI packages check each prose file the agent saves. Claude Code, Codex, and Gemini CLI run the checker after the write or edit finishes; Antigravity checks proposed writes and edits in `PreToolUse` before they reach disk. In every host, the hook checks only the text that save adds, under your saved profile, and returns findings so the agent rewrites the flagged sentences. Text already in the file stays untouched. The `off` profile skips the check.
 
 In Claude Code, the hook also checks the lines a Bash command adds to a prose file, when Claude Code records that command's changes. It records them by default in auto and bypassPermissions mode when it has the agent edit files through Bash. To record them in every mode, add `"bashEditDiffEnabled": true` to your user settings file, `~/.claude/settings.json`. This needs Claude Code 2.1.269 or later, and a repository's settings cannot turn it on.
 

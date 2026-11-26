@@ -1,0 +1,44 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "name": "grounded-copy-activate",
+            "description": "Load grounded-copy writing rules at session start",
+            "type": "command",
+            "command": ". \"${extensionPath}/hooks/gemini_activate.cmd\" \"${extensionPath}\"",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "BeforeAgent": [
+      {
+        "hooks": [
+          {
+            "name": "grounded-copy-reminder",
+            "description": "Add the grounded-copy turn reminder before each prompt",
+            "type": "command",
+            "command": ". \"${extensionPath}/hooks/gemini_tracker.cmd\" \"${extensionPath}\"",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "name": "grounded-copy-gate",
+            "description": "Check prose files after the agent saves them",
+            "type": "command",
+            "command": ". \"${extensionPath}/hooks/gemini_gate.cmd\" \"${extensionPath}\"",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  }
+}

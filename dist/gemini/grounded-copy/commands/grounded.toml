@@ -1,0 +1,22 @@
+description = "Show or change the grounded-copy writing mode (chat, copy, or off)"
+prompt = """
+Match the user's argument (`{{args}}`) to `chat`, `copy`, or `off`. For an empty or unknown argument, run the status command. Limit the operation to the profile setting.
+
+On Unix or Git Bash, run the selected command:
+
+- `chat`: `sh '${extensionPath}/hooks/run.sh' grounded_tracker.py --set chat`
+- `copy`: `sh '${extensionPath}/hooks/run.sh' grounded_tracker.py --set copy`
+- `off`: `sh '${extensionPath}/hooks/run.sh' grounded_tracker.py --set off`
+- status: `sh '${extensionPath}/hooks/run.sh' grounded_tracker.py --status`
+
+On Windows PowerShell, run the matching launcher:
+
+- `chat`: `& '${extensionPath}\\hooks\\run.cmd' grounded_tracker.py --set chat`
+- `copy`: `& '${extensionPath}\\hooks\\run.cmd' grounded_tracker.py --set copy`
+- `off`: `& '${extensionPath}\\hooks\\run.cmd' grounded_tracker.py --set off`
+- status: `& '${extensionPath}\\hooks\\run.cmd' grounded_tracker.py --status`
+
+Use the selected command as written and keep user-supplied text out of the shell command. For an unknown argument, report the rejected value and the current profile while leaving the saved setting unchanged.
+
+A successful change prints the status and the instructions for the new profile. Apply those instructions from this turn forward.
+"""

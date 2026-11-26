@@ -54,7 +54,7 @@
 
 ## Try it
 
-The Claude Code and Codex plugins load the `chat` rules at the start of every session, with no instruction from you. Start a session and ask your question. In Codex, approve the plugin's hooks the first time the app asks.
+The plugins for Claude Code, Codex, Antigravity, Gemini CLI, and dsh load the `chat` rules at the start of every session, with no instruction from you. Start a session and ask your question. In Codex, approve the plugin's hooks the first time the app asks.
 
 With the skill alone, name it in your request, such as "Use grounded-copy to answer."
 
@@ -87,6 +87,9 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 |---|---|
 | Claude Code | `claude plugin marketplace add HiroHyun/grounded-copy`<br>`claude plugin install grounded-copy@hirohyun-plugins -s user` |
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
+| Antigravity | From a clone: `agy plugin install ./dist/antigravity/grounded-copy` (or copy the folder into `~/.gemini/config/plugins/grounded-copy`) |
+| Gemini CLI | From a clone: `gemini extensions install --path ./dist/gemini/grounded-copy` |
+| DeepSeek Harness (dsh) | `dsh plugin --profile <profile> add github:HiroHyun/grounded-copy` |
 | Agents supported by the Skills CLI | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
 </details>
@@ -124,6 +127,20 @@ $grounded-profile copy
 $grounded-profile off
 $grounded-profile status
 ```
+
+**Gemini CLI and dsh:**
+
+```text
+/grounded chat
+/grounded copy
+/grounded off
+```
+
+Use `/grounded` to see the current mode.
+
+**Antigravity:**
+
+Ask the agent to run `grounded-profile` with `chat`, `copy`, `off`, or `status`.
 
 > [!IMPORTANT]
 > **For a faithful translation, set `off` first.** The rules can otherwise prompt the agent to remove a comparison that belongs to the original text.

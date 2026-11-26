@@ -55,7 +55,7 @@
 <a id="try-it"></a>
 ## 试着用一次
 
-Claude Code 和 Codex 插件会在每个会话开始时加载 `chat` 规则，无需你额外下指令。开启会话，直接提问即可。Codex 首次提示时，请批准插件的钩子。
+Claude Code、Codex、Antigravity、Gemini CLI 和 dsh 的插件会在每个会话开始时加载 `chat` 规则，无需你额外下指令。开启会话，直接提问即可。Codex 首次提示时，请批准插件的钩子。
 
 只安装技能时，请在请求中点名，例如“用 grounded-copy 回答”。
 
@@ -89,6 +89,9 @@ irm https://raw.githubusercontent.com/HiroHyun/grounded-copy/main/install.ps1 | 
 |---|---|
 | Claude Code | `claude plugin marketplace add HiroHyun/grounded-copy`<br>`claude plugin install grounded-copy@hirohyun-plugins -s user` |
 | Codex | `codex plugin marketplace add HiroHyun/grounded-copy`<br>`codex plugin add grounded-copy@hirohyun-plugins` |
+| Antigravity | 克隆仓库后运行 `agy plugin install ./dist/antigravity/grounded-copy`（或将该目录复制到 `~/.gemini/config/plugins/grounded-copy`） |
+| Gemini CLI | 克隆仓库后运行 `gemini extensions install --path ./dist/gemini/grounded-copy` |
+| DeepSeek Harness (dsh) | `dsh plugin --profile <profile> add github:HiroHyun/grounded-copy` |
 | Skills CLI 支持的智能体 | `npx skills add HiroHyun/grounded-copy --skill grounded-copy --yes` |
 
 </details>
@@ -127,6 +130,20 @@ $grounded-profile copy
 $grounded-profile off
 $grounded-profile status
 ```
+
+**Gemini CLI 和 dsh：**
+
+```text
+/grounded chat
+/grounded copy
+/grounded off
+```
+
+输入 `/grounded` 查看当前模式。
+
+**Antigravity：**
+
+让智能体运行 `grounded-profile`，并指定 `chat`、`copy`、`off` 或 `status`。
 
 > [!IMPORTANT]
 > **需要忠实翻译原文时，先切换到 `off`。** 否则，智能体可能为了遵守写作规则，删掉原文中有意义的对比。

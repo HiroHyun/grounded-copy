@@ -1,0 +1,297 @@
+# Pattern guide
+
+Use this guide when the checker reports a phrase or when a draft feels vague.
+
+The examples are invented, and each Draft holds wording the checker reports. Use facts from your own source when you rewrite.
+
+## Everyday examples
+
+Each rewrite is its draft with the contrast half removed.
+
+| Draft | Rewrite |
+|---|---|
+| "The file isn't missing, it's empty." | "The file is empty." |
+| "Your plant isn't dying, it's dormant." | "Your plant is dormant." |
+| "A budget is a plan, not a punishment." | "A budget is a plan." |
+| "Rinse the rice rather than skipping that step." | "Rinse the rice." |
+| "Use olive oil instead of butter." | "Use olive oil." |
+| "The museum is no longer free on Sundays." | "The museum charges on Sundays." |
+| "You can cancel without paying a fee." | "Cancelling is free." |
+| "He wasn't fired, he quit." | "He quit." |
+| "The printer isn't broken, it needs paper." | "The printer needs paper." |
+| "You don't need a gym, you need a routine." | "You need a routine." |
+| "文件不是丢了，而是空的。" | "文件是空的。" |
+
+Keep the second half when the reader raised it. If someone asked about butter, "Use olive oil; butter burns at this heat." answers them.
+
+## Placed against an alternative
+
+Describe the subject directly.
+
+Triggers: phrases that downplay the subject ("not just/only/merely/simply", "doesn't just",
+"more than just", "far from just/being", "beyond just"); comparisons ("rather than X",
+"instead of X", "as opposed to X", "no longer", "less a vacation than a reunion").
+
+| Draft | Rewrite |
+|---|---|
+| "This soup doesn't just warm you up, it fills you up." | "This soup fills you up." |
+| "More than just a snack, these oats keep you full until lunch." | "These oats keep you full until lunch." |
+| "Far from being a chore, cooking at home saves money." | "Cooking at home saves money." |
+| "The trip was less a vacation than a family reunion." | "The trip was a family reunion." |
+| "Text your landlord rather than waiting for a call." | "Text your landlord." |
+| "Walk to the station instead of taking the bus." | "Walk to the station." |
+
+An ordinary substitution, exclusion, or status line reports too. Say what to do or what is true now.
+
+## Reversal reveals
+
+Start with the fact.
+
+Triggers: "It's not X, it's Y", "isn't about X, it's about Y", "—not X, but Y",
+"X, not Y", ", not by X", and a denial followed by a dash "isn't/wasn't X — it Y".
+The denial can also set up "just", "only", "merely", or "simply": "not X, just Y".
+A slogan opens the same way: "No X, just Y".
+
+| Draft | Rewrite |
+|---|---|
+| "It's not a cold. It's an allergy." | "It's an allergy." |
+| "Rest is part of training, not a break from it." | "Rest is part of training." |
+| "The recipe isn't hard — it takes three ingredients." | "The recipe takes three ingredients." |
+| "I'm not the plugin's author, just a user." | "I use this plugin; a friend wrote it." |
+| "No fancy tools, just a sharp knife." | "You need a sharp knife." |
+| "Your cat isn't angry, it's scared." | "Your cat is scared." |
+
+## Suspended lists
+
+A list between paired dashes separates the subject from its verb. Remove the list, or keep one example in the sentence. When every item affects the reader's next step, put the items in a list below the sentence. Parentheses or a colon leave the same interruption.
+
+| Draft | Rewrite |
+|---|---|
+| "Copy that has to carry one — a legal disclaimer, regulatory text, a translation of supplied source — is written with the profile off." | "Use the profile off for required wording, such as a legal disclaimer." |
+| "Pointed at text that carries a contrast of its own — a translation, a quoted passage, a legal clause, a billing statement — the model can delete that contrast." | "The agent can remove a comparison when translating supplied text." |
+| "Acme covers every channel — email, live chat, phone, and the help centre — with one queue." | "Acme brings customer requests into one queue." |
+
+## Paragraph review
+
+Apply this review to English and other languages. Decide what the reader needs from the paragraph, then select the facts that serve that purpose. A fact can be accurate and still be unnecessary here. Omit incidental details and keep the resulting claim within what the source supports.
+
+The checker reports none of the five points below. Length and punctuation counts alone do not establish quality. Read first for what belongs, then for how the sentences read.
+
+### Dense lists
+
+Watch for noun lists and chains of actions that keep restating one point. Remove details that add no useful meaning, then explain the supported relationship between the remaining ideas. A shorter summary must keep any condition that changes the reader's conclusion or next step.
+
+Changing commas to semicolons or moving each item into a bullet leaves the information burden intact. Review the whole passage again after cutting: make its point clear and connect the remaining details.
+
+### Repeated frames
+
+Adjacent sentences can form a catalog even when each sentence names only one item. Watch for neighboring sentences that open the same way. Cut what repeats, and give what is left its own subject and verb.
+
+### Lead-ins
+
+A lead-in announces a statement and delays it. Start with the statement. When a sentence stops at a colon, check that what follows explains what came before. A colon is ordinary punctuation, and one sentence shape alone proves nothing.
+
+### Close repetition
+
+When the same sentence or the next one repeats a time, a degree, or a judgment and adds nothing, say it once. Keep a repeated term where the reader needs it to follow the reference. A near-synonym with another meaning is no repair.
+
+### Register
+
+Match the reader and the task: plain speech for an everyday explanation, formal wording for an application or a report. Keep the meaning when you smooth a shift. Archaic words and business jargon slow a reader too.
+
+| Context | Draft | Rewrite |
+|---|---|---|
+| A user-facing update about a fix for interrupted uploads. | "The fix changes chunk IDs, checksum records, and retry queues so interrupted uploads can resume." | "Interrupted uploads can now resume." |
+| Introduce a task board's purpose to a new teammate. | "The board shows owners, dates, priorities, and next steps. Teammates can see who owns each task and what happens next." | "The board shows who owns each task and what happens next." |
+| Explain how a team reviews blocked tasks. | "We read the status. We read the owner. We read the due date. We read the blocker note. We then ask the owner what is needed to unblock the task." | "We review blocked tasks and ask each owner what is needed to continue." |
+| An editing note on two abstracts that both lack the experimental conditions. | "As for the second abstract, the situation is the same: it also lacks the experimental conditions." | "The second abstract also lacks the experimental conditions." |
+| A project plan for a system that collects and displays device status. | "While the system runs, it will continuously collect device status and continuously display device status." | "While the system runs, it collects and displays device status." |
+| A formal report on an alarm log search that helps staff trace faults. | "The system offers an alarm log search, so when stuff breaks you can dig around." | "The system offers an alarm log search so staff can trace faults." |
+
+Use the task to decide what belongs. Explicit requests for a complete inventory still require complete coverage.
+
+## Marketing copy
+
+These sections cover product pages and promotional text. The checker reports their phrases in `copy` mode.
+
+### Slogans
+
+Say what the product does.
+
+Triggers: claims about exceeding a category ("goes beyond", "redefines", "reimagines",
+"reinvents", "not your average X"); claims about removing a problem ("without the
+hassle/hidden fees/middlemen", "zero guesswork/compromises", "hassle-free", "frictionless");
+a fragment that denies one word and claims another ("Not X, just Y.", "Not a X. A Y.").
+
+| Draft | Rewrite |
+|---|---|
+| "Acme goes beyond file storage." | "Acme saves document versions, searches their contents, and syncs them across five device types." |
+| "We're redefining online booking." | "Acme books 40,000 appointments a month across 12 countries." |
+| "Order direct without the hassle of middlemen." | "You order directly from the maker's workshop." |
+| "Zero guesswork. Zero hidden fees." | "Each listing carries the serial number, condition report, and full price." |
+| "Not your average newsletter." | "The newsletter delivers three vetted job listings every Tuesday, each with salary range and visa status." |
+| "Not slow, just cold." | "The pool is 18 °C." |
+| "Not a patch. A rewrite." | "Version 2 replaces the parser." |
+
+### Era-ending
+
+Give the current behavior or result.
+
+Triggers: "gone are the days", "the days of X are over", "the era of X is
+over", "a thing of the past", "long gone", "say goodbye/hello", "no more X",
+"never again", "welcome to a new era".
+
+| Draft | Rewrite |
+|---|---|
+| "Gone are the days of opaque pricing." | "Every plan shows its full monthly price, including tax, before checkout." |
+| "Say goodbye to hidden fees." | "The listed price is the complete price; the invoice adds nothing." |
+| "No more waiting weeks for a quote." | "Quotes arrive within one business day." |
+| "In today's fast-paced world, speed matters more than ever." | "Pages load in under 200 ms." |
+
+### Competitor put-downs
+
+Explain what the product offers.
+
+Triggers: "unlike traditional/most/other X", "while others/most X, we Y",
+"compared to other tools".
+
+| Draft | Rewrite |
+|---|---|
+| "Unlike traditional agencies, we publish our rates." | "Acme publishes its hourly rates on the pricing page." |
+| "While others hide their fees, Acme lists them." | "Acme itemizes every charge on the invoice." |
+
+The same comparison can span sentences: "Most vendors bury their fees. Acme prints them." Rewrite it as "Acme prints every fee on the invoice."
+
+### Rhetorical bait
+
+Put the useful information first.
+
+Triggers: "The result?", "The best part?", "Here's the thing", "Think again", "Ever wondered",
+"Tired of", "What if", "Imagine", "Picture this", "In a world where",
+"Stop Xing. Start Ying.", "Forget X", "Don't just X".
+
+| Draft | Rewrite |
+|---|---|
+| "The best part? Every plan includes support." | "Every plan includes support." |
+| "Tired of slow responses?" | "Support replies within four business hours." |
+| "Imagine a report that writes itself." | "The report generates each Monday from the previous week's data." |
+| "Look no further than Acme." | "Acme runs the three checks listed above." |
+| "It's worth noting that every plan includes support." | "Every plan includes support." |
+
+### Collision framing
+
+Name a material, price, feature, or action.
+
+Trigger: "where X meets Y".
+
+| Draft | Rewrite |
+|---|---|
+| "Where quality meets affordability." | "Solid-oak desks from $390, each with a 10-year warranty." |
+
+### Corporate throat-clearing
+
+Start with what the customer gets or what the company does.
+
+Trigger: "At [Company], we...".
+
+| Draft | Rewrite |
+|---|---|
+| "At Acme, we put customers first." | "Customers have 30 days to pay and an account manager they can contact." |
+
+### Hype vocabulary
+
+Replace broad praise with the feature or fact it refers to. Review synonyms by meaning too.
+
+Common examples: unleash, unlock, unparalleled, unwavering,
+unmatched, unprecedented, unsung, unrivaled, elevate, seamless, empower,
+revolutionize, game-changing, delve, supercharge, turbocharge, next-level,
+cutting-edge, state-of-the-art, best-in-class, world-class, transformative,
+effortless, one-stop shop, synergy; figurative "landscape" and "journey";
+and "harness", "next-gen", "revolutionary".
+
+| Draft | Rewrite |
+|---|---|
+| "seamless ordering" | "three-step ordering: pick, pay, track" |
+| "unmatched support" | "one named rep per account, reachable within business hours" |
+| "unlock new markets" | "ship to 40+ countries with customs documents prepared for you" |
+| "world-class inspection" | "120-point inspection with the report attached to every listing" |
+| "boasts a vibrant community" | "12,000 forum members, 300 posts a day" |
+| "a testament to our quality" | "winner of the 2025 Red Dot product award" |
+
+### Vague attribution
+
+Name a source that the reader can check.
+
+Triggers: "experts say", "critics say", "studies show", "studies have shown".
+
+| Draft | Rewrite |
+|---|---|
+| "Experts agree Acme leads the market." | "The 2025 market report by [source] gives Acme a 34% share of [segment]." |
+| "Studies show users prefer simple forms." | "In Acme's May 2026 survey of 1,200 users, 78% completed the three-field form." |
+
+A trailing phrase can add praise too: ", highlighting our commitment to quality" or ", underscoring its value". Remove it and state the supported fact.
+
+## Chinese equivalents
+
+The checker knows the phrases below. Review the rest of the text yourself.
+
+Triggers: 不仅仅是 / 不只是 / 不仅是 / 不止是 / 不再是 / 不僅僅是 / 不光是 / 不单是 / 并非 X，而是 Y / 与其说 X，不如说 Y / 不是 X，而是 Y
+
+In `copy` mode the checker also reports 告别… / 重新定义 / 颠覆 / 告別 / 重新定義 / 顛覆.
+
+When translating a draft written under these rules, keep its facts and use natural sentences in the target language. For a faithful translation of supplied text, preserve its intended comparisons and use the profile off as needed.
+
+Some listed phrases have ordinary uses and still report. Read the sentence in context before changing it.
+
+### Chinese comparisons
+
+以下情境均为教学示例。改写依据同一行给出的事实，实际使用时请换成有来源的内容。
+
+| 已知情境 | Draft | Rewrite |
+|---|---|---|
+| 问卷要求填写一个购买主因；这20位受访者均填写了续航。 | “这20位受访者不是看中价格，而是看中续航。” | “这20位受访者填报的购买主因是续航。” |
+| 表单要求提交前填写每天的行驶距离和充电条件。 | “关键不是等待，而是先填好每天的行驶距离和充电条件。” | “提交前，请填写每天的行驶距离和充电条件。” |
+| 服务说明规定每单收取2元服务费。 | “这项服务不是免费帮忙，是每单收取2元的生意。” | “这项服务每单收取2元服务费。” |
+| 申请在提交后进入审批流程，获管理员批准后生效。 | “申请不是提交后立即生效，而是获管理员批准后生效。” | “提交的申请经管理员批准后生效。” |
+
+## Chinese paragraph review
+
+先明确读者需要知道什么，再决定写哪些事实。无助于主旨的信息可以删去，包括正确的技术细节；保留下来的说法须有依据，关键限定不能省。用户明确要求完整清单或逐字引用时，按要求处理。
+
+检查脚本不检测以下五项。顿号数量只可辅助观察。审读时先看内容是否值得写，再看句式是否自然。
+
+### 密集列举
+
+先写清本段要让读者理解的一件事。列举项若不影响读者理解主旨或完成操作，可以删去；几项共同说明一个意思时，直接概括。技术术语同样需要取舍。
+
+把细节拆成短句、改成项目符号或换用逗号，仍然是逐项复述。先删减内容，再调整衔接。说明先后或因果须有依据。
+
+### 模板化句式
+
+留意相邻句子反复使用同一种起句，如“真正需要……的是……”。重复的意思删去，留下的内容按具体主语和动作展开。
+
+### 欧化表达
+
+按汉语习惯直接交代事情，检查主语、谓语和分句之间的衔接。引导句接冒号时，确认后文确实解释了前文；空泛的转接语删去或并入具体陈述。冒号是正常标点，单凭一种句式不能断定它是翻译腔。
+
+### 近距离冗余
+
+同一句或相邻句中重复的时间范围、程度或判断，若无新增含义，合并表达。需要保持术语一致、明确指代或强调持续时间时，保留原词，不为避重换上含义不同的近义词。
+
+### 语体一致
+
+按读者和任务选择语体：日常解释用自然口语，申请材料和报告用正式表达。修改突兀的口语或书面套话时保持原意，“愿意付费”不能改成“已经盈利”。文言词和商业术语也会增加理解负担。
+
+### 按用途取舍和改写
+
+以下情境为新编示例。改写只选用与用途相关的事实。
+
+| 情境 | Draft | Rewrite |
+|---|---|---|
+| 面向普通用户的更新说明：修复了上传中断后重复提交的问题，实现涉及分片编号、校验记录和重试队列。 | “这次更新修改了分片编号、校验记录、重试队列，解决了上传中断后重复提交的问题。” | “修复了上传中断后重复提交的问题。” |
+| 学习提醒：报名本周五截止；学员应按自己的时间选择课程。 | “真正需要留意的是本周五的报名截止时间。真正需要考虑的是自己的时间能否配合课程。” | “报名本周五截止，选课时请确认上课时间是否合适。” |
+| 编辑记录：两篇摘要都缺少实验条件。 | “对于第二篇摘要，情况也是这样的：它同样缺少实验条件。” | “第二篇摘要也缺少实验条件。” |
+| 项目计划：系统运行期间，设备状态的采集和显示均持续进行。 | “系统运行期间，将持续采集设备状态，并持续显示设备状态。” | “系统运行期间，将持续采集并显示设备状态。” |
+| 正式报告：系统提供告警记录查询，方便人员追溯故障。 | “系统提供告警记录查询，出了岔子就翻一翻。” | “系统提供告警记录查询，便于工作人员追溯故障。” |
+
+信息是否出现，由本次任务决定。删减后检查结论是否准确，涉及操作的关键条件须交代。
