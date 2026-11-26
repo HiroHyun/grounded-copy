@@ -1,12 +1,14 @@
-# Unreleased
+# 0.7.9
 
 ## English
 
+- The plugin supports Google Antigravity, Gemini CLI, and DeepSeek Harness (dsh). The README and setup guide list the install commands for each host.
 - Codex loads the writing rules when the installation folder's name contains a dollar sign, backtick, or ampersand.
 - Approve the plugin's hooks again when Codex prompts you after the update.
 
 ## 简体中文
 
+- 插件支持 Google Antigravity、Gemini CLI 和 DeepSeek Harness（dsh）。README 和安装说明列出了各宿主的安装命令。
 - 安装文件夹的名称含有美元符号、反引号或 & 符号时，Codex 也能加载写作规则。
 - 更新后，请按 Codex 的提示重新批准插件钩子。
 
